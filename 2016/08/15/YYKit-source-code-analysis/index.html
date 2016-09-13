@@ -1,0 +1,766 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言YYKit 源码分析 之 YYCache">
+<meta property="og:type" content="article">
+<meta property="og:title" content="看YYKit的源码">
+<meta property="og:url" content="http://yoursite.com/2016/08/15/YYKit-source-code-analysis/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言YYKit 源码分析 之 YYCache">
+<meta property="og:updated_time" content="2016-09-02T08:01:19.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="看YYKit的源码">
+<meta name="twitter:description" content="前言YYKit 源码分析 之 YYCache">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/08/15/YYKit-source-code-analysis/"/>
+
+  <title> 看YYKit的源码 | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                看YYKit的源码
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-15T19:31:27+08:00" content="2016-08-15">
+              2016-08-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/15/YYKit-source-code-analysis/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/15/YYKit-source-code-analysis/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><strong>YYKit</strong> 源码分析 之 <strong>YYCache</strong></p>
+<a id="more"></a>
+<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><p><strong>YYCache</strong> 是一个线程安全的 <strong>key-value</strong> 的缓存框架。使用 <strong>YYMemoryCache</strong> 来将对象存放在小且快的内存中；使用 <strong>YYDiskCache</strong> 来将对象存放在较慢的磁盘上。</p>
+<h2 id="YYCache"><a href="#YYCache" class="headerlink" title="YYCache"></a>YYCache</h2><p>先来看看 <strong>YYCache</strong> 的工作流程。</p>
+<h3 id="创建Cache-init"><a href="#创建Cache-init" class="headerlink" title="创建Cache(init)"></a>创建Cache(init)</h3><p>使用下面代码可以创建一个叫做vanney的新的cache。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">YYCache *newCache = [YYCache alloc] initWithName:@&quot;vanney&quot;];</div></pre></td></tr></table></figure>
+<p>这句语句所做的事情如下：</p>
+<ol>
+<li>物理层面<ol>
+<li>在APP的 <strong>Caches</strong> 目录下面新建一个 <strong>vanney</strong> 的子目录，这个目录用来存放所有属于vanney的cache</li>
+<li>在vanney目录下面新建一个 <strong>manifest</strong> 的sqlite数据库，这个数据库用来记录属于vanney的所有cache的信息，数据库的每一行记录表示一个cache。每一行的信息包括：<ol>
+<li><strong>key</strong> : cache的唯一标识。manifes的主键</li>
+<li><strong>filename</strong> : 如果cache的数据大于设置的值的话（默认是20KB），会将cache的二进制数据存放到一个文件中，这个filename就是该cache对应的文件名</li>
+<li><strong>size</strong> : cache的大小，单位是byte</li>
+<li><strong>inline_data</strong> : cache的二进制数据，如果cache以文件形式存放的话，这里就为空</li>
+<li><strong>modification_time</strong> : 上一次对该cache的修改时间</li>
+<li><strong>last_access_time</strong> : 上一次使用该cache的时间</li>
+<li><strong>extended_data</strong> : 一些额外的数据</li>
+</ol>
+</li>
+<li>在vanney的目录下创建 <strong>data</strong> 的文件夹，用来存放以文件形式存在的cache</li>
+<li>在vanney的目录下创建 <strong>trash</strong> 的文件夹，删除cache时会将data中的文件先移到trash中，然后再异步的删除该文件夹里面的文件</li>
+</ol>
+</li>
+<li>程序层面<ol>
+<li>创建了一个 <strong>YYDiskCache</strong> 。后面会细说</li>
+<li>创建了一个 <strong>YYMemoryCache</strong> 。后面会细说</li>
+</ol>
+</li>
+</ol>
+<h3 id="往Cache里面新增记录-set"><a href="#往Cache里面新增记录-set" class="headerlink" title="往Cache里面新增记录(set)"></a>往Cache里面新增记录(set)</h3><p>也就是所谓的 <strong>set</strong> 方法。使用下面代码可以新增一条cache记录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[newCache setObject:@&quot;New Record&quot; forKey:@&quot;New Key&quot;];</div></pre></td></tr></table></figure>
+<p>这里newCache做了两件事：</p>
+<ol>
+<li>往YYMemoryCache里面写入这条数据</li>
+<li>往YYDiskCache里面写入这条数据</li>
+</ol>
+<h3 id="向Cache中读取缓存记录-get"><a href="#向Cache中读取缓存记录-get" class="headerlink" title="向Cache中读取缓存记录(get)"></a>向Cache中读取缓存记录(get)</h3><p>也就是所谓的 <strong>get</strong>  方法。使用下面代码可以读取一条cache记录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSString *cacheValue = [newCache objectForKey:@&quot;New Key&quot;];</div></pre></td></tr></table></figure>
+<ol>
+<li>现从memory里面获取这个cache，也就是从YYMemoryCache里面获取</li>
+<li>如果没有发现的话，就从YYDiskCache里面获取，再将它存放到YYMemoryCache中</li>
+</ol>
+<h3 id="从Cache中删除记录-remove"><a href="#从Cache中删除记录-remove" class="headerlink" title="从Cache中删除记录(remove)"></a>从Cache中删除记录(remove)</h3><p>也就是 <strong>remove</strong> 方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[newCache removeObjectForKey:@&quot;New Key&quot;];</div></pre></td></tr></table></figure>
+<ol>
+<li>从YYMemoryCache中删除</li>
+<li>从YYDiskCache中删除</li>
+</ol>
+<h2 id="YYDiskCache"><a href="#YYDiskCache" class="headerlink" title="YYDiskCache"></a>YYDiskCache</h2><p>YYDiskCache负责将cache存放在物理硬盘中，也就是上面所说的，存放在 <strong>Cache</strong> 目录下面的相应的cacheName下面，（例子中使用的是 <strong>vanney</strong> 目录）。存放的方式是：</p>
+<ol>
+<li>使用sqlite数据库记录所有的cache的信息</li>
+<li>大于某个限额的cache以文件形式存放，在数据库中记录下该cache对应的文件名；而对于小型的cache就直接将二进制的数据存放在数据库里面就好了</li>
+</ol>
+<h3 id="初始化-init"><a href="#初始化-init" class="headerlink" title="初始化(init)"></a>初始化(init)</h3><p>使用下面的代码初始化一个YYDIskCache，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">YYDiskCache *diskCache = [YYDiskCache alloc] iniwtWithPath:path];</div></pre></td></tr></table></figure>
+<ol>
+<li>有一个全局的存放YYDiskCache的 <strong>NSMapTable</strong> ，以path为 <strong>key</strong> 。这里的path就是上面所说的 <strong>vanney</strong> 目录，以YYDiskCache为 <strong>value</strong> 。</li>
+<li>先从这个NSMapTable中找看是否有这个path的YYDiskCache，有就直接返回</li>
+<li>没有的话，就开始创建。这个创建过程如下：<ol>
+<li>创建 <strong>vanney</strong> 文件夹</li>
+<li>创建 <strong>vanney</strong> 文件夹下面的各个部件： <strong>data</strong> ，<strong>trash</strong> 文件夹和 <strong>manifest</strong> 数据库</li>
+<li>将创建的YYDiskCache以 <strong>path</strong> ：<strong>YYDiskCache</strong> 的形式存放在全局的NSMapTable中</li>
+</ol>
+</li>
+<li>添加一些观测事件</li>
+</ol>
+<h3 id="写入缓存-set"><a href="#写入缓存-set" class="headerlink" title="写入缓存(set)"></a>写入缓存(set)</h3><p>使用下面的代码写入Disk缓存：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[diskCache setObject:@&quot;DiskCache&quot; forKey:@&quot;DiskCacheKey&quot;];</div></pre></td></tr></table></figure>
+<ol>
+<li>先将object，这里就是 <em>DiskCache</em> 字符串压缩，使他变成一个 <strong>NSData</strong></li>
+<li>如果NSData大小没超过限制，那么将这条cache以 <strong>key : DiskCacheKey</strong>  <strong>value:NSData</strong> <strong>filename:NULL</strong> 的形式写入manifest数据库</li>
+<li>如果NSData的大小超过限制的话，先将NSData写入文件名为 <strong>md5(DiskCacheKey)</strong> 的文件中，文件存放在 <strong>data</strong> 文件夹；然后再将这条cache以 <strong>key:DiskCacheKey</strong> <strong>value:NULL</strong> <strong>filename:md5(DiskCacheKey)</strong> 的形式写入manifest数据库</li>
+</ol>
+<h3 id="读取缓存-get"><a href="#读取缓存-get" class="headerlink" title="读取缓存(get)"></a>读取缓存(get)</h3><p>使用下面的代码读取Disk缓存:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSString *diskCacheValue = [diskCache objectForKey:@&quot;DiskCacheKey&quot;];</div></pre></td></tr></table></figure>
+<ol>
+<li>进入数据库获取key为DiskCacheKey的记录，并且修改这条记录的 <strong>last_access_time</strong> </li>
+<li>如果是将cache存放在数据库的话，获取数据库的value字段；如果是以文件形式存在的话，读取存放NSData的文件</li>
+<li>将cache的NSData解压，还原成最初的形式，返回</li>
+</ol>
+<h3 id="删除缓存-remove"><a href="#删除缓存-remove" class="headerlink" title="删除缓存(remove)"></a>删除缓存(remove)</h3><p>使用下面的代码删除Disk的缓存：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[diskCache removeObjectForKey:@&quot;DiskCacheKey&quot;];</div></pre></td></tr></table></figure>
+<ol>
+<li>删除数据库中key为DiskCacheKey的记录</li>
+<li>如果存在文件的话，删除</li>
+</ol>
+<h2 id="YYMemoryCache"><a href="#YYMemoryCache" class="headerlink" title="YYMemoryCache"></a>YYMemoryCache</h2><p>YYMemoryCache维护着一个双向链表(<strong>YYLinkedMap</strong>)，链表里面的每一个节点就是一个memory的缓存记录，表头的节点表示最近访问过的，表尾的节点很久没去访问了。每个节点是一个 <strong>YYLinkedMapNode</strong> 对象，这个对象里面有指向前后节点的指针，和包含缓存信息的 <strong>key</strong> 和 <strong>value</strong> 属，以及一些缓存的其他属性：<strong>cost</strong> 和 <strong>time</strong> </p>
+<h3 id="初始化-init-1"><a href="#初始化-init-1" class="headerlink" title="初始化(init)"></a>初始化(init)</h3><p>使用下面的代码初始化一个YYMemoryCache：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">YYMemoryCache *memoryCache = [YYMemoryCache new];</div></pre></td></tr></table></figure>
+<ol>
+<li>新建一个YYLinkedMap</li>
+<li>添加一些监听事件，设置一些属性等等</li>
+</ol>
+<h3 id="写入缓存-set-1"><a href="#写入缓存-set-1" class="headerlink" title="写入缓存(set)"></a>写入缓存(set)</h3><p>使用下面的代码写入缓存：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[memoryCache setObject:@&quot;Memory Cache&quot; forKey:@&quot;MemoryCacheKey&quot;];</div></pre></td></tr></table></figure>
+<ol>
+<li>先在YYLinkedMap中寻找是否有这个key，YYLinkedMap对象中有一个dic属性，它是一个键值对，键就是每个cache的key，值就是每个cache对应的YYLinkedMapNode</li>
+<li>如果存在的话，那就修改这个key对应的YYLinkedMapNode的value为<code>@&quot;Memory Cache&quot;</code>，并且修改它的其他属性，将time属性改为现在的时间，并将这个Node放在链表的表头。</li>
+<li>如果不存在的话，就直接生成一个YYLinkedMapNode，放在链表的表头</li>
+</ol>
+<h3 id="读取缓存-get-1"><a href="#读取缓存-get-1" class="headerlink" title="读取缓存(get)"></a>读取缓存(get)</h3><p>使用下面的代码读取缓存：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSString *cacheValue = [memoryCache objectForKey:@&quot;MemoryCacheKey&quot;];</div></pre></td></tr></table></figure>
+<ol>
+<li>从YYLinkedMap的dic中获取key为MemoryCacheKey的YYLinkedMapNode，修改node的time，并将这个node放在链表的表头</li>
+<li>返回所需的缓存，也就是node的value属性</li>
+</ol>
+<h3 id="删除缓存-remove-1"><a href="#删除缓存-remove-1" class="headerlink" title="删除缓存(remove)"></a>删除缓存(remove)</h3><p>使用下面的代码删除缓存：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[memoryCache removeObjectForKey:@&quot;MemoryCacheKey&quot;];</div></pre></td></tr></table></figure>
+<ol>
+<li>删除YYLinkedMap中的dic里面的key为MemoryCacheKey的YYLinkedMapNode</li>
+<li>调整双向链表</li>
+</ol>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="关于线程安全"><a href="#关于线程安全" class="headerlink" title="关于线程安全"></a>关于线程安全</h3><h4 id="YYDiskCache-1"><a href="#YYDiskCache-1" class="headerlink" title="YYDiskCache"></a>YYDiskCache</h4><ol>
+<li><p>每个YYDiskCache有一个信号量为1的锁 <em>_lock</em> ，使用 <code>dispatch_semaphore_create(1);</code>来创建。当对这个YYDiskCache里面的数据进行操作时，比如添加或者读取缓存时，一次只允许一个操作在进行。</p>
+</li>
+<li><p>还有一个信号量也为1的全局的锁 <em>_globalInstancesLock</em> ，它用来对存储每个YYDiskCache的NSMapTable进行加锁，对这个NSMapTable进行读写的操作只能同时存在一个。</p>
+</li>
+<li><p>每一个YYDiskCache有一个并行的queue，这个queue用来执行读写删之后的block。因为有这样的API:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (void)objectForKey:(NSString *)key withBlock:(void(^)(NSString *key, id&lt;NSCoding&gt; _Nullable object))block;</div></pre></td></tr></table></figure>
+<p>所以这里的block就在这个queue里面执行，达到多线程操作的效果</p>
+</li>
+</ol>
+<h4 id="YYMemoryCache-1"><a href="#YYMemoryCache-1" class="headerlink" title="YYMemoryCache"></a>YYMemoryCache</h4><ol>
+<li>每一个YYMemoryCache都有一个<code>pthread_mutex_t</code>锁，同理，对YYMemoryCache的写入和读取缓存等操作只能同时存在一个。</li>
+<li>有一个YYMemoryCacheGetReleaseQueue， 用来释放删除的缓存。 这里还需要细看代码。。。</li>
+</ol>
+<h3 id="关于各种限制"><a href="#关于各种限制" class="headerlink" title="关于各种限制"></a>关于各种限制</h3><p>YYCache可以设置各种限制，比如缓存的最大数量，最大size以及缓存的生存时间等等。对于YYDiskCache和YYMemoryCache有两套不同的处理方法。当然也有相同的一点就是：他们都会定时清理缓存，在新建一个YYDiskCache或YYMemoryCache时，都会设一个定时事件，按时清理缓存。</p>
+<h4 id="YYDiskCache-2"><a href="#YYDiskCache-2" class="headerlink" title="YYDiskCache"></a>YYDiskCache</h4><p>在YYDiskCache里面，每一个cache的大小都在数据库里面的size字段里面有记录，而最近的缓存操作时间也有记录。如果操过某个限制的话，比如总容量限制或总数量限制或者存活时间限制，那么会删掉最长时间没有去使用的缓存。这个操作很简单，只需要对数据库的各个缓存按时间排序就行了。</p>
+<h4 id="YYMemoryCache-2"><a href="#YYMemoryCache-2" class="headerlink" title="YYMemoryCache"></a>YYMemoryCache</h4><p>在YYMemoryCache里面，使用双向链表来记录每个缓存的使用情况。表头的表示刚刚使用过，而表尾的则很久没使用了。每个YYLinkedMapNode都有记录自己的time和cost，而YYLinkedMap则有记录总的cost和总的缓存数量。当超过某个限制的话，就会从表尾开始删除缓存，直到达到要求</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://github.com/ibireme/YYKit" target="_blank" rel="external">YYKit</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/08/linux-kernel-development-reading-note-one/" rel="next" title="Linux内核设计与实现">
+                <i class="fa fa-chevron-left"></i> Linux内核设计与实现
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/06/somethings-about-ios-and-js/" rel="prev" title="somethings about ios and js">
+                somethings about ios and js <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/08/15/YYKit-source-code-analysis/"
+           data-title="看YYKit的源码" data-url="http://yoursite.com/2016/08/15/YYKit-source-code-analysis/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YYCache"><span class="nav-number">3.</span> <span class="nav-text">YYCache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建Cache-init"><span class="nav-number">3.1.</span> <span class="nav-text">创建Cache(init)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#往Cache里面新增记录-set"><span class="nav-number">3.2.</span> <span class="nav-text">往Cache里面新增记录(set)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#向Cache中读取缓存记录-get"><span class="nav-number">3.3.</span> <span class="nav-text">向Cache中读取缓存记录(get)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从Cache中删除记录-remove"><span class="nav-number">3.4.</span> <span class="nav-text">从Cache中删除记录(remove)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YYDiskCache"><span class="nav-number">4.</span> <span class="nav-text">YYDiskCache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化-init"><span class="nav-number">4.1.</span> <span class="nav-text">初始化(init)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写入缓存-set"><span class="nav-number">4.2.</span> <span class="nav-text">写入缓存(set)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读取缓存-get"><span class="nav-number">4.3.</span> <span class="nav-text">读取缓存(get)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除缓存-remove"><span class="nav-number">4.4.</span> <span class="nav-text">删除缓存(remove)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YYMemoryCache"><span class="nav-number">5.</span> <span class="nav-text">YYMemoryCache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化-init-1"><span class="nav-number">5.1.</span> <span class="nav-text">初始化(init)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写入缓存-set-1"><span class="nav-number">5.2.</span> <span class="nav-text">写入缓存(set)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读取缓存-get-1"><span class="nav-number">5.3.</span> <span class="nav-text">读取缓存(get)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除缓存-remove-1"><span class="nav-number">5.4.</span> <span class="nav-text">删除缓存(remove)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">6.</span> <span class="nav-text">其他</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于线程安全"><span class="nav-number">6.1.</span> <span class="nav-text">关于线程安全</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#YYDiskCache-1"><span class="nav-number">6.1.1.</span> <span class="nav-text">YYDiskCache</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#YYMemoryCache-1"><span class="nav-number">6.1.2.</span> <span class="nav-text">YYMemoryCache</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于各种限制"><span class="nav-number">6.2.</span> <span class="nav-text">关于各种限制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#YYDiskCache-2"><span class="nav-number">6.2.1.</span> <span class="nav-text">YYDiskCache</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#YYMemoryCache-2"><span class="nav-number">6.2.2.</span> <span class="nav-text">YYMemoryCache</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<span><script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script></span>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

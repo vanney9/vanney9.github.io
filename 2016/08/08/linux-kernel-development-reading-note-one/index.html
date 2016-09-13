@@ -1,0 +1,722 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言Linux内核设计与实现 读书笔记（一）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux内核设计与实现">
+<meta property="og:url" content="http://yoursite.com/2016/08/08/linux-kernel-development-reading-note-one/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言Linux内核设计与实现 读书笔记（一）">
+<meta property="og:updated_time" content="2016-08-15T11:30:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux内核设计与实现">
+<meta name="twitter:description" content="前言Linux内核设计与实现 读书笔记（一）">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/08/08/linux-kernel-development-reading-note-one/"/>
+
+  <title> Linux内核设计与实现 | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Linux内核设计与实现
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-08T15:03:36+08:00" content="2016-08-08">
+              2016-08-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/08/linux-kernel-development-reading-note-one/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/08/linux-kernel-development-reading-note-one/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Linux内核设计与实现 读书笔记（一）</p>
+<a id="more"></a>
+<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="Linux内核简介"><a href="#Linux内核简介" class="headerlink" title="Linux内核简介"></a>Linux内核简介</h3><ol>
+<li>Unix中，所有的东西都被当做文件对待。这种抽象使对<em>数据</em>和对<em>设备</em>的操作都是通过一套相同的系统调用接口来进行的。</li>
+<li><strong>操作系统</strong>：在整个系统中负责完成最基本功能和系统管理的部分。这部分包括内核、设备驱动程序、启动引导程序、命令行Shell等等。其中 <strong>内核</strong> 是操作系统的核心。</li>
+<li>内核独立于普通程序，它一般处于系统态，拥有受保护的内存空间和访问硬件的所有权限。这种系统态加上被保护的内存空间，称为<strong>内核空间</strong>。相对的，一般的应用程序在 <strong>用户空间</strong> 执行。</li>
+<li>应用程序可以通过 <strong>系统调用</strong> 来与内核通信。也就是应用程序调用库函数（API）来让内核代其完成一些任务。</li>
+<li>处理器的任何时间都处在下面3者之一：<ol>
+<li>运行于用户空间，执行用户进程。</li>
+<li>运行于内核空间，处于进程上下文，代表某个特定的进程执行。</li>
+<li>运行于内核空间，处于中断上下文，与任何进程无关，处理某个特定的中断。、</li>
+</ol>
+</li>
+<li>比较内核的两大类型<ol>
+<li><strong>单内核</strong>：把内核作为一个单独的大过程来实现，同时也运行在一个单独的地址空间上面。因此，这样的内核通常以单个静态二进制文件的形式存放于磁盘中。内核间通信简单。这种形式的内核简单，性能高。</li>
+<li><strong>微内核</strong>：微内核的功能被划分为多个独立的过程，保持独立并运行在各自的地址空间。使用 <strong>进程间通信机制（IPC）</strong> 来联系各个过程。模块化，好管理。</li>
+</ol>
+</li>
+<li>Linux是单内核，但是它也实现了模块化等微内核的优点。</li>
+</ol>
+<h3 id="从内核出发"><a href="#从内核出发" class="headerlink" title="从内核出发"></a>从内核出发</h3><ol>
+<li>Git和Linux都是<strong>Linus</strong>发明的。</li>
+</ol>
+<h3 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h3><ol>
+<li><p><strong>进程</strong>：进程就是处于执行器的程序。但是进程不仅仅是一段可执行代码，它还包括其他资源：打开的文件，挂起的信号，内核内部数据，处理器状态，内存地址以及一个或多个执行线程。所以说， <strong>一个进程包括一个或者多个线程</strong>。</p>
+</li>
+<li><p><strong>线程</strong>：执行线程，简称线程，是 <strong>进程中活动的对象</strong>。内核调度的是线程，不是进程。</p>
+</li>
+<li><p>进程提供两种虚拟机制：</p>
+<ol>
+<li>虚拟处理器：让进程觉得自己独享处理器，其实是多个进程共享处理器</li>
+<li>虚拟内存：让进程觉得自己拥有整个系统的内存资源。</li>
+</ol>
+</li>
+<li><p>注意进程并不是程序，它是处于 <strong>执行期程序</strong> 和 <strong>相关资源</strong> 的总称。可以同时存在多个进程，他们是执行的同一个程序。</p>
+</li>
+<li><p>父进程调用系统函数<code>fork();</code>生成子进程。接着子进程调用<code>exec();</code>这组函数皆可以创建新的地址空间，将新的程序载入其中，开始一段新的旅程。<code>exit();</code>函数会退出程序执行，终结进程释放资源。父进程还可以使用<code>wait4();</code>函数等待子进程的结束。</p>
+</li>
+<li><p>内核将进程的列表放在 <strong>任务队列</strong> 的双向循环列表中。列表中的每一项都是类型为 <code>task_struct</code>的结构体，称为 <strong>进程描述符</strong> ；它包含了一个进程的具体信息：比如进程打开的文件，进程的地址空间，挂起的信号等等信息。</p>
+</li>
+<li><p>内核通过唯一的进程标识符 <strong>PID (process identification value)</strong> 来标识每一个进程。PID是一个数，int类型。每个进程的PID存放在他们的<code>task_struct</code>结构体中。</p>
+</li>
+<li><p>可以通过current宏查出当前正在执行的进程。需要经常的访问进程描述符。</p>
+</li>
+<li><p>进程描述符的<code>state</code>成员描述了进程的当前状态。进程必然处于以下5种状态之一：</p>
+<ol>
+<li><strong>TASK_RUNNING</strong>：运行态。进程是可执行的。他说明进程正在运行或者在运行队列中等待执行。</li>
+<li><strong>TASK_INTERRUPTIBLE</strong>：可中断。进程正在睡眠，也就是被阻塞，等待某条件的达成。一旦条件达成，就会将状态设置为运行态。</li>
+<li><strong>TASK_UNINTERRUPTIBLE</strong>：不可中断。在睡眠，但是不会被唤醒。。。使用的较少</li>
+<li><strong>__TASK_TRACED</strong>：被其他进程跟踪的进程</li>
+<li><strong>__TASK_STOPPED</strong>：停止态。进程停止执行。</li>
+</ol>
+</li>
+<li><p><code>set_task_state(task, state);</code>函数用来设置进程的状态。</p>
+</li>
+<li><p>可执行程序代码：将一个可执行文件载入到进程的地址空间执行。一般的进程在用户空间执行，当一个进程执行了 <strong>系统调用</strong> 或者是 <strong>触发了某个异常</strong> 时，他会 <em>陷入</em> 内核空间。此时称 <strong>内核代表进程执行，并处于进程上下文</strong> 。</p>
+</li>
+<li><p>有一个 <strong>进程树</strong> 。所有的进程都是PID为1的 <strong>init进程</strong> 的后代。进程描述符中有指向父进程的<code>parent</code>指针和指向子进程的<code>children</code> 子进程链表。</p>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> task_struct *task;</div><div class="line"><span class="keyword">for</span> (task = current; task != &amp;init_task; task = task-&gt;parent) &#123;</div><div class="line">  	<span class="comment">// do something</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// current指代当前进程， &amp;init_task是init进程</span></div></pre></td></tr></table></figure>
+<ol>
+<li><p>进程创建：分成两个步骤 <strong>fork()</strong> 和 <strong>exec()</strong></p>
+</li>
+<li><p><strong>fork()</strong> ：由父进程调用。通过拷贝当前进程来创建一个子进程。父进程和子进程的区别仅仅是 <strong>PID</strong> 和 <strong>PPID (parent PID)</strong> ，以及一些资源和统计量</p>
+<ol>
+<li><strong>exec()</strong> ：由子进程调用。负责读取可执行文件，并将它载入到该进程的地址空间，进行执行。</li>
+</ol>
+</li>
+<li><p>fork()使用 <strong>写时拷贝 (copy-on-write)</strong> 。简单说就是需要拷贝时才去拷贝，高效。</p>
+</li>
+<li><p>线程机制提供了在同一程序内共享内存地址空间的一组线程。这组线程还共享打开的文件和其他资源。线程机制支持并发设计。</p>
+</li>
+<li><p>Linux中并没有线程这一特殊的定义。它只是把线程当做一个和其他进程共享地址空间以及其他资源的特殊进程而已。</p>
+</li>
+<li><p>进程结束时会调用<code>exit();</code>函数释放持有的内存空间等资源。一般在main函数返回时，都会隐式的调用<code>exit();</code>函数。</p>
+</li>
+</ol>
+<h3 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h3><ol>
+<li>调度程序负责决定将哪个进程投入运行，何时运行以及运行多长时间。调度程序是像Linux这样的多任务操作系统的基础。</li>
+<li>在一组处于可执行状态的进程中，选择一个来执行，是调度程序所需完成的基本工作。</li>
+<li><strong>多任务</strong> ：指的是能同时并发的交互执行多个进程。它能使多个进程在内存中，但是只有一个处于可执行的状态。</li>
+<li>多任务系统分成2类：非抢占式和抢占式。抢占式也就是调度系统可以强制让一个进程挂起，执行另一个进程。所以在进程被挂起之前执行的时间称之为 <strong>进程的时间片</strong> 。非抢占式，除非进程自己停止执行，否则会一直运行下去。</li>
+<li>进程调度算法其实就是用来决定这个时候哪个进程来执行，执行多久而已。有很多种进程调度算法。</li>
+<li>进程优先级：优先级高的进程被优待。</li>
+<li>时间片：表示进程一次能持续运行的时间。时间片太长，感觉不是并发的，交互性不好；太短，又会使太多的性能浪费在进程的切换上面。</li>
+<li><strong>CFS 完全公平调度</strong> ：</li>
+</ol>
+<h3 id="PS"><a href="#PS" class="headerlink" title="PS"></a>PS</h3><p>看不进去，level不够，先不看了。。。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/02/OC-ARC-GCD-reading-note-three/" rel="next" title="iOS与OS X多线程和内存管理 - GCD">
+                <i class="fa fa-chevron-left"></i> iOS与OS X多线程和内存管理 - GCD
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/15/YYKit-source-code-analysis/" rel="prev" title="看YYKit的源码">
+                看YYKit的源码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/08/08/linux-kernel-development-reading-note-one/"
+           data-title="Linux内核设计与实现" data-url="http://yoursite.com/2016/08/08/linux-kernel-development-reading-note-one/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux内核简介"><span class="nav-number">2.1.</span> <span class="nav-text">Linux内核简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从内核出发"><span class="nav-number">2.2.</span> <span class="nav-text">从内核出发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程管理"><span class="nav-number">2.3.</span> <span class="nav-text">进程管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程调度"><span class="nav-number">2.4.</span> <span class="nav-text">进程调度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PS"><span class="nav-number">2.5.</span> <span class="nav-text">PS</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<span><script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script></span>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

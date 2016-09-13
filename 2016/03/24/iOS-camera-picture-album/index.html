@@ -1,0 +1,659 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言一款App很有可能需要访问系统的图库（照片）或者通过相机来获取图片，比如更换用户头像等等。效果如图👇
+
+下面来看看如何实现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS从图库或相机获得图片">
+<meta property="og:url" content="http://yoursite.com/2016/03/24/iOS-camera-picture-album/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言一款App很有可能需要访问系统的图库（照片）或者通过相机来获取图片，比如更换用户头像等等。效果如图👇
+
+下面来看看如何实现">
+<meta property="og:image" content="http://yoursite.com/lionheart/1603/camerademo.gif">
+<meta property="og:image" content="http://yoursite.com/lionheart/1603/authorizationdemo.gif">
+<meta property="og:updated_time" content="2016-03-26T03:11:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS从图库或相机获得图片">
+<meta name="twitter:description" content="前言一款App很有可能需要访问系统的图库（照片）或者通过相机来获取图片，比如更换用户头像等等。效果如图👇
+
+下面来看看如何实现">
+<meta name="twitter:image" content="http://yoursite.com/lionheart/1603/camerademo.gif">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/03/24/iOS-camera-picture-album/"/>
+
+  <title> iOS从图库或相机获得图片 | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS从图库或相机获得图片
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-24T21:23:18+08:00" content="2016-03-24">
+              2016-03-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/24/iOS-camera-picture-album/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/24/iOS-camera-picture-album/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一款App很有可能需要访问系统的图库（照片）或者通过相机来获取图片，比如更换用户头像等等。效果如图👇</p>
+<p><img src="/lionheart/1603/camerademo.gif" alt="camera demo"></p>
+<p>下面来看看如何实现</p>
+<a id="more"></a>
+<h2 id="查看访问权限"><a href="#查看访问权限" class="headerlink" title="查看访问权限"></a>查看访问权限</h2><p>App在第一次访问系统照片或者相机时，通常需要询问是否有权限去access相片图库或者使用相机。可以通过下面代码得知目前该app的权限👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">@import AVFoundation;</div><div class="line">@import Photos;</div><div class="line"></div><div class="line">// 检查使用相片的权限， YES为可以访问，NO为不能使用</div><div class="line">+ (BOOL)checkPhotoLibraryAuthorizationStatus &#123;</div><div class="line">    if ([PHPhotoLibrary responseToSelector:@selector(authorizationStatus)]) &#123;</div><div class="line">        PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus]; // 获取当前app对相片的权限</div><div class="line">        if (status == PHAuthorizationStatusDenied || status == PHAuthorizationStatusRestricted) &#123; // 若当前权限为不允许使用</div><div class="line">            [self showSettingAlertStr:@&quot;请在iPhone的“设置-&gt;隐私-&gt;照片”中打开本应用的访问权限&quot;]; // 提示用户去**设置**中更改权限</div><div class="line">            return NO;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return YES;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 检查使用相机的权限， YES为可以使用， NO为不能访问</div><div class="line">+ (BOOL)checkCameraAuthorizationStatus &#123;</div><div class="line">    if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) &#123; // 判断该设备是否支持拍照</div><div class="line">        alert(@&quot;该设备不能拍照&quot;)；</div><div class="line">        return NO;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if ([AVCaptureDevice responseToSelector:@selector(authorizationStatusForMediaType:)]) &#123;</div><div class="line">        AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo]; // 获取当前app对相机的权限</div><div class="line">        if (status == AVAuthorizationStatusDenied || status == AVAuthorizationStatusRestricted) &#123; // 若当前权限为不允许使用</div><div class="line">            [self showSettingAlertStr:@&quot;请在iPhone的“设置-&gt;隐私-&gt;相机”中打开本应用的访问权限&quot;]; // 提示用户去**设置**中更改权限</div><div class="line">            return NO;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return YES;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 提示用户去设置中更改权限</div><div class="line">+ (void)showSettingAlertStr:(NSString *)tipStr &#123;</div><div class="line">    if (floor(NSFoundationVersionNumber) &gt; NSFoundationVersionNumber_iOS_7_1) &#123; // iOS7.1之后的可以直接进入设置</div><div class="line">        // 新建提示弹框</div><div class="line">        UIAlertView *alertView = [UIAlertView bk_alertViewWithTitle:@&quot;提示&quot; message:tipStr];</div><div class="line">        [alertView bk_setCancelButtonWithTitle:@&quot;取消&quot; handler:nil];</div><div class="line">        [alertView bk_addButtonWithTitle:@&quot;&quot; handler:nil];</div><div class="line">        [alertView bk_setDidDismissBlock:^(UIAlertView *alertView, NSInteger buttonIndex) &#123;</div><div class="line">            if (buttonIndex == 1) &#123;</div><div class="line">                // 跳转到设置界面进行设置</div><div class="line">                UIApplication *app = [UIApplication sharedApplication];</div><div class="line">                NSURL *settingsURL = [NSURL urlWithString:UIApplicationOpenSettingsURLString];</div><div class="line">                if ([app canOpenURL:settingsURL]) &#123;</div><div class="line">                    [app openURL:settingsURL];</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>效果如下👇<br><img src="/lionheart/1603/authorizationdemo.gif" alt="autorization demo"></p>
+<h2 id="UIImagePickerController"><a href="#UIImagePickerController" class="headerlink" title="UIImagePickerController"></a>UIImagePickerController</h2><p><a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImagePickerController_Class/" target="_blank" rel="external">UIImagePickerController</a>是系统提供的用来拍照或者使用系统相片的用户界面。</p>
+<p>使用UIImagePickerController需注意：</p>
+<ol>
+<li>sourceType属性: 该属性说明UIImagePickerController会如何显示界面。如果sourceType为UIImagePickerControllerSourceTypeCamera，那么系统会呈现一个拍照的界面；如果sourceType为UIImagePickerControllerSourceTypeSavedPhotosAlbum，那么系统会呈现一个选取系统照片的界面</li>
+<li>检查app是否有权限使用相机或者系统相片</li>
+</ol>
+<p>下面来看看使用示例👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">+ (void)showImagePickerController &#123;</div><div class="line">    UIImagePickerController *pickerController = [UIImagePickerController alloc] init]; // 初始化</div><div class="line">    pickerController.delegate = self;</div><div class="line">    pickerController.allowsEditing = YES; //允许用户编辑拍摄的图片或者选取的相册的图片</div><div class="line">    if (camera) &#123; // 选择相机</div><div class="line">        if (![Helper checkCameraAuthorizationStatus]) &#123; // 根据上文的函数，判断是否有使用相机的权限</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line">        pickerController.sourceType = UIImagePickerControllerSourceTypeCamera; // 指定sourceType为Camera，pickerController将会提供一个拍摄的界面</div><div class="line">    &#125; else &#123; // 选择系统图库</div><div class="line">        if (![Helper checkPhotoLibraryAuthorizationStatus]) &#123; // 根据上文函数，判断是否能够access系统图库</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line">        pickerController.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum; // 指定sourceType为SavedPhotosAlbum，pickerController将会提供一个选取系统相片的界面</div><div class="line">    &#125;</div><div class="line">    [self presentViewController:pickerController animated:YES completion:nil]; // 展示UIImagePickerController</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">// UIImagePickerControllerDelegate</div><div class="line"></div><div class="line">// 进入UIImagePickerController后如果选择`cancel` 就不做什么处理</div><div class="line">- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker &#123;</div><div class="line">    [picker dismissViewControllerAnimated:YES completion:nil];</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 进入UIImagePickerController后如果选择`done` 做一些处理</div><div class="line">- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary&lt;NSString *, id&gt;*)info &#123;</div><div class="line">    // 推出UIImagePickerController并处理选取的图片</div><div class="line">    [picker dismissViewControllerAnimated:YES completion:^&#123;</div><div class="line">        UIImage *editedImage, *originalImage;</div><div class="line">        editedImage = [info objectForKey:UIImagePickerControllerEditedImage]; // 获取编辑后的图片</div><div class="line"></div><div class="line">        // do something here: like take this edited image as user avatar or something else</div><div class="line"></div><div class="line">        // 如果是相机拍摄的图片，那么将原图保存到系统图库</div><div class="line">        if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) &#123;</div><div class="line">            originalImage = [info objectForKey:UIImagePickerControllerOriginalImage]; // 获取编辑之前的图片</div><div class="line">            UIImageWriteToSavedPhotosAlbum(originalImage, self, nil, NULL); //将图片保存</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="P-S"><a href="#P-S" class="headerlink" title="P.S"></a>P.S</h2><p>本文代码都参考自<a href="https://github.com/Coding/Coding-iOS" target="_blank" rel="external">Coding-iOS</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://github.com/Coding/Coding-iOS" target="_blank" rel="external">Coding-iOS</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/24/iOS-global-setting/" rel="next" title="iOS全局设置">
+                <i class="fa fa-chevron-left"></i> iOS全局设置
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/26/iOS-method-swizzling/" rel="prev" title="iOS Method Swizzling">
+                iOS Method Swizzling <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/03/24/iOS-camera-picture-album/"
+           data-title="iOS从图库或相机获得图片" data-url="http://yoursite.com/2016/03/24/iOS-camera-picture-album/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看访问权限"><span class="nav-number">2.</span> <span class="nav-text">查看访问权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UIImagePickerController"><span class="nav-number">3.</span> <span class="nav-text">UIImagePickerController</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P-S"><span class="nav-number">4.</span> <span class="nav-text">P.S</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<span><script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script></span>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

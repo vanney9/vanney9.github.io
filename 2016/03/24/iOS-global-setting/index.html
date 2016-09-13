@@ -1,0 +1,670 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言一个iOS项目，有很多东西是全局通用的，比如全局常量等等。在整个项目的某个地方，对其进行全局设置，会极大的方便程序的编写，而且简化程序的结构。
+不同类型的全局设置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS全局设置">
+<meta property="og:url" content="http://yoursite.com/2016/03/24/iOS-global-setting/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言一个iOS项目，有很多东西是全局通用的，比如全局常量等等。在整个项目的某个地方，对其进行全局设置，会极大的方便程序的编写，而且简化程序的结构。
+不同类型的全局设置">
+<meta property="og:updated_time" content="2016-03-24T13:19:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS全局设置">
+<meta name="twitter:description" content="前言一个iOS项目，有很多东西是全局通用的，比如全局常量等等。在整个项目的某个地方，对其进行全局设置，会极大的方便程序的编写，而且简化程序的结构。
+不同类型的全局设置">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/03/24/iOS-global-setting/"/>
+
+  <title> iOS全局设置 | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS全局设置
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-24T19:14:29+08:00" content="2016-03-24">
+              2016-03-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/24/iOS-global-setting/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/24/iOS-global-setting/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个iOS项目，有很多东西是全局通用的，比如全局常量等等。在整个项目的某个地方，对其进行全局设置，会极大的方便程序的编写，而且简化程序的结构。</p>
+<h2 id="不同类型的全局设置"><a href="#不同类型的全局设置" class="headerlink" title="不同类型的全局设置"></a>不同类型的全局设置</h2><a id="more"></a>
+<ol>
+<li>用户登录，用户数据全局存储</li>
+</ol>
+<h2 id="用户登录，用户数据全局存储"><a href="#用户登录，用户数据全局存储" class="headerlink" title="用户登录，用户数据全局存储"></a>用户登录，用户数据全局存储</h2><p>用户登录时，对用户数据进行存储，在全局都可以获得当前登录用户的数据。来看看如何实现</p>
+<h3 id="NSUserDefaults"><a href="#NSUserDefaults" class="headerlink" title="NSUserDefaults"></a><code>NSUserDefaults</code></h3><p><a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSUserDefaults_Class/" target="_blank" rel="external">NSUserDefaults</a>用来存储轻量级的本地数据灰常合适，就比如说当前的登录用户数据（用户名，密码等等）。NSUserDefaults存储时支持的数据类型有 NSNumber, NSString, NSDate, NSArray, NSDictionary, BOOL。它有点类似键值对。</p>
+<h3 id="plist"><a href="#plist" class="headerlink" title="plist"></a><code>plist</code></h3><p>plist是<code>Property List</code>的缩写，它是一个xml格式的文件，用来存储串行化后的对象。因此plist文件可以用来存储历史登录用户的数据。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><h4 id="用户登录时"><a href="#用户登录时" class="headerlink" title="用户登录时"></a>用户登录时</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">+ (void)doLogin:(NSDictionary *)loginData &#123;</div><div class="line">    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults]; // 获取默认的NSUserDefaults</div><div class="line">    [defaults setObject:[NSNumber numberWithBool:YES] forKey:@&quot;loginStatus&quot;]; // 设置登录状态为已登录</div><div class="line">    [defaults setObject:loginData forKey:@&quot;loginData&quot;]; // 存储当前登录用户数据。注：loginData为NSDictionary，里面可以存放username、password、email等信息</div><div class="line">    [defaults synchronize]; // 同步数据</div><div class="line">    [self saveLoginData:loginData]; // 使用plist存储历史登录用户数据，在后文会有介绍</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里使用NSUserDefaults存储登录时的数据：</p>
+<ol>
+<li>使用loginStatus键来存储登录状态：YES表示已登录，NO表示未登陆</li>
+<li>使用loginData键来存储登录用户的数据：该键对应的值是一个NSDictionary，该字典里面可以包含username、password、email等与当前用户相关的数据</li>
+<li>[defaults synchronize]; 该方法表示将NSUserDefaults数据同步到磁盘，此举避免了程序意外退出而导致数据未存储的情况</li>
+<li>saveLoginData方法将这个用户数据写入plist文件，达到存储历史数据的目的，后面会介绍</li>
+</ol>
+<h4 id="用户退出时"><a href="#用户退出时" class="headerlink" title="用户退出时"></a>用户退出时</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">+ (void)doLogout &#123;</div><div class="line">    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults]; // 获取默认的NSUserDefaults</div><div class="line">    [defaults setObject:[NSNumber numberWithBool:NO] forKey:@&quot;loginStatus&quot;]; // 设置登录状态为未登陆</div><div class="line">    [defaults synchronize]; // 同步数据</div><div class="line">    // do something else, like clear cookies</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里将用户登录状态设置为未登陆，并同步数据</p>
+<h4 id="判断是否登录"><a href="#判断是否登录" class="headerlink" title="判断是否登录"></a>判断是否登录</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+ (BOOL)isLogin &#123;</div><div class="line">    NSNumber *loginStatus = [NSUserDefaults standardUserDefaults] objectForKey:@&quot;loginStatus&quot;]; // 获取用户登录状态</div><div class="line">    if (loginStatus.boolValue) &#123; // 判断用户是否登录，并返回</div><div class="line">        return YES;</div><div class="line">    &#125; else &#123;</div><div class="line">        return NO;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>获取NSUserDefaults中loginStatus键的值来获取用户的登录状态</p>
+<h4 id="获取当前登录用户"><a href="#获取当前登录用户" class="headerlink" title="获取当前登录用户"></a>获取当前登录用户</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (User *)curLoginUser &#123;</div><div class="line">    NSDictionary *loginData = [NSUserDefaults standardUserDefaults] objectForKey:@&quot;loginData&quot;]; // 获取当前用户数据</div><div class="line">    User *curLoginUser = loginData ? [NSObject objectOfClass:@&quot;User&quot; fromJSON:loginData]; // 转化为User对象</div><div class="line">    return curLoginUser;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>获取NSUserDefaults中loginData的NSDictionary，并转化为User对象返回。注：User对象为一个model。</p>
+<h4 id="存储历史数据"><a href="#存储历史数据" class="headerlink" title="存储历史数据"></a>存储历史数据</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">+ (NSString *)loginDataListPath &#123;</div><div class="line">    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]; // 返回app存放数据的Documents文件夹路径</div><div class="line">    NSString *listPath = [documentPath stringByAppendingPathComponent:@&quot;login_list.plist&quot;]; // 返回存放历史数据的plist文件的路径，他在Documents文件夹里面</div><div class="line">    return listPath;</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (NSMutableDictionary *)readLoginDataList &#123;</div><div class="line">    NSMutableDictionary *loginDataList = [NSMutableDictionary dictionaryWithContentsOfFile:[self loginDataListPath]]; // 读取plist文件内容，并将它存放在NSMutableDictionary中返回</div><div class="line">    return loginDataList;</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (BOOL)saveLoginData:(NSDictionary *)loginData &#123;</div><div class="line">    BOOL save = NO;</div><div class="line">    if (loginData) &#123;</div><div class="line">        NSMutableDictionary *loginDataList = [self readLoginDataList]; // 获取已经存储的用户数据</div><div class="line">        User *curUser = [NSObject objectOfClass:@&quot;User&quot; fromJSON:loginData]; // 转化为User对象</div><div class="line">        if (curUser.username.length &gt; 0) &#123;</div><div class="line">            [loginDataList setObject:loginData forKey:curUser.username]; // 更新历史数据中该用户的数据</div><div class="line">            save = YES;</div><div class="line">        &#125;</div><div class="line">        if (save) &#123;</div><div class="line">          save = [loginDataList writeToFile:[self loginDataListPath] atomically:YES]; // 将数据写入plist文件</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>以上代码中包括三个函数：</p>
+<ol>
+<li>loginDataListPath: 该函数返回plist文件的路径</li>
+<li>readLoginDataList: 该函数读取plist文件中的数据，以NSDictionary的方式返回</li>
+<li>saveLoginData: 更新readLoginDataList中返回的历史数据，加入当前登录用户的数据；并再次将已经更新的历史用户数据写入plist文件</li>
+</ol>
+<h4 id="p-s"><a href="#p-s" class="headerlink" title="p.s"></a>p.s</h4><p>以上代码均参照<a href="https://github.com/Coding/Coding-iOS" target="_blank" rel="external">Coding-iOS</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSUserDefaults_Class/" target="_blank" rel="external">NSUserDefaults Reference</a></li>
+<li><a href="https://github.com/Coding/Coding-iOS" target="_blank" rel="external">Coding-iOS</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/19/2016-week4/" rel="next" title="2016-week4">
+                <i class="fa fa-chevron-left"></i> 2016-week4
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/24/iOS-camera-picture-album/" rel="prev" title="iOS从图库或相机获得图片">
+                iOS从图库或相机获得图片 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/03/24/iOS-global-setting/"
+           data-title="iOS全局设置" data-url="http://yoursite.com/2016/03/24/iOS-global-setting/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不同类型的全局设置"><span class="nav-number">2.</span> <span class="nav-text">不同类型的全局设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用户登录，用户数据全局存储"><span class="nav-number">3.</span> <span class="nav-text">用户登录，用户数据全局存储</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NSUserDefaults"><span class="nav-number">3.1.</span> <span class="nav-text">NSUserDefaults</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#plist"><span class="nav-number">3.2.</span> <span class="nav-text">plist</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#示例"><span class="nav-number">3.3.</span> <span class="nav-text">示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用户登录时"><span class="nav-number">3.3.1.</span> <span class="nav-text">用户登录时</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用户退出时"><span class="nav-number">3.3.2.</span> <span class="nav-text">用户退出时</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#判断是否登录"><span class="nav-number">3.3.3.</span> <span class="nav-text">判断是否登录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获取当前登录用户"><span class="nav-number">3.3.4.</span> <span class="nav-text">获取当前登录用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#存储历史数据"><span class="nav-number">3.3.5.</span> <span class="nav-text">存储历史数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#p-s"><span class="nav-number">3.3.6.</span> <span class="nav-text">p.s</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<span><script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script></span>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,721 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言iOS应用从API获得的数据有很重要的一部分是以JSON格式返回的，通过AFNetworking，这种JSON格式会被转换成NSDictionary或者NSArray，从而被APP所接收。这时，如果能将这些NSDictionary/NSArray转化成APP中已经封装好的各种Model，将极大的简化APP的开发。有很多第三方库已经实现了这个功能，比较知名的就有MJExtension
+
+MJEx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NSObject+ObjectMap 源码分析">
+<meta property="og:url" content="http://yoursite.com/2016/05/07/NSObject-ObjectMap/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言iOS应用从API获得的数据有很重要的一部分是以JSON格式返回的，通过AFNetworking，这种JSON格式会被转换成NSDictionary或者NSArray，从而被APP所接收。这时，如果能将这些NSDictionary/NSArray转化成APP中已经封装好的各种Model，将极大的简化APP的开发。有很多第三方库已经实现了这个功能，比较知名的就有MJExtension
+
+MJEx">
+<meta property="og:image" content="http://yoursite.com/lionheart/1605/json.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1605/model.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1605/json.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1605/property.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1605/json.png">
+<meta property="og:updated_time" content="2016-05-07T08:08:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NSObject+ObjectMap 源码分析">
+<meta name="twitter:description" content="前言iOS应用从API获得的数据有很重要的一部分是以JSON格式返回的，通过AFNetworking，这种JSON格式会被转换成NSDictionary或者NSArray，从而被APP所接收。这时，如果能将这些NSDictionary/NSArray转化成APP中已经封装好的各种Model，将极大的简化APP的开发。有很多第三方库已经实现了这个功能，比较知名的就有MJExtension
+
+MJEx">
+<meta name="twitter:image" content="http://yoursite.com/lionheart/1605/json.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/05/07/NSObject-ObjectMap/"/>
+
+  <title> NSObject+ObjectMap 源码分析 | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                NSObject+ObjectMap 源码分析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-07T10:45:25+08:00" content="2016-05-07">
+              2016-05-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS/源码分析/" itemprop="url" rel="index">
+                    <span itemprop="name">源码分析</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/07/NSObject-ObjectMap/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/07/NSObject-ObjectMap/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>iOS应用从API获得的数据有很重要的一部分是以JSON格式返回的，通过AFNetworking，这种JSON格式会被转换成NSDictionary或者NSArray，从而被APP所接收。<br>这时，如果能将这些NSDictionary/NSArray转化成APP中已经封装好的各种Model，将极大的简化APP的开发。<br>有很多第三方库已经实现了这个功能，比较知名的就有<a href="https://github.com/CoderMJLee/MJExtension" target="_blank" rel="external">MJExtension</a></p>
+<blockquote>
+<p>MJExtension: A fast, convenient and nonintrusive conversion between JSON and model. Your model class don’t need to extend another base class. You don’t need to modify any model file.</p>
+</blockquote>
+<p>嗯，这个第三方库很有名，功能强大，使用也方便，但是本文并不介绍它。在这篇文章里面，我将介绍一个小的从JSON到Model进行转换的第三方库，这个库小到没有一个像样的名字，我在github上也只找到了一个模糊的地址：<a href="https://github.com/uacaps/NSObject-ObjectMap" target="_blank" rel="external">uacaps/NSObject-ObjectMap</a> (<em>注</em> 不能确认是否是本文所介绍的)。<br>另外，我也将本文所介绍的这个第三方库上传到我的<a href="https://github.com/vanney9/blogDemo/tree/master/NSObject%2BObjectMap" target="_blank" rel="external">github</a>上去了。</p>
+<a id="more"></a>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>说正事，这个第三方库只包含2个文件，<code>NSObject+ObjectMap.h</code>和<code>NSObject+ObjectMap.m</code>。从名字可以看出，它应该是实现了NSObject类的一个category，的确也是如此的。用下面几张图来说说这个库具体干了些什么。</p>
+<ol>
+<li>APP通过API获得Server提供的数据是JSON格式的，如下👇<br><img src="/lionheart/1605/json.png" alt="JSON"></li>
+<li>该JSON格式的数据经过AFNetworking返回给APP的数据形式是<code>NSDictionary</code>({…})或者<code>NSArray</code>([…])</li>
+<li>这些数据经过<code>NSObject+ObjectMap</code>转化成最终的model对象，如下👇<br><img src="/lionheart/1605/model.png" alt="Model"></li>
+</ol>
+<h2 id="正经的源码分析"><a href="#正经的源码分析" class="headerlink" title="正经的源码分析"></a>正经的源码分析</h2><h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>从Network Request中得到的数据如下👇<br><img src="/lionheart/1605/json.png" alt="JSON"><br>调用NSObject+ObjectMap中的函数，将JSON-&gt;Model<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id resultData = [data valueForKeyPath:@&quot;data&quot;];</div><div class="line">ProjectTopics *resultT = [NSObject objectOfClass:@&quot;ProjectTopics&quot; fromJSON:resultData];</div></pre></td></tr></table></figure></p>
+<h3 id="正经实现"><a href="#正经实现" class="headerlink" title="正经实现"></a>正经实现</h3><p><code>+(id)objectOfClass:(NSString *)object fromJSON:(NSDictionary *)dict;</code><br>该函数是本文分析的核心，它实现了将JSON-&gt;Model，来看看它具体是如何实现的。</p>
+<h4 id="初始化Model对象-例子中使用的是ProjectTopics对象-，借助NSClassFromString的帮助"><a href="#初始化Model对象-例子中使用的是ProjectTopics对象-，借助NSClassFromString的帮助" class="headerlink" title="初始化Model对象(例子中使用的是ProjectTopics对象)，借助NSClassFromString的帮助"></a>初始化Model对象(例子中使用的是<code>ProjectTopics</code>对象)，借助<code>NSClassFromString</code>的帮助</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">id newObject = [[NSClassFromString(object) alloc] init];</div></pre></td></tr></table></figure>
+<h4 id="获取ProjectTopics对象的全部属性"><a href="#获取ProjectTopics对象的全部属性" class="headerlink" title="获取ProjectTopics对象的全部属性"></a>获取<code>ProjectTopics</code>对象的全部属性</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[newObject propertyDictionary];</div></pre></td></tr></table></figure>
+<p>具体看看如何实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">- (NSDictionary *)propertyDictionary &#123;</div><div class="line">      NSMutableDictionary *dict = [NSMutableDictionary dictionary];</div><div class="line"></div><div class="line">      unsigned count;</div><div class="line">      objc_property_t *properties = class_copyPropertyList([self class], &amp;count);</div><div class="line"></div><div class="line">      for (int i = 0; i &lt; count; i++) &#123;</div><div class="line">          NSString *key = [NSString stringWithUTF8String:property_getName(properties[i])];</div><div class="line">          [dict setObject:key forKey:key];</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      free(properties);</div><div class="line"></div><div class="line">      // Add all superclass properties as well, until it hits NSObject</div><div class="line">      NSString *superClassName = [[self superclass] nameOfClass];</div><div class="line">      if (![superClassName isEqualToString:@&quot;NSObject&quot;]) &#123;</div><div class="line">          for (NSString *property in [[[self superclass] propertyDictionary] allKeys]) &#123;</div><div class="line">              [dict setObject:property forKey:property];</div><div class="line">          &#125;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      return dict;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p><strong> 关键函数 </strong></p>
+<ul>
+<li><code>objc_property_t *class_copyPropertyList(Class cls, unsigned int *outCount)</code>:<br>该函数将ProjectTopics类的属性拷贝到一个数组中，并返回该数组。数组中的每个元素是<code>objc_property_t</code>类型</li>
+<li><code>const char *property_getName(objc_property_t property)</code><br>该函数传入一个objc_property_t参数，并返回该属性的属性名</li>
+</ul>
+<p><strong> 关键步骤 </strong></p>
+<ul>
+<li>获取ProjectTopics类的所有属性名，将所有属性名添加入一个NSDictionary</li>
+<li>如果父类不是NSObject，也将父类的所有属性名加入同一个NSDictionary</li>
+</ul>
+<p>最终得到的NSDictionary如下👇<br><img src="/lionheart/1605/property.png" alt="property"></p>
+<h4 id="遍历传入的NSDictionary：dict-为ProjectTopics类的各个属性赋值"><a href="#遍历传入的NSDictionary：dict-为ProjectTopics类的各个属性赋值" class="headerlink" title="遍历传入的NSDictionary：dict,为ProjectTopics类的各个属性赋值"></a>遍历传入的NSDictionary：<code>dict</code>,为ProjectTopics类的各个属性赋值</h4><p>先再来看看这个dict👇<br><img src="/lionheart/1605/json.png" alt="JSON"><br>因为传入<code>dict</code>中的每个key其实就是ProjectTopics类中的每个属性名，所以就可以直接赋值了。当然其中也分3中情况，</p>
+<ol>
+<li><p>最简单的情况，这个key对应的值既不是NSArray，也不是NSDictionary(比如id, owner_id等)。对于这种情况，直接赋值，代码如下👇</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">objc_property_t property = class_getProperty([newObject class], [propertyName UTF8String]);</div><div class="line">if (!property) &#123;</div><div class="line">    continue;</div><div class="line">&#125;</div><div class="line">NSString *classType = [newObject typeFromProperty:property];</div><div class="line"></div><div class="line">// check if NSDate or not</div><div class="line">if ([classType isEqualToString:@&quot;T@\&quot;NSDate\&quot;&quot;]) &#123;</div><div class="line">    //                1970年的long型数字</div><div class="line">    NSObject *obj = [dict objectForKey:key];</div><div class="line">    if ([obj isKindOfClass:[NSNumber class]]) &#123;</div><div class="line">        NSNumber *timeSince1970 = (NSNumber *)obj;</div><div class="line">        NSTimeInterval timeSince1970TimeInterval = timeSince1970.doubleValue/1000;</div><div class="line">        NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeSince1970TimeInterval];</div><div class="line">        [newObject setValue:date forKey:propertyName];</div><div class="line">    &#125;else&#123;</div><div class="line">        //                            日期字符串</div><div class="line">        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];</div><div class="line">        [formatter setDateFormat:OMDateFormat];</div><div class="line">        [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:OMTimeZone]];</div><div class="line">        NSString *dateString = [[dict objectForKey:key] stringByReplacingOccurrencesOfString:@&quot;T&quot; withString:@&quot; &quot;];</div><div class="line">        [newObject setValue:[formatter dateFromString:dateString] forKey:propertyName];</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">else &#123;</div><div class="line">    if ([dict objectForKey:key] != [NSNull null]) &#123;</div><div class="line">        [newObject setValue:[dict objectForKey:key] forKey:propertyName];</div><div class="line">    &#125;</div><div class="line">    else &#123;</div><div class="line">        [newObject setValue:nil forKey:propertyName];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上述代码说了很多，但是主要是区分该属性是否是一个NSDate,如果不是的话就直接通过下面代码赋值就完成了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[newObject setValue:[dict objectForKey:key] forKey:propertyName]; // KVO</div></pre></td></tr></table></figure>
+<p>至于如何判断属性是否是NSDate，有以下几个关键函数</p>
+<ul>
+<li><code>objc_property_t class_getProperty(Class cls, const char *name)</code><br>该函数传入类和字符串，返回一个<code>objc_property_t</code>类型的属性</li>
+<li><p><code>- (NSString *)typeFromProperty:(objc_property_t)property;</code><br>该函数的实现如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">return [[NSString stringWithUTF8String:property_getAttributes(property)] componentsSeparatedByString:@&quot;,&quot;][0];</div></pre></td></tr></table></figure>
+<p>它返回的NSString是长这样的：T@”NSDate”,&amp;,N,V_last_activity_at ／ T@”NSString”,&amp;,N,V_company；所以可以根据是否有NSDate进行判断</p>
+</li>
+</ul>
+</li>
+<li><p>如果这个key对应的是一个NSDictionary对象，那么说明这个属性也是另外一个Model对象，对该属性递归调用上面方法即可实现赋值。代码如下👇</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSString *propertyType = [newObject classOfPropertyNamed:propertyName];</div><div class="line">id nestedObj = [NSObject objectOfClass:propertyType fromJSON:[dict objectForKey:key]];</div><div class="line">[newObject setValue:nestedObj forKey:propertyName];</div></pre></td></tr></table></figure>
+<p>其中的propertyType其实就是通过上面讲道的<code>property_getAttributes</code>函数，并解析<code>T@&quot;User&quot;,&amp;,N,V_owner ／ T@&quot;Project&quot;,&amp;,N,V_project</code>这种类似的字符串，来得到这个Model对象的类型(比如 User， Project类型等)</p>
+</li>
+<li><p>如果这个key对应的是一个NSArray对象，那么就得通过<code>ProjectTopics.m</code>中的<code>propertyArrayMap</code>得知这个NSArray里面装的到底是什么对象。<br>先来看看ProjectTopics.m里面对propertyArrayMap的设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">_propertyArrayMap = [NSDictionary dictionaryWithObjectsAndKeys:@&quot;ProjectTopic&quot;, @&quot;list&quot;, nil];</div></pre></td></tr></table></figure>
+<p>从上面可以看出，<code>ProjectTopics</code>的<code>list</code>属性是一个NSArray对象，这个NSArray里面装的是一个一个的<code>ProjectTopic</code>对象。这就好办了，对这些ProjectTopic对象按照上述的方法对他们进行赋值。</p>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总算写完了。。。感觉写的很乱。。。<br>总之就是对关于对象的几个属性进行操作：</p>
+<ol>
+<li><code>[[NSClassFromString(object) alloc] init];</code><br>这个函数可以根据字符串获得对象，比如根据”ProjectTopics”来初始化一个ProjectTopics对象</li>
+<li><code>objc_property_t *class_copyPropertyList(Class cls, unsigned int *outCount)</code><br>这个函数可以获得对象的所有属性，并返回一个都是由<code>objc_property_t</code>组成的数组</li>
+<li><code>const char *property_getName(objc_property_t property)</code><br>这个函数可以获得属性的属性名，意思就是说objc_property_t是属性，但就是不能以字符串显示出来，这个函数就可以将属性显示出来(比如：”list”啊,”page”啊,”totalRow”啊 等等)</li>
+<li><code>objc_property_t class_getProperty(Class cls, const char *name)</code><br>这个函数和3相反，根据属性名获得属性 (感觉objc_property_t就是一个难以表述的东西)</li>
+<li><code>const char *property_getAttributes(objc_property_t property)</code><br>这个函数根据属性返回属性的类型，比如说<code>owner</code>属性是一个<code>User</code>对象，那么该函数就返回<code>@&quot;User&quot;,&amp;,N,V_owner</code></li>
+<li><code>[newObject setValue:[dict objectForKey:key] forKey:propertyName];</code><br>给属性赋值， 比如propertyName是owner, 那么就给他赋一个User对象。简单粗暴</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/" target="_blank" rel="external">Objective-C Runtime Reference</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/26/iOS-method-swizzling/" rel="next" title="iOS Method Swizzling">
+                <i class="fa fa-chevron-left"></i> iOS Method Swizzling
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/12/app-download-uoload-manager/" rel="prev" title="iOS关于文件上传与下载">
+                iOS关于文件上传与下载 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/07/NSObject-ObjectMap/"
+           data-title="NSObject+ObjectMap 源码分析" data-url="http://yoursite.com/2016/05/07/NSObject-ObjectMap/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正经的源码分析"><span class="nav-number">3.</span> <span class="nav-text">正经的源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">3.1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正经实现"><span class="nav-number">3.2.</span> <span class="nav-text">正经实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#初始化Model对象-例子中使用的是ProjectTopics对象-，借助NSClassFromString的帮助"><span class="nav-number">3.2.1.</span> <span class="nav-text">初始化Model对象(例子中使用的是ProjectTopics对象)，借助NSClassFromString的帮助</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获取ProjectTopics对象的全部属性"><span class="nav-number">3.2.2.</span> <span class="nav-text">获取ProjectTopics对象的全部属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#遍历传入的NSDictionary：dict-为ProjectTopics类的各个属性赋值"><span class="nav-number">3.2.3.</span> <span class="nav-text">遍历传入的NSDictionary：dict,为ProjectTopics类的各个属性赋值</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<span><script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script></span>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

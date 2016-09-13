@@ -1,0 +1,704 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言最近还在跟着Coding-iOS源码学习iOS开发，现在来介绍一下Coding-iOS的文件下载和上传机制。其实说实话，在写这文章的时候我对这个机制的总体把握也不是很全面；下面我将通过源码再来熟悉一遍这个全过程。这篇文章主要介绍的是下载流程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS关于文件上传与下载">
+<meta property="og:url" content="http://yoursite.com/2016/05/12/app-download-uoload-manager/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言最近还在跟着Coding-iOS源码学习iOS开发，现在来介绍一下Coding-iOS的文件下载和上传机制。其实说实话，在写这文章的时候我对这个机制的总体把握也不是很全面；下面我将通过源码再来熟悉一遍这个全过程。这篇文章主要介绍的是下载流程。">
+<meta property="og:updated_time" content="2016-05-18T13:04:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS关于文件上传与下载">
+<meta name="twitter:description" content="前言最近还在跟着Coding-iOS源码学习iOS开发，现在来介绍一下Coding-iOS的文件下载和上传机制。其实说实话，在写这文章的时候我对这个机制的总体把握也不是很全面；下面我将通过源码再来熟悉一遍这个全过程。这篇文章主要介绍的是下载流程。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/05/12/app-download-uoload-manager/"/>
+
+  <title> iOS关于文件上传与下载 | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS关于文件上传与下载
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-12T19:06:10+08:00" content="2016-05-12">
+              2016-05-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/12/app-download-uoload-manager/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/12/app-download-uoload-manager/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近还在跟着<a href="https://github.com/Coding/Coding-iOS" target="_blank" rel="external">Coding-iOS源码</a>学习iOS开发，现在来介绍一下Coding-iOS的文件下载和上传机制。其实说实话，在写这文章的时候我对这个机制的总体把握也不是很全面；下面我将通过源码再来熟悉一遍这个全过程。这篇文章主要介绍的是下载流程。</p>
+<a id="more"></a>
+<h2 id="源码先行"><a href="#源码先行" class="headerlink" title="源码先行"></a>源码先行</h2><h3 id="Coding-FileManager"><a href="#Coding-FileManager" class="headerlink" title="Coding_FileManager"></a><code>Coding_FileManager</code></h3><p>Coding-iOS中将文件下载与上传有关的方法都封装在<code>Coding_FileManager.h</code>和<code>Coding_FileManager.m</code>文件里面。先来看看其中的主要代码👇<br><code>Coding_FileManager</code>里面包含3个类：<code>Coding_FileManager</code>类，<code>Coding_DownloadTask</code>类和<code>Coding_UploadTask</code>类。其中的Coding_UploadTask类与上传有关，这里不做介绍。</p>
+<h4 id="Coding-DownloadTask类"><a href="#Coding-DownloadTask类" class="headerlink" title="Coding_DownloadTask类"></a><code>Coding_DownloadTask</code>类</h4><p>Coding_DownloadTask类用来封装每一个下载任务，它包含一个下载任务，下载进度和当前下载的文件名，代码如下👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@interface Coding_DownloadTask : NSObject</div><div class="line">@property (nonatomic, strong) NSURLSessionDownloadTask *task;  // 下载任务</div><div class="line">@property (nonatomic, strong) NSProgress *progress;  // 下载进度</div><div class="line">@property (nonatomic, strong) NSString *fileName;  // 下载文件名</div><div class="line"></div><div class="line">+ (Coding_DownloadTask *)cDownloadTaskWith:(NSURLSessionDownloadTask *)task progress:(NSProgress *)progress fileName:(NSString *)fileName;  // 初始化函数</div><div class="line">- (void)cancel;  // 取消当前下载函数</div><div class="line">@end</div></pre></td></tr></table></figure></p>
+<p>他的两个方法的实现也很简单：👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">+ (Coding_DownloadTask *)cDownloadTaskWith:(NSURLSessionDownloadTask *)task progress:(NSProgress *)progress fileName:(NSString *)fileName &#123;</div><div class="line">    Coding_DownloadTask *cDownloadTask = [Coding_DownloadTask alloc] init];</div><div class="line">    cDownloadTask.task = task;</div><div class="line">    cDownloadTask.progress = progress;</div><div class="line">    cDownloadTask.fileName = fileName;</div><div class="line"></div><div class="line">    return cDownloadTask;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)cancel &#123;</div><div class="line">    if (_task &amp;&amp; (_task.state == NSURLSessionTaskStateRunning || _task.state == NSURLSessionTaskStateSuspended)) &#123;</div><div class="line">        [_task cancel];  // 先判断task的state， 如果可以取消， 那就取消</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="Coding-FileManager类"><a href="#Coding-FileManager类" class="headerlink" title="Coding_FileManager类"></a><code>Coding_FileManager</code>类</h4><p>这个类是文件下载上传机制里面的最最最核心的类，好好来看看👇</p>
+<ol>
+<li><p>类的声明</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">@interface Coding_FileManager : NSObject</div><div class="line">+ (Coding_FileManager *)sharedManager;  // 单例模式</div><div class="line">+ (AFURLSessionManager *)af_manager;</div><div class="line">- (AFURLSessionManager *)af_manager;</div><div class="line"></div><div class="line">+ (Coding_DownloadTask *)cDownloadTaskForKey:(NSString *)storage_key;  // 根据特定的key获取特定的Coding_DownloadTask</div><div class="line">+ (NSURL *)diskDownloadUrlForKey:(NSString *)storage_key;  // 暂时不明</div><div class="line">- (Coding_DownloadTask *)addDownloadTaskForObj:(id)obj completionHandler:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler;  // 对于新文件，新建下载任务</div><div class="line">@end</div></pre></td></tr></table></figure>
+</li>
+<li><p>类的实现</p>
+</li>
+</ol>
+<ul>
+<li><code>属性</code><ol>
+<li>1个监控文件夹变化的属性：docDownloadWatcher，它是一个<code>DirectoryWatcher</code>对象，用来监控APP下载文件存放的文件夹的动态</li>
+<li>2个字典，downloadDict和diskDownloadDict。downloadDict用来存放当前的下载任务(Coding_DownloadTask)，它的key是storage_key；diskDownloadDict用来存放下载的文件的路径URL，它的key也是storage_key</li>
+<li>1个NSURL，downloadDirectory, 用来存放下载文件的文件夹的路径URL</li>
+</ol>
+</li>
+<li><p><code>方法</code></p>
+<ol>
+<li><p><code>sharedManager</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 单例模式初始化Coding_FileManager</div><div class="line">+ (Coding_FileManager *)sharedManager &#123;</div><div class="line">    static Coding_FileManager *manager = nil;</div><div class="line">    static dispatch_once_t onceToken;</div><div class="line">    dispatch_once(&amp;onceToken, ^&#123;</div><div class="line">        manager = [Coding_FileManager alloc] init];</div><div class="line">        // 创建存放下载文件的文件夹</div><div class="line">        [manager urlForDownloadFolder];</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    return manager;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>init</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// 初始化</div><div class="line">- (instancetype)init &#123;</div><div class="line">    self = [super init];</div><div class="line">    if (self) &#123;</div><div class="line">        [[self class] createFolder:[[self class] downloadPath]]; // 创建下载目录</div><div class="line">        _downloadDict = [NSMutableDictionary alloc] init]; // 初始化存放下载任务的字典</div><div class="line">        _diskDownloadDict = [NSMutableDictionary alloc] init]; //</div><div class="line">        _downloadDirectoryURL = nil; //初始化下载目录的文件夹URL</div><div class="line">        _docDownloadWatcher = [DirectoryWatcher watchFolderWithPath:[[self class] downloadPath] delegate:self]; // 添加文件夹状态监控器</div><div class="line">        [self directoryDidChange:_docDownloadWatcher]; // 初始化的时候先来之行一遍监控程序</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return self;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>urlForDownloadFolder</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 创建存放下载图片的文件夹</div><div class="line">- (NSURL *)urlForDownloadFolder &#123;</div><div class="line">    if (!_downloadDirectoryURL) &#123;</div><div class="line">        if ([self class] createFolder:[[self class] downloadPath]) &#123; // 创建存放下载文件的文件夹</div><div class="line">            // 文件夹创建成功</div><div class="line">            _downloadDirectoryURL = [NSURL fileURLWithPath:[[self class] downloadPath] isDirectory:YES];</div><div class="line">        &#125; else &#123;</div><div class="line">            // alert create folder error</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return _downloadDirectoryURL;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>downloadPath</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// 得到下载目录文件夹的路径, 该APP的Document目录下面的Coding_Download文件夹</div><div class="line">+ (NSString *)downloadPath &#123;</div><div class="line">    NSString *documentPath = [NSSearchPathForDirecrotiesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];</div><div class="line">    NSString *downloadPath = [documentPath stringByAppendingPathComponent:@&quot;Coding_Download&quot;];</div><div class="line">    return downloadPath;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>createFolder</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// 创建文件夹</div><div class="line">+ (BOOL) createFolder:(NSString *)path &#123;</div><div class="line">    BOOL isDir = NO;</div><div class="line">    NSFileManager *fileManager = [NSFileManager defaultManager];</div><div class="line">    BOOL existed = [fileManager fileExistsAtPath:path isDirectory:&amp;isDir];</div><div class="line">    BOOL isCreated = NO;</div><div class="line">    if (!(isDir == YES &amp;&amp; existed == YES)) &#123;</div><div class="line">        isCreated = [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];</div><div class="line">    &#125; else &#123;</div><div class="line">        isCreated = YES;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return isCreated;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>cDownloadTaskForKey</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+ (Coding_DownloadTask *)cDownloadTaskForKey:(NSString *)storage_key &#123;</div><div class="line">    if (!storage_key) &#123;</div><div class="line">        return nil;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 当前的每个下载任务 Coding_DownloadTask 都存放在 _downloadDict 里面，对应的key是storage_key</div><div class="line">    return [self sharedManager].downloadDict objectForKey:storage_key];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>directoryDidChange:(DirectoryWatcher *)folderWatcher</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">// DirectoryWatcher的delegate， 当文件夹里面的文件变动时触发</div><div class="line">- (void)directoryDidChange:(DirectoryWatcher *)folderWatcher &#123;</div><div class="line">    NSMutableDictionary *diskDict = _diskDownloadDict;</div><div class="line">    NSString *path = [[self class] downloadPath];</div><div class="line">    BOOL isDownload = YES;</div><div class="line"></div><div class="line">    /* 先移除diskDict里面的所有文件URL，再将当前下载目录里面的所有文件URL添加到diskDict里面 */</div><div class="line">    [diskDict removeAllObjects];</div><div class="line">    NSArray *fileContents = [NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:NULL]; // 获取path文件夹下面的所有内容，将所有文件名存放在fileContents数组里面</div><div class="line">    for (NSString *curFileName in [fileContents objectEnumerator]) &#123; // 遍历文件名</div><div class="line">        NSString *filePath = [path stringByAppendingPathComponent:curFileName]; // 当前文件的完整的路径</div><div class="line">        NSURL *fileUrl = [NSURL fileURLWithPath:filePath]; // 当前文件的URL</div><div class="line">        BOOL isDirectory;</div><div class="line">        [NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:&amp;isDirectory]; // 判断当前文件是否是文件夹</div><div class="line">        if (!isDirectory) &#123; // 如果不是文件夹， 存入diskDict</div><div class="line">            NSString *keyStr = [curFileName componentsSeparatedByString:@&quot;|&quot;].lastObject; // 因为下载文件名命名为&apos;IMG_0002.JPG|||264314|||QiniuStorage|c09bd7ea-6be9-431c-afc1-884293895719.JPG&apos;， 最后的|后面是storage_key</div><div class="line">            [diskDict setObject:fileUrl forKey:keyStr];</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>addDownloadTaskForObj:completionHandler</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 新建下载任务</div><div class="line">- (void)addDownloadTaskForObj:(id)obj completionHandler:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler &#123;</div><div class="line">    Coding_DownloadTask *cTask = nil;</div><div class="line">    ProjectFile *file = (ProjectFile *)obj; // Coding-iOS中的一个model</div><div class="line">    cTask = [self addDownloadTaskWithPath:file.downloadPath diskFileName:fileDiskFileName storage_key:file.storage_key completionHandler:completionHandler];</div><div class="line"></div><div class="line">    return cTask;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>addDownloadTaskWithPath:diskFileName:storage_key:completionHandler</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">// 新建下载任务 具体的</div><div class="line">- (void)addDownloadTaskWithPath:(NSString *)downloadPath diskFileName:(NSString *)diskFileName storage_key:(NSString)storage_key completionHandler:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler &#123;</div><div class="line">    NSProgress *progress;</div><div class="line">    NSURL *downloadPath = [NSURL URLWithString:downloadPath];</div><div class="line">    NSURLRequest *request = [NSURLRequest requestWithURL:downloadPath];</div><div class="line">    NSURLSessionDownloadTask *downloadTask = [self.af_manager downloadTaskWithRequest:request progress:&amp;progress destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) &#123;</div><div class="line">        NSURL *downloadURL = [Coding_FileManager sharedManager] urlForDownloadFolder];</div><div class="line">        Coding_DownloadTask *cDownloadTask = [Coding_FileManager cDownloadTaskForResponse:response];</div><div class="line">        if (cDownloadTask) &#123;</div><div class="line">            downloadUrl = [downloadUrl URLByAppendingPathComponent:cDownloadTask.diskFileName];</div><div class="line">        &#125; else &#123;</div><div class="line">            downloadUrl = [downloadUrl URLByAppendingPathComponent:[response suggestedFileName]];</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        return downloadUrl; // 返回存储的目标位置</div><div class="line">    &#125; completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) &#123;</div><div class="line">        if (error) &#123;</div><div class="line">            [Coding_FileManager cancelCDownloadTaskForKey:storage_key];</div><div class="line">        &#125; else &#123;</div><div class="line">            [Coding_FileManager cancelCDownloadTaskForResponse:response];</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line"></div><div class="line">    Coding_DownloadTask *cDownloadTask = [Coding_DownloadTask cDownloadTaskWithTask:downloadTask progress:progress fileName:diskFileName];</div><div class="line"></div><div class="line">    [self.downloadDict setObject:cDownloadTask forKey:storage_key];</div><div class="line">    [downloadTask resume];</div><div class="line">    return cDownloadTask;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="实力分析"><a href="#实力分析" class="headerlink" title="实力分析"></a>实力分析</h2><p>源码已经介绍完了，来分析一波。注意下面几个要点👇</p>
+<ol>
+<li>每个下载任务都是一个<code>Coding_DownloadTask</code>类的实例，这个类里面有个NSURLSessionDownloadTask属性</li>
+<li>所有下载有关的操作都会涉及到一个类<code>Coding_FileManager</code>，Coding会创建一个<code>Coding_FileManager</code>的单例类（既：APP生命周期内只会有一个这个类的实例）。该实例有两个字典：1个负责存储已经下载下来的文件的文件URL，另一个负责存储当前还在进行的下载任务(Coding_DownloadTask)。这两个字典的key由后台定义，每个文件／任务对应唯一的一个storage_key</li>
+<li>所有下载的文件存放在APP的Document文件夹下面的Coding_Download文件夹下面，在创建单例类Coding_FileManager的时候检测该文件夹是否存在，不存在就创建。</li>
+<li>开始一个新的下载任务其实就是创建一个NSURLSessionDownloadTask，然后再将该NSURLSessionDownloadTask封装进Coding_DownloadTask。而创建该NSURLSessionDownloadTask用的是AFURLSessionManager的downloadTaskWithRequest方法。</li>
+<li>有一个监控下载文件夹内容变化的监控器，每当文件夹内容变化时（文件被删除或文件下载完成）它会自动更新存放下载文件路径URL的字典，也就是更新当前APP下载了哪些文件</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>最后来用精炼的语言来总结一番：</p>
+<ol>
+<li>每个下载任务／文件都有唯一与之对应的storage_key。每当新来一个下载任务时，先查看已经完成的文件里面是否包括了该文件(即：查看存放已下载文件的字典是否有该storage_key)。若已经下载，则完成下载任务；还未下载，进行第二步。</li>
+<li>判断该任务是否存在(即：查看存储下载任务的字典，看是否有该storage_key)。若该任务存在，说明之前这个任务可能被暂停了，那么继续该下载任务，并跳过步骤3；若该任务不存在，那么进行第三步。</li>
+<li>根据任务的storage_key，文件的url创建Coding_DownloadTask，其实主要的是创建一个NSURLSessionDownloadTask，然后将该Coding_DownloadTask存放到存储下载任务的字典中，并开始下载文件。</li>
+<li>当文件下载完成时候，从存储下载任务的字典中将这个任务删除；并且文件会被存放到相应的文件夹，触发文件夹监控器的函数，将该文件的文件URL添加到存储已经下载完成的文件URL的字典中。</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://github.com/Coding/Coding-iOS" target="_blank" rel="external">Coding-iOS</a></li>
+</ul>
+<h2 id="P-S"><a href="#P-S" class="headerlink" title="P.S"></a>P.S</h2><p>已经过了2个大冰红茶了，一立还会远嘛～～～</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/07/NSObject-ObjectMap/" rel="next" title="NSObject+ObjectMap 源码分析">
+                <i class="fa fa-chevron-left"></i> NSObject+ObjectMap 源码分析
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/19/ios-pop-menu/" rel="prev" title="弹框按钮视图">
+                弹框按钮视图 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/12/app-download-uoload-manager/"
+           data-title="iOS关于文件上传与下载" data-url="http://yoursite.com/2016/05/12/app-download-uoload-manager/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码先行"><span class="nav-number">2.</span> <span class="nav-text">源码先行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Coding-FileManager"><span class="nav-number">2.1.</span> <span class="nav-text">Coding_FileManager</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Coding-DownloadTask类"><span class="nav-number">2.1.1.</span> <span class="nav-text">Coding_DownloadTask类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Coding-FileManager类"><span class="nav-number">2.1.2.</span> <span class="nav-text">Coding_FileManager类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实力分析"><span class="nav-number">3.</span> <span class="nav-text">实力分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P-S"><span class="nav-number">6.</span> <span class="nav-text">P.S</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<span><script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script></span>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

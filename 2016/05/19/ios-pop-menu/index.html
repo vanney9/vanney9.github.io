@@ -1,0 +1,681 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言这段时间又在忙项目的事，对Coding-iOS源码的学习只能先暂搁一旁。今天抽空来看看一个Coding-iOS中一个有趣的实现。这个和微博里面发送微博时的动效类似。效果如下👇">
+<meta property="og:type" content="article">
+<meta property="og:title" content="弹框按钮视图">
+<meta property="og:url" content="http://yoursite.com/2016/05/19/ios-pop-menu/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言这段时间又在忙项目的事，对Coding-iOS源码的学习只能先暂搁一旁。今天抽空来看看一个Coding-iOS中一个有趣的实现。这个和微博里面发送微博时的动效类似。效果如下👇">
+<meta property="og:image" content="http://yoursite.com/lionheart/1605/weibo.gif">
+<meta property="og:image" content="http://yoursite.com/lionheart/1605/weibomy.gif">
+<meta property="og:image" content="http://yoursite.com/lionheart/1605/finalPosition.png">
+<meta property="og:updated_time" content="2016-05-20T13:00:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="弹框按钮视图">
+<meta name="twitter:description" content="前言这段时间又在忙项目的事，对Coding-iOS源码的学习只能先暂搁一旁。今天抽空来看看一个Coding-iOS中一个有趣的实现。这个和微博里面发送微博时的动效类似。效果如下👇">
+<meta name="twitter:image" content="http://yoursite.com/lionheart/1605/weibo.gif">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/05/19/ios-pop-menu/"/>
+
+  <title> 弹框按钮视图 | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                弹框按钮视图
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-19T09:47:22+08:00" content="2016-05-19">
+              2016-05-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS/源码分析/" itemprop="url" rel="index">
+                    <span itemprop="name">源码分析</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS/源码分析/因缺斯听/" itemprop="url" rel="index">
+                    <span itemprop="name">因缺斯听</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/19/ios-pop-menu/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/19/ios-pop-menu/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这段时间又在忙项目的事，对<a href="https://github.com/Coding/Coding-iOS" target="_blank" rel="external">Coding-iOS</a>源码的学习只能先暂搁一旁。今天抽空来看看一个Coding-iOS中一个有趣的实现。这个和微博里面发送微博时的动效类似。效果如下👇<br><img src="/lionheart/1605/weibo.gif" alt="weibo"></p>
+<a id="more"></a>
+<h2 id="前言二"><a href="#前言二" class="headerlink" title="前言二"></a>前言二</h2><p>源码在<a href="https://github.com/xhzengAIB/PopMenu" target="_blank" rel="external">这里</a><br>我自己也简单的实现了一遍，看看效果👇<br><img src="/lionheart/1605/weibomy.gif" alt="weibomy"><br>我也把源码上传到<a href="https://github.com/vanney9/blogDemo/tree/master/testweibo" target="_blank" rel="external">github</a>了</p>
+<h2 id="分析一波"><a href="#分析一波" class="headerlink" title="分析一波"></a>分析一波</h2><p>这个PopMenu主要由2部分构成：模糊背景和按钮</p>
+<ol>
+<li>模糊背景<br>模糊背景直接就是白色半透明的View，它是PopMenu这个View的最底层的子View。这个模糊背景View的透明度从0-&gt;0.5渐变，当这个动画完成之后，开始显示按钮的动画。</li>
+<li>按钮<br>说是按钮，其实也是一个自定义的View，它由一个图片(UIImageView)和一个标题(UILabel)构成。这些按钮也是PopMenu这个View的子View。</li>
+<li>PopMenu View<br>这个View是主视图，它包括最底层的模糊背景视图和多个按钮视图。在这个视图内部定义了几个重要的方法<ul>
+<li>定义每一个按钮视图的其实位置和最终位置</li>
+<li>未每个按钮视图添加动画</li>
+</ul>
+</li>
+</ol>
+<h2 id="按钮位置"><a href="#按钮位置" class="headerlink" title="按钮位置"></a>按钮位置</h2><p>先来看看按钮视图的最终位置👇<br><img src="/lionheart/1605/finalPosition.png" alt="finalPosition"><br>给每个视图定大小很简单：先定死高度为110，再根据每行放置几个按钮定义按钮的宽度(例如本文每行3个按钮，那就屏幕宽度除以3)；最后定义按钮在PopMenu视图中的位置，也就是它的左上角相对于主视图的坐标，这个稍加计算就可得出。<br>而每个按钮其实开始的位置是在屏幕上方的，那么每个按钮的起始位置也就是最终位置向上平移一个相同的量，直至移出屏幕上方为止。</p>
+<h2 id="下落动画"><a href="#下落动画" class="headerlink" title="下落动画"></a>下落动画</h2><p>仔细瞧瞧，每个按钮的下落动画是一样的，只是开始时间不同而已。所以这些按钮动画的设置只需用开始时间进行区分即可。这里的动画使用了<a href="https://github.com/facebook/pop" target="_blank" rel="external">POPAnimation</a>，它是Facebook的一个著名的开源库。<br>来看看动画的源代码👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (void)startAnimationFromPosition:(CGRect)from toPosition:(CGRect)to atView:(UIView *)view beginTime:(CFTimeInterval)beginTime &#123;</div><div class="line">    POPSpringAnimation *springAnimation = [POPSpringAnimation animation]; // 新建一个弹簧动画</div><div class="line">    springAnimation.property = [POPAnimatableProperty propertyWithName:kPOPViewFrame]; // 这个动画作用于View的Frame</div><div class="line">    springAnimation.removedOnCompletion = YES; // 动画执行结束后删除该动画</div><div class="line">    springAnimation.beginTime = beginTime + CACurrentMediaTime(); // 定义动画开始时间， 现在时间加上一个动画执行延迟</div><div class="line">    springAnimation.springBounciness = 6; // 定义弹簧动画弹动程度</div><div class="line">    springAnimation.springSpeed = 2; // 定义动画的速度</div><div class="line"></div><div class="line">    springAnimation.fromValue = [NSValue valueWithCGRect:from]; // 定义动画开始位置</div><div class="line">    springAnimation.toValue = [NSValue valueWithCGRect:to]; // 定义动画结束位置</div><div class="line"></div><div class="line">    [view pop_addAnimation:springAnimation forKey:@&quot;vanney9&quot;]; // 给视图添加该动画，这个视图就是上面的按钮视图</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 按钮调用动画</div><div class="line">[self startAnimationFromPosition:from toPosition:to atView:button beginTime:0.1 * index];</div></pre></td></tr></table></figure></p>
+<p>POPAnimation的使用很简单，首先定义动画要做什么，什么时候开始执行，动画的起始和结束位置等等。。。动画定义完成之后，将该动画附加到一个视图上面，这里就是将弹簧动画赋予按钮视图；然后每个按钮视图的动画的执行时间都是按一定间隔隔开的。这样就完成了上图所展示的效果。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://github.com/xhzengAIB/PopMenu" target="_blank" rel="external">PopMenu</a></li>
+<li><a href="https://github.com/facebook/pop" target="_blank" rel="external">Facebook POP开源库</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/12/app-download-uoload-manager/" rel="next" title="iOS关于文件上传与下载">
+                <i class="fa fa-chevron-left"></i> iOS关于文件上传与下载
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/21/ios-note/" rel="prev" title="iOS笔记">
+                iOS笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/19/ios-pop-menu/"
+           data-title="弹框按钮视图" data-url="http://yoursite.com/2016/05/19/ios-pop-menu/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前言二"><span class="nav-number">2.</span> <span class="nav-text">前言二</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析一波"><span class="nav-number">3.</span> <span class="nav-text">分析一波</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#按钮位置"><span class="nav-number">4.</span> <span class="nav-text">按钮位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下落动画"><span class="nav-number">5.</span> <span class="nav-text">下落动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<span><script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script></span>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

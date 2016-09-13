@@ -1,0 +1,806 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言iOS Core Animation  读书笔记（一）The Layer Beneath">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS Core Animation - The Layer Beneath">
+<meta property="og:url" content="http://yoursite.com/2016/07/01/iOS-Core-Animation-reading-note-one/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言iOS Core Animation  读书笔记（一）The Layer Beneath">
+<meta property="og:updated_time" content="2016-07-08T08:27:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS Core Animation - The Layer Beneath">
+<meta name="twitter:description" content="前言iOS Core Animation  读书笔记（一）The Layer Beneath">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/01/iOS-Core-Animation-reading-note-one/"/>
+
+  <title> iOS Core Animation - The Layer Beneath | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS Core Animation - The Layer Beneath
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-01T15:42:38+08:00" content="2016-07-01">
+              2016-07-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/01/iOS-Core-Animation-reading-note-one/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/01/iOS-Core-Animation-reading-note-one/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><strong>iOS Core Animation</strong>  读书笔记（一）<strong>The Layer Beneath</strong></p>
+<a id="more"></a>
+<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="The-Layer-Tree"><a href="#The-Layer-Tree" class="headerlink" title="The Layer Tree"></a>The Layer Tree</h3><ol>
+<li><strong>Layer Kit</strong>: 高效的，硬件加速的混合框架， 用来替代以Quartz为基础的，相对低效的AppKit框架。它也就是Core Animation的基础。</li>
+<li><strong>Core Animation</strong> 不仅仅只和动画有关，它是iOS的核心组件之一，你在屏幕上看到的所有东西都由它来power。</li>
+<li><strong>Core Animation</strong>的主要工作是将各个可视化的layer显示在屏幕上面。也就是将layer tree显示出来。</li>
+<li><strong>UIView</strong> handles touch events and supports <em>Core Graphics</em>-based drawing, affine transform, and simple animations such as sliding and fading.</li>
+<li>但是UIView并不是亲自处理这些任务中的大部分。渲染，布局，动画…这些任务其实都是由<em>Core Animation</em>里面的<strong>CALayer</strong>来完成的。</li>
+<li><em>CALayer</em>不负责用户交互(<strong>user interaction</strong>)，和<em>responder chain</em>没有联系。</li>
+<li>每一个UIView都有一个layer属性，也就是一个CALayer。实际上，UIView并没有做什么事情，关于在屏幕上的显示和动画基本上都是由CALayer来完成。UIView可以说只是一个CALayer的wrapper，负责一些手势处理，以及一些高层面的对于Core Animation的一些API的封装。</li>
+<li>总结来说：UIView主要负责处理事件以及用户交互，而CALayer主要负责显示和动画。</li>
+</ol>
+<h3 id="The-Backing-Image"><a href="#The-Backing-Image" class="headerlink" title="The Backing Image"></a>The Backing Image</h3><h4 id="The-Contents-Image"><a href="#The-Contents-Image" class="headerlink" title="The Contents Image"></a>The Contents Image</h4><ol>
+<li><p>CALayer可以包含一个图片；图片里面，你想显示啥就显示啥。这就是CALayer的<em>backing image</em>。</p>
+</li>
+<li><p>CALayer有一个<strong>contents</strong>属性，给这个contents属性赋值入锅不是CGImage的话，这个Layer还是什么都没有显示。要这般赋值：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">layer.contents = (__bridge id)image.CGImage;</div></pre></td></tr></table></figure>
+<p>因为，要真正赋值给contents属性的应该是一个CGImageRef，它是一个指针，指向CGImage的结构体；而UIImage的CGImage属性就是一个CGImageRef，但由于不是一个OC对象，无法赋值给id，所以需要使用(__bridge id)来转换。</p>
+</li>
+<li><p>CALyer的<strong>contentsGravity</strong>属性类似于UIView的contentMode。</p>
+</li>
+<li><p>CALayer的<strong>contentsScale</strong>属性与Retina有关。（有点不懂）</p>
+</li>
+<li><p><strong>contentsRect</strong>属性将backing image限制在当前CALayer矩形的一个子框框里面。它不是按点来计算的；按照统一的标尺，这个Rect的长和宽最小为0，最大为1。</p>
+</li>
+<li><p>iOS中用到3中坐标类型：</p>
+<ol>
+<li><p><strong>Points</strong>：最常用的坐标类型，point表示逻辑像素。在标准清晰度的设备中一个point代表一个pixel；在Retina设备中，一个point代表2x2个pixel。</p>
+</li>
+<li><p><strong>Pixels</strong>: 不常用，一般和使用pixel作为度量的CGImage等一同使用。</p>
+</li>
+<li><p><strong>Unit</strong>：就是contentsRect属性用到的坐标系。</p>
+<p>example： todo 插入例子</p>
+</li>
+</ol>
+</li>
+</ol>
+<ol>
+<li><p><strong>contentsCenter</strong>:该属性是一个CGRect，它定义了一个可伸缩的区域。具体的见下图：(有点不清楚)</p>
+<p>example： todo 插入图片</p>
+<p>其中四个黄色区域组合起来是原图。黄色区域内部四个点其实原来是一个点，也就是原图的中心点。</p>
+</li>
+</ol>
+<h4 id="Custom-Drawing"><a href="#Custom-Drawing" class="headerlink" title="Custom Drawing"></a>Custom Drawing</h4><p>除了将一个CGImage指派给一个CALayer的contents以外，还可以直接在CALayer的<em>backing image</em>上面绘图。先来看看整个CALayer生成<em>backing image</em>的过程。</p>
+<ol>
+<li><p>有一个CALayerDelegate的协议，当CALayer需要对它的content进行填充时，会去请求该协议的方法。</p>
+</li>
+<li><p>CALayer先会请求下列方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (void)displayLayer:(CALayer *)layer;</div></pre></td></tr></table></figure>
+<p>在这个方法里面可以直接设置CALayer的contents属性。如果实现了这个方法，那么CALayer不会再去请求其他的方法来填充它的内容。</p>
+</li>
+<li><p>如果上一步未实现该方法，CALayer会去请求下面的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;</div></pre></td></tr></table></figure>
+<p>在请求这个方法之前，<strong>CALayer会创建一个空白的backing image</strong>，和一个匹配该backing image的context。然后调用这个方法进行绘图。</p>
+</li>
+<li><p>只有在调用了<code>[layer display];</code>方法之后，上面说的这些delegate才会被调用。</p>
+</li>
+</ol>
+<p>所以总结一下这个过程，首先可以直接对CALayer的contents进行设置；然后如果发现调用了<code>[layer display];</code>方法，会调用<code>- (void)displayLayer:(CALayer *)layer;</code>方法，在这个方法里面可以直接设置contents，如果没有设置就沿用之前的contents；<strong>但是如果这个方法没有实现的话，display方法会创建一个空白的backing image来取代之前设置的contents</strong>，然后再调用<code>- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;</code>方法。在这个方法里面进行绘图。</p>
+<p><strong>PS</strong>：CALayer的backgroundColor和contents没有一点关系，该怎么设置就怎么设置。</p>
+<p>再<strong>PS</strong>：我们一般是不需要去调用或者实现上面说的所有方法的，如果我们通过直接设置UIView或者是CALayer的属性无法达到我们的目的的时候，我们需要做的是重写UIView的<code>-drawRect:</code>方法。这个方法会帮我们在暗中处理上面说到的各种方法。</p>
+<p>再再<strong>PS</strong>：如果不需要调用<code>-drawRect:</code>方法，那么久不要去重写它；因为即使是一个空的<code>-drawRect:</code>方法，程序也会花内存和CPU时间去创建一个新的，空的backing image。</p>
+<h3 id="Layer-Geometry"><a href="#Layer-Geometry" class="headerlink" title="Layer Geometry"></a>Layer Geometry</h3><h4 id="Layout"><a href="#Layout" class="headerlink" title="Layout"></a>Layout</h4><ol>
+<li>对于设置UIView的<em>frame</em>，<em>bounds</em>以及<em>center</em>，其实就是调用对应CALayer的setter和getter函数，对CALayer的相对应的属性进行设置。</li>
+<li>CALayer对应的属性是：<em>frame</em>, <em>bounds</em>, <em>positions</em> 和 <em>anchorPoint</em>。其中frame和bounds好理解。<strong>position</strong>的值是父layer的坐标系中的，它表示layer的旋转中心。<strong>anchorPoint</strong>的值表示position的那个点在自己layer的bounds上的比例。比如position是中点，那么anchorPoint就是(0.5, 0.5)；如果position在左上角，那么anchorPoint就是(0, 0)。</li>
+<li>在iOS中，坐标系原点在左上角；在Mac OS中，坐标系原点在左下角。通过设置CALayer的<strong>geometryFlipped</strong>属性，可以改变坐标系从左上变到左下。只需将geometryFlipped设置为YES。</li>
+<li>UIView是严格的二维平面；但是，CALayer存在三维空间。CALayer有<strong>zPosition</strong>和<strong>anchorPointZ</strong>属性。除了用在CATransform3D外，比较有用的就是改变layer的现实顺序，zPosition越大，越靠前显示。</li>
+</ol>
+<h4 id="Hit-Testing"><a href="#Hit-Testing" class="headerlink" title="Hit Testing"></a>Hit Testing</h4><ol>
+<li>CALayer不知道responder chain的存在，不能直接处理用户的交互动作。只有几个函数和用户交互有关。比如<code>-hitTest:</code>。</li>
+<li><strong><code>-hitTest:</code></strong> 返回CGPoint的点在哪个CALayer。</li>
+</ol>
+<h4 id="Automatic-Layout"><a href="#Automatic-Layout" class="headerlink" title="Automatic Layout"></a>Automatic Layout</h4><ol>
+<li>你可以通过UIVIew的UIViewAutoresizingMask和NSLayoutConstraint相关的API来使用autolayout。但是，如果你想直接通过操作CALayer来使用autolayout，最简单的方法就是使用CALayerDelegate的<code>- (void)layoutSublayersOfLayer:(CALayer *)layer;</code>方法。但是它不好用，所以最好是直接操作UIView…</li>
+<li>上面是一个佐证：你最好使用带layer的view来组织你的界面，而不是使用单独的layer。</li>
+</ol>
+<h3 id="Visual-Effects"><a href="#Visual-Effects" class="headerlink" title="Visual Effects"></a>Visual Effects</h3><ol>
+<li><strong>cornerRadius</strong>默认的只会影响background color，不对backing image产生影响。但是加上<strong>masksToBounds</strong>之后，layer就确保了又圆角的属性。</li>
+<li>CALayer的border是被花在CALayer的内部的，在任何的sublayer的上面。</li>
+<li>CALayer的shadow不同于border的是：它是基于backing image的边缘的，而不是bounds的边缘。有点厉害</li>
+<li>CALayer的shadow通常是画在bounds的外部的，所以会被masksToBounds给切掉。。。</li>
+<li>CALayer的<strong>shadowPath</strong>属性可以强制指定一个shadow的形状。该属性的值是一个CGPathRef。可以使用UIBezierPath。</li>
+<li>CALayer的<strong>mask</strong>属性也是一个CALayer。但是它的作用是定义这个父layer的可见的部分。这个mask layer最重要的就是它的轮廓（和上面的shadow的边缘有点类似），它的父layer只会显示轮廓内的部分。</li>
+<li>CALayer的<strong>minificationFilter</strong>和<strong>magnificationFilter</strong>属性用于指定图片放大缩小时图片的显示方式。专业一点说就是生成图片像素的算法。他们有3个选项：kCAFilterLinear，kCAFilterNearest和kCAFilterTrilinerar。其中，nearest适合用于小图片以及图片颜色变化很尖锐的；而其他两个用于图片颜色变化比较缓和的，也就是均匀的，不会两个相邻像素之间颜色发生突变。</li>
+</ol>
+<h3 id="Transforms"><a href="#Transforms" class="headerlink" title="Transforms"></a>Transforms</h3><h4 id="Affine-Transforms"><a href="#Affine-Transforms" class="headerlink" title="Affine Transforms"></a>Affine Transforms</h4><ol>
+<li><p>利用CFAffineTransform的时候，其实可以计算原来view的四个点对应的变化之后的四个点，来确定变化之后的view的形状以及位置。</p>
+</li>
+<li><p>UIView的<strong>transform</strong>属性是一个CGAffineTransform，CALayer的<strong>transform</strong>属性是一个CATransform3D。CALayer中和UIView的transform等同的一个属性叫做<strong>affineTransform</strong>。其实对UIView的transform属性进行操作，实际上也是对CALayer进行操作，它只是一个向上的包装而已。</p>
+</li>
+<li><p>通过如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CGAffineTransform transform = CGAffineTransformIdentity;</div><div class="line">transform = CGAffineTransformScale(transform, 0.5, 0.5);</div><div class="line">transform = CGAffineTransformRotate(transform, M_PI / 180 * 30);</div><div class="line">transform = CGAffineTransformTranslate(transform, 200, 0);</div></pre></td></tr></table></figure>
+<p>记住，这里最后一步向右平移200点，其实并没有平移200点。因为，这样连续的变化，向右平移200点的transform受到了之前两步transform的影响。它其实被scale了一半，然后被旋转了30度。可以想象成向右200的向量吧(不确定)。</p>
+</li>
+<li><p>还有一种变换无法用translate， rotate和scale来表示。那就是：原View是矩形，变换之后了View变成了平行四边形。有点类似投影。那样的话就得直接修改CGAffineTransform矩阵中的值了。如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">CGAffineTransform transform = CGAffineTransformIdentity;</div><div class="line">transform.c = -x;</div><div class="line">transform.b = y;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="3D-Transforms"><a href="#3D-Transforms" class="headerlink" title="3D Transforms"></a>3D Transforms</h4><ol>
+<li>Core Graphics framework是一个2维的画图的库。而CALayer的transform属性是一个CATransform3D，3D的。所以需要用到Core Animation framework。</li>
+<li>控制透视效果，也就是远处的view看上去比近处的小。这个效果可以通过控制CATransform3D的m34值来实现。m34用来表示X，Y轴的放大系数与view距离camera的类似比值的一个东西。m34默认为0，将它定义成 -1.0/d，d表示view到镜头的距离，取500-1000之间的值都可以。d取值越小，透视的效果越明显。todo 来两张图</li>
+<li>3D最远端的消失点定义在layer的anchorPoint。</li>
+<li>CALayer的sublayerTransform属性可以为sublayer统一指定他们的perspective和vanishing point。</li>
+<li>沿Y轴旋转180度，就把layer翻转过来了，呈现镜像。但是如果将CALayer的<strong>doubleSided</strong>设置成NO，那么反面就不会被draw出来。</li>
+<li>对于外部的layer外转，内部的layer内转，得分情况来讨论。如果是按照Z轴来旋转，那么内部的layer旋转被抵消，正面显示。但是如果按照Y轴旋转，虽然内部的旋转也被抵消，但是显示在屏幕上的其实是内部layer在外部layer上的投影；此时外部layer已经倾斜了，虽然内部layer很正，但是显示投影上去还是倾斜的。todo 来张图</li>
+<li>CATransform3D 先位移再旋转和先旋转再位移是不一样的。要始终找到旋转以及平移的中心点，以该中心点建立三维坐标系。当旋转或平移时，该坐标系也会跟着旋转和平移，那么下一步的选装或平移要以当前最新的坐标系为标准。</li>
+<li>UIView的touch event接收顺序与zPosition无关，还是与添加UIView的顺序相关。</li>
+</ol>
+<h3 id="Specialized-Layers"><a href="#Specialized-Layers" class="headerlink" title="Specialized Layers"></a>Specialized Layers</h3><h4 id="CAShapeLayer"><a href="#CAShapeLayer" class="headerlink" title="CAShapeLayer"></a>CAShapeLayer</h4><ol>
+<li><p>CAShapeLayer使用矢量画图，而不是位图(bitmap image)。</p>
+</li>
+<li><p>相比与普通的CALayer，它更快：硬件加速；内存更高效：不需要创建backing image；不会被边界限制（backing image的context）；放大缩小时不是像素化的：矢量图。</p>
+</li>
+<li><p>创建CAShapeLayer的CGPath时只能创建一次，不能分开多次创建。也就是说CGPath的路径，颜色，线段粗细等属性只能在创建时一次性全部设置。如果想画多个不同类型(比如：不同颜色，不同粗细等)的shape，那么就得创建多个layer。</p>
+</li>
+<li><p>CAShapeLayer的<strong>path</strong>属性是一个CGPath，但是使用UIBezierPath，可以简化我们的使用，不用手动去释放CGPath。</p>
+</li>
+<li><p>创建一个只有3个角的bezierPath：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CGRect rect = CGRectMake(50, 50, 100, 100); CGSize radii = CGSizeMake(20, 20); UIRectCorner corners = UIRectCornerTopRight |</div><div class="line">UIRectCornerBottomRight | UIRectCornerBottomLeft;</div><div class="line">//create path</div><div class="line">UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:corners cornerRadii:radii];</div></pre></td></tr></table></figure>
+<p>可以把这个CGPath构成的CAShapeLayer当做某个CALayer的mask。</p>
+</li>
+</ol>
+<h4 id="CATextLayer"><a href="#CATextLayer" class="headerlink" title="CATextLayer"></a>CATextLayer</h4><ol>
+<li><p>CATextLayer提供了UILabel的绝大部分功能，以及一些自己的功能，并且比UILabel渲染的更快。</p>
+</li>
+<li><p>CATextLayer要注意提供<strong>contentsScale</strong>属性，以保证在各种屏幕上显示正确。</p>
+</li>
+<li><p>它的<strong>font</strong>属性是一个CFTypeRef，所以可以给他CTFontRef或者是CGFontRef；而且这两个和UIFont一样不会压缩point size，也就是字体大小；所以还需要自己指定<strong>fontSize</strong>属性。</p>
+</li>
+<li><p>CATextLayer在iOS3.2的时候就已经支持attributed string了，比UILabel等UIKit元素更早。</p>
+</li>
+<li><p>但是它的行间距和字间距比UILabel的表现要差。</p>
+</li>
+<li><p>CALayer不太支持autolayout和autoresizing…</p>
+</li>
+<li><p><strong>如何让一个UIView的root layer不是普通的CALayer呢？</strong>UIView通过<code>+ (Class)layerClass;</code>方法来返回root layer的类型；所以只需要在我们自己的View类里面重写该方法就可以。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@implementation LayerLabel  // 自定义的UIView</div><div class="line">+ (Class)layerClass &#123;  // override layerClass of UIView</div><div class="line">  	return [CATextLayer class];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>那么这时就不会调用<code>-drawRect:</code>方法来绘图，而是使用CATextLayer自己来渲染文字。将CATextLayer作为UILabel的root layer还有个好处，就是不需要设置contentsScale。因为这个被UIView自己设置了。这也佐证了使用带layer的View比单独使用layer要方便。</p>
+</li>
+</ol>
+<h4 id="CATransformLayer"><a href="#CATransformLayer" class="headerlink" title="CATransformLayer"></a>CATransformLayer</h4><ol>
+<li><p>它的存在解决了之前说的外部layer外转内部layer内转，但是内部layer显示奇怪的问题。这个问题的根本原因就是所有sublayer都被containerLayer给扁平化得显示在它自己的空间内，有点剥夺3d效果的感觉。</p>
+</li>
+<li><p>CATransformLayer不能用于显示任何内容，它必须包含一些sublayer。它有可以应用于sublayer的transform，可以使sublayer立体化起来。</p>
+</li>
+<li><p>这个例子很赞：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div></pre></td><td class="code"><pre><div class="line">@interface ViewController ()</div><div class="line">@property (nonatomic, weak) IBOutlet UIView *containerView; </div><div class="line">@end</div><div class="line">@implementation ViewController</div><div class="line">- (CALayer *)faceWithTransform:(CATransform3D)transform &#123;</div><div class="line">	//create cube face layer</div><div class="line">	CALayer *face = [CALayer layer];</div><div class="line">	face.frame = CGRectMake(-50, -50, 100, 100);</div><div class="line"></div><div class="line">	//apply a random color</div><div class="line">	CGFloat red = (rand() / (double)INT_MAX); </div><div class="line">	CGFloat green = (rand() / (double)INT_MAX); </div><div class="line">	CGFloat blue = (rand() / (double)INT_MAX); </div><div class="line">	face.backgroundColor = [UIColor colorWithRed:red green:green blue:blue alpha:1.0].CGColor;</div><div class="line"></div><div class="line"> 	//apply the transform and return</div><div class="line">	face.transform = transform;</div><div class="line">	</div><div class="line">	return face; </div><div class="line">&#125;</div><div class="line"></div><div class="line">- (CALayer *)cubeWithTransform:(CATransform3D)transform &#123;</div><div class="line">	//create cube layer</div><div class="line">	CATransformLayer *cube = [CATransformLayer layer];</div><div class="line">	</div><div class="line">	//add cube face 1</div><div class="line">	CATransform3D ct = CATransform3DMakeTranslation(0, 0, 50); </div><div class="line">	[cube addSublayer:[self faceWithTransform:ct]];</div><div class="line"></div><div class="line">	//add cube face 2</div><div class="line">	ct = CATransform3DMakeTranslation(50, 0, 0); </div><div class="line">	ct = CATransform3DRotate(ct, M_PI_2, 0, 1, 0); </div><div class="line">	[cube addSublayer:[self faceWithTransform:ct]];</div><div class="line"></div><div class="line">	//add cube face 3</div><div class="line">	ct = CATransform3DMakeTranslation(0, -50, 0); </div><div class="line">	ct = CATransform3DRotate(ct, M_PI_2, 1, 0, 0); </div><div class="line">	[cube addSublayer:[self faceWithTransform:ct]];</div><div class="line"></div><div class="line">	//add cube face 4</div><div class="line">	ct = CATransform3DMakeTranslation(0, 50, 0); </div><div class="line">	ct = CATransform3DRotate(ct, -M_PI_2, 1, 0, 0); </div><div class="line">	[cube addSublayer:[self faceWithTransform:ct]];</div><div class="line"></div><div class="line">	//add cube face 5</div><div class="line">	ct = CATransform3DMakeTranslation(-50, 0, 0); </div><div class="line">	ct = CATransform3DRotate(ct, -M_PI_2, 0, 1, 0); </div><div class="line">	[cube addSublayer:[self faceWithTransform:ct]];</div><div class="line">	</div><div class="line">	//add cube face 6</div><div class="line">	ct = CATransform3DMakeTranslation(0, 0, -50); </div><div class="line">	ct = CATransform3DRotate(ct, M_PI, 0, 1, 0); </div><div class="line">	[cube addSublayer:[self faceWithTransform:ct]];</div><div class="line"></div><div class="line">	//center the cube layer within the container</div><div class="line">	CGSize containerSize = self.containerView.bounds.size; </div><div class="line">	cube.position = CGPointMake(containerSize.width / 2.0, containerSize.height / 2.0);</div><div class="line"></div><div class="line">	//apply the transform and return</div><div class="line">	cube.transform = transform;</div><div class="line">	return cube; </div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)viewDidLoad &#123; </div><div class="line">	[super viewDidLoad];</div><div class="line">	//set up the perspective transform</div><div class="line">	CATransform3D pt = CATransform3DIdentity; </div><div class="line">	pt.m34 = -1.0 / 500.0; </div><div class="line">	self.containerView.layer.sublayerTransform = pt;</div><div class="line"></div><div class="line">	//set up the transform for cube 1 and add it</div><div class="line">	CATransform3D c1t = CATransform3DIdentity; </div><div class="line">	c1t = CATransform3DTranslate(c1t, -100, 0, 0); </div><div class="line">	CALayer *cube1 = [self cubeWithTransform:c1t]; </div><div class="line">	[self.containerView.layer addSublayer:cube1];</div><div class="line"></div><div class="line">	//set up the transform for cube 2 and add it</div><div class="line">	CATransform3D c2t = CATransform3DIdentity;</div><div class="line">	c2t = CATransform3DTranslate(c2t, 100, 0, 0); </div><div class="line">	c2t = CATransform3DRotate(c2t, -M_PI_4, 1, 0, 0); </div><div class="line">	c2t = CATransform3DRotate(c2t, -M_PI_4, 0, 1, 0); </div><div class="line">	CALayer *cube2 = [self cubeWithTransform:c2t]; </div><div class="line">	[self.containerView.layer addSublayer:cube2];</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>todo add picture</p>
+</li>
+</ol>
+<h4 id="CAGradientLayer"><a href="#CAGradientLayer" class="headerlink" title="CAGradientLayer"></a>CAGradientLayer</h4><ol>
+<li>测试了重写View的layerClass方法之后发现，对于CATextLayer，不会调用<code>-drawRect;</code>方法，但是对于其他种类的layer，还是会调用<code>-drawRect;</code>方法。</li>
+<li>硬件加速。</li>
+<li><strong>colors</strong>属性是一个数组。里面装的是CGColorRef，不是UIColor。所以还是需要使用<code>(__bridge id)</code>。<strong>startPoint</strong>和<strong>endPoint</strong>指定渐变方向，这两个属性使用的是<em>unit coordinates</em>。</li>
+<li>colors属性可以添加任意个颜色，默认的他们是均匀分布的；但是我们可以通过<strong>locations</strong>属性改变他们的分布。<strong>locations</strong>属性是一个装着NSNumber(float value)的数组，从0-1，表示各种color的终区段。</li>
+</ol>
+<h4 id="CAReplicatorLayer"><a href="#CAReplicatorLayer" class="headerlink" title="CAReplicatorLayer"></a>CAReplicatorLayer</h4><ol>
+<li><p>它是用来高效的生成一系列相似的layer。</p>
+</li>
+<li><p><strong>instanceCount</strong>属性指定copy的个数，<strong>instanceTransform</strong>属性指定变化，各个变化是叠加的。</p>
+</li>
+<li><p>说不清楚，直接上代码…</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">@interface ViewController ()</div><div class="line">@property (nonatomic, weak) IBOutlet UIView *containerView; </div><div class="line">@end</div><div class="line"></div><div class="line">@implementation ViewController</div><div class="line">- (void)viewDidLoad &#123;</div><div class="line">	[super viewDidLoad];</div><div class="line"></div><div class="line">	//create a replicator layer and add it to our view</div><div class="line">	CAReplicatorLayer *replicator = [CAReplicatorLayer layer]; </div><div class="line">	replicator.frame = self.containerView.bounds; </div><div class="line">	[self.containerView.layer addSublayer:replicator];</div><div class="line"></div><div class="line">	//configure the replicator</div><div class="line">	replicator.instanceCount = 10;</div><div class="line"></div><div class="line">	//apply a transform for each instance</div><div class="line">	CATransform3D transform = CATransform3DIdentity;</div><div class="line">	transform = CATransform3DTranslate(transform, 0, 200, 0); </div><div class="line">	transform = CATransform3DRotate(transform, M_PI / 5.0, 0, 0, 1);</div><div class="line"> </div><div class="line">	transform = CATransform3DTranslate(transform, 0, -200, 0); </div><div class="line">	replicator.instanceTransform = transform;</div><div class="line"></div><div class="line">	//apply a color shift for each instance</div><div class="line">	replicator.instanceBlueOffset = -0.1; </div><div class="line">	replicator.instanceGreenOffset = -0.1;</div><div class="line"></div><div class="line">	//create a sublayer and place it inside the replicator</div><div class="line">	CALayer *layer = [CALayer layer];</div><div class="line">	layer.frame = CGRectMake(100.0f, 100.0f, 100.0f, 100.0f); </div><div class="line">	layer.backgroundColor = [UIColor whiteColor].CGColor; </div><div class="line">	[replicator addSublayer:layer];</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>todo add picture</p>
+</li>
+</ol>
+<h4 id="CAScrollLayer"><a href="#CAScrollLayer" class="headerlink" title="CAScrollLayer"></a>CAScrollLayer</h4><ol>
+<li>一个可以scroll的layer，有一个方法<code>-scrollToPoint:</code>。因为CALayer无法处理用户手势操作，所以这个方法也是这个layer所能做的所有事了。。。可以从UIView的层面获取手势所处的point，再将该point传递给CAScrollLayer。</li>
+<li>该layer滑动的时候，改变的是layer的bounds。</li>
+</ol>
+<h4 id="OtherLayer"><a href="#OtherLayer" class="headerlink" title="OtherLayer"></a>OtherLayer</h4><ol>
+<li>Core Animation使用CPU来处理图片，而不是更快的GPU。</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/21/ios-note/" rel="next" title="iOS笔记">
+                <i class="fa fa-chevron-left"></i> iOS笔记
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/08/iOS-Core-Animation-reading-note-two/" rel="prev" title="iOS Core Animation - Setting Things in Motion">
+                iOS Core Animation - Setting Things in Motion <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/01/iOS-Core-Animation-reading-note-one/"
+           data-title="iOS Core Animation - The Layer Beneath" data-url="http://yoursite.com/2016/07/01/iOS-Core-Animation-reading-note-one/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Layer-Tree"><span class="nav-number">2.1.</span> <span class="nav-text">The Layer Tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Backing-Image"><span class="nav-number">2.2.</span> <span class="nav-text">The Backing Image</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#The-Contents-Image"><span class="nav-number">2.2.1.</span> <span class="nav-text">The Contents Image</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Custom-Drawing"><span class="nav-number">2.2.2.</span> <span class="nav-text">Custom Drawing</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Layer-Geometry"><span class="nav-number">2.3.</span> <span class="nav-text">Layer Geometry</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Layout"><span class="nav-number">2.3.1.</span> <span class="nav-text">Layout</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hit-Testing"><span class="nav-number">2.3.2.</span> <span class="nav-text">Hit Testing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Automatic-Layout"><span class="nav-number">2.3.3.</span> <span class="nav-text">Automatic Layout</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Visual-Effects"><span class="nav-number">2.4.</span> <span class="nav-text">Visual Effects</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Transforms"><span class="nav-number">2.5.</span> <span class="nav-text">Transforms</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Affine-Transforms"><span class="nav-number">2.5.1.</span> <span class="nav-text">Affine Transforms</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3D-Transforms"><span class="nav-number">2.5.2.</span> <span class="nav-text">3D Transforms</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Specialized-Layers"><span class="nav-number">2.6.</span> <span class="nav-text">Specialized Layers</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CAShapeLayer"><span class="nav-number">2.6.1.</span> <span class="nav-text">CAShapeLayer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CATextLayer"><span class="nav-number">2.6.2.</span> <span class="nav-text">CATextLayer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CATransformLayer"><span class="nav-number">2.6.3.</span> <span class="nav-text">CATransformLayer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CAGradientLayer"><span class="nav-number">2.6.4.</span> <span class="nav-text">CAGradientLayer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CAReplicatorLayer"><span class="nav-number">2.6.5.</span> <span class="nav-text">CAReplicatorLayer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CAScrollLayer"><span class="nav-number">2.6.6.</span> <span class="nav-text">CAScrollLayer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OtherLayer"><span class="nav-number">2.6.7.</span> <span class="nav-text">OtherLayer</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<span><script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script></span>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

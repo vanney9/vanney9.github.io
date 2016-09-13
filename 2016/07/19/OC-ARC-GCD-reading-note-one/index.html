@@ -1,0 +1,802 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言iOS与OS X多线程和内存管理 读书笔记（一） 自动引用计数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS与OS X多线程和内存管理 - 自动引用计数">
+<meta property="og:url" content="http://yoursite.com/2016/07/19/OC-ARC-GCD-reading-note-one/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言iOS与OS X多线程和内存管理 读书笔记（一） 自动引用计数">
+<meta property="og:updated_time" content="2016-07-28T13:04:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS与OS X多线程和内存管理 - 自动引用计数">
+<meta name="twitter:description" content="前言iOS与OS X多线程和内存管理 读书笔记（一） 自动引用计数">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/19/OC-ARC-GCD-reading-note-one/"/>
+
+  <title> iOS与OS X多线程和内存管理 - 自动引用计数 | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS与OS X多线程和内存管理 - 自动引用计数
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T20:14:02+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/OC-ARC-GCD-reading-note-one/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/OC-ARC-GCD-reading-note-one/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>iOS与OS X多线程和内存管理 读书笔记（一） <strong>自动引用计数</strong></p>
+<a id="more"></a>
+<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="内存管理-引用计数"><a href="#内存管理-引用计数" class="headerlink" title="内存管理/引用计数"></a>内存管理/引用计数</h3><ol>
+<li><p>使用办公室的照明灯来做比喻，对象相当于照明灯，但是会有许多人需要这个照明灯，也就是持有对象。只要有人持有这个对象，就不能释放对象；若没人在需要对象，就释放对象。</p>
+</li>
+<li><p>例如：a = [class new];  b = a; 那么a生成对象时持有对象，b也持有对象。只有当a和b都不持有对象时，才能释放对象。</p>
+</li>
+<li><p>对于对象，有4个关键词。<strong>生成</strong>，<strong>持有</strong>，<strong>释放</strong>和<strong>废弃</strong>。</p>
+</li>
+<li><p>看看对应的操作：（以下的方法均是<strong>NSObject</strong>类的方法）</p>
+<ol>
+<li>使用<code>alloc/new/copy/mutableCopy</code>开头的方法<strong>生成</strong>并<strong>持有</strong>对象</li>
+<li><code>retain</code>方法<strong>持有</strong>对象</li>
+<li><code>release</code>方法<strong>释放</strong>对象</li>
+<li><code>dealloc</code>方法<strong>废弃</strong>对象</li>
+</ol>
+</li>
+<li><p>自己生成的对象自己持有</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">id obj = [[NSObject alloc] new]; // alloc方法生成并持有对象</div><div class="line">// or</div><div class="line">id obj = [NSObject new]; // new 和 alloc + init 一样</div></pre></td></tr></table></figure>
+<p>另外<code>copy</code>和<code>mutableCopy</code>也是生成对象的副本，并持有。</p>
+</li>
+<li><p>非自己生成的对象，自己也能持有</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id obj = [NSMutableArray array]; // 对象存在了，但是obj对象不持有对象</div><div class="line">[obj retain]; // 现在obj已经持有对象了</div></pre></td></tr></table></figure>
+</li>
+<li><p>不在需要自己持有的对象时释放</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id obj = [NSObject new]; // obj持有对象</div><div class="line">[obj release]; // obj不再需要对象时，释放对对象。 对象释放后就不能被访问到了。</div></pre></td></tr></table></figure>
+<ol>
+<li>不持有可以这样理解：可以使用对象，但是没有强行占用对象。</li>
+<li>无法释放非自己持有的对象</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id obj = [NSMutableArray array]; // obj自己不持有对象</div><div class="line">[obj release]; // 程序崩溃，因为不能释放不是自己持有的对象</div></pre></td></tr></table></figure>
+</li>
+<li><p>来看看如何实现alloc/retain/release/dealloc方法 （<strong>注意：这部分对于理解最为关键</strong>）。</p>
+<ol>
+<li><p>alloc的实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">   struct obj_layout &#123;</div><div class="line">     	NSUInteger retained;</div><div class="line">   &#125;</div><div class="line"></div><div class="line">+ (id)alloc &#123;</div><div class="line">  	int size = sizeof(struct obj_layout) + 对象大小;</div><div class="line">  	struct obj_layout *p = (struct obj_layout *)calloc(1, size); // 分配一个长度为size的连续内存空间 p为该内存空间的第一个地址。这个内存空间的内存计量单位为一个obj_layout struct</div><div class="line">  	return (id)(p + 1); // 该内存空间的第一个内存单位放的是obj_layout这个结构体，之后是对象的内存空间，已经被置为0。返回的是指向对象内存空间的首地址的指针。</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>看看retainCount的实现，这个方法用来查看对象的引用计数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (NSUInteger)retainCount &#123;</div><div class="line">  	return ((struct obj_layout *) self)[-1].retained + 1;</div><div class="line">&#125;</div><div class="line">// 因为self指向的是对象内存的首地址。将这个地址看成obj_layout,也就是地址计数以obj_layout结构体的内存大小为单位。-1就指向了对象上方存储obj_layout结构体的首地址。这样就可以取出retained。因为retained默认是0，所以需要加1。</div></pre></td></tr></table></figure>
+</li>
+<li><p>根据2，可以方便推出<strong>retain</strong>方法是将retained值加一；而<strong>release</strong>方法是将retained值减一。注意当release时发现retained值等于0，那么就不执行减一操作了，直接执行dealloc方法，因为已经没有人只有该对象了。</p>
+</li>
+<li><p>dealloc的实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (void)dealloc &#123;</div><div class="line">  	struct obj_layout *o = &amp;((struct obj_layout *) self)[-1];</div><div class="line">  	free(o); // 释放之前由calloc分配的内存空间</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p><strong>autorelease</strong>：</p>
+<p>当变量调用对象的autorelease方法时，说明他已经不持有这个对象了。但是这个对象并没有被释        放，还是可以被取到。</p>
+<p>autorelease的使用方法：</p>
+<ol>
+<li>生成并持有NSAutoreleasePool对象</li>
+<li>调用已分配对象的autorelease方法</li>
+<li>废弃NSAutoreleasePool对象</li>
+</ol>
+<p>NSAutoreleasePool对象生成和废弃的这个期间，相当于对象的作用域。当废弃NSAutoreleasePool对象时，自动调用对象的release方法。来看看代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];</div><div class="line">id obj = [[NSObject alloc] init];</div><div class="line">[obj autorelease];</div><div class="line">[pool drain]; // 这个时候才会release对象</div></pre></td></tr></table></figure>
+<p><strong>注意</strong>：使用autorelease时，太多的需要autorelease的对象可能由于没有及时的release，会导致内存不足。<strong>PS</strong>：其实还是在dealloc的时候释放内存，但是因为在release时，若没有变量引用对象的话，会自动调用对象的dealloc方法，所以release也可以说是释放内存吧。</p>
+<p>看看下面代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id array = [NSMutableArray arrayWithCapacity:1]; // array不持有对象</div><div class="line">id array = [[NSMutableArray alloc] initWithCapacity:1] autorelease]; // array也不持有对象</div></pre></td></tr></table></figure>
+<p>上面两行代码是等价的。</p>
+</li>
+<li><p>autorelease的实现</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">- (id)autorelease &#123;</div><div class="line">  	[NSAutoreleasePool addObject:self];</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (void)addObject:(id)anObj &#123;</div><div class="line">  	NSAutoreleasePool *pool = 取得正在使用的NSAutoreleasePool对象;</div><div class="line">  	if (pool != nil) &#123;</div><div class="line">  		[pool addObject:anObj];</div><div class="line">	&#125; else &#123;</div><div class="line">  		NSLog(@&quot;不存在NSAutoreleasePool&quot;);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)addObject:(id)anObj &#123;</div><div class="line">  	[array addObject:anObj]; // NSAutoreleasePool对象里面有一个array数组，用来存储需要autorelease的对象</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)drain &#123;</div><div class="line">  	[self dealloc]; // 废弃NSAutoreleasePool对象</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)dealloc &#123;</div><div class="line">  	for (id obj in array) &#123;</div><div class="line">  		[obj release]; // 释放之前注册到NSAutoreleasePool的对象</div><div class="line">	&#125;</div><div class="line">	[array release]; // 释放array数组</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>注意不能autorelease NSAutoreleasePool对象</li>
+</ol>
+<h3 id="ARC规则"><a href="#ARC规则" class="headerlink" title="ARC规则"></a>ARC规则</h3><ol>
+<li><p>引用计数式内存管理的本质并没有改变，只是ARC自动帮我们处理“引用计数”的相关部分。</p>
+</li>
+<li><p>编译单位可以选择ARC是否有效。一个应用程序可以以混合ARC和非ARC的方式进行编译。</p>
+</li>
+<li><p><strong>NSObject *</strong>是指向NSObject类的指针。<strong>id</strong>相当于C语言中的<strong>void *</strong>。</p>
+</li>
+<li><p>在ARC下，类型必须附上所有权修饰符，有一下几种类型</p>
+<ol>
+<li>__strong</li>
+<li>__weak</li>
+<li>__unsafe_unretained</li>
+<li>__autoreleasing</li>
+</ol>
+</li>
+<li><p><strong>__strong</strong>修饰符：是id类型和所有对象类型默认的所有权修饰符。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">id obj = [[NSObject alloc] init]; </div><div class="line">// 上面实际的代码如下</div><div class="line">id __strong obj = [[NSObject alloc] init];</div></pre></td></tr></table></figure>
+<p>再来看看一下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/* ARC下 */</div><div class="line">&#123;</div><div class="line">  	id __strong obj = [[NSObject alloc] init];</div><div class="line">&#125; // 出了作用域，obj对象自动被释放</div><div class="line"></div><div class="line">/* 非ARC下的等价代码 */</div><div class="line">&#123;</div><div class="line">  	id obj = [[NSObject alloc] init];</div><div class="line">  	[obj release]; // 出作用域之前要记得释放obj对象，不然会导致内存泄漏</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>__strong修饰符表示对对象的强引用。在超出作用域时，强引用变量被废弃(<strong>obj指针被废弃</strong>)，与此同时它引用的对象也会被释放(<strong>对象被释放</strong>)。</p>
+<p>看看对于非自己生成的对象：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/* ARC下 */</div><div class="line">&#123;</div><div class="line">  	id __strong obj = [NSMutableArray array]; // 这里的obj是持有对象的</div><div class="line">  	// do something here</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 非ARC下的等价代码 */</div><div class="line">&#123;</div><div class="line">  	id obj = [NSMutableArray array];</div><div class="line">  	[obj retain];  // obj要手动持有</div><div class="line">  	// do something here</div><div class="line">  	</div><div class="line">  	[obj release];  // 出作用域时要手动释放</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>__weak</strong>修饰符主要是为了防止相互引用。__weak指的是弱引用，也就是变量不能持有对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __strong obj0 = [[NSObject alloc] init]; // obj0强引用对象，持有</div><div class="line">  	id __weak obj1 = obj0; // obj1弱引用对象，不持有</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所以在出作用域时obj0废弃，不在有变量持有对象，对象被释放。可以通过检查附有__weak修饰符的变量是否为nil，来判断对象是否已经被释放。</p>
+</li>
+<li><p><strong>__unsafe_unretained</strong>作用和__weak一样，但是如名字所言，它是不安全的。当这种变量指向的对象被释放时，weak型的变量就被置成nil(正确的做法)，但是unsafe的变量可能还指向某个地址(不安全的，因为那个地址的对象已经被释放了)。</p>
+</li>
+<li><p>来看看autorelease，先看段代码：（<strong>PS</strong>：有点迷糊）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/* ARC无效 */</div><div class="line">NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];</div><div class="line">id obj = [[NSObject alloc] init];</div><div class="line">[obj autorelease];</div><div class="line">[pool drain];</div><div class="line"></div><div class="line">/* ARC有效 */</div><div class="line">@autoreleasepool &#123;</div><div class="line">  	id __autoreleasing obj = [[NSObject alloc] init];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>但是通常不需要再@autorelease里面显式的使用__autoreleasing修饰符。</p>
+</li>
+<li><p>在ARC有效时有以下规定：</p>
+<ol>
+<li>不能使用retain/release/retainCount/autorelease方法</li>
+<li>不能使用NSAllocateObject/NSDeallocateObject</li>
+<li>要遵循方法的命名规则。alloc/new/copy/mutableCopy开头的方法，要返回自己生成并持有的对象。init开头的方法，基本只是对alloc方法返回的对象进行初始化并返回该对象。</li>
+<li>不要显式调用dealloc方法。因为在对象需要废弃时，会自动调用该方法。在ARC无效时，要在dealloc方法里面调用<code>[super dealloc];</code>。但是在ARC有效时，不需要这样调用，ARC会自动帮你处理。</li>
+<li>使用@autoreleasepool而不是NSAutoreleasePool</li>
+<li>结构体中的成员变量不能是Objective-C对象</li>
+<li>id 和 void* 不懂，什么东西？这里还和__bridge有点关系</li>
+</ol>
+</li>
+<li><p>在ARC有效时，变量有各种修饰符。当然属性也会有各种修饰符。 </p>
+<ol>
+<li>assign  == __unsafe_unretained</li>
+<li>copy == __strong （但是赋值的是被复制的对象）</li>
+<li>retain == __strong</li>
+<li>strong == __strong</li>
+<li>unsafe_unretained == __unsafe_unretained</li>
+<li>weak == __weak</li>
+</ol>
+</li>
+<li><p>数组1.3.6 不懂</p>
+</li>
+</ol>
+<h3 id="ARC的实现"><a href="#ARC的实现" class="headerlink" title="ARC的实现"></a>ARC的实现</h3><ol>
+<li><p>ARC由下面两者来实现</p>
+<ol>
+<li>clang（LLVM编译器）3.0以上</li>
+<li>objc4 Objective-C运行时库 493.9以上 （主要是 runtime/objc-arr.mm)</li>
+</ol>
+</li>
+<li><p><strong>__strong</strong>的实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __strong obj = [[NSObject alloc] init];</div><div class="line">  	// do something</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 经过编译之后 */</div><div class="line">id obj = objc_msgSend(NSObject, @selector(alloc)); // 执行alloc方法，obj变量持有对象，也就是强引用</div><div class="line">objc_msgSend(obj, @selector(init)); // 执行init方法，进行一些初始化操作，无关ARC</div><div class="line">// do something</div><div class="line">objc_release(obj); // 在变量出作用域时，编译器自动释放对象</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __strong obj = [NSMutableArray array];  // obj是持有对象的</div><div class="line">  	// do something</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 经过编译之后 */</div><div class="line">id obj objc_msgSend(NSMutableArray, @selector(array)); // 执行array方法，此时对象“照理来说”是已经被注册到NSAutoreleasePool里面，obj变量此时是不持有对象的</div><div class="line">objc_retainAutoreleasedReturnValue(obj); // 编译器帮obj持有注册到NSAutoreleasePool中的变量</div><div class="line">// do something</div><div class="line">objc_release(obj); // 变量要出作用域了，编译器自动释放对象</div><div class="line"></div><div class="line">/* array函数实质 */</div><div class="line">+ (id)array &#123;</div><div class="line">  	return [[NSMutableArray alloc] init];</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 经过编译之后 */</div><div class="line">+ (id)array &#123;</div><div class="line">  	id obj = objc_msgSend(NSMutableArray, @selector(alloc)); // 生成对象，obj持有</div><div class="line">  	objc_msgSend(obj, @selector(init)); // 初始化，无关ARC</div><div class="line">  	return objc_autoreleaseReturnValue(obj); // 讲道理，这一步是要将对象注册到NSAutoreleasePool中，obj不再持有对象(可以说是obj将对象持有权转交给了NSAutoreleasePool)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>按上面的说法来看，最终持有array对象的有2个：一个是NSAutoreleasePool，一个是obj。但是其实是做了优化的。<code>objc_autoreleaseReturnValue(obj);</code>这个函数观察到紧接着它自己调用的函数如果是<code>objc_retainAutoreleasedReturnValue(obj);</code>的话，就不会将对象注册到NSAutoreleasePool，直接将对象给obj让它持有就行了。这个优化就是因为__strong修饰符要持有对象，与其先将对象注册到NSAutoreleasePool，再从NSAutoreleasePool中拿到这个对象给obj持有一遍；还不如直接跳过注册，直接让obj持有对象。说到底，使用NSAutoreleasePool的原因就是怕没有变量持有对象，那么就取不到这个对象了，所以让NSAutoreleasePool暂时持有对象。</p>
+<p><strong>PS</strong>：让NSAutoreleasePool暂时持有对象这个说法不知道靠不靠谱</p>
+<p>todo add a picture</p>
+</li>
+<li><p><strong>__weak</strong>的实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __weak obj1 = obj; // 这里obj是强引用</div><div class="line">  	// do something</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 编译之后 */</div><div class="line">id = obj1;</div><div class="line">obj1 = 0;</div><div class="line">objc_storeWeak(&amp;obj1, obj);</div><div class="line">// do something</div><div class="line">objc_storeWeak(&amp;obj1, 0);</div></pre></td></tr></table></figure>
+<p><code>objc_storeWeak(&amp;obj1, obj);</code>函数将obj指向对象的地址作为key，将obj1变量的地址作为value，注册到weak表中，并将obj1指向对象。因为一个对象可以赋给多个值，所以一个key可以对应多个值。如果第二个参数是0的话，就将obj1这个变量的地址从weak表中删除（删除value为obj1地址的那条记录，废弃obj1对象）。<strong>PS</strong>：这么说的话，其实将obj1变量的地址当成key，更方便理解。</p>
+<p><strong>PS</strong>：我们来看看另外一种情况，就是释放对象时，但是weak变量还存在。这个时候会将weak变量置为nil。这是如何实现的呢？</p>
+<ol>
+<li>先将weak表中key为这个对象的地址的记录找出来</li>
+<li>将该地址对应的所有的weak变量找出来，将他们置为nil</li>
+<li>删除这条key为对象地址的记录</li>
+</ol>
+<p>由上面说明可以知道，大量使用weak变量也会消耗相应的CPU资源，所以只在需要避免循环引用时使用。</p>
+</li>
+<li><p>看看weak和unsafe_unretained的区别</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __weak obj = [[NSObject alloc] init];</div><div class="line">  	// do something</div><div class="line">&#125;</div><div class="line">/* 编译之后 */</div><div class="line">id = obj;</div><div class="line">id tmp = objc_msgSend(NSObject, @selector(alloc));</div><div class="line">objc_msgSend(tmp, @selector(init));</div><div class="line">objc_initWeak(&amp;obj, tmp);  // 在weak表中插入对象，将obj指向对象</div><div class="line">objc_release(tmp); // 释放对象后，不在有变量持有对象，这时候会将obj置为nil。安全</div><div class="line">// do something</div><div class="line">objc_destroyWeak(&amp;obj); // 删除记录（上一步已经做了，这里就不做了），废弃obj变量</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __unsafe_unretained obj = [[NSObject alloc] init];</div><div class="line">  	// do something</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 编译之后 */</div><div class="line">id obj = objc_msgSend(NSObject, @selector(alloc));</div><div class="line">objc_msgSend(obj, @selector(init));</div><div class="line">objc_release(obj); // 因为没有变量持有对象，所以释放对象，但是obj变量还指向了原对象。危险</div><div class="line">// do something</div></pre></td></tr></table></figure>
+</li>
+<li><p>还有就是要注意使用__weak变量时</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">NSLog(@&quot;%@&quot;, obj); // 假设这里的obj是weak变量</div><div class="line">/* 编译之后 */</div><div class="line">id tmp = objc_loadWeakRetained(&amp;obj);</div><div class="line">objc_autorelease(tmp);  // 这两句说的是将obj弱引用的对象交给NSAutoreleasePool持有，以保证这个对象可以被取到。</div><div class="line">NSLog(@&quot;%@&quot;, tmp); // 做正事</div></pre></td></tr></table></figure>
+<p>上面说的这个是，当使用weak变量的时候，会先将weak变量指向的对象交给NSAutoreleasePool持有，以保证这个对象万一被强引用它的变量释放的时候，还是可以取到。但是当多次使用weak变量的话，最好先将weak变量的对象给一个变量，让它强引用，这样就不用多次去和NSAutoreleasePool打交道，耗时间了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id tmp = obj; // 让tmp强引用对象，这里会发生一次和NSAutoreleasePool的交互，因为使用到了obj这个weak变量。这一步过后tmp和NSAutoreleasePool都持有对象</div><div class="line">// 使用tmp做正事，而不是频繁使用obj</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>__autoreleasing</strong>的实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@autoreleasepool &#123;</div><div class="line">  	id __autoreleasing obj = [[NSObject alloc] init];</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 编译之后 */</div><div class="line">id pool = objc_autoreleasePoolPush();</div><div class="line">id obj = objc_msgSend(NSObject, @selector(alloc));</div><div class="line">objc_msgSend(obj, @selector(init));</div><div class="line">objc_autorelease(obj); // 交给NSAutoreleasePool持有</div><div class="line">objc_autoreleasePoolPop(pool); // 废除NSAutoreleasePool，释放对象</div></pre></td></tr></table></figure>
+<p>看看对于非自己生成并持有的对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@autoreleasepool &#123;</div><div class="line">  	id __autoreleasing obj = [NSMutableArray array];</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 编译之后 */</div><div class="line">id pool = objc_autoreleasePoolPush();</div><div class="line">id obj = objc_msgSend(NSMutableAttay, @selector(array)); // 不持有</div><div class="line">objc_retainAutoreleasedReturnValue(obj); // 又重新持有对象。。。</div><div class="line">objc_autorelease(obj); // 又交给NSAutoreleasePool持有</div><div class="line">objc_autoreleasePoolPop(pool); // 废除NSAutoreleasePool，释放对象</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>uintptr_t _objc_rootRetainCount(id obj);</code>函数可以获得obj对象当前的引用计数，也就是有多少个变量强引用该对象。注意注册到NSAutoreleasePool中的对象也算一次引用计数。也就是如同上面一直说的，可以说是NSAutoreleasePool持有对象。注意，这个函数不一定可信。。。</p>
+</li>
+</ol>
+<h2 id="PS"><a href="#PS" class="headerlink" title="PS"></a>PS</h2><p>呕心沥血啊。看得要吐了。。。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/14/iOS-Core-Animation-reading-note-three/" rel="next" title="iOS Core Animation - The Performance of a Lifetime">
+                <i class="fa fa-chevron-left"></i> iOS Core Animation - The Performance of a Lifetime
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/20/SVGKit-source-code-analysis-one/" rel="prev" title="SVGKit源码分析（一）">
+                SVGKit源码分析（一） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/19/OC-ARC-GCD-reading-note-one/"
+           data-title="iOS与OS X多线程和内存管理 - 自动引用计数" data-url="http://yoursite.com/2016/07/19/OC-ARC-GCD-reading-note-one/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内存管理-引用计数"><span class="nav-number">2.1.</span> <span class="nav-text">内存管理/引用计数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARC规则"><span class="nav-number">2.2.</span> <span class="nav-text">ARC规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARC的实现"><span class="nav-number">2.3.</span> <span class="nav-text">ARC的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PS"><span class="nav-number">3.</span> <span class="nav-text">PS</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<span><script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script></span>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

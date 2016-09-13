@@ -1,0 +1,756 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="开篇第二星期开始，先和浩哥去看了美人鱼，就开始每天继续Coding-iOS的学习了。个人感觉这个Coding-iOS项目代码写的真好，开源之后简直就是iOS菜鸡开发者的福音。自己写起来之后，才发现coding速度真的是慢＝。＝
+问题列表">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2016 Week 2">
+<meta property="og:url" content="http://yoursite.com/2016/03/05/2016-week2/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="开篇第二星期开始，先和浩哥去看了美人鱼，就开始每天继续Coding-iOS的学习了。个人感觉这个Coding-iOS项目代码写的真好，开源之后简直就是iOS菜鸡开发者的福音。自己写起来之后，才发现coding速度真的是慢＝。＝
+问题列表">
+<meta property="og:image" content="http://yoursite.com/lionheart/1603/category.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1603/mbprogresshud.gif">
+<meta property="og:image" content="http://yoursite.com/lionheart/1603/easeinput.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1603/alertcontroller.png">
+<meta property="og:updated_time" content="2016-03-26T07:57:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2016 Week 2">
+<meta name="twitter:description" content="开篇第二星期开始，先和浩哥去看了美人鱼，就开始每天继续Coding-iOS的学习了。个人感觉这个Coding-iOS项目代码写的真好，开源之后简直就是iOS菜鸡开发者的福音。自己写起来之后，才发现coding速度真的是慢＝。＝
+问题列表">
+<meta name="twitter:image" content="http://yoursite.com/lionheart/1603/category.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/03/05/2016-week2/"/>
+
+  <title> 2016 Week 2 | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                2016 Week 2
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-05T10:26:10+08:00" content="2016-03-05">
+              2016-03-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/周记/" itemprop="url" rel="index">
+                    <span itemprop="name">周记</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/05/2016-week2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/05/2016-week2/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="开篇"><a href="#开篇" class="headerlink" title="开篇"></a>开篇</h2><p>第二星期开始，先和浩哥去看了美人鱼，就开始每天继续Coding-iOS的学习了。个人感觉这个<a href="https://github.com/Coding/Coding-iOS" target="_blank" rel="external">Coding-iOS</a>项目代码写的真好，开源之后简直就是iOS菜鸡开发者的福音。自己写起来之后，才发现coding速度真的是慢＝。＝</p>
+<h2 id="问题列表"><a href="#问题列表" class="headerlink" title="问题列表"></a>问题列表</h2><a id="more"></a>
+<ol>
+<li><code>UITextField</code>有关</li>
+<li>自定义<code>UITableViewCell</code>流程</li>
+<li><code>NSUserDefaults</code>基础</li>
+<li><code>dispatch_once</code> 和 <code>static</code> 变量</li>
+<li>创建<code>category</code></li>
+<li><code>SHA1</code>加密</li>
+<li>2种<code>enum</code>类型</li>
+<li>Coding调用API流程</li>
+<li><code>MBProgressHUD</code>基础</li>
+<li><code>keyWindow</code></li>
+<li>文件操作有关</li>
+<li>账户输入提示框</li>
+<li><code>enumerateObjectsUsingBlock:</code></li>
+<li>2种<code>UITableViewCell</code>重用方式</li>
+<li><code>NSRange</code>基础</li>
+<li><code>CAShapeLayer</code>基础</li>
+<li>显示/隐藏导航栏</li>
+<li>ViewController之间切换卡顿</li>
+<li><code>SDWebImageOptions</code></li>
+<li>在<code>category</code>中新增<code>property</code></li>
+<li>用户名存储整个流程</li>
+<li><code>UIAlertController</code>基础</li>
+</ol>
+<h2 id="UITextField有关"><a href="#UITextField有关" class="headerlink" title="UITextField有关"></a><code>UITextField</code>有关</h2><p>介绍几个UITextField的属性和方法</p>
+<ol>
+<li><code>secureTextEntry</code>: 输入的文本不可见，多用于密码输入</li>
+<li><code>clearButtonMode</code>: 清空文本输入的按钮的模式控制，属于<code>UITextFieldViewMode</code>。经常用到的有:<code>UITextFieldViewModeNever</code>, <code>UITextFieldViewModeWhileEditing</code></li>
+<li>触发事件: 常用的有 开始编辑(<code>UIControlEventEditingDidBegin</code>), 文本变更(<code>UIControlEventEditingChanged</code>), 结束编辑(<code>UIControlEventEditingDidEnd</code>)</li>
+<li><code>keyboardType</code>: 键盘类型，可选的有 <code>UIKeyboardTypeEmailAddress</code>,<br><code>UIKeyboardTypeDefault</code>等</li>
+</ol>
+<h2 id="自定义UITableViewCell流程"><a href="#自定义UITableViewCell流程" class="headerlink" title="自定义UITableViewCell流程"></a>自定义<code>UITableViewCell</code>流程</h2><p>参考这里</p>
+<h2 id="NSUserDefaults基础"><a href="#NSUserDefaults基础" class="headerlink" title="NSUserDefaults基础"></a><code>NSUserDefaults</code>基础</h2><p>NSUserDefaults适合存储轻量级的本地数据，非常适合用来存储登录界面的数据（用户名，密码等等）。用法也很简单👇</p>
+<ol>
+<li><p>存储数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];        // 获取 defaults</div><div class="line">[defaults setObject:loginData forKey:@&quot;loginData&quot;];                      // 存放登录数据</div><div class="line">[defaults synchronize];                                                  // 同步到磁盘，避免数据丢失</div></pre></td></tr></table></figure>
+</li>
+<li><p>读取数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];        // 获取 defaults</div><div class="line">NSDictionary *loginData = [defaults objectForKey:@&quot;loginData&quot;];          // 获取登录数据</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="dispatch-once-和-static-变量"><a href="#dispatch-once-和-static-变量" class="headerlink" title="dispatch_once 和 static 变量"></a><code>dispatch_once</code> 和 <code>static</code> 变量</h2><p><code>dispatch_once</code>函数只会被执行一次，经常用来创建单例实例，先来看看<code>dispatch_once</code>函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">void dispatch_once(dispatch_once_t *predicate, dispatch_block_t block);</div></pre></td></tr></table></figure></p>
+<p>第二个参数是只会被执行一次的代码块，第一个参数用来判断代码块是否被执行。该函数与<code>static</code>变量一同使用，看看具体代码👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">+ (instancetype)sharedManager &#123;</div><div class="line">    static Coding_NetAPIManager *manager = nil;</div><div class="line">    static dispatch_once_t pred;</div><div class="line">    dispatch_once(&amp;pred, ^&#123;</div><div class="line">        manager = [[Coding_NetAPIManager alloc] init];</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    return manager;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面的<code>static</code>变量属于类成员，如果没有在.h文件中声明该static变量，那么他就是私有的类成员。类成员不能通过实例对象或是实例方法(-)去访问，只能通过类实例或是类方法(+)访问。</p>
+<h2 id="创建category文件"><a href="#创建category文件" class="headerlink" title="创建category文件"></a>创建category文件</h2><p>这个很简单啦，xcode -&gt; New File -&gt; Objective-C File -&gt; 填写所需信息 -&gt; Finish<br>例如，创建一个<code>UIButton+Common</code>的category,应该👇<br><img src="/lionheart/1603/category.png" alt="category"></p>
+<h2 id="SHA1加密"><a href="#SHA1加密" class="headerlink" title="SHA1加密"></a><code>SHA1</code>加密</h2><p>加密方法如下👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (NSString *)sha1Str &#123;</div><div class="line">    const char *cstr = [self cStringUsingEncoding:NSUTF8StringEncoding];</div><div class="line">    NSData *data = [NSData dataWithBytes:cstr length:self.length];</div><div class="line"></div><div class="line">    uint8_t digest[CC_SHA1_DIGEST_LENGTH];</div><div class="line"></div><div class="line">    CC_SHA1(data.bytes, (CC_LONG)data.length, digest);</div><div class="line"></div><div class="line">    NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];</div><div class="line"></div><div class="line">    for (int i = 0; i &lt; CC_SHA1_DIGEST_LENGTH; i++) &#123;</div><div class="line">        [output appendFormat:@&quot;%02x&quot;, digest[i]];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return output;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>注意</strong> 该方法写在了NSString的category里面</p>
+<h2 id="2种enum类型"><a href="#2种enum类型" class="headerlink" title="2种enum类型"></a>2种<code>enum</code>类型</h2><p>指定enum有两种方式:<br>1.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">typedef enum &#123;</div><div class="line">    Get = 0,</div><div class="line">    Post,</div><div class="line">    Put,</div><div class="line">    Delete</div><div class="line">&#125; NetworkMethod;</div></pre></td></tr></table></figure></p>
+<p>2.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">typedef NS_ENUM(NSInteger, IllegalContentType) &#123;</div><div class="line">    IllegalContentTypeTweet = 0,</div><div class="line">    IllegalContentTypeTopic,</div><div class="line">    IllegalContentTypeProject,</div><div class="line">    IllegalContentTypeWebsite</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h2 id="Coding调用API流程"><a href="#Coding调用API流程" class="headerlink" title="Coding调用API流程"></a>Coding调用API流程</h2><p>参考这里</p>
+<h2 id="MBProgressHUD基础"><a href="#MBProgressHUD基础" class="headerlink" title="MBProgressHUD基础"></a><code>MBProgressHUD</code>基础</h2><p><a href="https://github.com/jdg/MBProgressHUD" target="_blank" rel="external"><code>MBProgressHUD</code></a>是一个用来显示提示信息的第三方库，效果图如下👇<br><img src="/lionheart/1603/mbprogresshud.gif" alt="MBProgressHUD demo"></p>
+<p>事例代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">- (void)viewDidLoad &#123;</div><div class="line">    [super viewDidLoad];</div><div class="line">    // Do any additional setup after loading the view, typically from a nib.</div><div class="line">    MBProgressHUD  *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];</div><div class="line">    hud.mode = MBProgressHUDModeText;</div><div class="line">    hud.detailsLabelFont = [UIFont boldSystemFontOfSize:15];</div><div class="line">    hud.detailsLabelText = @&quot;tip from vanney9.com&quot;;</div><div class="line">    hud.margin = 10;</div><div class="line">    hud.removeFromSuperViewOnHide = YES;</div><div class="line">    [hud hide:YES afterDelay:2.0f];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="keyWindow"><a href="#keyWindow" class="headerlink" title="keyWindow"></a><code>keyWindow</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[UIApplication sharedApplication].keyWindow</div></pre></td></tr></table></figure>
+<p>APP主界面</p>
+<h2 id="文件操作有关"><a href="#文件操作有关" class="headerlink" title="文件操作有关"></a>文件操作有关</h2><p>3个与文件操作相关的方法</p>
+<ol>
+<li><p>[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];<br>该方法返回该APP的Documents目录，在真机上显示的结果如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/var/mobile/Containers/Data/Application/7DB19AAA-B9E7-40D8-AAFA-C5BA2FA91CF0/Documents</div></pre></td></tr></table></figure>
+<p>在模拟机上显示的结果如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Users/vanney/Library/Developer/CoreSimulator/Devices/FF2B6585-B815-4762-AC40-268D51742C85/data/Containers/Data/Application/82FEAB7E-9245-4BA8-88ED-A559034BA5F0/Documents</div></pre></td></tr></table></figure>
+</li>
+<li><p>[NSMutableDictionary dictionaryWithContentsOfFile:@”file name”];<br>该方法读取<code>@&quot;file name&quot;</code>这个文件中的内容（注意：该文件应该存放键值对，一般XML文件），并返回由该键值对组成的NSMutableDictionary</p>
+</li>
+<li>[loginDataList writeToFile:@”file name” atomically:YES];<br>该方法中的loginDataList是一个NSMutableDictionary,这个方法将键值对写入<code>@&quot;file name&quot;</code>这个文件中</li>
+</ol>
+<h2 id="账户输入提示框"><a href="#账户输入提示框" class="headerlink" title="账户输入提示框"></a>账户输入提示框</h2><p>效果如下图👇<br><img src="/lionheart/1603/easeinput.png" alt="easeinput demo"><br>实现该效果的步骤如下：</p>
+<ol>
+<li>创建提示的UITableView<br>显示提示的白色框框实际上是一个UITableView，UITableView的内容根据当前已经输入的内容进行改变，若没有输入到@符号，就从之前输入过的账户中搜索；若已经输入了@符号，就显示不同的邮箱后缀。</li>
+<li>将上一步创建的UITableView添加到输入账号，密码的UITableView中，并将提示框UITableView的位置定在账号的cell下面。</li>
+<li>至于两个UITableView的交互：当账号的cell中的UITextField内容发生变化时，调用提示框UITableView的一个block，传入当前UITextField的文本，对提示的内容进行实时的变换。</li>
+</ol>
+<h2 id="enumerateObjectsUsingBlock"><a href="#enumerateObjectsUsingBlock" class="headerlink" title="enumerateObjectsUsingBlock:"></a><code>enumerateObjectsUsingBlock:</code></h2><p><code>enumerateObjectsUsingBlock:</code>方法和<code>for-in</code>类似，具体代码如下👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">NSDictionary *dict = @&#123;@&quot;a&quot;: @&quot;1&quot;, @&quot;b&quot;: @&quot;2&quot;&#125;;</div><div class="line">[dict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) &#123;</div><div class="line">    NSLog(@&quot;key: %@, value: %@&quot;, key, obj);</div><div class="line">&#125;];</div></pre></td></tr></table></figure></p>
+<p>推荐使用<code>for-in</code>方法，快。</p>
+<h2 id="2种UITableViewCell重用方式"><a href="#2种UITableViewCell重用方式" class="headerlink" title="2种UITableViewCell重用方式"></a>2种<code>UITableViewCell</code>重用方式</h2><p><code>UITableViewCell</code>有两种dequeueReuse方法：</p>
+<ol>
+<li><p><code>- (id)dequeueReusableCellWithIdentifier:(NSString *)identifier;</code><br>该方法是不用事先注册Cell，但是它可能返回nil；所以当返回nil时，需要重新init。示例代码如下👇</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">static NSString *CellIdentifier = @&quot;Cell&quot;;</div><div class="line">UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];</div><div class="line">if (cell == nil) &#123;</div><div class="line">    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>- (id)dequeueReusableCellWithIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath;</code><br>该方法在iOS6中取代了第一种方法，它可以保证一定会返回UITableViewCell，但是在初始化UITableView时，需要进行UITableViewCell的注册，如下👇</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[_tableView registerClass:[CustomCell class] forCellReuseIdentifier:@&quot;Cell&quot;];</div></pre></td></tr></table></figure>
+<p>于是在重用UITableViewCell，不需要判断是否为nil，代码如下👇</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">CustomCell *cell = [tableView dequeueReusableCellWithIdentifier:@&quot;Cell&quot; forIndexPath:indexPath];</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="NSRange基础"><a href="#NSRange基础" class="headerlink" title="NSRange基础"></a><code>NSRange</code>基础</h2><p>NSRange是一个结构体，其定义如下👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">typedef struct _NSRange &#123;</div><div class="line">    NSUInteger location;</div><div class="line">    NSUInteger length;</div><div class="line">&#125; NSRange;</div></pre></td></tr></table></figure></p>
+<p>其中<code>location</code>表示起始位置，<code>length</code>表示长度。</p>
+<h2 id="CAShapeLayer基础"><a href="#CAShapeLayer基础" class="headerlink" title="CAShapeLayer基础"></a><code>CAShapeLayer</code>基础</h2><p><code>CAShapeLayer</code>继承自<code>CALayer</code>，它表示一个形状，有一个<code>path</code>属性用来描述该形状，然后可以对这个形状进行描边，填充等操作。示例代码如下👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">CAShapeLayer *layer = [CAShapeLayer layer];</div><div class="line">// 创建path, 给layer添加path, 释放path</div><div class="line">CGMutablePathRef pathRef = CGPathCreateMutable();</div><div class="line">CGRect bounds = CGRectInset(cell.bounds, 0, 0);</div><div class="line">CGPathAddRect(pathRef, nil, bounds);</div><div class="line">layer.path = pathRef;</div><div class="line">CFRelease(pathRef);</div><div class="line">// 对layer进行填充操作</div><div class="line">layer.fillColor = [UIColor colorWithWhite:1.0 alpha:0.8].CGColor;</div><div class="line">// 添加layer</div><div class="line">UIView *bgView = [[UIView alloc] initWithFrame:bounds];</div><div class="line">[bgView.layer addSublayer:layer];</div></pre></td></tr></table></figure></p>
+<h2 id="显示-隐藏导航栏"><a href="#显示-隐藏导航栏" class="headerlink" title="显示/隐藏导航栏"></a>显示/隐藏导航栏</h2><p>使用下列方法实现导航栏的显示或者隐藏<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (void)viewWillAppear:(BOOL)animated &#123;</div><div class="line">    [super viewWillAppear:animated];</div><div class="line">    // 隐藏导航栏，若Hidden设为NO，则显示导航栏</div><div class="line">    [self.navigationController setNavigationBarHidden:YES animated:YES];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="ViewController之间切换卡顿"><a href="#ViewController之间切换卡顿" class="headerlink" title="ViewController之间切换卡顿"></a>ViewController之间切换卡顿</h2><p>可能的原因：没有设置ViewController的backgroundColor＝。＝</p>
+<h2 id="SDWebImageOptions"><a href="#SDWebImageOptions" class="headerlink" title="SDWebImageOptions"></a><code>SDWebImageOptions</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">typedef NS_OPTIONS(NSUInteger, SDWebImageOptions) &#123;</div><div class="line">    SDWebImageRetryFailed = 1 &lt;&lt; 0,//下载失败了会再次尝试下载</div><div class="line">    WebImageLowPriority = 1 &lt;&lt; 1,//当UIScrollView等正在滚动时，延迟下载图片（放置scrollView滚动卡）</div><div class="line">    SDWebImageCacheMemoryOnly = 1 &lt;&lt; 2,//只缓存到内存中</div><div class="line">    SDWebImageProgressiveDownload = 1 &lt;&lt; 3,// 图片会边下边显示</div><div class="line">    SDWebImageRefreshCached = 1 &lt;&lt; 4,//将硬盘缓存交给系统自带的NSURLCache去处理</div><div class="line">    SDWebImageContinueInBackground = 1 &lt;&lt; 5,//后台下载</div><div class="line">    SDWebImageHandleCookies = 1 &lt;&lt; 6,// 通过设置NSMutableURLRequest.HTTPShouldHandleCookies = YES来处理存储在NSHTTPCookieStore中的cookie</div><div class="line">    SDWebImageAllowInvalidSSLCertificates = 1 &lt;&lt; 7,// 允许不受信任的SSL证书。主要用于测试目的。</div><div class="line">    SDWebImageHighPriority = 1 &lt;&lt; 8,</div><div class="line">    SDWebImageDelayPlaceholder = 1 &lt;&lt; 9,</div><div class="line">    SDWebImageTransformAnimatedImage = 1 &lt;&lt; 10,</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="在category中新增property"><a href="#在category中新增property" class="headerlink" title="在category中新增property"></a>在<code>category</code>中新增<code>property</code></h2><p>正常情况下，在category中是不能新增property的，要按如下步骤进行＝。＝</p>
+<ol>
+<li><p>导入头文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#import &lt;objc/runtime.h&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>新增@property</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@property (nonatomic, strong) UIActivityIndicatorView *buttonIndicatorView;</div></pre></td></tr></table></figure>
+</li>
+<li><p>自定义<code>setter</code>和<code>getter</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">static char EAButtonIndicatorViewKey;</div><div class="line"></div><div class="line">- (void)setButtonIndicatorView:(UIActivityIndicatorView *)buttonIndicatorView &#123;</div><div class="line">    objc_setAssociatedObject(self, &amp;EAButtonIndicatorViewKey, buttonIndicatorView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);  </div><div class="line">&#125;</div><div class="line"></div><div class="line">- (UIActivityIndicatorView *)buttonIndicatorView &#123;</div><div class="line">    return objc_getAssociatedObject(self, &amp;EAButtonIndicatorViewKey);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="用户名存储整个流程"><a href="#用户名存储整个流程" class="headerlink" title="用户名存储整个流程"></a>用户名存储整个流程</h2><p>参考这里</p>
+<h2 id="UIAlertController基础"><a href="#UIAlertController基础" class="headerlink" title="UIAlertController基础"></a><code>UIAlertController</code>基础</h2><p>从iOS8开始，<code>UIAlertController</code>开始替代<code>UIAlertAction</code>,先来看看UIAlertController的效果图👇<br><img src="/lionheart/1603/alertcontroller.png" alt="UIAlertController demo"><br>实现代码👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@&quot;提示&quot; message:@&quot;欢迎注册 Coding，请尽快去邮箱查收邮件并激活账号。如若在收件箱中未看到激活邮件，请留意一下垃圾邮件箱(T_T)。&quot; preferredStyle:UIAlertControllerStyleAlert];</div><div class="line">UIAlertAction *ok = [UIAlertAction actionWithTitle:@&quot;知道了&quot; style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) &#123;</div><div class="line">    [alertController dismissViewControllerAnimated:YES completion:nil];</div><div class="line">&#125;];</div><div class="line"></div><div class="line">[alertController addAction:ok];</div><div class="line">[self presentViewController:alertController animated:YES completion:nil];</div></pre></td></tr></table></figure></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://blog.csdn.net/ryantang03/article/details/8622415" target="_blank" rel="external">iOS学习笔记42—利用dispatch_once创建单例</a></li>
+<li><a href="http://tutuge.me/2015/03/21/effective-objective-c-5-enum/" target="_blank" rel="external">Enum-枚举的正确使用-Effective-Objective-C-读书笔记-Item-5</a></li>
+<li><a href="http://blog.sunnyxx.com/2014/04/30/ios_iterator/" target="_blank" rel="external">ios中集合遍历方法的比较和技巧</a></li>
+<li><a href="http://eric-gao.iteye.com/blog/2234047" target="_blank" rel="external">UITableView的两种重用Cell方法的区别</a></li>
+<li><a href="http://www.henishuo.com/ios-cashapelayer-learning/" target="_blank" rel="external">iOS CAShapeLayer精讲</a></li>
+<li><a href="http://www.jianshu.com/p/c07df06c60be" target="_blank" rel="external">SDWebImage源码剖析</a></li>
+</ul>
+<h2 id="P-S"><a href="#P-S" class="headerlink" title="P.S"></a>P.S</h2><p>以上都不是重点，重点是ollie要过立了＝。＝</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/27/jazzhands/" rel="next" title="JazzHands">
+                <i class="fa fa-chevron-left"></i> JazzHands
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/05/iOS-coding-skill/" rel="prev" title="iOS编程小技巧">
+                iOS编程小技巧 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/03/05/2016-week2/"
+           data-title="2016 Week 2" data-url="http://yoursite.com/2016/03/05/2016-week2/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#开篇"><span class="nav-number">1.</span> <span class="nav-text">开篇</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题列表"><span class="nav-number">2.</span> <span class="nav-text">问题列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UITextField有关"><span class="nav-number">3.</span> <span class="nav-text">UITextField有关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义UITableViewCell流程"><span class="nav-number">4.</span> <span class="nav-text">自定义UITableViewCell流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSUserDefaults基础"><span class="nav-number">5.</span> <span class="nav-text">NSUserDefaults基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dispatch-once-和-static-变量"><span class="nav-number">6.</span> <span class="nav-text">dispatch_once 和 static 变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建category文件"><span class="nav-number">7.</span> <span class="nav-text">创建category文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SHA1加密"><span class="nav-number">8.</span> <span class="nav-text">SHA1加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2种enum类型"><span class="nav-number">9.</span> <span class="nav-text">2种enum类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Coding调用API流程"><span class="nav-number">10.</span> <span class="nav-text">Coding调用API流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MBProgressHUD基础"><span class="nav-number">11.</span> <span class="nav-text">MBProgressHUD基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#keyWindow"><span class="nav-number">12.</span> <span class="nav-text">keyWindow</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件操作有关"><span class="nav-number">13.</span> <span class="nav-text">文件操作有关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#账户输入提示框"><span class="nav-number">14.</span> <span class="nav-text">账户输入提示框</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#enumerateObjectsUsingBlock"><span class="nav-number">15.</span> <span class="nav-text">enumerateObjectsUsingBlock:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2种UITableViewCell重用方式"><span class="nav-number">16.</span> <span class="nav-text">2种UITableViewCell重用方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSRange基础"><span class="nav-number">17.</span> <span class="nav-text">NSRange基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CAShapeLayer基础"><span class="nav-number">18.</span> <span class="nav-text">CAShapeLayer基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#显示-隐藏导航栏"><span class="nav-number">19.</span> <span class="nav-text">显示/隐藏导航栏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ViewController之间切换卡顿"><span class="nav-number">20.</span> <span class="nav-text">ViewController之间切换卡顿</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SDWebImageOptions"><span class="nav-number">21.</span> <span class="nav-text">SDWebImageOptions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在category中新增property"><span class="nav-number">22.</span> <span class="nav-text">在category中新增property</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用户名存储整个流程"><span class="nav-number">23.</span> <span class="nav-text">用户名存储整个流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UIAlertController基础"><span class="nav-number">24.</span> <span class="nav-text">UIAlertController基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">25.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P-S"><span class="nav-number">26.</span> <span class="nav-text">P.S</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<span><script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script></span>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

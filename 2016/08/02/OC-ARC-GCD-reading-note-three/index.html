@@ -1,0 +1,700 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言iOS与OS X多线程和内存管理 读书笔记（三） GCD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS与OS X多线程和内存管理 - GCD">
+<meta property="og:url" content="http://yoursite.com/2016/08/02/OC-ARC-GCD-reading-note-three/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言iOS与OS X多线程和内存管理 读书笔记（三） GCD">
+<meta property="og:updated_time" content="2016-08-03T12:01:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS与OS X多线程和内存管理 - GCD">
+<meta name="twitter:description" content="前言iOS与OS X多线程和内存管理 读书笔记（三） GCD">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/08/02/OC-ARC-GCD-reading-note-three/"/>
+
+  <title> iOS与OS X多线程和内存管理 - GCD | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS与OS X多线程和内存管理 - GCD
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-02T15:54:22+08:00" content="2016-08-02">
+              2016-08-02
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/02/OC-ARC-GCD-reading-note-three/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/02/OC-ARC-GCD-reading-note-three/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>iOS与OS X多线程和内存管理 读书笔记（三） <strong>GCD</strong></p>
+<a id="more"></a>
+<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="GCD概要"><a href="#GCD概要" class="headerlink" title="GCD概要"></a>GCD概要</h3><ol>
+<li><strong>GCD</strong>：Grand Central Dispatch，大中枢派发，很牛逼的名字</li>
+</ol>
+<h3 id="GCD的API"><a href="#GCD的API" class="headerlink" title="GCD的API"></a>GCD的API</h3><ol>
+<li><p><code>dispatch_async(queue, block);</code></p>
+<p>将想要执行的任务封装进Block，放他到queue中执行。这里的queue有两种：</p>
+<ol>
+<li>一种是<strong>Serial Dispatch Queue</strong>，顺序队列，放入这里面的block任务是一个一个执行的，先进先出。</li>
+<li>另一种是 <strong>Concurrent Dispatch Queue</strong>，并行队列，意思就是会开多个队列，block一次进入各个队列同时执行；但是队列的数量由系统控制，那些还来不及进入任何一个队列执行的block，只能等某个队列的block执行完了，再进入队列执行了；所以说这里的每个block的执行顺序是不确定的。</li>
+</ol>
+<p><strong>PS</strong>：当然你也可以同时开多个顺序队列，以达到并行队列的效果；但是不能多开，因为程序在各个队列之间切换，也就是在各个线程之间切换，也就是所谓的上下文切换，需要耗费CPU等资源。当然存放每个线程的状态等信息也需要耗费资源。</p>
+</li>
+<li><p><code>dispatch_queue_create;</code></p>
+<p>这个API用来生成Dispatch Queue。看看下面代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t mySerialDispatchQueue = dispatch_queue_create(&quot;com.vanney9.serialQueue&quot;, NULL);</div></pre></td></tr></table></figure>
+<p>上面的代码用来生成一个Serial dispatch queue，这个函数有两个参数：第一个是queue的名字，最好唯一；第二个是代表生成的queue的类型，若指定为NULL，则生成serial dispatch queue，若指定为<code>DISPATCH_QUEUE_CONCURRENT</code>，则生成concurrent dispatch queue。返回类型是<em>dispatch_queue_t</em>。</p>
+<p><strong>PS</strong>：生成的queue，要通过<code>dispatch_release</code>函数手动释放。</p>
+</li>
+<li><p><code>dispatch_get_main_queue();</code></p>
+<p>这个函数用来获取程序的主线程，主线程只有一个，当然是serial dispatch queue。追加到主线程执行的任务会在主线程的Runloop中执行。</p>
+</li>
+<li><p><code>dispatch_get_global_queue(level, 0);</code></p>
+<p>这个函数用来获取Global dispatch queue。它是一个Concurrent dispatch queue。它有4个人优先级：High Priority，Default Priority，Low Priority和Background Priority。</p>
+</li>
+<li><p><code>dispatch_set_target_queue</code> （有点晕）</p>
+<p>该函数用来设置queue的优先级。默认情况下，使用<code>dispatch_queue_create</code>生成的queue都是和Global dispatch queue的默认优先级相同。可以使用该函数来改变优先级：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t mySerialQueue = dispatch_queue_create(&quot;com.vanney9.serialQueue&quot;, NULL); // 优先级为Default Priority</div><div class="line">dispatch_queue_t globalBackgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0); // 获取Background Priority的queue</div><div class="line">dispatch_set_target_queue(mySerialQueue, globalBackgroundQueue); // 设置mySerialQueue的优先级和globalBackgroundQueue的相同</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>dispatch_after(time, queue, block);</code></p>
+<p>该函数表示在time时间之后（比如3s后）将block加到queue中。</p>
+</li>
+<li><p>Dispatch Group</p>
+<p>追加到dispatch queue中的多个处理都结束时，想进行一些处理该如何实现呢？对于serial dispatch queue，这很简单；但是如果是concurrent dispatch queue，这时候就需要<strong>Dispatch Group</strong>。如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0); //先创建一个concurrent queue</div><div class="line">dispatch_group_t group = dispatch_group_create(); // 创建一个group</div><div class="line"></div><div class="line">/* 再将3个Block添加到这个queue中，并且属于同一个group */</div><div class="line">dispatch_group_async(group, queue, ^&#123;NSLog(@&quot;blk1&quot;);&#125;);</div><div class="line">dispatch_group_async(group, queue, ^&#123;NSLog(@&quot;blk2&quot;);&#125;);</div><div class="line">dispatch_group_async(group, queue, ^&#123;NSLog(@&quot;blk3&quot;);&#125;);</div><div class="line"></div><div class="line">dispatch_group_notify(group, dispatch_get_main_queue(), ^&#123;NSLog(@&quot;Done&quot;);&#125;); // 全部结束后通知主线程，将Block追加到主线程中</div><div class="line"></div><div class="line">dispatch_release(group); // 释放group。因为Global dispatch queue不需要我们手动释放</div></pre></td></tr></table></figure>
+<p>上面的<code>dispatch_group_notify</code>函数在group中的三个block全部都执行完之后，才会将<code>^{NSLog(@&quot;Done&quot;);}</code>这一个Block追加到主线程中去。还可以使用<code>dispatch_group_wait</code>函数，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 1ull *NSEC_PER_SEC); // 1s的时间</div><div class="line">long result = dispatch_group_wait(group, time); // 表示group经过1s之后，是什么结果</div><div class="line">if (result == 0) &#123;</div><div class="line">  	/* result == 0，那么group中的Block已经全部处理完 */</div><div class="line">&#125; else &#123;</div><div class="line">  	/* result != 0， 那么还没处理完 */</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>PS</strong>：注意，执行<code>dispatch_gropu_wait</code>的线程是处于停滞状态的，只有当该函数返回后，才会执行之后的操作，所以还是推荐使用<code>dispatch_group_notify;</code>，异步，无阻塞。</p>
+</li>
+<li><p><code>dispatch_barrier_async</code></p>
+<p>该函数和concurrent dispatch queue一起使用，看看例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">dispatch_async(queue, blk_reading1); // 注意这里queue是concurrent dispatch queue </div><div class="line">dispatch_async(queue, blk_reading2);</div><div class="line">dispatch_async(queue, blk_reading3);</div><div class="line">dispatch_barrier_async(queue, blk_writing);</div><div class="line">dispatch_async(queue, blk_reading4);</div><div class="line">dispatch_async(queue, blk_reading5);</div><div class="line">dispatch_async(queue, blk_reading6);</div><div class="line">dispatch_async(queue, blk_reading7);</div></pre></td></tr></table></figure>
+<p>上面的代码会同时先执行blk_reading1,blk_reading2和blk_reading3这三个读取操作，然后等执行完后再单独执行blk_writing这一写入操作，最后等写入完成后再开始同时执行之后的4的读取操作。</p>
+</li>
+<li><p><code>dispatch_sync</code></p>
+<p>该函数同步执行block，也就是说block不执行完，就一直停留在这个函数这里，容易导致死锁。看看例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t queue = dispatch_get_main_queue(); // 注意，这段代码在主线程上执行。获取主线程</div><div class="line">dispatch_sync(queue, block); // 死锁</div></pre></td></tr></table></figure>
+<p><code>dispatch_sync</code>在主线程上将block追加到主线程去处理，这时候程序一直卡在<code>dispatch_sync</code>这里。因为该函数一直在等待block处理结束；但是block的处理也是在主线程上，需要等当前这些操作结束后，才会去执行block。这样就卡住了，死锁，GG。</p>
+</li>
+<li><p><code>dispatch_apply</code></p>
+<p>该函数同样要等待block执行完，才结束。它可以指定block的执行次数。</p>
+</li>
+<li><p><code>dispatch_suspend(queue)/dispatch_resume(queue)</code></p>
+<ol>
+<li><code>dispatch_suspend(queue);</code>：挂起queue，未执行的block暂停</li>
+<li><code>dispatch_resume(queue);</code>：恢复queue，继续执行之前没有执行的block</li>
+</ol>
+</li>
+<li><p>一些其他API</p>
+<ol>
+<li>Dispatch Semaphore：更细粒度的多线程控制，类似于信号量</li>
+<li><code>dispatch_once</code>：整个应用程序中只执行一次，多线程安全，单例模式</li>
+<li>Dispatch I/O：文件分块读取，提高文件读取效率</li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/29/OC-ARC-GCD-reading-note-two/" rel="next" title="iOS与OS X多线程和内存管理 - Blocks">
+                <i class="fa fa-chevron-left"></i> iOS与OS X多线程和内存管理 - Blocks
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/08/linux-kernel-development-reading-note-one/" rel="prev" title="Linux内核设计与实现">
+                Linux内核设计与实现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/08/02/OC-ARC-GCD-reading-note-three/"
+           data-title="iOS与OS X多线程和内存管理 - GCD" data-url="http://yoursite.com/2016/08/02/OC-ARC-GCD-reading-note-three/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GCD概要"><span class="nav-number">2.1.</span> <span class="nav-text">GCD概要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GCD的API"><span class="nav-number">2.2.</span> <span class="nav-text">GCD的API</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<span><script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script></span>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
