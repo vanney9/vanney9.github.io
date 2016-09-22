@@ -1,0 +1,750 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="C," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言C和指针读书笔记，第一篇。会按章节排序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C和指针读书笔记（一）">
+<meta property="og:url" content="http://yoursite.com/2016/09/14/Pointers-on-c-reading-note-one/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言C和指针读书笔记，第一篇。会按章节排序">
+<meta property="og:updated_time" content="2016-09-22T07:46:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C和指针读书笔记（一）">
+<meta name="twitter:description" content="前言C和指针读书笔记，第一篇。会按章节排序">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/09/14/Pointers-on-c-reading-note-one/"/>
+
+  <title> C和指针读书笔记（一） | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div>
+    <script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                C和指针读书笔记（一）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-14T14:42:12+08:00" content="2016-09-14">
+              2016-09-14
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/14/Pointers-on-c-reading-note-one/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/14/Pointers-on-c-reading-note-one/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>C和指针读书笔记，第一篇。会按章节排序</p>
+<a id="more"></a>
+<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="快速上手"><a href="#快速上手" class="headerlink" title="快速上手"></a>快速上手</h3><ol>
+<li>函数参数若指定为 <strong>const</strong> ,表示函数不会修改这个参数。</li>
+<li>字符串就是一串以 <strong>NUL</strong> 字节结尾的字符，NUL作为字符串终止符，不属于字符串。 NUL也就是 ‘\0’ </li>
+<li>字符串常量以双引号起止。比如 “Hello” ，在内存中占据6个字节，分别是：H e l l o 和 NUL</li>
+</ol>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ol>
+<li>代码的翻译阶段：<ol>
+<li>程序的各个源代码先被转换成目标代码，也就是 <strong>.o</strong> 文件。编译阶段</li>
+<li>然后各个目标代码会被链接器捆绑到一起，并且链接器还会将所需的各种库链接到程序中；这些目标代码和各种库捆绑到一起，形成最终的可执行文件，也就是 <strong>.out</strong> 文件。寻找各种库，会在系统库和用户指定的函数库中寻找。链接阶段</li>
+</ol>
+</li>
+<li>编译阶段：先解析(parse)；若有优化选项的话，还要进行优化(optimizer)</li>
+<li>对于字符注意一下 <strong>三字母词</strong> 。这些都以??开头，比如说 <code>??)</code>表示的是<code>]</code>。所以当你打出 <code>??):</code> 的时候，在控制台的输出会是 <code>]:</code> </li>
+<li><code>&#39;\100&#39;</code>：这里的100是八进制，表示64。也就是ASCII码值为64的字符，也就是<code>@</code></li>
+<li>同4所讲，<code>&#39;\x40&#39;</code>：是用16进制来计算，也表示的是<code>@</code></li>
+</ol>
+<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><ol>
+<li><p>C语言中仅有4种基本类型：整形、浮点型、指针和聚合类型（数组和结构体等）</p>
+</li>
+<li><p><strong>整形家族</strong> 包括字符、短整型、整形和长整型，他们都有 <strong>有符号</strong> 和 <strong>无符号</strong> 两种版本</p>
+</li>
+<li><p><strong>指针变量</strong> 也是一个变量，他存储的值是一个内存地址</p>
+</li>
+<li><p>字符串常量，比如”Hello”，这个常量的值是一个 <strong>指向字符的指针</strong> ，也就是一个地址，所以不能将”Hello”赋值给一个字符数组。</p>
+</li>
+<li><p><code>int *a;</code> 说明了 <em>a 是一个int型变量，这样才进而说明了a是指向一个int变量的指针。 </em>号表示取地址</p>
+</li>
+<li><p>看个等价的代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">char</span> *message = <span class="string">"Hallo"</span>;</div><div class="line"><span class="comment">/* 等价于 */</span></div><div class="line"><span class="keyword">char</span> *message;</div><div class="line">message = <span class="string">"Hallo"</span>; <span class="comment">// PS 这里是message，而不是*message</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>typeof</strong> ：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">typeof <span class="keyword">char</span> *ptr_to_char; <span class="comment">// 这里ptr_to_char就是指向char的指针类型</span></div><div class="line">ptr_to_char a; <span class="comment">// 声明了一个指向char的指针变量a</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>常量</strong> : 被声明为常量之后，是无法被修改的。比如<code>int const a = 9;</code> 之后无法对这个a再赋新值。</p>
+</li>
+<li><p>看看常量和指针的结合</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> <span class="keyword">const</span> *pci; <span class="comment">// 指向整形常量的指针，可以修改指针的值，但是不能修改指向的int的值</span></div><div class="line"><span class="keyword">int</span> * <span class="keyword">const</span> cpi; <span class="comment">// 指向整形的常量指针，可以修改指向的int的值，但是不能改变指针让他指向另外的地址</span></div><div class="line"><span class="keyword">int</span> <span class="keyword">const</span> * <span class="keyword">const</span> cpci; <span class="comment">// 都不能修改</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>编译器可以确认4种不同类型的 <strong>作用域</strong> ：文件作用域、函数作用域、代码块作用域和原型作用域</p>
+</li>
+<li><p>标识符（变量、函数等等）都有链接属性，三种：<strong>none</strong> 、<strong>internal</strong> 和 <strong>external</strong> PS 不是很懂。。</p>
+</li>
+<li><p>有3个地方用来存储变量（ <strong>存储类型</strong> ）： <strong>普通内存</strong> 、 <strong>运行时堆栈</strong> 、 <strong>硬件寄存器</strong>。在代码块之外声明的变量称之为静态变量（static），存放在静态内存中，也就是不属于堆栈的内存，这种变量在整个程序执行时都生存着；在代码块内部声明的变量称之为自动变量（auto），存放在堆栈中，当开始执行代码块时生成这种变量，代码块执行结束，变量被销毁。</p>
+</li>
+<li><p>对于代码块内的变量可以加上<code>static</code>修饰符，强行将它变成静态变量，存放在静态内存中，整个程序运行时间都生存。但是即使这样，它的作用域还是只能在代码块中，在代码块外，它还是无法被使用。</p>
+</li>
+<li><p>注意：形参不能声明为静态变量</p>
+</li>
+<li><p>给自动变量加<code>register</code>修饰符，说明该变量存放在寄存器中，寄存器中的访问速度比内存更快。注意：存放在寄存器中的数量是有限的，如果太多的变量声明为register，只有一部分会存放在寄存器中，那么其他的只能按照正常的变量来处理，将其存放在内存中。</p>
+</li>
+<li><p>关于 <strong>static</strong> 关键字</p>
+</li>
+<li><p>用于函数定义或用于代码块之外的变量声明时：static用于修改标识符的链接属性，从external改为internal；但是标识符的存储类型和作用域不受影响；说明了该标识符只能在文件内部使用</p>
+</li>
+<li><p>在代码块内部使用static来声明变量时：static用来修改变量的存储类型，变成了静态变量；但是链接属性和作用域是不变的</p>
+</li>
+<li><p>注意：函数的代码总是存放在静态内存中。</p>
+</li>
+<li><p>在代码块中的变量声明成external的话，它是一个在外部被定义的静态变量，存放在静态内存中，不再是一个自动变量</p>
+</li>
+</ol>
+<h3 id="操作符和表达式"><a href="#操作符和表达式" class="headerlink" title="操作符和表达式"></a>操作符和表达式</h3><ol>
+<li><p>移位操作符分为逻辑移位和算术移位。逻辑移位插入0，算术移位插入1</p>
+</li>
+<li><p>位操作符：<strong>AND(&amp;)</strong> 、 <strong>OR(|)</strong> 、 <strong>XOR(^)</strong> 对他们的操作数的各个位分别执行与、或、异或操作</p>
+</li>
+<li><p><strong>~</strong> 操作符按位取反</p>
+</li>
+<li><p><strong>&amp;</strong> 操作符获得变量的地址</p>
+</li>
+<li><p>在mac上 <code>sizeof(int)</code> 是4，<code>sizeof(char)</code>是1，注意<code>getchar()</code>返回的是int， <strong>EOF</strong> 也是int型</p>
+</li>
+<li><p><code>sizeof(a = b + 1);</code>是对表达式求字节数，这里并没有对a赋值</p>
+</li>
+<li><p>注意：表达式中的字符型( <strong>char</strong> ) 和短整型( <strong>short int</strong> ) 在使用之前会先被转换成为整形，如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">char</span> a, b, c; <span class="comment">// abc都是1个字节</span></div><div class="line">a = b + c; <span class="comment">// b和c先被转化成整形，也就是4个字节，在相加；得到结果后再截断成一个字节存储进a中</span></div></pre></td></tr></table></figure>
+<p>这样做是为了提高精度，因为如果涉及到位运算的话，很容易将8位的其中某些位数给删除掉，增加到32位就会减小这种错误的概率</p>
+</li>
+<li><p>如果操作符的各个操作数不是同样的类型（位数不同），那么位数少的类型会先转化成位数多的类型，再进行运算</p>
+</li>
+</ol>
+<h3 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h3><ol>
+<li><p>内存的地址以字节( <strong>byte</strong> )为单位，每个地址就是一个字节，8位。</p>
+</li>
+<li><p>为了存储更大的值，经常把2个或更多的字节合并在一起来组成更大的内存单位，也就是 <strong>字</strong> 。字经常由2个或是4个字节组成。所以第一个字的地址为100的话，第二个字的地址可能是102或是104</p>
+</li>
+<li><p>注意：以4字节的字为例。虽然一个字包含4个字节，但是这个字还是只有一个地址，至于它的地址是最左边字节的地址还是最右边的字节的地址，这由机器来决定。（高位地址和低位地址）</p>
+</li>
+<li><p>注意一下 * 的使用</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> a = <span class="number">112</span>; <span class="comment">// a的值是112，假设a的地址是100</span></div><div class="line"><span class="keyword">int</span> *b = &amp;a; <span class="comment">// 这里是将a的地址100，赋给指针b</span></div><div class="line"><span class="built_in">printf</span>(<span class="string">"%d"</span>, *b); <span class="comment">// 这里是取得b指针指向的地址内的值，也就是 112</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>指针变量不是整形变量，所以<code>d = 10 - *d;</code> 这样是错的。不能将一个int型赋值给一个指针变量</p>
+</li>
+<li><p>表达式是一个值，若这个值的存储位置没有清晰定义的话，这个表达式只能是右值，不能是左值</p>
+</li>
+<li><p><code>*cp++</code> 这个表达式中 ++ 优先级高于 * 。执行步骤</p>
+<ol>
+<li>++操作符先生成一份cp的拷贝</li>
+<li>对cp执行加一的操作</li>
+<li>现在cp++执行完成，他是第一步中cp的拷贝；再执行*操作，取这个拷贝指向的地址的值</li>
+</ol>
+</li>
+<li><p><code>NULL</code> <code>&#39;\0&#39;</code> 的int值都是 0</p>
+</li>
+<li><p>指针运算很智能。就以指针加一的运算为例。</p>
+<ol>
+<li>char类型占据一个字节，所以指向char的指针加一，也就是地址加一，指向下一个char</li>
+<li>float类型可能占据4个字节，那么指向float的指针加一，其实是地址加4，结果也是指向下一个float</li>
+</ol>
+</li>
+<li><p>两个指针可以相减（这两个指针必须指向同一个数组中的元素），相减的结果的类型是 <strong>ptrdiff_t</strong> ，一种有符号整数类型。结果是两指针在内训中的距离，注意还是以数组元素的长度为单位，不是以字节为单位。</p>
+</li>
+<li><p>对指针执行<code>&lt; &lt;= &gt; &gt;=</code>操作也是可以的，同样，两指针必须指向同一数组的元素</p>
+</li>
+<li><p>可以对任意两指针执行相等或不相等的测试，指向同一地址的两指针相等</p>
+</li>
+</ol>
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><ol>
+<li>函数原型很重要，如果没有函数原型，就调用函数（ps：函数调用发生在函数定义之前），那么默认的是返回整形。这时举个例子，调用的函数返回的是float，float存放在内存中的是二进制，但是编译器会将他解释成int；如果将这个函数返回值赋给float，这个值也是int型转化的float，不是原来的float。</li>
+<li>C函数的参数都是传值调用，就是传递拷贝，不改变原值；传指针的话，可以改变指针指向的值，但是也是传值调用，因为传递的是指针的拷贝</li>
+<li><strong>ADT</strong> 抽象数据类型</li>
+<li>可变参数列表是通过宏来实现的，这些宏位于 stdrag.h 头文件中。PS 有点不懂</li>
+</ol>
+<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><ol>
+<li>​</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag">#C</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/07/pro-objective-c-design-patterns-for-iOS/" rel="next" title="Objective-C编程之道 读书笔记">
+                <i class="fa fa-chevron-left"></i> Objective-C编程之道 读书笔记
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/09/14/Pointers-on-c-reading-note-one/"
+           data-title="C和指针读书笔记（一）" data-url="http://yoursite.com/2016/09/14/Pointers-on-c-reading-note-one/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#快速上手"><span class="nav-number">2.1.</span> <span class="nav-text">快速上手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本概念"><span class="nav-number">2.2.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据"><span class="nav-number">2.3.</span> <span class="nav-text">数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作符和表达式"><span class="nav-number">2.4.</span> <span class="nav-text">操作符和表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#指针"><span class="nav-number">2.5.</span> <span class="nav-text">指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数"><span class="nav-number">2.6.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组"><span class="nav-number">2.7.</span> <span class="nav-text">数组</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
