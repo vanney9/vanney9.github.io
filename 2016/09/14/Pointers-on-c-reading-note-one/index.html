@@ -90,10 +90,12 @@
 <meta property="og:url" content="http://yoursite.com/2016/09/14/Pointers-on-c-reading-note-one/index.html">
 <meta property="og:site_name" content="Leonhart">
 <meta property="og:description" content="前言C和指针读书笔记，第一篇。会按章节排序">
-<meta property="og:updated_time" content="2016-09-22T07:46:47.000Z">
+<meta property="og:image" content="http://yoursite.com/lionheart/1603/array.JPG">
+<meta property="og:updated_time" content="2016-09-23T09:25:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C和指针读书笔记（一）">
 <meta name="twitter:description" content="前言C和指针读书笔记，第一篇。会按章节排序">
+<meta name="twitter:image" content="http://yoursite.com/lionheart/1603/array.JPG">
 
 
 
@@ -130,7 +132,7 @@
 
 
 
-  <div>
+  <div display: none>
     <script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script>
   </div>
 
@@ -415,7 +417,40 @@
 <li>可变参数列表是通过宏来实现的，这些宏位于 stdrag.h 头文件中。PS 有点不懂</li>
 </ol>
 <h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><ol>
-<li>​</li>
+<li><p>数组名是一个指向其他类型的指针常量（比如指向int型的），不能修改它的指向。也就是说数组名是一个指针，但是不能被赋值。</p>
+</li>
+<li><p>注意，<code>int a[10]; sizeof(a);</code> 使用sizeof时，并不是求指针的长度，而是数组的长度</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</div><div class="line"><span class="keyword">int</span> *b = &amp;a；</div><div class="line"><span class="keyword">int</span> c[<span class="number">10</span>];</div><div class="line"><span class="keyword">sizeof</span>(b); <span class="comment">// b的大小是8字节，因为他是指针</span></div><div class="line"><span class="keyword">sizeof</span>(c); <span class="comment">// c的大小是40字节，因为他是int型数组，有10个4字节的int</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>数组的下标引用和指针操作是一样的。一下几种写法等价</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">array</span>[<span class="number">2</span>]; </div><div class="line">*(<span class="built_in">array</span> + <span class="number">2</span>);</div><div class="line">*(<span class="number">2</span> + <span class="built_in">array</span>);</div><div class="line"><span class="number">2</span>[<span class="built_in">array</span>];</div></pre></td></tr></table></figure>
+</li>
+<li><p>指针有时效率比下标引用快</p>
+</li>
+<li><p>注意，数组和指针还是有区别的，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> a[<span class="number">5</span>]; <span class="comment">// 分配了5个int的内存空间，a指向第一个int内存空间，并没有说明a指针存放在哪里</span></div><div class="line"><span class="keyword">int</span> *b; <span class="comment">// 分配了一个指针变量的内存空间，用来存放b指针，但是没有分配int内存空间，也没有说明b指向哪里</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>注意，数组名是个指针常量，不能被修改它的指向。但是，当它被当成参数传递给函数时，函数接收到的是一个指向数组第一个元素的指针变量，可以修改它的指向。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">strlen</span><span class="params">(<span class="keyword">char</span> *<span class="built_in">string</span>)</span></span>; <span class="comment">// 使用这样的函数声明来传递数组名</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>再看看数组和指针的区别</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">char</span> message1[] = <span class="string">"Hello"</span>;</div><div class="line"><span class="keyword">char</span> *message2 = <span class="string">"Hello"</span>;</div></pre></td></tr></table></figure>
+<p><img src="/lionheart/1603/array.JPG" alt="array"></p>
+</li>
+<li><p>二维数组的数组名是一个指向一维数组的指针，多维依次照推</p>
+</li>
+<li><p>声明一个指向数组的指针</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> matrix[<span class="number">3</span>][<span class="number">10</span>];</div><div class="line"><span class="keyword">int</span> (*p)[<span class="number">10</span>] = matrix; <span class="comment">// p指向三维数组的第一行</span></div><div class="line"><span class="comment">// ps 要避免下面的声明</span></div><div class="line"><span class="keyword">int</span> (*p)[]; <span class="comment">// 最好要声明长度，因为方便指针的运算</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>函数传递多维数组时的声明形式如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">int matrix[3][10];</div><div class="line">func(matrix);</div><div class="line">// 一下两种原型声明都可以,记得声明低维的长度</div><div class="line">void func(int (*mat)[10]);</div><div class="line">void func(int mat[][10]);</div><div class="line">// ps 下面这样的声明是不对的</div><div class="line">void func(int **mat); // 这传递的是指向整形指针的指针，而不是指向数组的指针</div></pre></td></tr></table></figure>
+</li>
+<li><p>指针数组：元素都是指针的数组：<code>int *p[10];</code> p是一个数组，长度为10，元素是int型指针</p>
+</li>
+<li><p>看看这段代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* size of char is 1, size of char * is 8*/</span></div><div class="line"><span class="keyword">char</span> a = <span class="string">'a'</span>;</div><div class="line">   <span class="keyword">char</span> *b = &amp;a;</div><div class="line">   <span class="built_in">printf</span>(<span class="string">"size of char is %ld, and size of char * is %ld\n"</span>, <span class="keyword">sizeof</span>(a), <span class="keyword">sizeof</span>(b)); </div><div class="line"></div><div class="line"><span class="comment">/* size of keyword 36 ,因为有36个char；size of keyp 32，因为有4个char型指针；</span></div><div class="line">   size of keyword[0] 9,因为一维数组有9个char； size of keyp[0] 8,因为是一个char型指针 */</div><div class="line">   <span class="keyword">char</span> <span class="keyword">const</span> keyword[][<span class="number">9</span>] = &#123;</div><div class="line">           <span class="string">"do"</span>,</div><div class="line">           <span class="string">"haha"</span>,</div><div class="line">           <span class="string">"hehe"</span>,</div><div class="line">           <span class="string">"yeah"</span></div><div class="line">   &#125;;</div><div class="line"></div><div class="line">   <span class="keyword">char</span> <span class="keyword">const</span> *keyp[] = &#123;</div><div class="line">           <span class="string">"do"</span>,</div><div class="line">           <span class="string">"haha"</span>,</div><div class="line">           <span class="string">"hehe"</span>,</div><div class="line">           <span class="string">"yeah"</span></div><div class="line">   &#125;;</div><div class="line"><span class="built_in">printf</span>(<span class="string">"size of keyword is %ld, and size of keyp is %ld"</span>, <span class="keyword">sizeof</span>(keyword[<span class="number">0</span>]), <span class="keyword">sizeof</span>(keyp[<span class="number">0</span>]));</div><div class="line">   <span class="built_in">printf</span>(<span class="string">"size of keyword is %ld, and size of keyp is %ld"</span>, <span class="keyword">sizeof</span>(keyword[<span class="number">0</span>]), <span class="keyword">sizeof</span>(keyp[<span class="number">0</span>]));</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
 </ol>
 
       
