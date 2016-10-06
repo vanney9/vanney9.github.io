@@ -91,7 +91,8 @@
 <meta property="og:site_name" content="Leonhart">
 <meta property="og:description" content="前言C和指针读书笔记，第一篇。会按章节排序">
 <meta property="og:image" content="http://yoursite.com/lionheart/1603/array.JPG">
-<meta property="og:updated_time" content="2016-09-23T09:25:42.000Z">
+<meta property="og:image" content="http://yoursite.com/lionheart/1609/argv.png">
+<meta property="og:updated_time" content="2016-09-30T03:27:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C和指针读书笔记（一）">
 <meta name="twitter:description" content="前言C和指针读书笔记，第一篇。会按章节排序">
@@ -443,15 +444,258 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> matrix[<span class="number">3</span>][<span class="number">10</span>];</div><div class="line"><span class="keyword">int</span> (*p)[<span class="number">10</span>] = matrix; <span class="comment">// p指向三维数组的第一行</span></div><div class="line"><span class="comment">// ps 要避免下面的声明</span></div><div class="line"><span class="keyword">int</span> (*p)[]; <span class="comment">// 最好要声明长度，因为方便指针的运算</span></div></pre></td></tr></table></figure>
 </li>
 <li><p>函数传递多维数组时的声明形式如下：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">int matrix[3][10];</div><div class="line">func(matrix);</div><div class="line">// 一下两种原型声明都可以,记得声明低维的长度</div><div class="line">void func(int (*mat)[10]);</div><div class="line">void func(int mat[][10]);</div><div class="line">// ps 下面这样的声明是不对的</div><div class="line">void func(int **mat); // 这传递的是指向整形指针的指针，而不是指向数组的指针</div></pre></td></tr></table></figure>
-</li>
-<li><p>指针数组：元素都是指针的数组：<code>int *p[10];</code> p是一个数组，长度为10，元素是int型指针</p>
-</li>
-<li><p>看看这段代码</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* size of char is 1, size of char * is 8*/</span></div><div class="line"><span class="keyword">char</span> a = <span class="string">'a'</span>;</div><div class="line">   <span class="keyword">char</span> *b = &amp;a;</div><div class="line">   <span class="built_in">printf</span>(<span class="string">"size of char is %ld, and size of char * is %ld\n"</span>, <span class="keyword">sizeof</span>(a), <span class="keyword">sizeof</span>(b)); </div><div class="line"></div><div class="line"><span class="comment">/* size of keyword 36 ,因为有36个char；size of keyp 32，因为有4个char型指针；</span></div><div class="line">   size of keyword[0] 9,因为一维数组有9个char； size of keyp[0] 8,因为是一个char型指针 */</div><div class="line">   <span class="keyword">char</span> <span class="keyword">const</span> keyword[][<span class="number">9</span>] = &#123;</div><div class="line">           <span class="string">"do"</span>,</div><div class="line">           <span class="string">"haha"</span>,</div><div class="line">           <span class="string">"hehe"</span>,</div><div class="line">           <span class="string">"yeah"</span></div><div class="line">   &#125;;</div><div class="line"></div><div class="line">   <span class="keyword">char</span> <span class="keyword">const</span> *keyp[] = &#123;</div><div class="line">           <span class="string">"do"</span>,</div><div class="line">           <span class="string">"haha"</span>,</div><div class="line">           <span class="string">"hehe"</span>,</div><div class="line">           <span class="string">"yeah"</span></div><div class="line">   &#125;;</div><div class="line"><span class="built_in">printf</span>(<span class="string">"size of keyword is %ld, and size of keyp is %ld"</span>, <span class="keyword">sizeof</span>(keyword[<span class="number">0</span>]), <span class="keyword">sizeof</span>(keyp[<span class="number">0</span>]));</div><div class="line">   <span class="built_in">printf</span>(<span class="string">"size of keyword is %ld, and size of keyp is %ld"</span>, <span class="keyword">sizeof</span>(keyword[<span class="number">0</span>]), <span class="keyword">sizeof</span>(keyp[<span class="number">0</span>]));</div></pre></td></tr></table></figure>
-<p>​</p>
 </li>
 </ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">int matrix[3][10];</div><div class="line">func(matrix);</div><div class="line">// 一下两种原型声明都可以,记得声明低维的长度</div><div class="line">void func(int (*mat)[10]);</div><div class="line">void func(int mat[][10]);</div><div class="line">// ps 下面这样的声明是不对的</div><div class="line">void func(int **mat); // 这传递的是指向整形指针的指针，而不是指向数组的指针</div></pre></td></tr></table></figure>
+<p>1.1111111111111112e+3211111111111111121111111111111111. 指针数组：元素都是指针的数组：<code>int *p[10];</code> p是一个数组，长度为10，元素是int型指针</p>
+<p>1.1111111111111112e+3211111111111111121111111111111111. 看看这段代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* size of char is 1, size of char * is 8*/</span></div><div class="line">   	<span class="keyword">char</span> a = <span class="string">'a'</span>;</div><div class="line">       <span class="keyword">char</span> *b = &amp;a;</div><div class="line">       <span class="built_in">printf</span>(<span class="string">"size of char is %ld, and size of char * is %ld\n"</span>, <span class="keyword">sizeof</span>(a), <span class="keyword">sizeof</span>(b)); </div><div class="line">   	</div><div class="line">   	<span class="comment">/* size of keyword 36 ,因为有36个char；size of keyp 32，因为有4个char型指针；</span></div><div class="line">   	   size of keyword[0] 9,因为一维数组有9个char； size of keyp[0] 8,因为是一个char型指针 */</div><div class="line">       <span class="keyword">char</span> <span class="keyword">const</span> keyword[][<span class="number">9</span>] = &#123;</div><div class="line">               <span class="string">"do"</span>,</div><div class="line">               <span class="string">"haha"</span>,</div><div class="line">               <span class="string">"hehe"</span>,</div><div class="line">               <span class="string">"yeah"</span></div><div class="line">       &#125;;</div><div class="line"></div><div class="line">       <span class="keyword">char</span> <span class="keyword">const</span> *keyp[] = &#123;</div><div class="line">               <span class="string">"do"</span>,</div><div class="line">               <span class="string">"haha"</span>,</div><div class="line">               <span class="string">"hehe"</span>,</div><div class="line">               <span class="string">"yeah"</span></div><div class="line">       &#125;;</div><div class="line">   	<span class="built_in">printf</span>(<span class="string">"size of keyword is %ld, and size of keyp is %ld"</span>, <span class="keyword">sizeof</span>(keyword[<span class="number">0</span>]), <span class="keyword">sizeof</span>(keyp[<span class="number">0</span>]));</div><div class="line">       <span class="built_in">printf</span>(<span class="string">"size of keyword is %ld, and size of keyp is %ld"</span>, <span class="keyword">sizeof</span>(keyword[<span class="number">0</span>]), <span class="keyword">sizeof</span>(keyp[<span class="number">0</span>]));</div></pre></td></tr></table></figure>
+<h3 id="字符串、字符和字节"><a href="#字符串、字符和字节" class="headerlink" title="字符串、字符和字节"></a>字符串、字符和字节</h3><ol>
+<li><p>字符串以一个位全为0的NUL字节结尾，注意是字节，但是这个字节不属于字符串</p>
+</li>
+<li><p>字符串长度，就是包含的字符数，不包括NUL结尾字节，使用<code>strlen</code>函数取得</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">size_t</span> <span class="built_in">strlen</span>(<span class="keyword">char</span> <span class="keyword">const</span> *<span class="built_in">string</span>); <span class="comment">//这里返回的是size_t,无符号整形</span></div></pre></td></tr></table></figure>
+<p>因为无符号整形是不会为负数的，所以注意这两种写法</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="built_in">strlen</span>(x) &gt;= <span class="built_in">strlen</span>(y)) ...  <span class="comment">// right</span></div><div class="line"><span class="keyword">if</span> (<span class="built_in">strlen</span>(x) - <span class="built_in">strlen</span>(y) &gt;= <span class="number">0</span>) ... <span class="comment">// wrong</span></div></pre></td></tr></table></figure>
+<p>第一种是对的，但是第二种是错的。因为两个无符号整形相减还是无符号整形，不可能是负数，所以if里面的判断始终正确。无符号整形要和有符号的计算时，最好先强制转化成int型</p>
+</li>
+<li><p><code>strcpy</code>用拷贝字符串，<code>strcat</code>用于连接字符串；他们返回值都是新的字符串的首地址，也就是指向首字符的指针</p>
+</li>
+<li><p><code>strcmp</code>用于两字符串比较，a小于b，返回负值；a等于b，返回0；a大于b，返回正值</p>
+</li>
+<li><p>查找一个字符：区分大小写</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">char</span> *<span class="title">strchr</span><span class="params">(<span class="keyword">char</span> <span class="keyword">const</span> *str, <span class="keyword">int</span> ch)</span></span>; <span class="comment">// 在str中找第一个ch字符，返回指向ch的指针，若没有返回NULL指针</span></div><div class="line"><span class="function"><span class="keyword">char</span> *<span class="title">strrchr</span><span class="params">(<span class="keyword">char</span> <span class="keyword">const</span> *str, <span class="keyword">int</span> ch)</span></span>; <span class="comment">// 同上，找的是最后一个ch字符</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>查找任意几个字符：区分大小写</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">char</span> *<span class="title">strpbrk</span><span class="params">(<span class="keyword">char</span> <span class="keyword">const</span> *str, <span class="keyword">char</span> <span class="keyword">const</span> *group)</span></span>; <span class="comment">// 在str中查找group中的字符，返回第一个找到的字符的指针</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>查找一个子串</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">char</span> *<span class="title">strstr</span><span class="params">(<span class="keyword">char</span> <span class="keyword">const</span> *s1, <span class="keyword">char</span> <span class="keyword">const</span> *s2)</span></span>; <span class="comment">// 若s2是一个空字符串，就返回s1</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>返回错误信息：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">char</span> *<span class="title">strerror</span><span class="params">(<span class="keyword">int</span> error_number)</span></span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>memcpy()</code>函数可以将任意字节数的内容复制到另一个地方，和<code>strcpy</code>不同的是，他碰到NUL字节不会停止工作</p>
+</li>
+</ol>
+<h3 id="结构和联合"><a href="#结构和联合" class="headerlink" title="结构和联合"></a>结构和联合</h3><ol>
+<li><p>使用结构将不同类型的值存储在一起，显然数组无法完成这个工作</p>
+</li>
+<li><p>数组元素可以通过下标来访问，因为他们的长度相同；但是结构不行，因为他的成员类型不同</p>
+</li>
+<li><p>通过 <strong>.</strong> 来访问成，也就是 <code>结构.成员</code></p>
+</li>
+<li><p>还可以通过 <strong>-&gt;</strong> 来访问成员，但是适用于结构指针，也就是 <code>结构指针-&gt;成员</code></p>
+</li>
+<li><p>注意结构的自引用：</p>
+<ol>
+<li>结构体的成员是结构体本身，这是不合法的。不能确定内存大小，无限递归了</li>
+<li>结构体的成员是指向结构体本身的指针，这是合法的。可以确定内存大小，因为指针大小是8字节</li>
+</ol>
+</li>
+<li><p>不完整声明，用于处理两个互相引用的结构体：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> B; <span class="comment">// B的不完整声明</span></div><div class="line"><span class="keyword">struct</span> A &#123;</div><div class="line">  	<span class="keyword">struct</span> B *partner;</div><div class="line">&#125;</div><div class="line"><span class="keyword">struct</span> B &#123;</div><div class="line">  	<span class="keyword">struct</span> A *partner;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>假设px是指向结构体的指针，那么<code>px+1</code>是非法的；这里不像数组</p>
+</li>
+<li><p><code>*px-&gt;c.b</code> 先执行-&gt;，然后执行 . 操作，最后执行 * 操作</p>
+</li>
+<li><p>关于结构体边界对齐的三个基本原则</p>
+<ol>
+<li>普通数据成员对齐规则：第一个数据成员放在offset为0的地方，以后每个数据成员存储的起始位置要从该成员大小的整数倍开始（比如int在32位机为４字节，则要从4的整数倍地址开始存储）。</li>
+<li>结构体成员对齐规则：如果一个结构里有某些结构体成员，则该结构体成员要从其内部最大元素大小的整数倍地址开始存储。（struct a里存有struct b，b里有char，int，double等元素，那b应该从8的整数倍开始存储。）</li>
+<li>结构体大小对齐规则：结构体大小也就是sizeof的结果，必须是其内部成员中最大的对齐参数的整数倍，不足的要补齐。</li>
+</ol>
+</li>
+<li><p><code>offsetof(struct, member);</code>函数可以求出member的存储首地址和结构体的存储首地址的偏移量，以字节为单位</p>
+</li>
+<li><p>在函数调用时，传递结构体不是一个好的方案，可以使用下面的传参方是</p>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(<span class="keyword">register</span> <span class="keyword">struct</span> <span class="keyword">const</span> *structP)</span></span>;</div></pre></td></tr></table></figure>
+<p>   传递指向结构体的指针可以提高效率，因为指针的size为8，一般来说是比结构体小很多的。另外添加const修饰，可以防止结构体被修改；另外增加register修饰，将这个指针存放在寄存器上面，可以提高指针访问成员（-&gt;）操作的效率。PS，如果想对结构体进行修改的话，去掉const修饰</p>
+<ol>
+<li>联合的所有成员引用的是 <strong>内存中的相同位置</strong> ，当你想在 <strong>不同时刻</strong> 将 <strong>不同的东西</strong> 存放在 <strong>相同的位置</strong> 时，就可以使用联合</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">union</span> &#123;</div><div class="line">  	<span class="keyword">float</span> f;</div><div class="line">  	<span class="keyword">int</span> i;</div><div class="line">&#125; fi;</div><div class="line"></div><div class="line">fi.f = <span class="number">3.14159</span>;</div><div class="line"><span class="built_in">printf</span>(<span class="string">"%d\n"</span>, fi.i);</div></pre></td></tr></table></figure>
+<p>   float 和 int 都占据32位的数据，上面的代码先将3.14159这一浮点数以二进制的存放在32位的内存上面；然后fi.i会以int的形式读取相同内存位置上的这32位数据</p>
+<h3 id="动态内存分配"><a href="#动态内存分配" class="headerlink" title="动态内存分配"></a>动态内存分配</h3><ol>
+<li><p>数组的长度在运行时才可以知道，但是我们却经常给他一个常量，那么在编译时就会分配给数组以长度大小的内存。所以可以使用动态分配内存</p>
+</li>
+<li><p><code>malloc</code> 和 <code>free</code> 函数用于执行动态内存的分配和释放。他们维护着一块内存池</p>
+</li>
+<li><p><code>malloc</code>从内存池中取出一块 <strong>连续</strong> 内存，并将指向这块内存的指针返回；当不需要这块内存时，使用<code>free</code>释放，并将该快内存归还给内存池</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> *<span class="title">malloc</span> <span class="params">(<span class="keyword">size_t</span> size)</span></span>; <span class="comment">// 参数是字节数</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">free</span><span class="params">(<span class="keyword">void</span> *pointer)</span></span>; <span class="comment">// 参数是malloc返回的指针</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>如果 <code>malloc</code> 无法返回指定大小的内存，就会返回一个NULL指针。他返回的内存的起始位置满足边界对齐的要求</p>
+</li>
+<li><p><code>void *calloc(size_t num_elements, size_t element_size);</code> 函数在返回内存时，会先将这块内存初始化，全部置为0</p>
+</li>
+<li><p><code>void realloc(void *ptr, size_t new_size);</code> 函数用于扩大或缩小已经分配出来的内存块(ptr)</p>
+</li>
+<li><p>传递给 <code>free</code> 函数的指针必须是 <code>malloc</code> <code>calloc</code> <code>realloc</code> 函数返回的指针，不然会报错</p>
+</li>
+<li><p>动态内存不再使用时，却没有释放，会导致内存泄漏。有些OS，所有的执行程序共享一个内存池，持续的内存泄漏会导致内存池被榨干，导致所有的程序瘫痪，这时只能重启OS；对于其他OS，内存泄漏也会导致该程序的内存池被榨干，导致程序崩溃</p>
+</li>
+</ol>
+<h3 id="使用结构和指针"><a href="#使用结构和指针" class="headerlink" title="使用结构和指针"></a>使用结构和指针</h3><ol>
+<li>链表的各个节点，在物理内存上并不相邻</li>
+<li>关于单链表和双链表的插入操作，没有细看</li>
+</ol>
+<h3 id="高级指针话题"><a href="#高级指针话题" class="headerlink" title="高级指针话题"></a>高级指针话题</h3><ol>
+<li><p>函数指针：指向函数的指针，再取值之前也要先初始化</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span>)</span></span>;</div><div class="line"><span class="keyword">int</span> (*pf)(<span class="keyword">int</span>) = &amp;f; <span class="comment">// 初始化函数指针，注意这里的 &amp; 是可选的</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>函数指针被初始化之后，调用函数方式有如下几种：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> ans;</div><div class="line">ans = f(<span class="number">25</span>);</div><div class="line">ans = (*pf)(<span class="number">25</span>);</div><div class="line">ans = pf(<span class="number">25</span>);</div></pre></td></tr></table></figure>
+<ol>
+<li>第一种：编译器先将函数名 <strong>隐式</strong> 的转化成函数指针，然后找到内存中函数的位置，开始执行</li>
+<li>第二种：先对pf函数指针取地址，获得函数名(f)；再将函数名转化成函数指针。。。多此一举；最后找到内存中的位置，执行函数</li>
+<li>第三种：这就很直接了，直接到对应的地址执行函数</li>
+</ol>
+</li>
+<li><p>回调函数：函数指针；转移表：函数指针数组</p>
+</li>
+<li><p>命令行参数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span>;</div></pre></td></tr></table></figure>
+<p>main函数的2个参数，argc表示命令行参数的数目，argv指向一个指针数组的首地址。这个argv可以认为是指向的一个字符串数组的第一个。这个字符串数组的第一个元素是程序的名称</p>
+<p><img src="/lionheart/1609/argv.png" alt="argv.png"></p>
+</li>
+<li><p>字符串常量出现在表达式中的时候，它的值是一个指针常量</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"xyz"</span> + <span class="number">1</span>; <span class="comment">// 对指向x的指针常量加一，也就是这个表达式的值是指向y的指针，因为 "xyz" 表示一个指向char的指针</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="预处理器"><a href="#预处理器" class="headerlink" title="预处理器"></a>预处理器</h3><ol>
+<li><p>编译C程序的第一步称为 <strong>预处理阶段</strong> ，主要任务就是：删除注释、插入被#include指令包含的文件的内容、定义和替换#define指令定义的符号以及确定代码的部分内容是否应该根据一些条件编译指令进行编译</p>
+</li>
+<li><p><code>#define name stuff</code> 每当有符号name出现，预处理器就用stuff将其替换。来几个例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> reg	register</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> do_forever for(;;)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> CASE break;case</span></div><div class="line"><span class="comment">// 一行定义不完，就加反斜杠</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> DEBUG_PRINT printf(<span class="meta-string">"File %s line %d:"</span> \</span></div><div class="line">					<span class="meta-string">" x=%d, y=%d, z=%d"</span>, \</div><div class="line">					__FILE__, __LINE__, \</div><div class="line">					x, y, z)  <span class="comment">// 注意这里使用了 "相邻的两个字符串自动结合成一个字符串的特性"</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>#define name(paraneter_list) stuff</code>，或称之为宏，本质就是文本的替换</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SQUARE(x) x * x</span></div></pre></td></tr></table></figure>
+<p>之后使用 <code>SQUARE(5)</code> 就等同于 <code>5 * 5</code> ；文本替换</p>
+</li>
+<li><p>宏相比与函数，不存在函数调用/返回的额外开销，所以更快</p>
+</li>
+<li><p>使用 <code>#undef</code> 来移除一个宏定义</p>
+</li>
+<li><p>条件编译：可以选择代码的一部分是被正常编译还是被完全忽略。用于支持条件编译的基本结构是 <code>#if</code> 和 <code>#endif</code> 指令</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">if</span> constant-expression</span></div><div class="line">	statements</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<p>其中的 constant-expression 是常量表达式，由预处理器进行求值，如果为真，就编译statements，否则就不处理他们。看个例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> DEBUG 1</span></div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> DEBUG</span></div><div class="line">	<span class="built_in">printf</span>(<span class="string">"x=%d, y=%d"</span>, x, y);</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+</li>
+<li><p>条件编译还有 <code>#elif</code> <code>#else</code> 这两条指令</p>
+</li>
+<li><p>条件编译可以测试符号是否被定义</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 下面两句等价 用于判断一个宏是否被定义</span></div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(OS_UNIX)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> OS_UNIX</span></div><div class="line"></div><div class="line"><span class="comment">// 下面两句等价 用于判断一个宏是否没被定义</span></div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> !defined(OS_UNIX)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> OS_UNIX</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>#include</code> 指令替换文件的内容到这条指令的位置，这样一个头文件被包含到10个源文件中，他就被编译10次；这会涉及一些开销，不过我们不用在意</p>
+</li>
+<li><p><code>#include &lt;filename&gt;</code> 库文件。编译器会定义一系列的标准位置，这条文件包含指令会在这些标准位置里寻找库文件。例如，UNIX OS里，编译器会在 /usr/include 目录里面查找库文件。编译器有一个命令行选项，可以让你添加目录，那么这个目录也会是搜索的一个target</p>
+</li>
+<li><p><code>#include &quot;filename&quot;</code> 现在源文件的当前目录下面寻找，没有的话再到库文件里面寻找</p>
+</li>
+<li><p>一个头文件可能被一个源文件包含几次，也就是多重包含。解决这个问题的方法是在编写头文件时使用如下方法：</p>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _HEADERNAME_H</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> _HEADERNAME_H 1</span></div><div class="line"><span class="comment">/*</span></div><div class="line">** all the statements</div><div class="line">*/</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<p>   这样，当第一次包含时，正常编译；第二次包含时，由于已经定义了 _HEADERNAME_H 就不再编译了</p>
+<h3 id="输入-输出函数"><a href="#输入-输出函数" class="headerlink" title="输入/输出函数"></a>输入/输出函数</h3><ol>
+<li><p>对C程序而言，所有的I/O操作只是简单的从程序 <strong>移进或移出字节的事情</strong> 。所有这种字节流被称为 <strong>流</strong> 。程序只需关心 <strong>创建正确的输出字节数据和正确的解释从输入读取的字节数据</strong> 。不需要关心特定的I/O设备</p>
+</li>
+<li><p>有2种缓冲区(buffer)，输入缓冲区和输出缓冲区。这些缓冲区都是一块内存区域。程序输出数据会先写入输出缓冲区，然后再写入文件或输出给设备；输入数据（文件读取数据，键盘输入数据）也会先写入输入缓冲区，然后再交给程序。</p>
+</li>
+<li><p>一般来说，这些缓冲区都是要先填满，再给到设备或是程序的。所以使用printf时，先将要print的数据写入缓冲区，不会立即显示在屏幕上，如果这时候程序崩溃了，他可能就永远无法显示出来了</p>
+</li>
+<li><p>流分为 <strong>文本流</strong> 和 <strong>二进制流</strong> </p>
+</li>
+<li><p>文本流在不同OS中某些特性会不同：一种是文本行的最大长度；另一种是文本行的结束方式，在MS-DOS系统中使用回车符和换行符表示一行结束，在UNIX中使用换行符表示一行结束。</p>
+</li>
+<li><p>但是在代码中不必操心，库函数会帮你处理这些差异。比如在MS-DOS上执行c程序，输出时会将文本中的换行符转化成回车符/换行符的形式写入文件；输入时，从文本读取的回车符/换行符也会转化成换行符交给程序</p>
+</li>
+<li><p>系统运行时至少提供3个流：标准输入(stdin)，标准输出(stdout)和标准错误(stderr)；这些流的名字分别是 <code>stdin</code> <code>stdout</code> <code>stderr</code>；他们都是一个指向FILE结构体的指针。FILE结构体在stdio.h中定义，与物理磁盘上面的文件没有关系。</p>
+</li>
+<li><p>标准输入默认是键盘，标准输出默认是屏幕。可以修改默认的输入和输出设备，也就是重定向，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ./program &lt; data &gt; answer</div></pre></td></tr></table></figure>
+<p>上面的命令将从文件data读取数据，将数据输出到answer文件</p>
+</li>
+<li><p>关于流的处理流程</p>
+<ol>
+<li>使用 <code>fopen</code> 函数打开一个流，这里你必须指定需要访问的文件或是设备，以及访问方式：读、写、读写；该函数验证文件或设备的存在性，并初始化与这个流对应的FILE结构体。一个流对应一个FILE结构</li>
+<li>根据需要对该文件或设备进行读写</li>
+<li>最后使用 <code>fclose</code> 函数关闭流，不再对文件和设备进行操作</li>
+<li>注意：标准流的I/O更加的简单，因为他们不需要打开和关闭。标准流就是 stdin, stdout, stderr</li>
+</ol>
+</li>
+<li><p><code>FILE *fopen(char const *name, char const *mode);</code> 函数打开流，name是文件或设备的名称，mode是读写模式。成功返回一个FILE结构指针，这个结构体代表一个新建的流；失败返回NULL指针，errno会提示问题的性质</p>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">FILE *input;</div><div class="line">input = fopen(<span class="string">"data"</span>, <span class="string">"r"</span>); <span class="comment">// 以只读打开文件data</span></div><div class="line"><span class="keyword">if</span> (input == <span class="literal">NULL</span>) &#123; <span class="comment">// 打开失败</span></div><div class="line">  	perror(<span class="string">"data"</span>);</div><div class="line">  	<span class="built_in">exit</span>(EXIT_FAILURE);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>   打开失败的类似输出： <code>data : No such file or directory</code></p>
+<ol>
+<li><p><code>int fclose(FILE *f);</code> 函数关闭流。对于输出流，在关闭之前，先刷新缓冲区。执行成功，返回0；执行失败，返回EOF</p>
+</li>
+<li><p>当一个流被打开之后可以用于输入和输出，包括字符，文本行和二进制的输入和输出3种类型</p>
+</li>
+<li><p>字符I/O</p>
+</li>
+<li><p>从流中读取字符</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">fgetc</span><span class="params">(FILE *stream)</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">getc</span><span class="params">(FILE *stream)</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">getchar</span><span class="params">(<span class="keyword">void</span>)</span></span>;</div></pre></td></tr></table></figure>
+<p>  getchar从标准输入流中读取，所以不需要指定流。注意：读取字符，但是返回的还是int型；没有更多字符的话返回EOF</p>
+<ol>
+<li><p>向流中写入字符</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">fputc</span><span class="params">(<span class="keyword">int</span> character, FILE *stream)</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">putc</span><span class="params">(<span class="keyword">int</span> character, FILE *stream)</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">putchar</span><span class="params">(<span class="keyword">int</span> character)</span></span>;</div></pre></td></tr></table></figure>
+<p>失败返回EOF</p>
+</li>
+</ol>
+</li>
+<li><p>未格式化的行I/O：简单读取或写入字符串</p>
+</li>
+<li><p>从流中读取行</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">char</span> *<span class="title">fgets</span><span class="params">(<span class="keyword">char</span> *buffer, <span class="keyword">int</span> buffer_size, FILE *stream)</span></span>;</div><div class="line"><span class="function"><span class="keyword">char</span> *<span class="title">gets</span><span class="params">(<span class="keyword">char</span> *buffer)</span></span>;</div></pre></td></tr></table></figure>
+<p>  最好不适用gets。 <strong>这里的buffer就是之前所说的缓冲区，原来这个缓冲区使我们自己建的，还指明了大小</strong> 。fgets可以这样理解：从流中读取最多 buffer_size - 1 个字符到存储到缓冲区，若到了行尾就不读了，返回的是指向缓冲区首地址的指针。这里的 <strong>从流中读取</strong> 可以理解成 <strong>从文件中读取</strong> ；读取完成后，<strong>存放到程序自己制定的buffer缓冲区中</strong> </p>
+<ol>
+<li><p>向流中写入行</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">fputs</span><span class="params">(<span class="keyword">char</span> <span class="keyword">const</span> *buffer, FILE *stream)</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">puts</span><span class="params">(<span class="keyword">char</span> <span class="keyword">const</span> *buffer)</span></span>;</div></pre></td></tr></table></figure>
+<p>注意：可以写入多行，就是buffer里面有多少写多少 </p>
+</li>
+</ol>
+</li>
+<li><p>格式化的行I/O：也就是 <code>scanf</code> <code>printf</code> 家族函数</p>
+</li>
+<li><p>二进制I/O：效率最高，使用 <code>fread</code> <code>fwrite</code>函数</p>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">size_t</span> fread(<span class="keyword">void</span> *buffer, <span class="keyword">size_t</span> size, <span class="keyword">size_t</span> count, FILE *stream);</div><div class="line"><span class="keyword">size_t</span> fwrite(<span class="keyword">void</span> *buffer, <span class="keyword">size_t</span> size, <span class="keyword">size_t</span> count, FILE *stream);</div></pre></td></tr></table></figure>
+<p>   buffer解释为一个或多个值的数组；count表示数组中有多少个值，也就是要读取或写入的元素个数；size是缓冲区中每个元素的字节数；返回的是实际读取或写入的元素个数，不一定和count相等</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> VALUE &#123;</div><div class="line">  	<span class="keyword">long</span> a;</div><div class="line">  	<span class="keyword">float</span> b;</div><div class="line">  	<span class="keyword">char</span> c[SIZE];</div><div class="line">&#125; values[ARRAY_SIZE];</div><div class="line">n_values = fread(values, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> VALUE), ARRAY_SIZE, input_stream);</div><div class="line"></div><div class="line">fwrite(values, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> VALUE), ARRAY_SIZE, output_stream);</div></pre></td></tr></table></figure>
+<ol>
+<li><p><code>int fflush(FILE *stream);</code> 函数迫使输出流缓冲区内的数据进行物理写入。可以这样理解，上面几段代码中的buffer是一种缓冲区，对于写入操作而言，buffer缓冲区中的值写入流；流写入一个与之对应的真正的缓冲区，这个缓冲区就是第二点里说道的缓冲区，当该缓冲区满时，将他写入文件。</p>
+</li>
+<li><p><code>long ftell(FILE *stream);</code> 返回流当前的位置，他的返回值表示距离文件起始的偏移量。在二进制中，这个值就是距离文件起始的字节数</p>
+</li>
+<li><p><code>int fseek(FILE *stream, long offset, int from);</code> 将流中的当前的‘指针’，从from偏移offset个位置，也就是改变下一次读写的位置。from参数可以是 <code>SEEK_SET(起始位置)</code> <code>SEEK_CUR(当前位置)</code> <code>SEEK_END(结尾位置)</code></p>
+<h3 id="标准函数库"><a href="#标准函数库" class="headerlink" title="标准函数库"></a>标准函数库</h3></li>
+<li><p><code>int rand(void);</code> 函数返回一个0-RAND_MAX(至少是32767)的整形。为了避免每次运行程序时得到相同的结果，可以使用 <code>void srand(unsigned int seed);</code>设置不同的种子。比如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">srand((<span class="keyword">unsigned</span> <span class="keyword">int</span>) time(<span class="number">0</span>)); <span class="comment">// 使用现在的时间</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="经典抽象数据类型"><a href="#经典抽象数据类型" class="headerlink" title="经典抽象数据类型"></a>经典抽象数据类型</h3><ol>
+<li>C语言中创建堆栈(stack)的方式有3种：静态数组，动态分配内存数组，链式堆栈</li>
+<li>树的4中常见遍历方式：<ol>
+<li>前序遍历：先检查当前节点，在递归遍历左子树和右子树</li>
+<li>中序遍历：先遍历左子树，再检查当前节点，再遍历右子树</li>
+<li>后序遍历：先遍历右子树，再检查当前节点，再遍历左子树</li>
+<li>层次遍历：逐层检查，先根节点，再它的孩子，再它的孙子…</li>
+</ol>
+</li>
+</ol>
+<h3 id="运行时环境"><a href="#运行时环境" class="headerlink" title="运行时环境"></a>运行时环境</h3><ol>
+<li>程序包括几个区段：数据区(data)、代码段(text)</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://blog.csdn.net/b_h_l/article/details/7738217" target="_blank" rel="external">C结构体边界对齐</a></li>
+</ul>
 
       
     </div>
@@ -627,7 +871,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#快速上手"><span class="nav-number">2.1.</span> <span class="nav-text">快速上手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本概念"><span class="nav-number">2.2.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据"><span class="nav-number">2.3.</span> <span class="nav-text">数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作符和表达式"><span class="nav-number">2.4.</span> <span class="nav-text">操作符和表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#指针"><span class="nav-number">2.5.</span> <span class="nav-text">指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数"><span class="nav-number">2.6.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组"><span class="nav-number">2.7.</span> <span class="nav-text">数组</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#快速上手"><span class="nav-number">2.1.</span> <span class="nav-text">快速上手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本概念"><span class="nav-number">2.2.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据"><span class="nav-number">2.3.</span> <span class="nav-text">数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作符和表达式"><span class="nav-number">2.4.</span> <span class="nav-text">操作符和表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#指针"><span class="nav-number">2.5.</span> <span class="nav-text">指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数"><span class="nav-number">2.6.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组"><span class="nav-number">2.7.</span> <span class="nav-text">数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串、字符和字节"><span class="nav-number">2.8.</span> <span class="nav-text">字符串、字符和字节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构和联合"><span class="nav-number">2.9.</span> <span class="nav-text">结构和联合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态内存分配"><span class="nav-number">2.10.</span> <span class="nav-text">动态内存分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用结构和指针"><span class="nav-number">2.11.</span> <span class="nav-text">使用结构和指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高级指针话题"><span class="nav-number">2.12.</span> <span class="nav-text">高级指针话题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预处理器"><span class="nav-number">2.13.</span> <span class="nav-text">预处理器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#输入-输出函数"><span class="nav-number">2.14.</span> <span class="nav-text">输入/输出函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标准函数库"><span class="nav-number">2.15.</span> <span class="nav-text">标准函数库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#经典抽象数据类型"><span class="nav-number">2.16.</span> <span class="nav-text">经典抽象数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行时环境"><span class="nav-number">2.17.</span> <span class="nav-text">运行时环境</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
