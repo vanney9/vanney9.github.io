@@ -1,0 +1,678 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="杂七杂八," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言前几天aws的ec2服务器被攻击了，被莫名人士植入了一个minerd的恶意程序，下面简单记录一下对这个恶意程序的处理过程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次aws-ec2杀毒经历">
+<meta property="og:url" content="http://yoursite.com/2016/10/29/aws-minered-virus/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言前几天aws的ec2服务器被攻击了，被莫名人士植入了一个minerd的恶意程序，下面简单记录一下对这个恶意程序的处理过程">
+<meta property="og:image" content="http://yoursite.com/lionheart/1610/minerd.png">
+<meta property="og:updated_time" content="2016-10-29T09:10:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记一次aws-ec2杀毒经历">
+<meta name="twitter:description" content="前言前几天aws的ec2服务器被攻击了，被莫名人士植入了一个minerd的恶意程序，下面简单记录一下对这个恶意程序的处理过程">
+<meta name="twitter:image" content="http://yoursite.com/lionheart/1610/minerd.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/29/aws-minered-virus/"/>
+
+  <title> 记一次aws-ec2杀毒经历 | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display:none">
+    <script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                记一次aws-ec2杀毒经历
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-29T15:07:48+08:00" content="2016-10-29">
+              2016-10-29
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/29/aws-minered-virus/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/29/aws-minered-virus/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前几天aws的ec2服务器被攻击了，被莫名人士植入了一个minerd的恶意程序，下面简单记录一下对这个恶意程序的处理过程</p>
+<a id="more"></a>
+<h2 id="问题发现"><a href="#问题发现" class="headerlink" title="问题发现"></a>问题发现</h2><p>我们使用一台aws的ec2服务器来托管网站，前几天登录网站界面的时候一直在loading界面，死活无法登录。当我想终端登录ec2的时候也是死活登不上去。当时就有种不翔的预感，要GG。稳下来后，查看aws的CloudWatch监控记录，发现近段时间的ec2的CPU利用率一直很稳定的保持在100%。。。原来CPU被用完了，难怪怎么都登不上去，网站也无法运作。</p>
+<h2 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h2><h3 id="登录ec2"><a href="#登录ec2" class="headerlink" title="登录ec2"></a>登录ec2</h3><p>先得想办法登录ec2，看看到底发生了什么。注意：登录不上ec2的时候，千万不能随意的重启或者停止ec2；因为这样的话，存储在上面的数据可能会丢失。</p>
+<p>但是cpu占用率始终保持在100%，怎么也登不上ec2。只能使用大招了。使用一下步骤曲线救国：</p>
+<ol>
+<li>登录aws控制台。对现在的这台ec2（记为ec2one）的系统盘，也就是根卷创建一份快照</li>
+<li>根据刚创建的快照创建一个卷（也就是：磁盘），这样就复制了ec2one的系统盘</li>
+<li>启用一台全新的ec2（记为ec2two），注意登录密钥和ec2one的相同</li>
+<li>停用ec2two，卸载ec2two的根卷；将2中创建的系统盘绑定到ec2two上，作为它的系统盘（注意：指定为/dev/xvda，不然就被认定是一般磁盘；这时ec2two没有系统盘，无法启动）</li>
+<li>启动ec2two，并终端登录</li>
+</ol>
+<p>通过这样的方式就创建了一台和ec2one相同的机器 ec2two，并且登录上去了。</p>
+<h3 id="发现问题"><a href="#发现问题" class="headerlink" title="发现问题"></a>发现问题</h3><p>登录ec2two之后，使用top指令查看cpu的占用情况。过一段时间后，发现一个minerd的进程占用了90多的cpu，并且居高不下。</p>
+<p><img src="/lionheart/1610/minerd.png" alt="minerd virus"></p>
+<p>google了一下，这是个’挖矿‘的程序，估计是我这台服务器被莫名人士拿来挖比特币了。所以果然是服务器中毒了</p>
+<h3 id="解决经过"><a href="#解决经过" class="headerlink" title="解决经过"></a>解决经过</h3><ol>
+<li>先kill这个进程，没用，过一会这个进程又出来了</li>
+<li>使用 <code>ps aux | grep minerd</code> 查看什么程序在运行这个进程，发现了一个 <code>/opt/minerd</code>的在运行这个进程；进入/opt删掉minerd，没用，多一会，这个minerd的可执行文件又出来了。。。</li>
+<li>google，给出的答案居然是安装杀毒软件。还真是头一次在linux上面装杀毒软件。。</li>
+<li>下了一个免费的linux杀毒软件：shopos，官网看上去高大上，整个软件也有个500M左右，应该比较靠谱。</li>
+<li>安装，按照说明扫描杀毒，结果<code>minerd</code>进程还在不说，还把ps等指令给删除了。。。估计是我的打开方式不对，这时候还是很想念360的。你说他怎么就不出一个linux的360安全卫士呢？</li>
+<li>再google，发现一位国内码农遇到的情况和我相同，最后实践下来而确实靠谱，附上链接：<a href="http://www.cnblogs.com/zhouto/p/5680594.html" target="_blank" rel="external">阿里云服务器被挖矿minerd入侵的解决办法</a></li>
+<li>说一下这个最终解决方法<ol>
+<li>关闭访问挖矿服务器的访问 <code>iptables -A INPUT -s xmr.crypto-pool.fr -j DROP</code>  和  <code>iptables -A OUTPUT -d xmr.crypto-pool.fr -j DROP</code></li>
+<li><code>chmod -x minerd</code>  ,取消掉执行权限， 在没有找到根源前，千万不要删除 minerd，因为删除了，过一回会自动有生成一个</li>
+<li><code>pkill minerd</code> 杀掉进程</li>
+</ol>
+</li>
+<li>根据这位高人所说，之说以会被入侵，是因为redis服务器的漏洞。在ec2上面安装了redis，但是没有限制ip访问，开放的还是默认的6379端口，而且还不设置访问redis的密码的话，莫名人士就可以通过redis来进入这台服务器。显然我们之前的redis的访问条件就是这么的宽松。。。 看看如何限制redis的访问<ol>
+<li>因为我们网站需要使用redis，才安装的。但是这个redis只会由跑在nginx服务器上的php代码来访问，所以说只有ec2自己才会访问redis。</li>
+<li>所以登录aws的控制台，在安全组中，将之前开放的6379端口关闭</li>
+<li>在redis的配置文件中，限制访问ip只能是 127.0.0.1；并且改变redis的默认的6379的端口号</li>
+<li>在redis的配置文件中，设置redis的访问密码（AUTH）</li>
+<li>重启redis</li>
+</ol>
+</li>
+<li>为了验证是不是由redis引起的这次事故，进入/opt，root下的~/.ssh文件夹中看看，果然在authorized_keys里面发现了redis的一些相关的东西；而且他的密钥居然跟ec2-user的~/.ssh中的一样。看来果然是通过redis进到了ec2，并且拿到了登录ec2的密钥。删除这些相关的文件</li>
+</ol>
+<h3 id="一波三折"><a href="#一波三折" class="headerlink" title="一波三折"></a>一波三折</h3><p>本以为事件就这么顺利的解决了，没想到第二天aws又发来警告，网络输出超过了阈值。。。认真想想，这次的cpu没有报警，但是网络输出报警了。那么应该是挖矿程序没有再跑了，但是还有其他的程序将挖到的数据传输出去。</p>
+<p>其实之前的那位高人所说的步骤中的最后一步，我没有去执行，就导致了这个问题。这一步就是使用 <code>service stop crond</code> 或者 <code>crontab -r</code> 删除所有的执行计划，也就是定时计划。</p>
+<p>我进入ec2后，切换到root用户，使用 <code>crontab -l</code>查看所有的执行计划，果然有一个是定时执行一个 /tmp文件夹下面的 chongfu.sh 脚本。查看这个脚本，他会定时将所有tmp文件夹里的数据通过wget的方法传输到一个指定ip的机器上面。那么应该就是这个问题了。</p>
+<p>先使用 <code>crontab -r</code> 删除这个定时执行 chongfu.sh 脚本的计划，再 <code>pkill chongfu.sh</code> 杀掉所有已经在执行的这个脚本。这个数据传输也就解决了。</p>
+<p>查查看这个ip，果然是一个中国的ip，也就不难解释这个脚本为什么叫 chongfu.sh 而不是 repeat.sh。哎，国人何苦为难国人啊</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>经过这次的事件后，按常理是得总结点什么东西：</p>
+<ol>
+<li>要对aws进行访问限制，之前就是太宽松才被有机可乘。关掉没必要的访问端口，将ssh的端口设置成本机的ip等等</li>
+<li>对aws要做好备份，不然那一天aws又登不上去了。定期对aws的系统盘以及数据盘进行快照备份</li>
+<li>对于aws磁盘的选择，也就是卷的选择，最好是ebs。因为其他类型的卷可能在停止或重启ec2时，会丢失数据</li>
+<li>使用好aws的CloudWatch，可以实时监控aws，发生问题时可以及时收到通知</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://www.cnblogs.com/zhouto/p/5680594.html" target="_blank" rel="external">阿里云服务器被挖矿minerd入侵的解决办法</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/杂七杂八/" rel="tag">#杂七杂八</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/18/keng/" rel="next" title="坑..">
+                <i class="fa fa-chevron-left"></i> 坑..
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/29/aws-minered-virus/"
+           data-title="记一次aws-ec2杀毒经历" data-url="http://yoursite.com/2016/10/29/aws-minered-virus/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题发现"><span class="nav-number">2.</span> <span class="nav-text">问题发现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题解决"><span class="nav-number">3.</span> <span class="nav-text">问题解决</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#登录ec2"><span class="nav-number">3.1.</span> <span class="nav-text">登录ec2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发现问题"><span class="nav-number">3.2.</span> <span class="nav-text">发现问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决经过"><span class="nav-number">3.3.</span> <span class="nav-text">解决经过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一波三折"><span class="nav-number">3.4.</span> <span class="nav-text">一波三折</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">4.</span> <span class="nav-text">后记</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

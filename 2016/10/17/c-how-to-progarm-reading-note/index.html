@@ -1,0 +1,669 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="C," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言C++大学教程的读书笔记，(C++ how to program)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++大学教程读书笔记 - 与C++相关">
+<meta property="og:url" content="http://yoursite.com/2016/10/17/c-how-to-progarm-reading-note/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言C++大学教程的读书笔记，(C++ how to program)">
+<meta property="og:updated_time" content="2016-10-21T12:18:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++大学教程读书笔记 - 与C++相关">
+<meta name="twitter:description" content="前言C++大学教程的读书笔记，(C++ how to program)">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/17/c-how-to-progarm-reading-note/"/>
+
+  <title> C++大学教程读书笔记 - 与C++相关 | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display:none">
+    <script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                C++大学教程读书笔记 - 与C++相关
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-17T19:52:56+08:00" content="2016-10-17">
+              2016-10-17
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/17/c-how-to-progarm-reading-note/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/17/c-how-to-progarm-reading-note/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>C++大学教程的读书笔记，(C++ how to program)</p>
+<a id="more"></a>
+<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="类的深入剖析"><a href="#类的深入剖析" class="headerlink" title="类的深入剖析"></a>类的深入剖析</h3><ol>
+<li><p>构建头文件时注意使用：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> CLASS_H</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> CLASS_H</span></div><div class="line"><span class="comment">/* definition here */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<p>这样可以防止重复引用</p>
+</li>
+<li><p>类中的数据成员，若没有初始化，会被默认初始化成0</p>
+</li>
+<li><p>看看以下代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Time sunset; <span class="comment">// 创建一个Time类 sunset</span></div><div class="line">Time arrayOfTimes[<span class="number">5</span>]; <span class="comment">// 创建一个指向Time类的数组</span></div><div class="line">Time &amp;dinnerTime = sunset; <span class="comment">// dinnerTime是sunset的引用，其实就是sunset，一个Time类的实例</span></div><div class="line">Time *timePtr = &amp;dinnerTime; <span class="comment">// timePtr是一个指向Time的指针，他指向的是sunset这一个实例</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>关于类或者一个类实例的大小，也就是<code>sizeof(Class);</code> 他其实只包含类的数据成员，并不包含类的函数成员。类的函数成员在内存中只有一份，存放在独立于所有类对象的地方，它被所有的类对象共享，但是不算进<code>sizeof</code>的大小</p>
+</li>
+<li><p>析构函数在对象撤销时，自动调用；他不会释放对象所占的内存，只是进行一些扫尾工作。不能重载，不可以指定返回类型，void也不行，不接受参数</p>
+</li>
+<li><p>static的局部对象的构造函数只调用一次，而他们的相应的析构函数发生在main函数结束时，或者调用exit()时。调用abort函数结束程序时，static的析构函数不会被调用</p>
+</li>
+<li><p>引用和指针的区别：引用就是对象本身，指针是指向对象本身。都可以操作原始对象</p>
+</li>
+<li><p>使用const可以将对象指定为不可修改，<code>const Time noon(12, 0, 0);</code> 记得要及时初始化，不然之后不能修改了</p>
+</li>
+<li><p>对于const对象，只能调用对象的const成员函数，不能调用不是const的成员函数。const函数里面不能修改 对象的数据成员。将函数指定为const，需要在声明和定义2个地方都指定const，如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">getHour</span><span class="params">()</span> <span class="keyword">const</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">getHour</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</div><div class="line">  	<span class="comment">// ....</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>const函数不能调用同一对象上的非const成员函数</p>
+</li>
+<li><p>对于包含const数据成员的对象初始化，必须使用成员初始化器</p>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">Class Increment &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  	Increment(<span class="keyword">int</span> c= <span class="number">0</span>, <span class="keyword">int</span> i = <span class="number">1</span>);</div><div class="line"><span class="keyword">private</span>:</div><div class="line">	<span class="keyword">int</span> count;</div><div class="line">	<span class="keyword">const</span> <span class="keyword">int</span> increment;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Increment::Increment(<span class="keyword">int</span> c, <span class="keyword">int</span> i) : count(c), increment(i) &#123;</div><div class="line">  	<span class="comment">// empty</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">int</span> main &#123;</div><div class="line">  	<span class="function">Increment <span class="title">value</span><span class="params">(<span class="number">10</span>, <span class="number">5</span>)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>   注意，对于const成员变量一定要使用成员初始化，非const成员变量，也可以使用</p>
+<ol>
+<li>每个类都有一个默认的复制构造函数</li>
+<li>friend函数和friend类：类的friend函数在类的作用域之外定义，但是可以访问类的所有成员的权限</li>
+</ol>
+<h3 id="运算符重载"><a href="#运算符重载" class="headerlink" title="运算符重载"></a>运算符重载</h3><ol>
+<li>编写 <code>非static成员</code> 函数或者 <code>全局函数</code> 就可以实现运算符的重载。不能是static成员函数，因为运算符必须作用在对象上，而不是类</li>
+<li>运算符重载不改变元数，优先级和结合律</li>
+<li>运算符重载函数的参数要求至少有一个是自己定义的类对象，不能全是基本类型</li>
+<li>注意 <code>() [] -&gt;</code> 必须作为类的成员函数进行重载</li>
+<li>​</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag">#C</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/14/Pointers-on-c-reading-note-one/" rel="next" title="C和指针读书笔记（一）">
+                <i class="fa fa-chevron-left"></i> C和指针读书笔记（一）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/18/keng/" rel="prev" title="坑..">
+                坑.. <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/17/c-how-to-progarm-reading-note/"
+           data-title="C++大学教程读书笔记 - 与C++相关" data-url="http://yoursite.com/2016/10/17/c-how-to-progarm-reading-note/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类的深入剖析"><span class="nav-number">2.1.</span> <span class="nav-text">类的深入剖析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运算符重载"><span class="nav-number">2.2.</span> <span class="nav-text">运算符重载</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
