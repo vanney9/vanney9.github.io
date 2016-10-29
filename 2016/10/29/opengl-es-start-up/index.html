@@ -1,0 +1,665 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS, OpenGL," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言最近在学习OpenGL ES，跟着教程做了一个Demo，在模拟器下的运行效果如下：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenGL ES 入门">
+<meta property="og:url" content="http://yoursite.com/2016/10/29/opengl-es-start-up/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言最近在学习OpenGL ES，跟着教程做了一个Demo，在模拟器下的运行效果如下：">
+<meta property="og:image" content="http://yoursite.com/lionheart/1610/openglesstartup.gif">
+<meta property="og:updated_time" content="2016-10-29T12:47:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenGL ES 入门">
+<meta name="twitter:description" content="前言最近在学习OpenGL ES，跟着教程做了一个Demo，在模拟器下的运行效果如下：">
+<meta name="twitter:image" content="http://yoursite.com/lionheart/1610/openglesstartup.gif">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/29/opengl-es-start-up/"/>
+
+  <title> OpenGL ES 入门 | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display:none">
+    <script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                OpenGL ES 入门
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-29T19:41:29+08:00" content="2016-10-29">
+              2016-10-29
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/29/opengl-es-start-up/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/29/opengl-es-start-up/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在学习OpenGL ES，跟着教程做了一个Demo，在模拟器下的运行效果如下：</p>
+<p><img src="/lionheart/1610/openglesstartup.gif" alt="demo"></p>
+<a id="more"></a>
+<p>Demo代码在<a href="https://github.com/vanney9/blogDemo/tree/master/blogOpenGLESStartup" target="_blank" rel="external">这里</a></p>
+<h2 id="OpenGL和OpenGL-ES"><a href="#OpenGL和OpenGL-ES" class="headerlink" title="OpenGL和OpenGL ES"></a>OpenGL和OpenGL ES</h2><p>OpenGL ES是OpenGL的子集，它主要运行在手机上。推荐一个超棒的OpenGL入门教程：<a href="http://learnopengl.com/" target="_blank" rel="external">Learn OpenGL</a> ；当然也有热心的国人将他翻译过来了，在 <a href="https://learnopengl-cn.github.io/" target="_blank" rel="external">这里</a>。通过这些教程的学习，我也算是入了OpenGL的门。</p>
+<p>关于将OpenGL运用于iOS上面，也就是使用OpenGL ES，可以看看Apple的官方文档 <a href="https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1" target="_blank" rel="external">OpenGL ES Programming Guide for iOS</a></p>
+<h2 id="Demo实现"><a href="#Demo实现" class="headerlink" title="Demo实现"></a>Demo实现</h2><p>demo的实现可以分成2个部分：</p>
+<ol>
+<li>运用OpenGL ES显示静态的场景</li>
+<li>添加手势操作，让场景动起来</li>
+</ol>
+<h3 id="OpenGL-ES-渲染"><a href="#OpenGL-ES-渲染" class="headerlink" title="OpenGL ES 渲染"></a>OpenGL ES 渲染</h3><p>关于在iOS上使用OpenGL ES渲染，可以借助iOS的GLKit框架。他大大简化了OpenGL ES的使用难度。而渲染的主要步骤分成以下几步：</p>
+<h4 id="使用GLKit初始化"><a href="#使用GLKit初始化" class="headerlink" title="使用GLKit初始化"></a>使用GLKit初始化</h4><p>创建GLKViewController和GLKView，OpenGL ES渲染的结果将会显示在GLKView的layer上面。而将GLKViewController设置成GLKView的delegate，他会控制整个的渲染流程，比如每秒渲染多少次，何时开始渲染等等</p>
+<h4 id="设置GLKView的context属性"><a href="#设置GLKView的context属性" class="headerlink" title="设置GLKView的context属性"></a>设置GLKView的context属性</h4><p>OpenGL ES渲染的时候需要一个上下文，也就是GLKView的context，对于他的设置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">view.context = [[EAGLContext alloc]initWithAPI:kEAGLRenderingAPIOpenGLES3];</div><div class="line">[EAGLContext setCurrentContext:view.context];</div></pre></td></tr></table></figure>
+<p>这里创建context是使用OpenGL ES的基石，就相当于你使用GLFW和GLEW对整个环境进行初始化，定义viewport之类的</p>
+<h4 id="设置OpenGL-ES"><a href="#设置OpenGL-ES" class="headerlink" title="设置OpenGL ES"></a>设置OpenGL ES</h4><p>设置OpenGL ES的代码和OpenGL的基本相似。</p>
+<ol>
+<li><p>创建shader程序：也就是对你写的glsl文件进行编译链接，最终持有一个Shader programe。代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line">// load glsl file</div><div class="line">NSString *vertexFile = [[NSBundle mainBundle] pathForResource:vertexPath ofType:@&quot;glsl&quot;];</div><div class="line">NSString *fragmentFile = [[NSBundle mainBundle] pathForResource:fragmentPath ofType:@&quot;glsl&quot;];</div><div class="line"></div><div class="line">NSError *error;</div><div class="line"></div><div class="line">NSString *vertexString = [NSString stringWithContentsOfFile:vertexFile encoding:NSUTF8StringEncoding error:&amp;error];</div><div class="line">if (!vertexString) &#123;</div><div class="line">  NSLog(@&quot;vanney code log : error loading vertex shader : %@&quot;, error.localizedDescription);</div><div class="line">  exit(1);</div><div class="line">&#125;</div><div class="line"></div><div class="line">NSString *fragmentString = [NSString stringWithContentsOfFile:fragmentFile encoding:NSUTF8StringEncoding error:&amp;error];</div><div class="line">if (!fragmentString) &#123;</div><div class="line">  NSLog(@&quot;vanney code log : error loading fragment shader : %@&quot;, error.localizedDescription);</div><div class="line">  exit(1);</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">// compiler</div><div class="line">GLuint vertexShader, fragmentShader;</div><div class="line">GLint compilerSuccess, linkSuccess;</div><div class="line">GLchar messages[512];</div><div class="line"></div><div class="line">vertexShader = glCreateShader(GL_VERTEX_SHADER);</div><div class="line">const GLchar *vertexStringUTF8 = [vertexString UTF8String];</div><div class="line">glShaderSource(vertexShader, 1, &amp;vertexStringUTF8, NULL);</div><div class="line">glCompileShader(vertexShader);</div><div class="line">glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &amp;compilerSuccess);</div><div class="line">if (compilerSuccess == GL_FALSE) &#123;</div><div class="line">  glGetShaderInfoLog(vertexShader, sizeof(messages), NULL, messages);</div><div class="line">  NSLog(@&quot;vanney code log : compile vertex shader error : %@&quot;, [NSString stringWithUTF8String:messages]);</div><div class="line">  exit(1);</div><div class="line">&#125;</div><div class="line"></div><div class="line">fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);</div><div class="line">const GLchar *fragmentStringUTF8 = [fragmentString UTF8String];</div><div class="line">glShaderSource(fragmentShader, 1, &amp;fragmentStringUTF8, NULL);</div><div class="line">glCompileShader(fragmentShader);</div><div class="line">glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &amp;compilerSuccess);</div><div class="line">if (compilerSuccess == GL_FALSE) &#123;</div><div class="line">  glGetShaderInfoLog(fragmentShader, sizeof(messages), NULL, messages);</div><div class="line">  NSLog(@&quot;vanney code log : compile fragment shader error : %@&quot;, [NSString stringWithUTF8String:messages]);</div><div class="line">  exit(1);</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">// link</div><div class="line">self.program = glCreateProgram();</div><div class="line">glAttachShader(self.program, vertexShader);</div><div class="line">glAttachShader(self.program, fragmentShader);</div><div class="line">glLinkProgram(self.program);</div><div class="line">glGetProgramiv(self.program, GL_LINK_STATUS, &amp;linkSuccess);</div><div class="line">if (linkSuccess == GL_FALSE) &#123;</div><div class="line">  glGetProgramInfoLog(self.program, sizeof(messages), NULL, messages);</div><div class="line">  NSLog(@&quot;vanney code log : link shader error : %@&quot;, [NSString stringWithUTF8String:messages]);</div><div class="line">  exit(1);</div><div class="line">&#125;</div><div class="line"></div><div class="line">glDeleteShader(vertexShader);</div><div class="line">glDeleteShader(fragmentShader);</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>设置各种和顶点相关的缓冲，在缓冲中写入顶点数据，以及定义好GPU如何对这些顶点数据进行读取等等，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">// initialize vertex data</div><div class="line">glGenVertexArrays(1, &amp;VAO);</div><div class="line">glGenBuffers(1, &amp;VBO);</div><div class="line">//glGenBuffers(1, &amp;VEO);</div><div class="line"></div><div class="line">glBindVertexArray(VAO);</div><div class="line">glBindBuffer(GL_ARRAY_BUFFER, VBO);</div><div class="line">glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);</div><div class="line">//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.VEO);</div><div class="line">//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);</div><div class="line">glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *) 0);</div><div class="line">glEnableVertexAttribArray(GLKVertexAttribPosition);</div><div class="line">glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *) (3 * sizeof(GLfloat)));</div><div class="line">glEnableVertexAttribArray(GLKVertexAttribTexCoord0);</div><div class="line">glBindVertexArray(0);</div></pre></td></tr></table></figure>
+</li>
+<li><p>设置各种纹理缓冲，注意这里要使用 <code>GLKit的GLKTextureLoader</code> 和 <code>GLKTextureInfo</code> ，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">NSError *error;</div><div class="line">NSString *containerPath = [[NSBundle mainBundle] pathForResource:@&quot;container&quot; ofType:@&quot;jpg&quot;];</div><div class="line">self.containerTexture = [GLKTextureLoader textureWithContentsOfFile:containerPath options:nil error:&amp;error];</div><div class="line">glActiveTexture(GL_TEXTURE0);</div><div class="line">glBindTexture(self.containerTexture.target, self.containerTexture.name);</div></pre></td></tr></table></figure>
+</li>
+<li><p>开始渲染，只需实现GLKView的delegate <code>(void)glkView:(GLKView *)view drawInRect:(CGRect)rect;</code> 就可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect &#123;</div><div class="line">    glEnable(GL_DEPTH_TEST);</div><div class="line">    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);</div><div class="line">    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);</div><div class="line">    //glClear(GL_COLOR_BUFFER_BIT);</div><div class="line"></div><div class="line">    [self.shader use];</div><div class="line"></div><div class="line">    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(M_PI_4, self.view.bounds.size.width / self.view.bounds.size.height, 0.1f, 100.0f);</div><div class="line">    glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;projection&quot;), 1, GL_FALSE, projectionMatrix.m);</div><div class="line">    GLKMatrix4 viewMatrix = GLKMatrix4MakeLookAt(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);</div><div class="line">    glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;view&quot;), 1, GL_FALSE, viewMatrix.m);</div><div class="line"></div><div class="line">    // bind texture</div><div class="line">    glActiveTexture(GL_TEXTURE0);</div><div class="line">    glBindTexture(self.containerTexture.target, self.containerTexture.name);</div><div class="line">    glUniform1i(glGetUniformLocation(self.shader.program, &quot;ourTexture1&quot;), 0);</div><div class="line">    glActiveTexture(GL_TEXTURE1);</div><div class="line">    glBindTexture(self.faceTexture.target, self.faceTexture.name);</div><div class="line">    glUniform1i(glGetUniformLocation(self.shader.program, &quot;ourTexture2&quot;), 1);</div><div class="line"></div><div class="line">    glBindVertexArray(VAO);</div><div class="line">    GLKMatrix4 transModel = [self.transformation getModelViewMatrix];</div><div class="line">    for (int i = 0; i &lt; 10; ++i) &#123;</div><div class="line">    //GLKMatrix4 modelMatrix = GLKMatrix4TranslateWithVector3(GLKMatrix4Identity, cubePositions[i]);</div><div class="line">    GLKMatrix4 modelMatrix = GLKMatrix4TranslateWithVector3(transModel, cubePositions[i]);</div><div class="line">    GLfloat radian = (GLfloat) (20.0f * i / 180 * M_PI);</div><div class="line">    modelMatrix = GLKMatrix4RotateWithVector3(modelMatrix, radian, GLKVector3Make(1.0f, 0.3f, 0.5f));</div><div class="line">    glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;model&quot;), 1, GL_FALSE, modelMatrix.m);</div><div class="line">    glDrawArrays(GL_TRIANGLES, 0, 36);</div><div class="line">    &#125;</div><div class="line">    glBindVertexArray(0);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="添加手势"><a href="#添加手势" class="headerlink" title="添加手势"></a>添加手势</h3><p>参看这篇教程 <a href="https://www.raywenderlich.com/50398/opengl-es-transformations-gestures" target="_blank" rel="external">OpenGL ES Transformations with Gestures</a></p>
+<p>他的中心思想就是：向整个GLKView添加各种手势，通过手势传递的信息来调整物体的model的matrix，也就是从局部坐标到世界坐标转换的matrix。</p>
+<p>具体的代码可以参考Github上的Transformation类</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://learnopengl.com/" target="_blank" rel="external">Learn OpenGL</a></li>
+<li><a href="https://learnopengl-cn.github.io/" target="_blank" rel="external">Learn OpenGL中文翻译</a></li>
+<li><a href="OpenGL ES Programming Guide for iOS">OpenGL ES苹果官方文档</a></li>
+<li><a href="https://www.raywenderlich.com/50398/opengl-es-transformations-gestures" target="_blank" rel="external">OpenGL ES Transformations with Gestures</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS-OpenGL/" rel="tag">#iOS, OpenGL</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/29/aws-minered-virus/" rel="next" title="记一次aws-ec2杀毒经历">
+                <i class="fa fa-chevron-left"></i> 记一次aws-ec2杀毒经历
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/29/opengl-es-start-up/"
+           data-title="OpenGL ES 入门" data-url="http://yoursite.com/2016/10/29/opengl-es-start-up/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OpenGL和OpenGL-ES"><span class="nav-number">2.</span> <span class="nav-text">OpenGL和OpenGL ES</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Demo实现"><span class="nav-number">3.</span> <span class="nav-text">Demo实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#OpenGL-ES-渲染"><span class="nav-number">3.1.</span> <span class="nav-text">OpenGL ES 渲染</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用GLKit初始化"><span class="nav-number">3.1.1.</span> <span class="nav-text">使用GLKit初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置GLKView的context属性"><span class="nav-number">3.1.2.</span> <span class="nav-text">设置GLKView的context属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置OpenGL-ES"><span class="nav-number">3.1.3.</span> <span class="nav-text">设置OpenGL ES</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加手势"><span class="nav-number">3.2.</span> <span class="nav-text">添加手势</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
