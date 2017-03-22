@@ -1,0 +1,691 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS,读书笔记," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言Effective Objective-C 读书笔记 - 接口与API设计">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Effective Objective-C - 接口与API设计">
+<meta property="og:url" content="http://yoursite.com/2017/03/21/effective-objective-c-reading-note-one/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言Effective Objective-C 读书笔记 - 接口与API设计">
+<meta property="og:updated_time" content="2017-03-22T12:49:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Effective Objective-C - 接口与API设计">
+<meta name="twitter:description" content="前言Effective Objective-C 读书笔记 - 接口与API设计">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/03/21/effective-objective-c-reading-note-one/"/>
+
+  <title> Effective Objective-C - 接口与API设计 | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display:none">
+    <script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Effective Objective-C - 接口与API设计
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-21T19:26:16+08:00" content="2017-03-21">
+              2017-03-21
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/03/21/effective-objective-c-reading-note-one/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/21/effective-objective-c-reading-note-one/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><strong>Effective Objective-C</strong> 读书笔记 - 接口与API设计</p>
+<a id="more"></a>
+<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="用前缀避免命名空间冲突"><a href="#用前缀避免命名空间冲突" class="headerlink" title="用前缀避免命名空间冲突"></a>用前缀避免命名空间冲突</h3><ol>
+<li>前缀字母至少3个，两字母的前缀被Apple保留</li>
+<li>注意：实现文件中的纯C函数以及全局变量也最好要加前缀，因为他们也是全局可见的。纯C函数，默认是extern的。（<strong>PS</strong> 见参考1）</li>
+</ol>
+<h3 id="提供全能初始化方法"><a href="#提供全能初始化方法" class="headerlink" title="提供全能初始化方法"></a>提供全能初始化方法</h3><ol>
+<li><p>初始化方法以 <strong>init</strong> 开头。</p>
+</li>
+<li><p>如果一个类有多个初始化方法的话，最好要选定一个方法为全能初始化方法，让其他的初始化方法都来调用这个全能初始化方法。</p>
+</li>
+<li><p>在全能初始化方法中，才执行数据的存储等等操作；其他方法只是改变调用全能初始化方法的参数而已。这样简单地保证了所有的初始化方法都能正确执行。</p>
+</li>
+<li><p>全能初始化方法要链式调用：也就是说，子类的全能初始化方法要调用超类的全能初始化方法。</p>
+</li>
+<li><p>还有子类的全能初始化方法如果与超类的全能初始化方法不重名的话，要覆写该方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">// 超类全能初始化方法(矩形类)</div><div class="line">- (id)initWithWidth:(float)width andHeight:(float)height &#123;</div><div class="line">  	if (self = [super init]) &#123;</div><div class="line">      	_width = width;</div><div class="line">      	_height = height;</div><div class="line">  	&#125;</div><div class="line">  	return self;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 子类全能初始化方法(正方形类)</div><div class="line">- (id)initWithDimension:(float)dimension &#123;</div><div class="line">  	if (self = [super initWithWidth:dimension andHeight:dimension]) &#123; // 全能初始化方法链式调用</div><div class="line">      	</div><div class="line">  	&#125;</div><div class="line">  	return self;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 覆写超类方法</div><div class="line">- (id)initWithWidth:(float)width andHeight:(float)height &#123;</div><div class="line">  	float dimension = MAX(width, height);</div><div class="line">  	return [self initWithDimension:dimension];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样保证了：</p>
+<ol>
+<li>子类调用自己的任何初始化方法，都最终会调用自己的全能初始化方法</li>
+<li>子类调用超类的任何初始化方法，最终会调用超类的全能初始化方法；但是该方法被覆写，而且覆写时调用了子类自己的全能初始化方法。所以最终还是调用了子类自己的全能初始化方法~~</li>
+</ol>
+</li>
+</ol>
+<h3 id="实现description方法"><a href="#实现description方法" class="headerlink" title="实现description方法"></a>实现description方法</h3><ol>
+<li>方便调试</li>
+<li>除了你想看到的信息之外，还是要将默认的description的信息打印出来：也就是类名字和指针地址</li>
+<li>注意NSObject协议中的<code>debugDescription</code>方法，该方法只在 开发者在控制台中打印对象时 才会被调用。它的默认实现是直接调用 description 方法。在LLDB控制台输入 <code>po object</code> 可以打印object对象</li>
+</ol>
+<h3 id="尽量使用不可变对象"><a href="#尽量使用不可变对象" class="headerlink" title="尽量使用不可变对象"></a>尽量使用不可变对象</h3><ol>
+<li>尽量将对外的属性设置为readonly</li>
+<li>可以在实现文件里面，将属性重新定义成readwrite</li>
+</ol>
+<h3 id="使用清晰而协调的命名方式"><a href="#使用清晰而协调的命名方式" class="headerlink" title="使用清晰而协调的命名方式"></a>使用清晰而协调的命名方式</h3><h3 id="为私有方法加前缀"><a href="#为私有方法加前缀" class="headerlink" title="为私有方法加前缀"></a>为私有方法加前缀</h3><ol>
+<li>例如 <code>- (void)p_privateMethod;</code></li>
+</ol>
+<h3 id="理解Objective-C错误模型"><a href="#理解Objective-C错误模型" class="headerlink" title="理解Objective-C错误模型"></a>理解Objective-C错误模型</h3><ol>
+<li><p>ARC不是<code>异常安全</code>的，也就是说：如果抛出异常，那么本应在作用域末尾释放的对象现在却不会自动释放了。</p>
+</li>
+<li><p>基于上述原因，OC代码只会在极其严重的错误发生时，才抛出异常；而且此时应该结束app运行。</p>
+</li>
+<li><p>除了抛出异常（<strong>NSException</strong>）之外，还可以使用稍微缓和的方法，也就是<strong>NSError</strong> 。用法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error;</div></pre></td></tr></table></figure>
+<p>会将错误传到回调delegate中</p>
+</li>
+</ol>
+<h3 id="理解NSCopying协议"><a href="#理解NSCopying协议" class="headerlink" title="理解NSCopying协议"></a>理解NSCopying协议</h3><ol>
+<li><p>要让自定义的类的对象，具有拷贝功能，也就是具有正确的<code>[object copy];</code> 方法，该类就必须实现NSCopying协议的 <code>- (id)copyWithZone:(NSZone *)zone</code> 方法。（<strong>PS</strong> 不需要管zone参数）</p>
+</li>
+<li><p>copy方法定义在NSObject里面，所以所有类都继承了该方法。该方法的默认实现是简单的调用 <code>copyWithZone:</code> 方法</p>
+</li>
+<li><p>我们只需要实现类的copyWithZone: 方法，然后调用对象的copy方法，就可以实现对象的拷贝。（<strong>PS</strong> 要先声明该类遵循NSCopying协议）</p>
+</li>
+<li><p>可以使用 -&gt; 访问实例变量，而不是属性。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">@implementation EOCPerson &#123;</div><div class="line">  	NSMutableSet *_friends; // 实例变量，不是属性</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (id)copyWithZone:(NSZone *)zone &#123;</div><div class="line">  	EOCPerson *copy = [[self class] allocWithZone:zone] init];</div><div class="line">  	copy-&gt;_friends = [_friends mutableCopy]; // -&gt; 访问实例变量</div><div class="line">  	return copy;</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
+</li>
+<li><p>深拷贝和浅拷贝</p>
+<ol>
+<li>深拷贝：对象里面的底层数据也一并拷贝</li>
+<li>浅拷贝：只拷贝对象，对象里面的底层数据公用一份</li>
+<li>Foundation框架的collection类（NSArray， NSSet…）的默认拷贝方法都是<strong>浅拷贝</strong></li>
+</ol>
+</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://stackoverflow.com/questions/856636/effects-of-the-extern-keyword-on-c-functions" target="_blank" rel="external">Effects of the extern keyword on C functions</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag">#iOS</a>
+          
+            <a href="/tags/读书笔记/" rel="tag">#读书笔记</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/29/opengl-es-start-up/" rel="next" title="OpenGL ES 入门">
+                <i class="fa fa-chevron-left"></i> OpenGL ES 入门
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/03/21/effective-objective-c-reading-note-one/"
+           data-title="Effective Objective-C - 接口与API设计" data-url="http://yoursite.com/2017/03/21/effective-objective-c-reading-note-one/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用前缀避免命名空间冲突"><span class="nav-number">2.1.</span> <span class="nav-text">用前缀避免命名空间冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提供全能初始化方法"><span class="nav-number">2.2.</span> <span class="nav-text">提供全能初始化方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现description方法"><span class="nav-number">2.3.</span> <span class="nav-text">实现description方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#尽量使用不可变对象"><span class="nav-number">2.4.</span> <span class="nav-text">尽量使用不可变对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用清晰而协调的命名方式"><span class="nav-number">2.5.</span> <span class="nav-text">使用清晰而协调的命名方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为私有方法加前缀"><span class="nav-number">2.6.</span> <span class="nav-text">为私有方法加前缀</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#理解Objective-C错误模型"><span class="nav-number">2.7.</span> <span class="nav-text">理解Objective-C错误模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#理解NSCopying协议"><span class="nav-number">2.8.</span> <span class="nav-text">理解NSCopying协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

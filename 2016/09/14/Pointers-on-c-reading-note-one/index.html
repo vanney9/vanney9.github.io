@@ -92,7 +92,7 @@
 <meta property="og:description" content="前言C和指针读书笔记，第一篇。会按章节排序">
 <meta property="og:image" content="http://yoursite.com/lionheart/1603/array.JPG">
 <meta property="og:image" content="http://yoursite.com/lionheart/1609/argv.png">
-<meta property="og:updated_time" content="2016-09-30T03:27:17.000Z">
+<meta property="og:updated_time" content="2017-03-22T12:49:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C和指针读书笔记（一）">
 <meta name="twitter:description" content="前言C和指针读书笔记，第一篇。会按章节排序">
@@ -641,7 +641,7 @@
 </li>
 <li><p>从流中读取字符</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">fgetc</span><span class="params">(FILE *stream)</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">getc</span><span class="params">(FILE *stream)</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">getchar</span><span class="params">(<span class="keyword">void</span>)</span></span>;</div></pre></td></tr></table></figure>
-<p>  getchar从标准输入流中读取，所以不需要指定流。注意：读取字符，但是返回的还是int型；没有更多字符的话返回EOF</p>
+<p>   getchar从标准输入流中读取，所以不需要指定流。注意：读取字符，但是返回的还是int型；没有更多字符的话返回EOF</p>
 <ol>
 <li><p>向流中写入字符</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">fputc</span><span class="params">(<span class="keyword">int</span> character, FILE *stream)</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">putc</span><span class="params">(<span class="keyword">int</span> character, FILE *stream)</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">putchar</span><span class="params">(<span class="keyword">int</span> character)</span></span>;</div></pre></td></tr></table></figure>
@@ -653,7 +653,7 @@
 </li>
 <li><p>从流中读取行</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">char</span> *<span class="title">fgets</span><span class="params">(<span class="keyword">char</span> *buffer, <span class="keyword">int</span> buffer_size, FILE *stream)</span></span>;</div><div class="line"><span class="function"><span class="keyword">char</span> *<span class="title">gets</span><span class="params">(<span class="keyword">char</span> *buffer)</span></span>;</div></pre></td></tr></table></figure>
-<p>  最好不适用gets。 <strong>这里的buffer就是之前所说的缓冲区，原来这个缓冲区使我们自己建的，还指明了大小</strong> 。fgets可以这样理解：从流中读取最多 buffer_size - 1 个字符到存储到缓冲区，若到了行尾就不读了，返回的是指向缓冲区首地址的指针。这里的 <strong>从流中读取</strong> 可以理解成 <strong>从文件中读取</strong> ；读取完成后，<strong>存放到程序自己制定的buffer缓冲区中</strong> </p>
+<p>   最好不适用gets。 <strong>这里的buffer就是之前所说的缓冲区，原来这个缓冲区使我们自己建的，还指明了大小</strong> 。fgets可以这样理解：从流中读取最多 buffer_size - 1 个字符到存储到缓冲区，若到了行尾就不读了，返回的是指向缓冲区首地址的指针。这里的 <strong>从流中读取</strong> 可以理解成 <strong>从文件中读取</strong> ；读取完成后，<strong>存放到程序自己制定的buffer缓冲区中</strong> </p>
 <ol>
 <li><p>向流中写入行</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">fputs</span><span class="params">(<span class="keyword">char</span> <span class="keyword">const</span> *buffer, FILE *stream)</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">puts</span><span class="params">(<span class="keyword">char</span> <span class="keyword">const</span> *buffer)</span></span>;</div></pre></td></tr></table></figure>
@@ -809,7 +809,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-count">42</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -826,7 +826,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -894,7 +894,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

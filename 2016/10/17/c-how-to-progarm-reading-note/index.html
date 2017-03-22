@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/10/17/c-how-to-progarm-reading-note/index.html">
 <meta property="og:site_name" content="Leonhart">
 <meta property="og:description" content="前言C++大学教程的读书笔记，(C++ how to program)">
-<meta property="og:updated_time" content="2016-10-21T12:18:06.000Z">
+<meta property="og:updated_time" content="2016-11-02T06:55:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++大学教程读书笔记 - 与C++相关">
 <meta name="twitter:description" content="前言C++大学教程的读书笔记，(C++ how to program)">
@@ -319,17 +319,81 @@
 <li><p>对于包含const数据成员的对象初始化，必须使用成员初始化器</p>
 </li>
 </ol>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">Class Increment &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  	Increment(<span class="keyword">int</span> c= <span class="number">0</span>, <span class="keyword">int</span> i = <span class="number">1</span>);</div><div class="line"><span class="keyword">private</span>:</div><div class="line">	<span class="keyword">int</span> count;</div><div class="line">	<span class="keyword">const</span> <span class="keyword">int</span> increment;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Increment::Increment(<span class="keyword">int</span> c, <span class="keyword">int</span> i) : count(c), increment(i) &#123;</div><div class="line">  	<span class="comment">// empty</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">int</span> main &#123;</div><div class="line">  	<span class="function">Increment <span class="title">value</span><span class="params">(<span class="number">10</span>, <span class="number">5</span>)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">Class Increment &#123;</div><div class="line">  <span class="keyword">public</span>:</div><div class="line">  Increment(<span class="keyword">int</span> c= <span class="number">0</span>, <span class="keyword">int</span> i = <span class="number">1</span>);</div><div class="line">  <span class="keyword">private</span>:</div><div class="line">  <span class="keyword">int</span> count;</div><div class="line">  <span class="keyword">const</span> <span class="keyword">int</span> increment;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Increment::Increment(<span class="keyword">int</span> c, <span class="keyword">int</span> i) : count(c), increment(i) &#123;</div><div class="line">  <span class="comment">// empty</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">int</span> main &#123;</div><div class="line">  <span class="function">Increment <span class="title">value</span><span class="params">(<span class="number">10</span>, <span class="number">5</span>)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>   注意，对于const成员变量一定要使用成员初始化，非const成员变量，也可以使用</p>
 <ol>
-<li>每个类都有一个默认的复制构造函数</li>
-<li>friend函数和friend类：类的friend函数在类的作用域之外定义，但是可以访问类的所有成员的权限</li>
+<li><p>每个类都有一个默认的复制构造函数</p>
+</li>
+<li><p>friend函数和friend类：类的friend函数在类的作用域之外定义，但是可以访问类的所有成员的权限</p>
+</li>
 </ol>
 <h3 id="运算符重载"><a href="#运算符重载" class="headerlink" title="运算符重载"></a>运算符重载</h3><ol>
-<li>编写 <code>非static成员</code> 函数或者 <code>全局函数</code> 就可以实现运算符的重载。不能是static成员函数，因为运算符必须作用在对象上，而不是类</li>
-<li>运算符重载不改变元数，优先级和结合律</li>
-<li>运算符重载函数的参数要求至少有一个是自己定义的类对象，不能全是基本类型</li>
-<li>注意 <code>() [] -&gt;</code> 必须作为类的成员函数进行重载</li>
+<li><p>编写 <code>非static成员</code> 函数或者 <code>全局函数</code> 就可以实现运算符的重载。不能是static成员函数，因为运算符必须作用在对象上，而不是类</p>
+</li>
+<li><p>运算符重载不改变元数，优先级和结合律</p>
+</li>
+<li><p>运算符重载函数的参数要求至少有一个是自己定义的类对象，不能全是基本类型</p>
+</li>
+<li><p>注意 <code>() [] -&gt;</code> 必须作为类的成员函数进行重载</p>
+</li>
+<li><p>来看看重载 <code>&lt;&lt;</code> 和 <code>&gt;&gt;</code> 的示例代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// PhoneNumber.h</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line">Class PhoneNumber &#123;</div><div class="line">  	<span class="keyword">friend</span> ostream &amp;<span class="keyword">operator</span>&lt;&lt;(ostream &amp;, <span class="keyword">const</span> PhoneNumnber &amp;);</div><div class="line">  	<span class="keyword">friend</span> istream &amp;<span class="keyword">operator</span>&gt;&gt;(istream &amp;, PhoneNumber &amp;);</div><div class="line"><span class="keyword">private</span>:</div><div class="line">  	<span class="built_in">string</span> areaCode;</div><div class="line">  	<span class="built_in">string</span> exchange;</div><div class="line">  	<span class="built_in">string</span> line;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// PhoneNumber.cpp</span></div><div class="line">include &lt;iomanip&gt;</div><div class="line">include <span class="string">"PhoneNumber.h"</span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line">ostream &amp;<span class="keyword">operator</span>&lt;&lt;(ostream &amp;output, <span class="keyword">const</span> PhoneNumber &amp;number) &#123;</div><div class="line">  output &lt;&lt; <span class="string">"("</span> &lt;&lt; number.areaCode &lt;&lt; <span class="string">") "</span> &lt;&lt; number.exchange &lt;&lt; <span class="string">"-"</span> &lt;&lt; number.line;</div><div class="line">  <span class="keyword">return</span> output;</div><div class="line">&#125;</div><div class="line"></div><div class="line">input &amp;<span class="keyword">operator</span>&lt;&lt;(istream &amp;input, PhoneNumber &amp;number) &#123;</div><div class="line">  input.ignore();</div><div class="line">  input &gt;&gt; setw(<span class="number">3</span>) &gt;&gt; number.areaCode;</div><div class="line">  input.ignore(<span class="number">2</span>);</div><div class="line">  input &gt;&gt; setw(<span class="number">3</span>) &gt;&gt; number.exchange;</div><div class="line">  input &gt;&gt; ignore();</div><div class="line">  input &gt;&gt; setw(<span class="number">4</span>) &gt;&gt; number.line;</div><div class="line">  <span class="keyword">return</span> input;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>C++通过 <code>new</code> 和 <code>delete</code> 可以在运行时动态的分配和释放内存，这种内存是在 <strong>自由存储区</strong> ，也称之为 <strong>堆(heap)</strong> 。例如 ： <code>TIme *timePtr = new Time;</code> 他会分配一个Time对象大小的内存空间，调用Time类的构造函数，并将该内存空间的首地址给timePtr指针；要释放这个内存空间，调用 <code>delete timePtr;</code> 即可，他会先调用Time的析构函数，再释放内存</p>
+</li>
+<li><p>还可以使用 <code>new</code> 和 <code>delete</code> 来动态的分配和释放数组内存。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> *<span class="built_in">array</span> = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</div><div class="line"><span class="keyword">delete</span> [] <span class="built_in">array</span>;</div><div class="line"></div><div class="line"><span class="comment">// 体现动态分配</span></div><div class="line"><span class="keyword">int</span> i = <span class="number">10</span>;</div><div class="line"><span class="keyword">int</span> *dynamicArray = <span class="keyword">new</span> <span class="keyword">int</span>[i];</div><div class="line"><span class="keyword">delete</span> [] dynamicArray;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><ol>
+<li>继承方式有3种，<code>public</code> <code>protected</code> 和 <code>private</code> .这里的继承方式和数据成员的不是一个意思</li>
+<li>继承之后，基类的private数据成员也是被继承下来的，但是派生类不能直接访问</li>
+<li>友元函数不会被继承</li>
+<li>尽量避免在基类中使用protected成员，而应该使用private成员</li>
+<li>派生类不会继承基类的构造函数、析构函数和重载的赋值运算符</li>
+<li>先创建的对象后被析构</li>
+</ol>
+<h3 id="多态性"><a href="#多态性" class="headerlink" title="多态性"></a>多态性</h3><ol>
+<li><p>多态性的两个底层技术：virtual函数和动态绑定</p>
+</li>
+<li><p>如果没有运用virtual函数的话，将派生类的地址赋给基类指针，调用同名函数，执行的还是基类中的函数，而不是派生类中重写的函数。因为调用函数取决于调用函数的句柄（指针）的类型，而不是句柄指向的对象的类型。这样的话，并不能实现多态。</p>
+</li>
+<li><p>但是使用virtual函数的话，调用哪个函数，就取决与句柄指向的对象。也就是在基类中使用virtual定义同名函数，在派生类中重写该函数</p>
+</li>
+<li><p>一旦一个函数被声明为virtual函数，那么在继承层次中，所有下面的这个函数也都是virtual函数</p>
+</li>
+<li><p>通过以下两种形式，可以动态的执行函数。这些函数是在运行时绑定上去的</p>
+<ol>
+<li>通过指向派生类的基类指针调用virtual函数： <code>shapePtr-&gt;draw();</code></li>
+<li>通过指向派生类的基类引用调用virtual函数： <code>shapeRef.draw();</code></li>
+</ol>
+</li>
+<li><p>通过按名引用特定对象和使用点成员运算符调用virtual函数，是静态绑定，也就是在编译时就绑定了，不存在多态。 <code>squareObject.draw();</code></p>
+</li>
+<li><p>将类中的一个或多个函数声明为纯玩virtual函数，可以使一个类成为抽象类。纯虚函数不需要提供函数的实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>= <span class="number">0</span>; <span class="comment">// pure virtual function</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>实例化一个抽象类会导致编译错误</p>
+</li>
+</ol>
+<h3 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h3><ol>
+<li><p>函数模板的定义由关键字 <code>template</code> 开头，后面的尖括号里面的是模板类型的形参列表。每个表示类型的模板形参前面必须加上关键字 <code>class</code> 或 <code>typename</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="comment">// or</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> ElementType&gt;</div><div class="line"><span class="comment">// or</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Type1, <span class="keyword">typename</span> Type2&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>来看一个例子</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="comment">// function template</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">printArray</span><span class="params">(<span class="keyword">const</span> T * <span class="keyword">const</span> <span class="built_in">array</span>, <span class="keyword">int</span> count)</span> </span>&#123;</div><div class="line">  	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; ++i) &#123;</div><div class="line">      	<span class="built_in">cout</span> &lt;&lt; <span class="built_in">array</span>[i] &lt;&lt; <span class="string">" "</span>;</div><div class="line">  	&#125;</div><div class="line">  	<span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">  	<span class="keyword">const</span> <span class="keyword">int</span> aCount = <span class="number">5</span>;</div><div class="line">  	<span class="keyword">const</span> <span class="keyword">int</span> bCount = <span class="number">7</span>;</div><div class="line">  	<span class="keyword">const</span> <span class="keyword">int</span> cCount = <span class="number">6</span>;</div><div class="line">  </div><div class="line">  	<span class="keyword">int</span> a[aCount] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</div><div class="line">  	<span class="keyword">double</span> b[bCount] = &#123;<span class="number">1.1</span>, <span class="number">2.2</span>, <span class="number">3.3</span>, <span class="number">4.4</span>, <span class="number">5.5</span>, <span class="number">6.6</span>, <span class="number">7.7</span>&#125;;</div><div class="line">  	<span class="keyword">char</span> c[cCount] = <span class="string">"HELLO"</span>;</div><div class="line">  </div><div class="line">  	printArray(a, aCount);</div><div class="line">  	printArray(b, bCount);</div><div class="line">  	printArray(c, cCount);</div><div class="line">  </div><div class="line">  	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>模板的形参名自能在模板头部的参数列表中声明一次，但是可以在函数头和函数体中重复使用</p>
+</li>
+<li><p>看一个类模板的例子</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Stack &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  	Stack(<span class="keyword">int</span> = <span class="number">10</span>);</div><div class="line">  	~Stack() &#123;</div><div class="line">      	<span class="keyword">delete</span> [] stackPtr;</div><div class="line">  	&#125;</div><div class="line">  </div><div class="line">  	<span class="function"><span class="keyword">bool</span> <span class="title">push</span><span class="params">(<span class="keyword">const</span> T &amp;)</span> </span>&#123;</div><div class="line">      	<span class="comment">//...</span></div><div class="line">  	&#125;</div><div class="line">  	<span class="function"><span class="keyword">bool</span> <span class="title">pop</span><span class="params">(T &amp;)</span> </span>&#123;</div><div class="line">      	<span class="comment">//...</span></div><div class="line">  	&#125;</div><div class="line">  	<span class="function"><span class="keyword">bool</span> <span class="title">isEmpty</span><span class="params">()</span></span>;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">  	<span class="keyword">int</span> size, top;</div><div class="line">  	T *stackPtr;</div><div class="line">&#125;</div><div class="line"></div><div class="line">templete &lt;<span class="keyword">typename</span> T&gt;</div><div class="line">Stack&lt;T&gt;::Stack(<span class="keyword">int</span> s) &#123;</div><div class="line">   <span class="comment">//...</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">void</span> Stack&lt;T&gt;::isEmpty() &#123;</div><div class="line">   <span class="comment">//...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用类模板的时候： <code>Stack&lt;double&gt; doubleStack(5);</code></p>
+</li>
+</ol>
+<h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><ol>
+<li>可以通过 <code>throw;</code> 语句重新抛出异常</li>
+<li><code>int someFUnction(double value) throw(ExceptionA, ExceptionB, ExceptionC) {};</code>  指定了该函数可以抛出的异常的种类</li>
 <li>​</li>
 </ol>
 
@@ -445,7 +509,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-count">42</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -462,7 +526,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -511,7 +575,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类的深入剖析"><span class="nav-number">2.1.</span> <span class="nav-text">类的深入剖析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运算符重载"><span class="nav-number">2.2.</span> <span class="nav-text">运算符重载</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类的深入剖析"><span class="nav-number">2.1.</span> <span class="nav-text">类的深入剖析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运算符重载"><span class="nav-number">2.2.</span> <span class="nav-text">运算符重载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#继承"><span class="nav-number">2.3.</span> <span class="nav-text">继承</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多态性"><span class="nav-number">2.4.</span> <span class="nav-text">多态性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模板"><span class="nav-number">2.5.</span> <span class="nav-text">模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#异常处理"><span class="nav-number">2.6.</span> <span class="nav-text">异常处理</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
@@ -530,7 +594,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
