@@ -1,0 +1,696 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言学了一段时间的OpenGL，这次又重新看了一遍 iOS Core Animation 这本书，查看了许多资料。对这个iOS的drawing稍有顿悟=。=
+这篇文章里面，我会针对下面几个方面说说我自己的见解：
+
+Core Animation，Core Graphic 和 OpenGL ES
+Rendering以及Animation的步骤
+iOS Drawing中的CPU，GPU
+drawRect">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于iOS Drawing">
+<meta property="og:url" content="http://yoursite.com/2017/03/24/something-about-iOS-drawing/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言学了一段时间的OpenGL，这次又重新看了一遍 iOS Core Animation 这本书，查看了许多资料。对这个iOS的drawing稍有顿悟=。=
+这篇文章里面，我会针对下面几个方面说说我自己的见解：
+
+Core Animation，Core Graphic 和 OpenGL ES
+Rendering以及Animation的步骤
+iOS Drawing中的CPU，GPU
+drawRect">
+<meta property="og:updated_time" content="2017-03-25T02:53:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于iOS Drawing">
+<meta name="twitter:description" content="前言学了一段时间的OpenGL，这次又重新看了一遍 iOS Core Animation 这本书，查看了许多资料。对这个iOS的drawing稍有顿悟=。=
+这篇文章里面，我会针对下面几个方面说说我自己的见解：
+
+Core Animation，Core Graphic 和 OpenGL ES
+Rendering以及Animation的步骤
+iOS Drawing中的CPU，GPU
+drawRect">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/03/24/something-about-iOS-drawing/"/>
+
+  <title> 关于iOS Drawing | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display:none">
+    <script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                关于iOS Drawing
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-24T17:14:51+08:00" content="2017-03-24">
+              2017-03-24
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/03/24/something-about-iOS-drawing/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/24/something-about-iOS-drawing/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>学了一段时间的OpenGL，这次又重新看了一遍 <strong>iOS Core Animation</strong> 这本书，查看了许多资料。对这个iOS的drawing稍有顿悟=。=</p>
+<p>这篇文章里面，我会针对下面几个方面说说我自己的见解：</p>
+<ol>
+<li>Core Animation，Core Graphic 和 OpenGL ES</li>
+<li>Rendering以及Animation的步骤</li>
+<li>iOS Drawing中的CPU，GPU</li>
+<li>drawRect方法的弊端</li>
+<li>影响GPU与CPU绘制的因素</li>
+</ol>
+<a id="more"></a>
+<h2 id="Core-Animation，Core-Graphics-和-OpenGL-ES"><a href="#Core-Animation，Core-Graphics-和-OpenGL-ES" class="headerlink" title="Core Animation，Core Graphics 和 OpenGL ES"></a>Core Animation，Core Graphics 和 OpenGL ES</h2><p>Core Animation，Core Graphics 和 OpenGL ES 三者都是和iOS画图，呈现内容相关的iOS框架。总体来说，Core Animation和UIKit是一个层级的，而他们底层画图的框架就是Core Graphics 和 OpenGL ES。</p>
+<ol>
+<li><strong>Core Animation</strong> 是iOS用来控制内容的显示和动画的。它的主要功能就是管理<strong>CALayer</strong>。</li>
+<li><strong>UIView</strong> 大家都很熟悉。那么UIView底层负责显示内容和动画的就是 <strong>CALayer</strong> 。UIView上和显示以及动画相关的接口，其实也是对CALayer的接口的包装</li>
+<li>CALayer的contents最终会显示在屏幕上。而<strong>Core Graphics</strong> 和 <strong>OpenGL ES</strong>就负责在CALayer上面作画，并将其内容显示到屏幕上</li>
+<li><strong>Core Graphics</strong>是个2D图形库，一般用来画矢量图，比如UIBezierPath等等。它主要使用CPU来绘制。以绘制一条UIBezierPath为例：通过CPU的计算，生成包含该path路径的bitmap，然后将该bitmap传递给GPU，绘制出来。所以Core Graphics的主要计算压力在CPU上面，而且使用CPU来生成bitmap是很耗时的一个步骤</li>
+<li><strong>OpenGL ES</strong> 讲道理是可以画任何的2D、3D图形的。以绘制一个三角形为例，只需要将3个顶点传递给GPU，然后GPU会计算生成包含该三角形的bitmap，最终使用GPU将该bitmap绘制出来。</li>
+<li>所以我理解的Core Graphics和OpenGL ES的主要区别就是生成最终的 <strong>bitmap</strong> 的位置。Core Graphics由CPU来生成bitmap；OpenGL ES由GPU来生成bitmap。 最终这个bitmap都要交给GPU来渲染到屏幕上面。</li>
+<li>由于CPU生成bitmap较为耗时（这也是Core Graphics性能差的原因），而且CPU还要执行其他的任务，所以不推荐使用Core Graphics来绘制。</li>
+<li>Core Animation对绘制过程进行了优化，大多数的UIKit里面的原件(UIView)的底层layer都是硬件加速的，也就是使用GPU来生成bitmap并绘制。</li>
+</ol>
+<h2 id="Rendering和Animation的步骤"><a href="#Rendering和Animation的步骤" class="headerlink" title="Rendering和Animation的步骤"></a>Rendering和Animation的步骤</h2><p>参考<strong>iOS Core Animation</strong> 一书的第12章</p>
+<ol>
+<li><strong>Layout</strong>： 设置view/layer树种每个layer的属性(frame, background color, border等等)</li>
+<li><strong>Display</strong>： 生成layer的backing image，在这一步涉及到<code>-drawRect:</code>和<code>-drawLayer:inContext:</code>的调用，也就是使用CPU生成bitmap，来填充backing image。也可以使用UIImage来填充backing image。</li>
+<li><strong>Prepare</strong>： Core Animation准备好Animation的数据，比如动画的属性，终止值等等</li>
+<li><strong>Commit</strong>： Core Animation将所有layer数据和动画数据打包将他们发送给<strong>render server</strong> 进行显示</li>
+<li>将layer的属性计算，转化成OpenGL的顶点等属性（提供数据给GPU，计算bitmap，也就是OpenGL中的各个三角形）</li>
+<li>GPU组合各个layer的bitmap，将其渲染在屏幕上</li>
+</ol>
+<h2 id="iOS-Drawing中的CPU和GPU"><a href="#iOS-Drawing中的CPU和GPU" class="headerlink" title="iOS Drawing中的CPU和GPU"></a>iOS Drawing中的CPU和GPU</h2><ol>
+<li>Core Graphics使用CPU计算bitmap</li>
+<li>OpenGL ES使用GPU计算bitmap</li>
+<li>使用GPU将所有的layer的bitmap组合在一起</li>
+</ol>
+<h2 id="drawRect方法的弊端"><a href="#drawRect方法的弊端" class="headerlink" title="drawRect方法的弊端"></a>drawRect方法的弊端</h2><p>drawRect方法是对drawLayer:inContext:的包装。两个方法如果有实现的话，在重绘layer的时候会调用。他们适合自定义layer内容。但是会影响性能</p>
+<p>在每次调用这两个方法的时候，都会新建一个与当前的layer的大小相等的空的context（bitmap），然后使用Core Graphics或者直接UIImage等等将该context填充。这相当与离屏渲染。然后将生成的context再赋给layer的content，再交给GPU渲染出来。</p>
+<p>注意：CALayer会cache自己的bitmap，那么每次渲染的时候就不需要重新生成CALayer的bitmap。只需要将bitmap交给GPU，让GPU执行组合工作就可以了。一般来说，生成bitmap（无论在CPU端还是GPU端）都是比组合bitmap耗时的</p>
+<h2 id="影响GPU与CPU绘制的因素"><a href="#影响GPU与CPU绘制的因素" class="headerlink" title="影响GPU与CPU绘制的因素"></a>影响GPU与CPU绘制的因素</h2><h3 id="GPU端"><a href="#GPU端" class="headerlink" title="GPU端"></a>GPU端</h3><ol>
+<li>太多的重复绘制：一次绘制过程中，在同一个像素点，绘制多遍</li>
+<li>离屏渲染：CPU和GPU都会出现离屏渲染的情况，这需要额外的内存来存放渲染的结果</li>
+<li>太多的geometry：也就是OpenGL中，太多的三角形</li>
+<li>渲染太大的图片：GPU支持的最大的渲染texture是有限的（通常2048*2048，或者retina的4096*4096），图片像素过大的话，要先在CPU端处理之后，才能交给GPU显示</li>
+</ol>
+<h3 id="CPU端"><a href="#CPU端" class="headerlink" title="CPU端"></a>CPU端</h3><ol>
+<li>Layout计算：也就是计算每个layer的frame等等属性，这个在使用autolayout的系统上面更加的费时</li>
+<li>Lazy View Loading：只有在view第一次出现在屏幕上时，才会去加载view相关的资源（图片等等），所以如果这个资源很大，或者延迟很大（网络获取）的时候，会延缓CPU的操作。这一步的操作包括Layout，Display等步骤</li>
+<li>Core Graphics drawing</li>
+<li>图片解压：因为存放的基本都是压缩的图片，但是显示的时候需要全size的图片，所以需要CPU执行图片解压的工作</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://stackoverflow.com/questions/14659563/to-drawrect-or-not-to-drawrect-when-should-one-use-drawrect-core-graphics-vs-su" target="_blank" rel="external">to drawRect or not to drawRect (when should one use drawRect/Core Graphics vs subviews/images and why?)</a></li>
+<li><a href="http://stackoverflow.com/questions/7287254/calayer-vs-cgcontext-which-is-a-better-design-approach" target="_blank" rel="external">CALayer vs CGContext, which is a better design approach?</a></li>
+<li><a href="http://floriankugler.com/2013/05/24/layer-trees-vs-flat-drawing-graphics-performance-across-ios-device-generations/" target="_blank" rel="external">Layer Trees vs. Flat Drawing – Graphics Performance Across iOS Device Generations</a></li>
+<li><a href="http://vanney9.com/2016/07/01/iOS-Core-Animation-reading-note-one/" target="_blank" rel="external">iOS Core Animation - The Layer Beneath</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag">#iOS</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/23/effective-objective-c-reading-note-two/" rel="next" title="Effective Objective-C - 协议与分类">
+                <i class="fa fa-chevron-left"></i> Effective Objective-C - 协议与分类
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/03/24/something-about-iOS-drawing/"
+           data-title="关于iOS Drawing" data-url="http://yoursite.com/2017/03/24/something-about-iOS-drawing/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Core-Animation，Core-Graphics-和-OpenGL-ES"><span class="nav-number">2.</span> <span class="nav-text">Core Animation，Core Graphics 和 OpenGL ES</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rendering和Animation的步骤"><span class="nav-number">3.</span> <span class="nav-text">Rendering和Animation的步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS-Drawing中的CPU和GPU"><span class="nav-number">4.</span> <span class="nav-text">iOS Drawing中的CPU和GPU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#drawRect方法的弊端"><span class="nav-number">5.</span> <span class="nav-text">drawRect方法的弊端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#影响GPU与CPU绘制的因素"><span class="nav-number">6.</span> <span class="nav-text">影响GPU与CPU绘制的因素</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GPU端"><span class="nav-number">6.1.</span> <span class="nav-text">GPU端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU端"><span class="nav-number">6.2.</span> <span class="nav-text">CPU端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
