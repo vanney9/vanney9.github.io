@@ -1,0 +1,683 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS,Auto Layout,CAAnimation," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言最近实现了一个基于Auto Layout的CAKeyframeAnimation。先来看一下效果👇">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Auto Layout 与 CAKeyframeAnimation">
+<meta property="og:url" content="http://yoursite.com/2017/03/30/iOS-Auto-Layout-CAKeyframeAnimation/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言最近实现了一个基于Auto Layout的CAKeyframeAnimation。先来看一下效果👇">
+<meta property="og:image" content="http://yoursite.com/lionheart/1703/animate.gif">
+<meta property="og:updated_time" content="2017-03-30T14:02:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Auto Layout 与 CAKeyframeAnimation">
+<meta name="twitter:description" content="前言最近实现了一个基于Auto Layout的CAKeyframeAnimation。先来看一下效果👇">
+<meta name="twitter:image" content="http://yoursite.com/lionheart/1703/animate.gif">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/03/30/iOS-Auto-Layout-CAKeyframeAnimation/"/>
+
+  <title> Auto Layout 与 CAKeyframeAnimation | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display:none">
+    <script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Auto Layout 与 CAKeyframeAnimation
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-30T17:19:20+08:00" content="2017-03-30">
+              2017-03-30
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/03/30/iOS-Auto-Layout-CAKeyframeAnimation/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/30/iOS-Auto-Layout-CAKeyframeAnimation/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近实现了一个基于Auto Layout的CAKeyframeAnimation。先来看一下效果👇</p>
+<p><img src="lionheart/1703/animate.gif" alt="animate.gif"></p>
+<a id="more"></a>
+<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>看了效果图，第一反应应该是使用 <strong>CAKeyframeAnimation</strong>，让两个圆型view的position随着图中的贝塞尔曲线(<strong>CGPath</strong>)运动。</p>
+<p>那么问题来了：整个视图是使用 <strong>Auto Layout</strong> 来实现的，并没有指定每个视图的frame，我们是否可以使用CAKeyframeAnimation呢？这就引出了下面要讲的几点👇</p>
+<ol>
+<li><strong>Auto Layout</strong>的本质</li>
+<li>普通的基于<strong>Auto Layout</strong> 的动画</li>
+<li>在<strong>Auto Layout</strong>视图中获取<strong>frame</strong></li>
+<li><strong>CATransaction</strong> 与 <strong>CAKeyframeAnimation</strong></li>
+<li><strong>Auto Layout</strong> 百分比布局</li>
+</ol>
+<h2 id="Auto-Layout-的本质"><a href="#Auto-Layout-的本质" class="headerlink" title="Auto Layout 的本质"></a>Auto Layout 的本质</h2><p><a href="http://vanney9.com/2017/03/24/something-about-iOS-drawing/" target="_blank" rel="external">关于iOS Drawing</a> 这篇文章里面讲述了 <strong>iOS系统将View显示在屏幕上的6个详细步骤</strong>。这里说一下前面3个步骤：</p>
+<ol>
+<li><strong>Layout</strong>：将一个或者多个UIView（也就是<strong>UIView hierarchy</strong>）显示在屏幕上的第一步就是 <strong>计算每个layer的frame</strong>。无论代码使用<strong>Auto Layout</strong> 还是 <strong>Auto Resizing</strong> 还是直接指定了View的frame，iOS都会计算出每个layer的frame。</li>
+<li><strong>Display</strong>：此时已经知道每个Layer的frame，这一步会执行<code>-drawRect:</code>方法，执行custom的绘制，生成layer的backing image。</li>
+<li><strong>Prepare</strong>：这一步开始准备每个<strong>Animation</strong>的属性，比如要动画的layer属性，以及终止值等等。</li>
+</ol>
+<h4 id="划重点啦："><a href="#划重点啦：" class="headerlink" title="划重点啦："></a>划重点啦：</h4><ol>
+<li><strong>Auto Layout虽然没有指定frame，但是iOS会根据这些约束，在内部算出layer的frame。所以Auto Layout的本质也就是指定每个View的frame</strong></li>
+<li><strong>在计算出每个layer的frame属性时，才开始准备Animation的参数。所以不存在基于Auto Layout的动画；指定动画属性时，还是指定与view的frame相关的属性</strong></li>
+</ol>
+<h2 id="普通的基于-Auto-Layout-的动画"><a href="#普通的基于-Auto-Layout-的动画" class="headerlink" title="普通的基于 Auto Layout 的动画"></a>普通的基于 Auto Layout 的动画</h2><p><a href="http://stackoverflow.com/questions/12622424/how-do-i-animate-constraint-changes" target="_blank" rel="external">How do I animate constraint changes?</a> 这个stackoverflow的问题探讨了如何通过改变约束来使视图动画</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (void)moveBannerOffScreen &#123;</div><div class="line">    _addBannerDistanceFromBottomConstraint.constant = -32;  // 1</div><div class="line">    [UIView animateWithDuration:5</div><div class="line">        animations:^&#123;</div><div class="line">            [self.view layoutIfNeeded]; // 2</div><div class="line">        &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注释1：先更改约束条件，也就是指定动画结束之后，UIView该显示的位置</p>
+<p>注释2：在动画中执行<strong>layoutIfNeeded</strong>，计算出每个view的结束位置的frame，也就是动画的终止的frame</p>
+<p>可以这么理解：执行完这一个函数后，开始下一帧的绘制；这个时候真实的view已经绘制在最终该显示的位置了，但是被屏幕最上方的Animation的view给遮挡了；这个Animation View从上一帧的状态开始，动画到最终的位置（有待商榷）</p>
+<h2 id="在Auto-Layout-视图中获取bound"><a href="#在Auto-Layout-视图中获取bound" class="headerlink" title="在Auto Layout 视图中获取bound"></a>在Auto Layout 视图中获取bound</h2><p>说说方法：</p>
+<ol>
+<li>设要获取frame的视图为a，新建一个a的子视图b，使用Auto Layout将b的四边与a对齐</li>
+<li>重写b的<code>-drawRect:</code>方法，获取rect的宽高，也就是b的bound</li>
+<li>调用b的<code>setNeedsDisplay</code>方法，该方法会调用<code>-drawRect:</code>方法，从而获取b的bound</li>
+</ol>
+<p><strong>因为在调用<code>-drawRect:</code>的时候，每个视图的frame已经确定了，那么方法中的rect也就是该视图的bound</strong></p>
+<h2 id="CATransaction-与-CAKeyframeAnimation"><a href="#CATransaction-与-CAKeyframeAnimation" class="headerlink" title="CATransaction 与 CAKeyframeAnimation"></a>CATransaction 与 CAKeyframeAnimation</h2><p><strong>在这里详细说一下效果图的实现</strong>：</p>
+<ol>
+<li><p>图中的曲线使用UIBezier来画，那么就需要确定的坐标点，也就是需要知道曲线所在的视图的View。那么在<code>-drawRect:</code> 中画UIBezierPath，刚好可以知道view的bound</p>
+</li>
+<li><p>已经得到path之后，使用CAKeyframeAnimation来动画</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">// 先设定2个CAKeyframeAnimation</div><div class="line">CAKeyframeAnimation *animation1 = [CAKeyframeAnimation animation];</div><div class="line">animation1.keyPath = @&quot;position&quot;;</div><div class="line">animation1.path = animation1Path.CGPath;</div><div class="line">animation1.duration = 0.5f;</div><div class="line">animation1.removedOnCompletion = NO;</div><div class="line"></div><div class="line">CAKeyframeAnimation *animation2 = [CAKeyframeAnimation animation];</div><div class="line">animation2.keyPath = @&quot;position&quot;;</div><div class="line">animation2.path = animation2Path.CGPath;</div><div class="line">animation2.duration = 0.5f;</div><div class="line">animation2.removedOnCompletion = NO;</div><div class="line"></div><div class="line">// 更新两个circle的约束</div><div class="line">[self.circle1 updateConstraint]；</div><div class="line">[self.circle2 updateConstraint]；</div><div class="line">  </div><div class="line">// 执行动画</div><div class="line">[CATransaction begin];</div><div class="line">[self.circle1.layer addAnimation:consultationKeyAnimation forKey:@&quot;circle1&quot;];</div><div class="line">[self.circle2.layer addAnimation:followupKeyAnimation forKey:@&quot;circle2&quot;];</div><div class="line">[CATransaction commit];</div></pre></td></tr></table></figure>
+<p>关于CATransaction：在第一次动画没执行完的时候，立刻开始同一个transaction，会强制让第一个transaction的动画立刻结束到终点（也就是去掉Animation View的遮挡），再立刻开始第二个transaction的动画</p>
+<h2 id="Auto-Layout-百分比布局"><a href="#Auto-Layout-百分比布局" class="headerlink" title="Auto Layout 百分比布局"></a>Auto Layout 百分比布局</h2><p>这里无主题无关。</p>
+<p><a href="http://liumh.com/2015/09/27/ios-autolayout-multiplier/" target="_blank" rel="external">iOS AutoLayout 百分比布局</a> 这边文章谈到了Auto Layout百分比布局的问题，讲的很好。说一个里面的例子：子视图b的leading要与父视图a的leading之间隔20%的宽度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">b.leading = a.trailing * 0.2</div></pre></td></tr></table></figure>
+<p>使用Masonry</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[b mas_makeConstraints:^(MASConstraintMaker *make) &#123;</div><div class="line">	make.leading.equalTo(a.mas_trailing).multipliedBy(0.2);</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<p>可以这么理解：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">a.leading = 0;</div><div class="line">a.trailing = a.width;</div><div class="line">a.trailing * 0.2 = a.width * 0.2;</div><div class="line">b.leading - a.leading = 0.2 * a.width - 0 = 0.2 * a.width</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://liumh.com/2015/09/27/ios-autolayout-multiplier/" target="_blank" rel="external">iOS AutoLayout 百分比布局</a></li>
+<li><a href="http://stackoverflow.com/questions/12622424/how-do-i-animate-constraint-changes" target="_blank" rel="external">How do I animate constraint changes?</a></li>
+<li><a href="http://vanney9.com/2017/03/24/something-about-iOS-drawing/" target="_blank" rel="external">关于iOS Drawing</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag">#iOS</a>
+          
+            <a href="/tags/Auto-Layout/" rel="tag">#Auto Layout</a>
+          
+            <a href="/tags/CAAnimation/" rel="tag">#CAAnimation</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/25/effective-objective-c-reading-note-three/" rel="next" title="Effective Objective-C - 内存管理">
+                <i class="fa fa-chevron-left"></i> Effective Objective-C - 内存管理
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/03/30/iOS-Auto-Layout-CAKeyframeAnimation/"
+           data-title="Auto Layout 与 CAKeyframeAnimation" data-url="http://yoursite.com/2017/03/30/iOS-Auto-Layout-CAKeyframeAnimation/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https:/github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http:/weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题分析"><span class="nav-number">2.</span> <span class="nav-text">问题分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Auto-Layout-的本质"><span class="nav-number">3.</span> <span class="nav-text">Auto Layout 的本质</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#划重点啦："><span class="nav-number">3.0.1.</span> <span class="nav-text">划重点啦：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#普通的基于-Auto-Layout-的动画"><span class="nav-number">4.</span> <span class="nav-text">普通的基于 Auto Layout 的动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Auto-Layout-视图中获取bound"><span class="nav-number">5.</span> <span class="nav-text">在Auto Layout 视图中获取bound</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CATransaction-与-CAKeyframeAnimation"><span class="nav-number">6.</span> <span class="nav-text">CATransaction 与 CAKeyframeAnimation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Auto-Layout-百分比布局"><span class="nav-number">7.</span> <span class="nav-text">Auto Layout 百分比布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
