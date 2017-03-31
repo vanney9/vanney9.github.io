@@ -91,7 +91,7 @@
 <meta property="og:site_name" content="Leonhart">
 <meta property="og:description" content="前言最近实现了一个基于Auto Layout的CAKeyframeAnimation。先来看一下效果👇">
 <meta property="og:image" content="http://yoursite.com/lionheart/1703/animate.gif">
-<meta property="og:updated_time" content="2017-03-30T14:07:28.000Z">
+<meta property="og:updated_time" content="2017-03-31T12:24:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Auto Layout 与 CAKeyframeAnimation">
 <meta name="twitter:description" content="前言最近实现了一个基于Auto Layout的CAKeyframeAnimation。先来看一下效果👇">
@@ -315,10 +315,13 @@
 <li><strong>在计算出每个layer的frame属性时，才开始准备Animation的参数。所以不存在基于Auto Layout的动画；指定动画属性时，还是指定与view的frame相关的属性</strong></li>
 </ol>
 <h2 id="普通的基于-Auto-Layout-的动画"><a href="#普通的基于-Auto-Layout-的动画" class="headerlink" title="普通的基于 Auto Layout 的动画"></a>普通的基于 Auto Layout 的动画</h2><p><a href="http://stackoverflow.com/questions/12622424/how-do-i-animate-constraint-changes" target="_blank" rel="external">How do I animate constraint changes?</a> 这个stackoverflow的问题探讨了如何通过改变约束来使视图动画</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (void)moveBannerOffScreen &#123;</div><div class="line">    _addBannerDistanceFromBottomConstraint.constant = -32;  // 1</div><div class="line">    [UIView animateWithDuration:5</div><div class="line">        animations:^&#123;</div><div class="line">            [self.view layoutIfNeeded]; // 2</div><div class="line">        &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>注释1：先更改约束条件，也就是指定动画结束之后，UIView该显示的位置</p>
-<p>注释2：在动画中执行<strong>layoutIfNeeded</strong>，计算出每个view的结束位置的frame，也就是动画的终止的frame</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (void)moveBannerOffScreen &#123;</div><div class="line">  	[self.view layoutIfNeeded]; // 0</div><div class="line">    _addBannerDistanceFromBottomConstraint.constant = -32;  // 1</div><div class="line">  	// [sel.view layoutIfNeeded]; // 注释3</div><div class="line">    [UIView animateWithDuration:5</div><div class="line">        animations:^&#123;</div><div class="line">            [self.view layoutIfNeeded]; // 2</div><div class="line">        &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注释0：<strong>先强行计算出每个view的动画开始前的frame</strong></p>
+<p>注释1：先更改约束条件，也就是指定动画结束之后，UIView该显示的位置。<strong>但是此时并没有计算出view的最终的frame</strong></p>
+<p>注释2：<strong>先记录动画初始位置</strong>；然后在动画中执行<strong>layoutIfNeeded</strong>，强行执行Layout步骤，计算出每个view的结束位置的frame，也就是动画的终止的frame</p>
+<p>注释3：如果在这里执行<code>layoutIfNeeded</code>的话，就会强行计算出每个view的最终的frame，那么动画会将该frame记为初始位置。那么<strong>初始位置和结束位置相同，直接跳到最终的位置</strong></p>
 <p>可以这么理解：执行完这一个函数后，开始下一帧的绘制；这个时候真实的view已经绘制在最终该显示的位置了，但是被屏幕最上方的Animation的view给遮挡了；这个Animation View从上一帧的状态开始，动画到最终的位置（有待商榷）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// 相对比的UIView animate</div><div class="line">&#123;</div><div class="line">  	view.center = pointA; // 此时已经改变了view的frame，**计算动画的初始位置**</div><div class="line">  	[UIView animateWithDuration:0.5 animations:^&#123;</div><div class="line">      	view.center = pointB; // 计算view的最终frame， **计算动画的结束位置**</div><div class="line">  	&#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="在Auto-Layout-视图中获取bound"><a href="#在Auto-Layout-视图中获取bound" class="headerlink" title="在Auto Layout 视图中获取bound"></a>在Auto Layout 视图中获取bound</h2><p>说说方法：</p>
 <ol>
 <li>设要获取frame的视图为a，新建一个a的子视图b，使用Auto Layout将b的四边与a对齐</li>
