@@ -90,10 +90,12 @@
 <meta property="og:url" content="http://yoursite.com/2017/03/25/effective-objective-c-reading-note-three/index.html">
 <meta property="og:site_name" content="Leonhart">
 <meta property="og:description" content="前言Effective Objective C 读书笔记 - 内存管理">
-<meta property="og:updated_time" content="2017-04-04T03:17:54.000Z">
+<meta property="og:image" content="http://yoursite.com/lionheart/1703/zombiefix.png">
+<meta property="og:updated_time" content="2017-04-04T07:35:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Effective Objective-C - 内存管理">
 <meta name="twitter:description" content="前言Effective Objective C 读书笔记 - 内存管理">
+<meta name="twitter:image" content="http://yoursite.com/lionheart/1703/zombiefix.png">
 
 
 
@@ -322,7 +324,26 @@
 </ol>
 </li>
 </ol>
-<h3 id="以弱引用避免保留环"><a href="#以弱引用避免保留环" class="headerlink" title="以弱引用避免保留环"></a>以弱引用避免保留环</h3>
+<h3 id="以弱引用避免保留环"><a href="#以弱引用避免保留环" class="headerlink" title="以弱引用避免保留环"></a>以弱引用避免保留环</h3><h3 id="以“自动释放池块”降低内存峰值"><a href="#以“自动释放池块”降低内存峰值" class="headerlink" title="以“自动释放池块”降低内存峰值"></a>以“自动释放池块”降低内存峰值</h3><ol>
+<li><p>自动释放池还有变量可见范围的限制</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@autoreleasepool &#123;</div><div class="line">  	id object = [self createObject];</div><div class="line">&#125;</div><div class="line">[self useObject:object]; // 报错，因为object变量已经不可见了</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="用“僵尸对象”调试内存管理问题"><a href="#用“僵尸对象”调试内存管理问题" class="headerlink" title="用“僵尸对象”调试内存管理问题"></a>用“僵尸对象”调试内存管理问题</h3><ol>
+<li><p>向已经回收的对象发送消息是非常不安全的。如果该内存已经被覆写了，那么程序就会崩溃；如果暂时没有被覆写，那么侥幸可以运行。所以这时候<strong>程序会偶尔报错，难以调试</strong></p>
+</li>
+<li><p>这个时候就可以使用Cocoa提供的 <strong>僵尸对象</strong> 的调试方法</p>
+</li>
+<li><p>启用这一项调试功能之后：所有的本要被回收的对象会被转化成特殊的僵尸对象，这些内存不会被覆写；当僵尸对象收到消息后，他会将原本的对象信息打印出来，并提示说，你给一个已经回收的对象发送了信息</p>
+<p><img src="/lionheart/1703/zombiefix.png" alt="enable zombie"></p>
+</li>
+<li><p>至于僵尸对象的工作原理，具体的看书~</p>
+</li>
+</ol>
+<h3 id="不要使用retainCount"><a href="#不要使用retainCount" class="headerlink" title="不要使用retainCount"></a>不要使用retainCount</h3><ol>
+<li>ARC已经废弃<code>retainCount</code>方法</li>
+</ol>
+
       
     </div>
 
@@ -503,7 +524,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#理解引用计数"><span class="nav-number">2.1.</span> <span class="nav-text">理解引用计数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以ARC简化引用计数"><span class="nav-number">2.2.</span> <span class="nav-text">以ARC简化引用计数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在dealloc方法中只释放引用并解除监听"><span class="nav-number">2.3.</span> <span class="nav-text">在dealloc方法中只释放引用并解除监听</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以弱引用避免保留环"><span class="nav-number">2.4.</span> <span class="nav-text">以弱引用避免保留环</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#理解引用计数"><span class="nav-number">2.1.</span> <span class="nav-text">理解引用计数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以ARC简化引用计数"><span class="nav-number">2.2.</span> <span class="nav-text">以ARC简化引用计数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在dealloc方法中只释放引用并解除监听"><span class="nav-number">2.3.</span> <span class="nav-text">在dealloc方法中只释放引用并解除监听</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以弱引用避免保留环"><span class="nav-number">2.4.</span> <span class="nav-text">以弱引用避免保留环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以“自动释放池块”降低内存峰值"><span class="nav-number">2.5.</span> <span class="nav-text">以“自动释放池块”降低内存峰值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用“僵尸对象”调试内存管理问题"><span class="nav-number">2.6.</span> <span class="nav-text">用“僵尸对象”调试内存管理问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不要使用retainCount"><span class="nav-number">2.7.</span> <span class="nav-text">不要使用retainCount</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
