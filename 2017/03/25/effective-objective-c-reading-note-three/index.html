@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/03/25/effective-objective-c-reading-note-three/index.html">
 <meta property="og:site_name" content="Leonhart">
 <meta property="og:description" content="前言Effective Objective C 读书笔记 - 内存管理">
-<meta property="og:updated_time" content="2017-03-25T09:34:30.000Z">
+<meta property="og:updated_time" content="2017-04-04T03:17:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Effective Objective-C - 内存管理">
 <meta name="twitter:description" content="前言Effective Objective C 读书笔记 - 内存管理">
@@ -292,11 +292,37 @@
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><strong>Effective Objective C</strong> 读书笔记 - 内存管理</p>
 <a id="more"></a>
 <h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="理解引用计数"><a href="#理解引用计数" class="headerlink" title="理解引用计数"></a>理解引用计数</h3><ol>
-<li>引用关系有一个引用树，在iOS中，这个根引用对象是UIApplication</li>
-<li>调用alloc，引用计数加1，表示该对象想存活下去</li>
-<li>即使对象的引用计数为0，其占用的内存已经被dealloc了，但是注意：这个时候它的内存只是放回了“可用内存池”，里面的数据不会立即被覆盖</li>
+<li><p>引用关系有一个引用树，在iOS中，这个根引用对象是UIApplication</p>
+</li>
+<li><p>调用alloc，引用计数加1，表示该对象想存活下去</p>
+</li>
+<li><p>即使对象的引用计数为0，其占用的内存已经被dealloc了，但是注意：这个时候它的内存只是放回了“可用内存池”，里面的数据不会立即被覆盖</p>
+</li>
+<li><p>记住一点：在MRC中，将指针指向对象是不会增加reference count的，必须手动加1</p>
+</li>
+<li><p>看看下面的MRC代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (NSString *)stringValue &#123;</div><div class="line">  	NSString *str = [[NSString alloc]] initWithFormat:@&quot;vanney&quot;; // 1</div><div class="line">  	return str;</div><div class="line">&#125;</div><div class="line"></div><div class="line">NSString *str = [self stringValue];</div><div class="line">[str retain]; // 2</div></pre></td></tr></table></figure>
+<p>上面的代码在注释1，和注释2处分别增加了一次reference count，但是讲道理这个时候只需要一个reference count就可以了，所以会出现一些些小问题。这就需要<strong>Auto Release Pool</strong>了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (NSString *)stringValue &#123;</div><div class="line">  	NSString *str = [[NSString alloc]] initWithFormat:@&quot;vanney&quot;;</div><div class="line">  	return [str autorelease];</div><div class="line">&#125;</div><div class="line"></div><div class="line">NSString *str = [self stringValue];</div><div class="line">[str retain];</div></pre></td></tr></table></figure>
+</li>
+<li><p>注意retain cycle，也就是相互引用</p>
+</li>
 </ol>
-
+<h3 id="以ARC简化引用计数"><a href="#以ARC简化引用计数" class="headerlink" title="以ARC简化引用计数"></a>以ARC简化引用计数</h3><ol>
+<li>代码中不再需要写：<code>retain</code> 和 <code>release</code>方法，但是这两个方法实际上还是执行了的，他们由ARC帮你执行</li>
+<li>ARC中调用这些方法绕过了消息转发，直接调用底层的C函数，更加快速</li>
+<li>如果autorelease后面跟上的是retain，那么ARC可以优化这两个操作（因为这两个操作加在一起，什么也没做…）。这种优化通过设置标志位来实现，具体的看书~</li>
+<li>CoreFoundation的内容不适合ARC</li>
+</ol>
+<h3 id="在dealloc方法中只释放引用并解除监听"><a href="#在dealloc方法中只释放引用并解除监听" class="headerlink" title="在dealloc方法中只释放引用并解除监听"></a>在dealloc方法中只释放引用并解除监听</h3><ol>
+<li>delloc方法在对象reference count降到0时，会被调用</li>
+<li>因为ARC会帮你生成释放对象所拥有的引用，那么你需要做的主要有两点<ol>
+<li>释放CoreFoundation对象</li>
+<li>解除监听行为</li>
+</ol>
+</li>
+</ol>
+<h3 id="以弱引用避免保留环"><a href="#以弱引用避免保留环" class="headerlink" title="以弱引用避免保留环"></a>以弱引用避免保留环</h3>
       
     </div>
 
@@ -477,7 +503,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#理解引用计数"><span class="nav-number">2.1.</span> <span class="nav-text">理解引用计数</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#理解引用计数"><span class="nav-number">2.1.</span> <span class="nav-text">理解引用计数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以ARC简化引用计数"><span class="nav-number">2.2.</span> <span class="nav-text">以ARC简化引用计数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在dealloc方法中只释放引用并解除监听"><span class="nav-number">2.3.</span> <span class="nav-text">在dealloc方法中只释放引用并解除监听</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以弱引用避免保留环"><span class="nav-number">2.4.</span> <span class="nav-text">以弱引用避免保留环</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

@@ -91,7 +91,7 @@
 <meta property="og:site_name" content="Leonhart">
 <meta property="og:description" content="前言最近实现了一个基于Auto Layout的CAKeyframeAnimation。先来看一下效果👇">
 <meta property="og:image" content="http://yoursite.com/lionheart/1703/animate.gif">
-<meta property="og:updated_time" content="2017-03-31T12:24:56.000Z">
+<meta property="og:updated_time" content="2017-04-03T08:36:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Auto Layout 与 CAKeyframeAnimation">
 <meta name="twitter:description" content="前言最近实现了一个基于Auto Layout的CAKeyframeAnimation。先来看一下效果👇">
@@ -329,6 +329,7 @@
 <li>调用b的<code>setNeedsDisplay</code>方法，该方法会调用<code>-drawRect:</code>方法，从而获取b的bound</li>
 </ol>
 <p><strong>因为在调用<code>-drawRect:</code>的时候，每个视图的frame已经确定了，那么方法中的rect也就是该视图的bound</strong></p>
+<p><strong>还有一种更简单的方法：调用View的<code>layoutIfNeeded</code>方法，会立即重新计算每个view的frame</strong></p>
 <h2 id="CATransaction-与-CAKeyframeAnimation"><a href="#CATransaction-与-CAKeyframeAnimation" class="headerlink" title="CATransaction 与 CAKeyframeAnimation"></a>CATransaction 与 CAKeyframeAnimation</h2><p><strong>在这里详细说一下效果图的实现</strong>：</p>
 <ol>
 <li><p>图中的曲线使用UIBezier来画，那么就需要确定的坐标点，也就是需要知道曲线所在的视图的View。那么在<code>-drawRect:</code> 中画UIBezierPath，刚好可以知道view的bound</p>
