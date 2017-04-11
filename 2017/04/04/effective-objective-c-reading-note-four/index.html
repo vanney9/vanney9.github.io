@@ -93,7 +93,7 @@
 <meta property="og:description" content="前言Effective Objective C 读书笔记 - 块与大中枢派发
 多线程的两大核心：block，GCD">
 <meta property="og:image" content="http://yoursite.com/lionheart/1704/blockmemory">
-<meta property="og:updated_time" content="2017-04-05T12:16:45.000Z">
+<meta property="og:updated_time" content="2017-04-11T12:38:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Effective Objective-C - 块与大中枢派发">
 <meta name="twitter:description" content="前言Effective Objective C 读书笔记 - 块与大中枢派发
@@ -336,8 +336,62 @@
 <li>也就是使用block来代替delegate</li>
 <li>还可以同时使用多个block，来处理success或者fail的情况</li>
 </ol>
-<h3 id="用块引用其所属对象时不要出现保留环"><a href="#用块引用其所属对象时不要出现保留环" class="headerlink" title="用块引用其所属对象时不要出现保留环"></a>用块引用其所属对象时不要出现保留环</h3><h3 id="多用派发队列，少用同步锁"><a href="#多用派发队列，少用同步锁" class="headerlink" title="多用派发队列，少用同步锁"></a>多用派发队列，少用同步锁</h3><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<h3 id="用块引用其所属对象时不要出现保留环"><a href="#用块引用其所属对象时不要出现保留环" class="headerlink" title="用块引用其所属对象时不要出现保留环"></a>用块引用其所属对象时不要出现保留环</h3><h3 id="多用派发队列，少用同步锁"><a href="#多用派发队列，少用同步锁" class="headerlink" title="多用派发队列，少用同步锁"></a>多用派发队列，少用同步锁</h3><ol>
+<li><p><code>dispatch_sync(queue, block);</code> 等待block执行完，再执行后面的语句；<code>dispatch_async(queue, block);</code> 不等待block执行完，立刻执行后续语句。具体参考<a href="http://blog.csdn.net/zhangping871/article/details/44098773" target="_blank" rel="external">dispatch_async 和 dispatch_sync 的区别</a></p>
+</li>
+<li><p>来个例子说明一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">_syncQueue = dispatch_queue_create(&quot;com.vanney9.queue&quot;, NULL);</div><div class="line"></div><div class="line">- (NSString *)someString &#123;</div><div class="line">  	__block NSString *localSomeString;</div><div class="line">  	dispatch_sync(_syncQueue, ^&#123;      // 1</div><div class="line">      	localSomeThing = _someString;</div><div class="line">  	&#125;);</div><div class="line">  	return localSomeString;   // 2</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)setSomeString:(NSString *)someString &#123;</div><div class="line">  	dispatch_async(_syncQueue, ^&#123;    // 3</div><div class="line">      	_someString = someString;</div><div class="line">  	&#125;);</div><div class="line">  	return;    // 4</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>get方法使用同步派发(<strong>dispatch_sync</strong>)：因为必须等待block执行完，才能返回localString，如果使用异步派发(<strong>dispatch_async</strong>)的话，block还没有执行，也就是localString还没有设置，就返回了，那么就返回空值了。。</li>
+<li>set方法使用异步派发，因为不需要等待block执行完</li>
+</ol>
+</li>
+<li><p>上面的例子使用的queue都是串行队列，也就是必须等待注册到该序列中的前面的block执行完了，才能执行自己的bloc；但是对于读操作来说是可以并行的，只要写操作和其他的操作串行化就可以了。所以可以使用 <strong>并行序列+栅栏</strong> 来实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">_syncQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0); // 1</div><div class="line">- (NSString *)someString &#123;</div><div class="line">  	__block NSString *localSomeString;</div><div class="line">  	dispatch_sync(_syncQueue, ^&#123;  // 2</div><div class="line">      	localSomeString = _someString;</div><div class="line">  	&#125;);</div><div class="line">  	return localSomeString;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)setSomeString:(NSString *)someString &#123;</div><div class="line">  	dispatch_barrier_async(_syncQueue, ^&#123;  // 3</div><div class="line">      	_someString = somString;</div><div class="line">  	&#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注释1：创建了一个并发队列</p>
+<p>注释2：使用并发队列，可以同时执行get方法</p>
+<p>注释3：使用栅栏技术，让写操作执行的时候，队列中的其他操作无法执行</p>
+</li>
+</ol>
+<h3 id="多用GCD，少用performSelector系列方法"><a href="#多用GCD，少用performSelector系列方法" class="headerlink" title="多用GCD，少用performSelector系列方法"></a>多用GCD，少用performSelector系列方法</h3><ol>
+<li><p>先来说说<code>performSelector</code>方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">SEL selector;</div><div class="line">if (/* some condition*/) &#123;</div><div class="line">  	selector = @selector(foo);</div><div class="line">&#125;  else &#123;</div><div class="line">  	selector = @selector(bar);</div><div class="line">&#125;</div><div class="line">[object performSelector:selector];</div></pre></td></tr></table></figure>
+<p>动态绑定之上再动态绑定</p>
+</li>
+<li><p>为什么不推荐使用呢？因为该方法返回的是id类型，也就是一个指向任意OC对象的指针（在32位架构上占32位，4字节；在64位架构上占64位，8字节）。但是如果selector方法返回int，float等类型时就不好转换了</p>
+</li>
+<li><p>使用GCD可以实现：延迟执行，选择特定线程执行</p>
+</li>
+</ol>
+<h3 id="掌握GCD及操作队列的使用时机"><a href="#掌握GCD及操作队列的使用时机" class="headerlink" title="掌握GCD及操作队列的使用时机"></a>掌握GCD及操作队列的使用时机</h3><ol>
+<li>还有一整多线程机制：<strong>NSOperationQueue + NSOperation</strong> 也就是<strong>操作队列</strong>， 它也可以实现和GCD相同的功能。其中NSOperationQueue类似GCD；而NSOperation类似block</li>
+<li>操作队列对比GCD的优点：<ol>
+<li>可以取消尚未开始执行的NSOperation</li>
+<li>可以指定操作间的依赖关系：可以指定当前的NSOperation在某个NSOperation执行结束后，才开始执行</li>
+<li>NSOperation的许多属性适合KVO，通过监听可以更粒子化的监控NSOperation</li>
+<li>可以指定NSOperation的优先级：GCD的优先级是针对队列之间的；但是操作队列的优先级是针对NSOperation的，也就是同一队列里面的block的优先级。当然，操作队列也有线程间的优先级</li>
+</ol>
+</li>
+</ol>
+<h3 id="通过Dispatch-Group机制，根据系统资源状况来执行任务"><a href="#通过Dispatch-Group机制，根据系统资源状况来执行任务" class="headerlink" title="通过Dispatch Group机制，根据系统资源状况来执行任务"></a>通过Dispatch Group机制，根据系统资源状况来执行任务</h3><ol>
+<li>使用 <strong>dispatch group</strong> 机制可以将任务分组。调用者可以等待这组任务执行完毕；也可以给直接提供回调函数，立刻进行下面的步骤</li>
+<li>这个特性最重要的一点用途就是：把将要并发执行的多个任务合并为一组，那么就可以知道这些任务什么时候全部执行完毕</li>
+<li><code>dispatch_group_wait</code> 和 <code>dispatch_group_notify</code> 两个函数可以用来执行结束后该做什么，具体参见 <a href="http://vanney9.com/2016/08/02/OC-ARC-GCD-reading-note-three/" target="_blank" rel="external">iOS与OS X多线程和内存管理 - GCD</a></li>
+<li>使用并发队列进行多线程任务时，系统会根据当时的情况自动分配线程，无须码农自己来调度</li>
+</ol>
+<h3 id="使用dispatch-once来执行只需运行一次的线程安全代码"><a href="#使用dispatch-once来执行只需运行一次的线程安全代码" class="headerlink" title="使用dispatch_once来执行只需运行一次的线程安全代码"></a>使用dispatch_once来执行只需运行一次的线程安全代码</h3><ol>
+<li><p>这个常用于单例模式</p>
+</li>
+<li><p>example：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+ (id)sharedInstance &#123;</div><div class="line">  	static ECOClass *sharedInstanced = nil;</div><div class="line">  	static dispatch_once_t onceToken;</div><div class="line">  	dispatch_once(&amp;onceToken, ^&#123;</div><div class="line">      	sharedInstance = [[self alloc] init];</div><div class="line">  	&#125;);</div><div class="line">  	return sharedInstance;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在函数中的static变量：只在函数中可见，但是其生命期为整个程序。具体见 <a href="http://stackoverflow.com/questions/5033627/static-variable-inside-of-a-function-in-c" target="_blank" rel="external">Static variable inside of a function in C</a></p>
+</li>
+</ol>
+<h3 id="不要使用-dispatch-get-current-queue"><a href="#不要使用-dispatch-get-current-queue" class="headerlink" title="不要使用 dispatch_get_current_queue"></a>不要使用 dispatch_get_current_queue</h3><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="http://ios.jobbole.com/81900/" target="_blank" rel="external">Objective-C 拾遗：从Heap and Stack到Block</a></li>
+<li><a href="http://blog.csdn.net/zhangping871/article/details/44098773" target="_blank" rel="external">dispatch_async 和 dispatch_sync 的区别</a></li>
+<li><a href="http://vanney9.com/2016/08/02/OC-ARC-GCD-reading-note-three/" target="_blank" rel="external">iOS与OS X多线程和内存管理 - GCD</a></li>
+<li><a href="http://stackoverflow.com/questions/5033627/static-variable-inside-of-a-function-in-c" target="_blank" rel="external">Static variable inside of a function in C</a></li>
 </ul>
 
       
@@ -516,7 +570,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#理解“块”这以概念"><span class="nav-number">2.1.</span> <span class="nav-text">理解“块”这以概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为常用的块类型创建typedef"><span class="nav-number">2.2.</span> <span class="nav-text">为常用的块类型创建typedef</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用handler块降低代码分散程度"><span class="nav-number">2.3.</span> <span class="nav-text">用handler块降低代码分散程度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用块引用其所属对象时不要出现保留环"><span class="nav-number">2.4.</span> <span class="nav-text">用块引用其所属对象时不要出现保留环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多用派发队列，少用同步锁"><span class="nav-number">2.5.</span> <span class="nav-text">多用派发队列，少用同步锁</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#理解“块”这以概念"><span class="nav-number">2.1.</span> <span class="nav-text">理解“块”这以概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为常用的块类型创建typedef"><span class="nav-number">2.2.</span> <span class="nav-text">为常用的块类型创建typedef</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用handler块降低代码分散程度"><span class="nav-number">2.3.</span> <span class="nav-text">用handler块降低代码分散程度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用块引用其所属对象时不要出现保留环"><span class="nav-number">2.4.</span> <span class="nav-text">用块引用其所属对象时不要出现保留环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多用派发队列，少用同步锁"><span class="nav-number">2.5.</span> <span class="nav-text">多用派发队列，少用同步锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多用GCD，少用performSelector系列方法"><span class="nav-number">2.6.</span> <span class="nav-text">多用GCD，少用performSelector系列方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#掌握GCD及操作队列的使用时机"><span class="nav-number">2.7.</span> <span class="nav-text">掌握GCD及操作队列的使用时机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过Dispatch-Group机制，根据系统资源状况来执行任务"><span class="nav-number">2.8.</span> <span class="nav-text">通过Dispatch Group机制，根据系统资源状况来执行任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用dispatch-once来执行只需运行一次的线程安全代码"><span class="nav-number">2.9.</span> <span class="nav-text">使用dispatch_once来执行只需运行一次的线程安全代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不要使用-dispatch-get-current-queue"><span class="nav-number">2.10.</span> <span class="nav-text">不要使用 dispatch_get_current_queue</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
