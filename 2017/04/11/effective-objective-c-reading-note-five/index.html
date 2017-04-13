@@ -84,16 +84,16 @@
 
 
 
-<meta name="description" content="前言">
+<meta name="description" content="前言NSObject 属于 Foundation 框架，我们写的OC代码全部都是基于这些基本系统框架之上的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="effective objective c reading note five">
+<meta property="og:title" content="Effective Objective-C - 系统框架">
 <meta property="og:url" content="http://yoursite.com/2017/04/11/effective-objective-c-reading-note-five/index.html">
 <meta property="og:site_name" content="Leonhart">
-<meta property="og:description" content="前言">
-<meta property="og:updated_time" content="2017-04-11T12:44:05.000Z">
+<meta property="og:description" content="前言NSObject 属于 Foundation 框架，我们写的OC代码全部都是基于这些基本系统框架之上的">
+<meta property="og:updated_time" content="2017-04-13T12:34:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="effective objective c reading note five">
-<meta name="twitter:description" content="前言">
+<meta name="twitter:title" content="Effective Objective-C - 系统框架">
+<meta name="twitter:description" content="前言NSObject 属于 Foundation 框架，我们写的OC代码全部都是基于这些基本系统框架之上的">
 
 
 
@@ -116,7 +116,7 @@
 
   <link rel="canonical" href="http://yoursite.com/2017/04/11/effective-objective-c-reading-note-five/"/>
 
-  <title> effective objective c reading note five | Leonhart </title>
+  <title> Effective Objective-C - 系统框架 | Leonhart </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -242,7 +242,7 @@
             
             
               
-                effective objective c reading note five
+                Effective Objective-C - 系统框架
               
             
           </h1>
@@ -289,8 +289,50 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><a id="more"></a>
-
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><strong>NSObject</strong> 属于 <strong>Foundation</strong> 框架，我们写的OC代码全部都是基于这些基本系统框架之上的</p>
+<a id="more"></a>
+<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="熟悉系统框架"><a href="#熟悉系统框架" class="headerlink" title="熟悉系统框架"></a>熟悉系统框架</h3><ol>
+<li>将一系列代码封装为动态库，并在其中放入描述其接口的头文件，这样做出来的东西就叫框架。所有iOS平台的系统框架都是动态库</li>
+<li>NS开头的基本都是Foundation框架，与Foundation框架对应的一个CoreFoundation框架，他是C语言的API</li>
+<li>使用toll-free bridging可以实现Foundation的OC对象和CoreFoundation的C数据结构互相转换</li>
+<li>使用C语言的API可以绕过OC的runtime机制，加快运行速度；但是使用C语言的API时，需要注意内存管理的问题</li>
+</ol>
+<h3 id="多用块枚举，少用for循环"><a href="#多用块枚举，少用for循环" class="headerlink" title="多用块枚举，少用for循环"></a>多用块枚举，少用for循环</h3><ol>
+<li><p>使用OC1.0的 <strong>NSEnumerator</strong> 来遍历</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">NSArray *array = /*...*/;</div><div class="line">NSEnumerator *enumerator = [array objectEnumerator];</div><div class="line">id object;</div><div class="line">while ((object = [enumerator nextObject]) != nil) &#123;</div><div class="line">  	// do something</div><div class="line">&#125;</div><div class="line"></div><div class="line">NSDictionary *dict = /*...*/;</div><div class="line">NSEnumerator *enum = [dict keyEnumerator];</div><div class="line">id key;</div><div class="line">while ((key = [enum nextObject]) != nil) &#123;</div><div class="line">  	id value = dict[key];</div><div class="line">  	// do something</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>框架还提供反向遍历的enum接口</p>
+</li>
+<li><p>使用OC2.0的 <strong>快速遍历</strong> ，也就是<strong>for in</strong></p>
+</li>
+<li><p>基于块的遍历方式，对于NSArray有<code>-(void)enumerateObjectsUsingBlock:(void(^)(id object, NSUinteger idx, BOOL *stop))block;</code> ；其他的collection也有相对应的方法。使用block方法，可以获取更多的信息</p>
+</li>
+</ol>
+<h3 id="对自定义其内存管理语义的collection使用无缝桥接"><a href="#对自定义其内存管理语义的collection使用无缝桥接" class="headerlink" title="对自定义其内存管理语义的collection使用无缝桥接"></a>对自定义其内存管理语义的collection使用无缝桥接</h3><ol>
+<li><p>使用无缝桥接来转换Foundation和CoreFoundation</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">NSArray *array = @[@1， @2， @3]；</div><div class="line">CFArrayRef aCFArray = (__bridge CFArrayRef)array;</div></pre></td></tr></table></figure>
+</li>
+<li><p>__bridge 还有疑问</p>
+</li>
+<li><p>NSDictionary 对于key是copy，对于value则是retain。要想改变期内存语义的话呢，只能使用CoreFoundation了，具体的看书~</p>
+</li>
+</ol>
+<h3 id="构建缓存时选用NSCache而非NSDictionary"><a href="#构建缓存时选用NSCache而非NSDictionary" class="headerlink" title="构建缓存时选用NSCache而非NSDictionary"></a>构建缓存时选用NSCache而非NSDictionary</h3><ol>
+<li>NSCache在系统低内存时会自动删减缓存，而且优先删减的是最长时间没有使用过的缓存</li>
+<li>NSCache的key是retain的，不是copy的。因为很多时候，这个key的对象不支持copy</li>
+<li>线程安全，这点对于缓存来说很关键</li>
+</ol>
+<h3 id="精简initialize与load的实现代码"><a href="#精简initialize与load的实现代码" class="headerlink" title="精简initialize与load的实现代码"></a>精简initialize与load的实现代码</h3><ol>
+<li><code>+ (void)load;</code> 每个类必定会调用该方法，而且仅调用一次。当包含类的程序库载入系统时，就会执行此方法，也就是<strong>程序启动</strong>的时候</li>
+<li>如果分类和类都定义了load方法，那么先调用类的，再调用分类的</li>
+<li>在执行类的的load之前，会先执行多有超类的load方法</li>
+<li>load方法和其他不一样，如果子类没有实现的话，不管超类有没有，他都不会继承该方法</li>
+<li>load方法要精简，程序在执行没有load方法的时候都会阻塞</li>
+<li>尽量不要使用load方法</li>
+<li><code>+ (void)initialize;</code> 在程序第一次使用这个类的时候，会调用该方法。它也只会运行一次。不应该由代码来显式调用。</li>
+<li>initialize只有在程序用到该类的时候才会调用，属于惰性调用；它由运行期系统来调用。调用它的时候，系统中的个各类都是可以正常使用的，这一点和load方法不同</li>
+</ol>
+<h3 id="别忘了NSTimer会保留其目标对象"><a href="#别忘了NSTimer会保留其目标对象" class="headerlink" title="别忘了NSTimer会保留其目标对象"></a>别忘了NSTimer会保留其目标对象</h3>
       
     </div>
 
@@ -331,6 +373,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/04/12/iOS-runtime/" rel="prev" title="iOS runtime">
+                iOS runtime <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -356,7 +402,7 @@
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2017/04/11/effective-objective-c-reading-note-five/"
-           data-title="effective objective c reading note five" data-url="http://yoursite.com/2017/04/11/effective-objective-c-reading-note-five/">
+           data-title="Effective Objective-C - 系统框架" data-url="http://yoursite.com/2017/04/11/effective-objective-c-reading-note-five/">
       </div>
     
   </div>
@@ -401,7 +447,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-count">44</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -467,7 +513,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#熟悉系统框架"><span class="nav-number">2.1.</span> <span class="nav-text">熟悉系统框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多用块枚举，少用for循环"><span class="nav-number">2.2.</span> <span class="nav-text">多用块枚举，少用for循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对自定义其内存管理语义的collection使用无缝桥接"><span class="nav-number">2.3.</span> <span class="nav-text">对自定义其内存管理语义的collection使用无缝桥接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构建缓存时选用NSCache而非NSDictionary"><span class="nav-number">2.4.</span> <span class="nav-text">构建缓存时选用NSCache而非NSDictionary</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#精简initialize与load的实现代码"><span class="nav-number">2.5.</span> <span class="nav-text">精简initialize与load的实现代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#别忘了NSTimer会保留其目标对象"><span class="nav-number">2.6.</span> <span class="nav-text">别忘了NSTimer会保留其目标对象</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
