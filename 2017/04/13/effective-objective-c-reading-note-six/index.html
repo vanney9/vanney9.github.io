@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="detail," />
+  <meta name="keywords" content="iOS,读书笔记," />
 
 
 
@@ -84,19 +84,16 @@
 
 
 
-<meta name="description" content="记录下一些小技巧或是走过的坑…">
+<meta name="description" content="前言Effective Objective-C 2.0 系列读书笔记最后一篇">
 <meta property="og:type" content="article">
-<meta property="og:title" content="小技巧，套路or天坑...不定时更新">
-<meta property="og:url" content="http://yoursite.com/2015/08/06/trick/index.html">
+<meta property="og:title" content="Effective Objective-C - 对象、消息、运行期">
+<meta property="og:url" content="http://yoursite.com/2017/04/13/effective-objective-c-reading-note-six/index.html">
 <meta property="og:site_name" content="Leonhart">
-<meta property="og:description" content="记录下一些小技巧或是走过的坑…">
-<meta property="og:image" content="http://yoursite.com/images/lionheart/apt-cache.png">
-<meta property="og:image" content="http://yoursite.com/lionheart/1512/htmltonsattributedstring.png">
-<meta property="og:updated_time" content="2015-12-23T14:41:13.000Z">
+<meta property="og:description" content="前言Effective Objective-C 2.0 系列读书笔记最后一篇">
+<meta property="og:updated_time" content="2017-04-17T08:42:26.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="小技巧，套路or天坑...不定时更新">
-<meta name="twitter:description" content="记录下一些小技巧或是走过的坑…">
-<meta name="twitter:image" content="http://yoursite.com/images/lionheart/apt-cache.png">
+<meta name="twitter:title" content="Effective Objective-C - 对象、消息、运行期">
+<meta name="twitter:description" content="前言Effective Objective-C 2.0 系列读书笔记最后一篇">
 
 
 
@@ -117,9 +114,9 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2015/08/06/trick/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/13/effective-objective-c-reading-note-six/"/>
 
-  <title> 小技巧，套路or天坑...不定时更新 | Leonhart </title>
+  <title> Effective Objective-C - 对象、消息、运行期 | Leonhart </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -245,7 +242,7 @@
             
             
               
-                小技巧，套路or天坑...不定时更新
+                Effective Objective-C - 对象、消息、运行期
               
             
           </h1>
@@ -257,38 +254,19 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-08-06T11:22:05+08:00" content="2015-08-06">
-              2015-08-06
+            <time itemprop="dateCreated" datetime="2017-04-13T20:59:20+08:00" content="2017-04-13">
+              2017-04-13
             </time>
           </span>
 
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/心得/" itemprop="url" rel="index">
-                    <span itemprop="name">心得</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/08/06/trick/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/06/trick/" itemprop="commentsCount"></span>
+                <a href="/2017/04/13/effective-objective-c-reading-note-six/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/13/effective-objective-c-reading-note-six/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -311,24 +289,55 @@
       
 
       
-        <h4 id="记录下一些小技巧或是走过的坑…"><a href="#记录下一些小技巧或是走过的坑…" class="headerlink" title="记录下一些小技巧或是走过的坑…"></a>记录下一些小技巧或是走过的坑…</h4><a id="more"></a>
-<ol>
-<li><p>运用apt-cache搜索不知全名的包<br>比如你要apt-get安装一个貌似叫做libmemcache什么的包的时候，可以通过一下命令搜索：</p>
-<pre><code>sudo apt-cache search libmemcache | grep memcache
-</code></pre><p>于是就会出现下面的结果:</p>
-<p> <img src="/images/lionheart/apt-cache.png" alt="apt-cache"></p>
-<p> 图中的libmemcached-dev或许就会是你要的结果。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><strong>Effective Objective-C 2.0</strong> 系列读书笔记最后一篇</p>
+<a id="more"></a>
+<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="理解“属性”这一概念"><a href="#理解“属性”这一概念" class="headerlink" title="理解“属性”这一概念"></a>理解“属性”这一概念</h3><ol>
+<li><p>下面两部分代码等效</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@interface EOCPerson : NSObject</div><div class="line">@property NSString *firstName;</div><div class="line">@end</div><div class="line"></div><div class="line">@interface EOCPerson : NSObject &#123;</div><div class="line">  	NSString *_firstName;</div><div class="line">&#125;</div><div class="line">- (NSString *)firstName;</div><div class="line">- (void)setFirstName:(NSString *)firstName;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>可以理解成：属性 = 实例变量 + 存取方法</p>
 </li>
-<li><p>iOS中，将HTML代码转化成NSAttributedString</p>
-<pre><code>NSString *htmlString = @&quot;&lt;h1&gt;Header&lt;/h1&gt;&lt;h2&gt;Subheader&lt;/h2&gt;&lt;p&gt;Some &lt;em&gt;text&lt;/em&gt;&lt;/p&gt;&lt;img src=&apos;http://vanney9.com/images/default_avatar.jpg&apos; width=70 height=100 /&gt;&quot;;
-NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
-textView.attributedText = attributedString;
-</code></pre><p>运行结果如下：</p>
-<p> <img src="/lionheart/1512/htmltonsattributedstring.png" alt="html string TO NSAttributedString"></p>
-<p> 参考：<a href="http://stackoverflow.com/questions/2454067/display-html-text-in-uitextview" target="_blank" rel="external">Display html text in uitextview</a></p>
+<li><p>可以改变属性生成的实例变量的名字：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@implementation EOCPerson</div><div class="line">@synthesize firstName = _myFirstName;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>将实例变量命名成<code>_myFirstName</code> ，不再使用默认的名字</p>
+</li>
+<li><p>当然还可以不让编译器自动生成存取方法，就是使用dynamic</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@implementation EOCPerson</div><div class="line">@dynamic firstName;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>此时不会自动生成存取方法，也不会自动创建实例变量。在编译访问属性的代码时，也不会出错，因为编译器相信能在运行期找到对应的方法</p>
+</li>
+<li><p>具备<strong>readonly</strong>特性的属性仅拥有获取方法，只有当该属性由<code>@synthesize</code>实现时，编译器才会为其合成获取方法</p>
+</li>
+<li><p><strong>拥有与非拥有</strong> 是针对指针与内存空间来说的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@property (nonatomic, strong) NSString *strPointer;</div></pre></td></tr></table></figure>
+<p>上面的语句说明：有一个NSString指针，如果他指向一块存放NSString的内存，那么strPointer指针拥有该内存。该内存的reference count加1</p>
+</li>
+<li><p><strong>copy</strong> 对于NSString来说特别有用，特别是在NSString和NSMutableString之间转换的时候。需要注意的是在初始化方法中，初始化该属性也要使用copy方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">- (id)initWithFirstName:(NSString *)firstName &#123;</div><div class="line">  	if (self = [super init]) &#123;</div><div class="line">      	_firstName = [firstName copy];</div><div class="line">  	&#125;</div><div class="line">  	return self;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>不应该在init方法中调用存取方法。</p>
+</li>
+<li><p>iOS中的同步锁性能开销较严重，所以一般使用的<strong>nonatomic</strong>属性</p>
 </li>
 </ol>
-
+<h3 id="在对象内部尽量直接访问实例变量"><a href="#在对象内部尽量直接访问实例变量" class="headerlink" title="在对象内部尽量直接访问实例变量"></a>在对象内部尽量直接访问实例变量</h3><ol>
+<li>直接访问实例变量和通过存取方法来访问的区别<ol>
+<li>直接访问不经过方法派发，速度更快</li>
+<li>直接访问时不会经过设置方法，绕过了内存管理语义。例如：在ARC下直接方法一个copy属性，那么不会拷贝该值，只会retain</li>
+<li>直接访问不会触发KVO</li>
+</ol>
+</li>
+<li>折中的方案：设置时使用设置方法，读取时直接访问</li>
+</ol>
+<h3 id="理解“对象等同性”这一概念"><a href="#理解“对象等同性”这一概念" class="headerlink" title="理解“对象等同性”这一概念"></a>理解“对象等同性”这一概念</h3><ol>
+<li>应该使用NSObject协议中的<code>isEqual</code>方法来判断对象的等同性。可以对象自己实现<code>isEqual</code>来精确判断</li>
+<li>当然对于特殊的对象可以使用更精确的方法</li>
+</ol>
+<h3 id="以“类族模式”隐藏实现细节"><a href="#以“类族模式”隐藏实现细节" class="headerlink" title="以“类族模式”隐藏实现细节"></a>以“类族模式”隐藏实现细节</h3><ol>
+<li>UIButton有一个类方法：<code>+ (UIButton *)buttonWithType:(UIButtonType)type;</code> 该方法返回的对象类型根据type不同而不同，但是基类都是UIButton</li>
+<li>类族的基类一般没有 init 方法，提示用户：这种类不需要用户自己去创建。</li>
+<li>调用<code>isMemberOfClass:</code>的时候不会返回YES，因为不是UIButton，只是它的子类</li>
+<li>NSArray就是类族</li>
+</ol>
+<h3 id="在既有类中使用关联对象存放自定义数据"><a href="#在既有类中使用关联对象存放自定义数据" class="headerlink" title="在既有类中使用关联对象存放自定义数据"></a>在既有类中使用关联对象存放自定义数据</h3>
       
     </div>
 
@@ -350,7 +359,9 @@ textView.attributedText = attributedString;
       
         <div class="post-tags">
           
-            <a href="/tags/detail/" rel="tag">#detail</a>
+            <a href="/tags/iOS/" rel="tag">#iOS</a>
+          
+            <a href="/tags/读书笔记/" rel="tag">#读书笔记</a>
           
         </div>
       
@@ -359,17 +370,13 @@ textView.attributedText = attributedString;
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/08/03/nginx-conf-problem/" rel="next" title="nginx配置的一些问题">
-                <i class="fa fa-chevron-left"></i> nginx配置的一些问题
+              <a href="/2017/04/12/iOS-runtime/" rel="next" title="iOS runtime">
+                <i class="fa fa-chevron-left"></i> iOS runtime
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/12/12/ShortCut-xcode/" rel="prev" title="ShortCut(快捷键) － Xcode">
-                ShortCut(快捷键) － Xcode <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -395,8 +402,8 @@ textView.attributedText = attributedString;
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/08/06/trick/"
-           data-title="小技巧，套路or天坑...不定时更新" data-url="http://yoursite.com/2015/08/06/trick/">
+      <div class="ds-thread" data-thread-key="2017/04/13/effective-objective-c-reading-note-six/"
+           data-title="Effective Objective-C - 对象、消息、运行期" data-url="http://yoursite.com/2017/04/13/effective-objective-c-reading-note-six/">
       </div>
     
   </div>
@@ -507,7 +514,7 @@ textView.attributedText = attributedString;
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#记录下一些小技巧或是走过的坑…"><span class="nav-number">1.</span> <span class="nav-text">记录下一些小技巧或是走过的坑…</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笔记"><span class="nav-number">2.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#理解“属性”这一概念"><span class="nav-number">2.1.</span> <span class="nav-text">理解“属性”这一概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在对象内部尽量直接访问实例变量"><span class="nav-number">2.2.</span> <span class="nav-text">在对象内部尽量直接访问实例变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#理解“对象等同性”这一概念"><span class="nav-number">2.3.</span> <span class="nav-text">理解“对象等同性”这一概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以“类族模式”隐藏实现细节"><span class="nav-number">2.4.</span> <span class="nav-text">以“类族模式”隐藏实现细节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在既有类中使用关联对象存放自定义数据"><span class="nav-number">2.5.</span> <span class="nav-text">在既有类中使用关联对象存放自定义数据</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
