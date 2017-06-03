@@ -104,7 +104,7 @@ Category
 Message
 上层API
 如果还有其他的话">
-<meta property="og:updated_time" content="2017-06-03T02:40:02.000Z">
+<meta property="og:updated_time" content="2017-06-03T06:58:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Objective-C runtime - 系列开始">
 <meta name="twitter:description" content="前言学习OC的runtime也有一段时间了，是时候写个runtime的系列来做个总结了。大体按照以下几个主题：
@@ -320,7 +320,32 @@ Message
 <li>如果还有其他的话</li>
 </ol>
 <a id="more"></a>
-<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>说是概述，其实是我学习runtime的过程。</p>
+<ol>
+<li><p>苹果官方的<a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008048-CH1-SW1" target="_blank" rel="external">runtime文档</a>，对runtime是什么，用来做什么了解个大概</p>
+</li>
+<li><p>拿到了runtime的源码，<a href="http://blog.csdn.net/wotors/article/details/54426316" target="_blank" rel="external">据说能编译成objc的动态库</a>，并且新建一个使用自己编译的runtime的mac的工程</p>
+</li>
+<li><p>按原计划，到了这一步就该自己对着runtime的源码，修修改改，看看能弄出什么奇怪的效果。但是这才发现，要是重头开始一行一行的看runtime源码，是多么浩大的一项工程。。</p>
+</li>
+<li><p>改变策略，抓住runtime的重点，从博客看起，逐个弄懂。在这一过程中发现了2个人的博客</p>
+<ol>
+<li><a href="http://www.jianshu.com/u/43bb8b1a9d39" target="_blank" rel="external">Haven_ZN</a></li>
+<li><a href="http://draveness.me/" target="_blank" rel="external">Draveness</a></li>
+</ol>
+<p>这两位大神的博客里面都有一系列的关于runtime的源码的详解，受益匪浅。</p>
+</li>
+<li><p>在研究runtime源码的时候还需要使用llvm进行debug，<a href="https://objccn.io/issue-19-2/" target="_blank" rel="external">与调试器共舞 - LLDB 的华尔兹</a> 这篇文章介绍了llvm的debug方法</p>
+</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008048-CH1-SW1" target="_blank" rel="external">runtime官方文档</a></li>
+<li><a href="http://blog.csdn.net/wotors/article/details/54426316" target="_blank" rel="external">objc - 编译Runtime源码objc4-706</a></li>
+<li><a href="http://draveness.me/" target="_blank" rel="external">Draveness的主页</a></li>
+<li><a href="http://www.jianshu.com/u/43bb8b1a9d39" target="_blank" rel="external">Haven_ZN的主页</a></li>
+<li><a href="https://objccn.io/issue-19-2/" target="_blank" rel="external">与调试器共舞 - LLDB 的华尔兹</a></li>
+</ul>
+
       
     </div>
 
@@ -360,6 +385,10 @@ Message
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/03/objective-c-runtime-class-object/" rel="prev" title="objective-c-runtime-class-object">
+                objective-c-runtime-class-object <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -431,7 +460,7 @@ Message
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-count">47</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
