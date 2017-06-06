@@ -1,0 +1,702 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS,runtime," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言系列第二篇：深入分析OC中的属性与方法的本质。通过上一篇Objective-C runtime - 类和对象，我们了解了objc_class中的 isa 成员变量；在这篇文章中，则会详细介绍objc_class的另一成员变量 bits。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Objective-C runtime - 属性与方法">
+<meta property="og:url" content="http://yoursite.com/2017/06/05/objective-c-runtime-property-method/index.html">
+<meta property="og:site_name" content="Leonhart">
+<meta property="og:description" content="前言系列第二篇：深入分析OC中的属性与方法的本质。通过上一篇Objective-C runtime - 类和对象，我们了解了objc_class中的 isa 成员变量；在这篇文章中，则会详细介绍objc_class的另一成员变量 bits。">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/bits.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/class_bits.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/before_bits.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/after_bits.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/ivars.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/properties.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/methods.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/ivar_t.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/get_ivar.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/testObj.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/son.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/super.png">
+<meta property="og:updated_time" content="2017-06-06T13:18:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Objective-C runtime - 属性与方法">
+<meta name="twitter:description" content="前言系列第二篇：深入分析OC中的属性与方法的本质。通过上一篇Objective-C runtime - 类和对象，我们了解了objc_class中的 isa 成员变量；在这篇文章中，则会详细介绍objc_class的另一成员变量 bits。">
+<meta name="twitter:image" content="http://yoursite.com/lionheart/1706/bits.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/05/objective-c-runtime-property-method/"/>
+
+  <title> Objective-C runtime - 属性与方法 | Leonhart </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display:none">
+    <script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leonhart</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Objective-C runtime - 属性与方法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-05T16:03:20+08:00" content="2017-06-05">
+              2017-06-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/06/05/objective-c-runtime-property-method/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/05/objective-c-runtime-property-method/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>系列第二篇：深入分析OC中的属性与方法的本质。通过上一篇<a href="http://vanney9.com/2017/06/03/objective-c-runtime-class-object/" target="_blank" rel="external">Objective-C runtime - 类和对象</a>，我们了解了objc_class中的 <strong>isa</strong> 成员变量；在这篇文章中，则会详细介绍objc_class的另一成员变量 <strong>bits</strong>。</p>
+<a id="more"></a>
+<h2 id="bits"><a href="#bits" class="headerlink" title="bits"></a>bits</h2><p>先回忆一下objc_class的结构</p>
+<p><img src="/lionheart/1706/bits.png" alt="objc_class"></p>
+<p><code>bits</code> 用来存储类的属性，方法，协议等信息。它是一个<code>class_data_bits_t</code>类型</p>
+<h3 id="class-data-bits-t"><a href="#class-data-bits-t" class="headerlink" title="class_data_bits_t"></a>class_data_bits_t</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="keyword">class_data_bits_t</span> &#123;</div><div class="line">    <span class="keyword">uintptr_t</span> bits;</div><div class="line">    <span class="comment">// method here</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个结构体只有一个64bit的成员变量<code>bits</code>，先来看看这64bit分别存放的什么信息：</p>
+<p><img src="/lionheart/1706/class_bits.png" alt="class_data_bits_t"></p>
+<p><code>is_swift</code> : 第一个bit，判断类是否是Swift类</p>
+<p><code>has_default_rr</code> ：第二个bit，判断当前类或者父类含有默认的<code>retain/release/autorelease/retainCount/_tryRetain/_isDeallocating/retainWeakReference/allowsWeakReference</code> 方法</p>
+<p><code>require_raw_isa</code> ：第三个bit， 判断当前类的实例是否需要raw_isa (不是很懂)</p>
+<p><code>data</code> ：第4-48位，存放一个指向class_rw_t结构体的指针，该结构体包含了该类的属性，方法，协议等信息。至于为何只用44bit来存放地址，可以参考<a href="http://vanney9.com/2017/06/03/objective-c-runtime-class-object/" target="_blank" rel="external">Objective-C runtime - 类和对象</a></p>
+<h3 id="class-rw-t-和-class-ro-t"><a href="#class-rw-t-和-class-ro-t" class="headerlink" title="class_rw_t 和 class_ro_t"></a>class_rw_t 和 class_ro_t</h3><p>先来看看两个结构体的内部成员变量</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="keyword">class_rw_t</span> &#123;</div><div class="line">    <span class="keyword">uint32_t</span> flags;</div><div class="line">    <span class="keyword">uint32_t</span> version;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">class_ro_t</span> *ro;</div><div class="line"></div><div class="line">    <span class="keyword">method_array_t</span> methods;</div><div class="line">    <span class="keyword">property_array_t</span> properties;</div><div class="line">    <span class="keyword">protocol_array_t</span> protocols;</div><div class="line"></div><div class="line">    Class firstSubclass;</div><div class="line">    Class nextSiblingClass;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">struct</span> <span class="keyword">class_ro_t</span> &#123;</div><div class="line">    <span class="keyword">uint32_t</span> flags;</div><div class="line">    <span class="keyword">uint32_t</span> instanceStart;</div><div class="line">    <span class="keyword">uint32_t</span> instanceSize;</div><div class="line">    <span class="keyword">uint32_t</span> reserved;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">uint8_t</span> * ivarLayout;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> * name;</div><div class="line">    <span class="keyword">method_list_t</span> * baseMethodList;</div><div class="line">    <span class="keyword">protocol_list_t</span> * baseProtocols;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">ivar_list_t</span> * ivars;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">uint8_t</span> * weakIvarLayout;</div><div class="line">    <span class="keyword">property_list_t</span> *baseProperties;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>可以看出，class_rw_t结构体内有一个指向class_ro_t结构体的指针。</p>
+<p>每个类都对应有一个class_ro_t结构体和一个class_rw_t结构体。在编译期间，class_ro_t结构体就已经确定，objc_class中的bits的data部分存放着该结构体的地址。在runtime运行之后，具体说来是在运行runtime的<code>realizeClass</code> 方法时，会生成class_rw_t结构体，该结构体包含了class_ro_t，并且更新data部分，换成class_rw_t结构体的地址。</p>
+<p>用两张图来说明这个过程：</p>
+<p>类的<code>realizeClass</code>运行之前：</p>
+<p><img src="/lionheart/1706/before_bits.png" alt="before runtime"></p>
+<p>类的<code>realizeClass</code>运行之后：</p>
+<p><img src="/lionheart/1706/after_bits.png" alt="before runtime"></p>
+<p>细看两个结构体的成员变量会发现很多相同的地方，他们都存放着当前类的属性、实例变量、方法、协议等等。区别在于：class_ro_t存放的是编译期间就确定的；而class_rw_t是在runtime时才确定，它会先将class_ro_t的内容拷贝过去，然后再将当前类的分类的这些属性、方法等拷贝到其中。所以可以说class_rw_t是class_ro_t的超集，<strong>当然实际访问类的方法、属性等也都是访问的class_rw_t中的内容</strong></p>
+<h2 id="属性和实例变量"><a href="#属性和实例变量" class="headerlink" title="属性和实例变量"></a>属性和实例变量</h2><p>现在知道了属性(<strong>property</strong>)存放在class_rw_t中，实例变量(<strong>ivar</strong>)存放在class_ro_t中。下面来看看他们的真实面目。</p>
+<p>先看一段代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@interface TestOBJ : NSObject &#123;</div><div class="line">  	NSInteger ivarInt;</div><div class="line">&#125;</div><div class="line">@property (nonatomic, assign) NSInteger propertyInt;</div></pre></td></tr></table></figure>
+<p>这个TestOBJ类有一个实例变量<code>ivarInt</code> 和 一个属性<code>propertyInt</code> 。使用lldb打印出class_ro_t的ivars：</p>
+<p><img src="/lionheart/1706/ivars.png" alt="ivars list"></p>
+<p>再使用lldb打印出class_ro_t的baseProperties:</p>
+<p><img src="/lionheart/1706/properties.png" alt="properties list"></p>
+<p>顺便也把class_ro_t的baseMethods打印出来吧：</p>
+<p><img src="/lionheart/1706/methods.png" alt="methods list"></p>
+<p>从上面三张lldb的结果可以看出：<strong>TestOBJ类含有2个实例变量，1个属性和2个方法</strong>。但是代码里只有一个实例变量一个属性和0个方法。原因就是声明一个属性的同时，会同时生成一个实例变量和该实例变量的存取方法。</p>
+<p>以<code>propertyInt</code>为例：生成了 <code>_propertyInt</code> 实例变量和 <code>- (NSInteger)propertyInt;</code> 以及 <code>- (void)setPropertyInt:(NSInteger)propertyInt</code> 两个存取方法</p>
+<h3 id="property-t"><a href="#property-t" class="headerlink" title="property_t"></a>property_t</h3><p><em>class_ro_t</em>中<em>的baseProperties</em>是一个存放<em>property_t</em>结构体的list。<strong>property_t</strong>结构体用来存放属性的信息</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="keyword">property_t</span> &#123;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *attributes;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>该结构体保存了属性的名字和type encoding。</p>
+<h3 id="ivar-t"><a href="#ivar-t" class="headerlink" title="ivar_t"></a>ivar_t</h3><p>其实到这里你就会发现<em>property_t</em>结构体中存放的信息没啥用，真正有用的还是存放实例变量的结构体<strong>ivar_t</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="keyword">ivar_t</span> &#123;</div><div class="line">    <span class="keyword">int32_t</span> *offset;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *type;</div><div class="line">    <span class="comment">// alignment is sometimes -1; use alignment() instead</span></div><div class="line">    <span class="keyword">uint32_t</span> alignment_raw;</div><div class="line">    <span class="keyword">uint32_t</span> size;</div><div class="line"></div><div class="line">    <span class="keyword">uint32_t</span> alignment() <span class="keyword">const</span> &#123;</div><div class="line">        <span class="keyword">if</span> (alignment_raw == ~(<span class="keyword">uint32_t</span>)<span class="number">0</span>) <span class="keyword">return</span> <span class="number">1U</span> &lt;&lt; WORD_SHIFT;</div><div class="line">        <span class="keyword">return</span> <span class="number">1</span> &lt;&lt; alignment_raw;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>以<em>TestOBJ</em>中的 <strong>ivarInt</strong> 实例变量为例来说明，先使用lldb打印该实例变量的详细信息：</p>
+<p><img src="/lionheart/1706/ivar_t.png" alt="ivar_t"></p>
+<p><code>name</code> : <strong>实例变量的名字</strong> -&gt; ivarInt</p>
+<p><code>type</code> : <strong>实例变量的类型，type encoding</strong> -&gt; q 表示int类型 </p>
+<p><code>size</code> : <strong>实例变量的内存大小</strong> -&gt; 8 因为int类型占8个字节</p>
+<p><code>offset</code> : <strong>实例变量距离对象的首地址的偏移量</strong> -&gt; offset是一个指向int的指针，取出offset指向的int，发现偏移量为8</p>
+<p>上图还打印了class_ro_t，里面有2个变量需要注意一下：</p>
+<p><code>instanceStart</code> : <strong>对象开始存放实例变量的地址的偏移量</strong> -&gt; 8 因为对象的前8字节存放的是<code>isa_t</code>结构体</p>
+<p><code>instanceSize</code> : <strong>对象的大小</strong> -&gt; 24 = isa_t + ivarInt + _propertyInt</p>
+<p><strong>所以：获取TestOBJ实例a的ivarInt的过程：取出 对象首地址加ivarInt的偏移量 的内存空间的int</strong></p>
+<p><img src="/lionheart/1706/get_ivar.png" alt="get ivar"></p>
+<h3 id="类继承关系中的对象的内存空间结构"><a href="#类继承关系中的对象的内存空间结构" class="headerlink" title="类继承关系中的对象的内存空间结构"></a>类继承关系中的对象的内存空间结构</h3><p>先看看没有继承关系的类 TestOBJ：</p>
+<p><img src="/lionheart/1706/testObj.png" alt="testObj"></p>
+<p>再看看继承TestOBJ的Son类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@interface Son : TestOBJ</div><div class="line">@property (nonatomic, strong) NSString *sonStr</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>它的对象既存储了TestOBJ的实例变量，也存放了Son自己的实例变量</p>
+<p><img src="/lionheart/1706/son.png" alt="son"></p>
+<p>使用lldb打印son的class_ro_t:</p>
+<p><img src="/lionheart/1706/super.png" alt="super"></p>
+<p>可以发现Son类的 <code>instanceStart</code> 为24，因为Son的实例的前8字节存放isa，后面16字节存放父类的ivarInt和_propertyInt两个int型实例变量。Son类的 <code>instanceSize</code>为32字节，因为他还有自己的一个指向NSString结构体的指针 <strong>_sonStr</strong> ，这个指针也占8字节。</p>
+<p>另外<strong>_sonStr</strong> 这一个ivar_t的offset是24，也符合分析</p>
+<p>注意Son类的class_ro_t在<code>realizeClass</code>方法完成后就确定下来了</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><h2 id="底层存储方式"><a href="#底层存储方式" class="headerlink" title="底层存储方式"></a>底层存储方式</h2><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>realizeClass</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://www.jianshu.com/p/89ac27684693" target="_blank" rel="external">Runtime源码 —— property和ivar</a></li>
+<li><a href="http://draveness.me/method-struct.html" target="_blank" rel="external">深入解析 ObjC 中方法的结构</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag">#iOS</a>
+          
+            <a href="/tags/runtime/" rel="tag">#runtime</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/03/objective-c-runtime-class-object/" rel="next" title="Objective-C runtime - 类和对象">
+                <i class="fa fa-chevron-left"></i> Objective-C runtime - 类和对象
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/06/05/objective-c-runtime-property-method/"
+           data-title="Objective-C runtime - 属性与方法" data-url="http://yoursite.com/2017/06/05/objective-c-runtime-property-method/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">47</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bits"><span class="nav-number">2.</span> <span class="nav-text">bits</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#class-data-bits-t"><span class="nav-number">2.1.</span> <span class="nav-text">class_data_bits_t</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#class-rw-t-和-class-ro-t"><span class="nav-number">2.2.</span> <span class="nav-text">class_rw_t 和 class_ro_t</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#属性和实例变量"><span class="nav-number">3.</span> <span class="nav-text">属性和实例变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#property-t"><span class="nav-number">3.1.</span> <span class="nav-text">property_t</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ivar-t"><span class="nav-number">3.2.</span> <span class="nav-text">ivar_t</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类继承关系中的对象的内存空间结构"><span class="nav-number">3.3.</span> <span class="nav-text">类继承关系中的对象的内存空间结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法"><span class="nav-number">4.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#底层存储方式"><span class="nav-number">5.</span> <span class="nav-text">底层存储方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
