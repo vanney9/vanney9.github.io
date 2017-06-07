@@ -1,0 +1,671 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS,runtime," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言系列第三篇：深入分析OC中的分类 - Category 以及在分类里面会涉及到了 关联对象">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Objective-C runtime - 分类与关联对象">
+<meta property="og:url" content="http://yoursite.com/2017/06/07/objective-c-runtime-category/index.html">
+<meta property="og:site_name" content="Vanney">
+<meta property="og:description" content="前言系列第三篇：深入分析OC中的分类 - Category 以及在分类里面会涉及到了 关联对象">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/breakpoint.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/category.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/nsobject.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/association.png">
+<meta property="og:updated_time" content="2017-06-07T12:16:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Objective-C runtime - 分类与关联对象">
+<meta name="twitter:description" content="前言系列第三篇：深入分析OC中的分类 - Category 以及在分类里面会涉及到了 关联对象">
+<meta name="twitter:image" content="http://yoursite.com/lionheart/1706/breakpoint.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/07/objective-c-runtime-category/"/>
+
+  <title> Objective-C runtime - 分类与关联对象 | Vanney </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display:none">
+    <script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Vanney</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Objective-C runtime - 分类与关联对象
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-07T14:34:21+08:00" content="2017-06-07">
+              2017-06-07
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/06/07/objective-c-runtime-category/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/07/objective-c-runtime-category/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>系列第三篇：深入分析OC中的分类 - <strong>Category</strong> 以及在分类里面会涉及到了 <strong>关联对象</strong></p>
+<a id="more"></a>
+<h2 id="Category"><a href="#Category" class="headerlink" title="Category"></a>Category</h2><h3 id="category-t"><a href="#category-t" class="headerlink" title="category_t"></a>category_t</h3><p>先来看看category的真面目：<strong>category_t</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="keyword">category_t</span> &#123;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name;</div><div class="line">    <span class="keyword">classref_t</span> cls;</div><div class="line">    <span class="keyword">struct</span> <span class="keyword">method_list_t</span> *instanceMethods;</div><div class="line">    <span class="keyword">struct</span> <span class="keyword">method_list_t</span> *classMethods;</div><div class="line">    <span class="keyword">struct</span> <span class="keyword">protocol_list_t</span> *protocols;</div><div class="line">    <span class="keyword">struct</span> <span class="keyword">property_list_t</span> *instanceProperties;</div><div class="line">    <span class="comment">// Fields below this point are not always present on disk.</span></div><div class="line">    <span class="keyword">struct</span> <span class="keyword">property_list_t</span> *<span class="number">_</span>classProperties;</div><div class="line"></div><div class="line">    <span class="keyword">method_list_t</span> *methodsForMeta(<span class="keyword">bool</span> isMeta) &#123;</div><div class="line">        <span class="keyword">if</span> (isMeta) <span class="keyword">return</span> classMethods;</div><div class="line">        <span class="keyword">else</span> <span class="keyword">return</span> instanceMethods;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">property_list_t</span> *propertiesForMeta(<span class="keyword">bool</span> isMeta, <span class="keyword">struct</span> header_info *hi);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p><code>category_t</code>结构体定义在<code>objc-runtime-new.h</code>中，可以看出该结构体中含有：实例方法列表、类方法列表、协议列表、属性列表。</p>
+<h3 id="编译之后，runtime之前"><a href="#编译之后，runtime之前" class="headerlink" title="编译之后，runtime之前"></a>编译之后，runtime之前</h3><p>来看看NSObject的分类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#import &lt;Foundation/Foundation.h&gt;</div><div class="line"></div><div class="line">@interface NSObject (vc)</div><div class="line"></div><div class="line">- (void)test;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>在编译结束之后，runtime运行之前。NSObject被编译成一个<code>objc_class</code> 结构体；而NSObject (vc) 被编译成一个<code>category_t</code> 结构体。</p>
+<p>打印出这个结构体：(在<code>attachCategories</code>方法中判断当前的category位vc，并进入断点)</p>
+<p><img src="/lionheart/1706/breakpoint.png" alt="break point"></p>
+<p>打印出的category结果如下：</p>
+<p><img src="/lionheart/1706/category.png" alt="category"></p>
+<h3 id="runtime之后"><a href="#runtime之后" class="headerlink" title="runtime之后"></a>runtime之后</h3><p>运行<code>attachCategories</code> 方法之后，会将category中的所有方法、属性、协议添加到类的<code>class_rw_t</code>中。</p>
+<p>我们以添加方法为例，在添加任何的分类方法之前，NSObject的<code>class_rw_t</code>中的<code>methods</code>数组只有一个元素，也就是<code>class_ro_t</code>中的<code>baseMethodList</code>列表。添加一个分类之后，会往<code>methods</code>数组中添加一个元素，该元素的类型是<code>entsize_list_tt</code>。</p>
+<p>使用lldb查看，发现在添加vc分类后，NSObject里面已经添加了64个分类了；加上<code>baseMethodList</code>，<code>methods</code>数组已经有65个元素。（<strong>后添加的分类在数组中的位置靠前，baseMethodList元素在最后面</strong>）</p>
+<p><img src="/lionheart/1706/nsobject.png" alt="category"></p>
+<h3 id="例外"><a href="#例外" class="headerlink" title="例外"></a>例外</h3><p><strong>对于系统自带的类，才会在runtime时加载分类；但是对于自己创建的类，在编译结束之后就直接将分类的方法添加到<code>baseMethodList</code>中了，就好像没有分类一说。。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// TestOBJ</div><div class="line">@interface TestOBJ : NSObject &#123;</div><div class="line">    NSInteger ivatInt;</div><div class="line">&#125;</div><div class="line">@property (nonatomic, assign) NSInteger propertyInt;</div><div class="line">- (void)test;</div><div class="line">@end</div><div class="line">  </div><div class="line">// TestOBJ+vc</div><div class="line">#import &quot;TestOBJ.h&quot;</div><div class="line">@interface TestOBJ (vc)</div><div class="line">@property (nonatomic, assign) NSInteger vc;</div><div class="line">- (void)test;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>在<code>_objc_init</code>里面打上断点，这个方法是runtime的入口函数。在这个时候使用lldb，就发现在TestOBJ的<code>baseMethodList</code>里面有2个test方法了，当然分类的test方法在前面，也就是会被先检索到。</p>
+<h2 id="关联对象"><a href="#关联对象" class="headerlink" title="关联对象"></a>关联对象</h2><p>观察发现，category里面有属性，但是没有实例变量。在系列上一篇<a href="http://vanney9.com/2017/06/05/objective-c-runtime-property-method/" target="_blank" rel="external">Objective-C runtime - 属性与方法</a>了解到，属性没什么用，真正存放的还是实例变量。</p>
+<p><strong>那么为什么不能添加实例变量呢？</strong> 因为实例变量在每个对象中都有一份。对于使用分类之前，对象的内存是如此分布的；如果添加了分类，那么每个对象的内存结构都需要改变。而对于方法来说，只需要类的结构体来存储方法，类的结构体也就只有一个，就可以随意更改。</p>
+<p><strong>那么为什么可以添加属性呢？</strong> 只添加属性不添加实例变量，毫无意义。正是因为<strong>关联对象</strong>的引入，使得这个做法有意义起来。因为<strong>关联对象的作用和实例变量相似</strong>。</p>
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><p>关联对象相关的源码全部放在<code>objc-reference.h</code> 和 <code>objc-reference.mm</code> 两个文件中。</p>
+<p><strong>关联对象和对象是一一对应的，而不是和类一一对应的</strong></p>
+<ol>
+<li>所有的关联对象都由一个<strong>AssociationsManager</strong>对象来管理，这个对象里面有一个<strong>AssociationsHashMap</strong>。</li>
+<li><strong>AssociationsHashMap</strong>由许多key-value构成。key是对象的地址；value是一个<strong>ObjectAssociationMap</strong>，也就是所谓的关联对象。</li>
+<li><strong>ObjectAssociationMap</strong>就是关联对象，每个关联对象里面包含多个key-value对。key是属性名；value是<strong>ObjcAssociation</strong>，也就是相当于属性对应的实例变量。</li>
+<li><strong>ObjcAssociation</strong>相当于实例变量，该结构体有两个成员：<strong>_policy</strong> 属性的内存管理语义；<strong>_value</strong> 属性的值</li>
+</ol>
+<p><img src="/lionheart/1706/association.png" alt="association"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>category可以给既有类添加属性、方法、协议，但是不能添加实例变量</li>
+<li>添加属性对应的实例变量可以使用关联对象来实现</li>
+<li>category里面的方法不会覆盖原有的同名方法，只是会被提前检索到。所以感官上觉得被覆盖掉了</li>
+<li>对于系统自带的类，在runtime时才会加载category；但是自定义类的分类在编译期就已经全部加载了，就像不存在分类，但是存在一个大大的自定义类一样。</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://www.jianshu.com/p/de95ff8230bd" target="_blank" rel="external">Runtime源码 —— Associated Object</a></li>
+<li><a href="http://tech.meituan.com/DiveIntoCategory.html" target="_blank" rel="external">深入理解Objective-C：Category</a></li>
+<li><a href="http://www.jianshu.com/p/7ff34885999f" target="_blank" rel="external">Runtime源码 —— 关于category的一个问题</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag">#iOS</a>
+          
+            <a href="/tags/runtime/" rel="tag">#runtime</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/05/objective-c-runtime-property-method/" rel="next" title="Objective-C runtime - 属性与方法">
+                <i class="fa fa-chevron-left"></i> Objective-C runtime - 属性与方法
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/06/07/objective-c-runtime-category/"
+           data-title="Objective-C runtime - 分类与关联对象" data-url="http://yoursite.com/2017/06/07/objective-c-runtime-category/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Category"><span class="nav-number">2.</span> <span class="nav-text">Category</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#category-t"><span class="nav-number">2.1.</span> <span class="nav-text">category_t</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译之后，runtime之前"><span class="nav-number">2.2.</span> <span class="nav-text">编译之后，runtime之前</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#runtime之后"><span class="nav-number">2.3.</span> <span class="nav-text">runtime之后</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例外"><span class="nav-number">2.4.</span> <span class="nav-text">例外</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关联对象"><span class="nav-number">3.</span> <span class="nav-text">关联对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#源码分析"><span class="nav-number">3.1.</span> <span class="nav-text">源码分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
