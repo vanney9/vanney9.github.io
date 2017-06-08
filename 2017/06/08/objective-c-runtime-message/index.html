@@ -1,0 +1,686 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS,runtime," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/lion3.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言系列第三篇：来看看OC的消息。包括方法查找、缓存、方法决议以及消息转发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Objective-C runtime - 消息">
+<meta property="og:url" content="http://yoursite.com/2017/06/08/objective-c-runtime-message/index.html">
+<meta property="og:site_name" content="Vanney">
+<meta property="og:description" content="前言系列第三篇：来看看OC的消息。包括方法查找、缓存、方法决议以及消息转发">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/bits.png">
+<meta property="og:image" content="http://yoursite.com/lionheart/1706/forward.JPG">
+<meta property="og:updated_time" content="2017-06-08T09:19:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Objective-C runtime - 消息">
+<meta name="twitter:description" content="前言系列第三篇：来看看OC的消息。包括方法查找、缓存、方法决议以及消息转发">
+<meta name="twitter:image" content="http://yoursite.com/lionheart/1706/bits.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/08/objective-c-runtime-message/"/>
+
+  <title> Objective-C runtime - 消息 | Vanney </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  <div style="display:none">
+    <script src="http://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Vanney</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Objective-C runtime - 消息
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-08T14:46:01+08:00" content="2017-06-08">
+              2017-06-08
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/06/08/objective-c-runtime-message/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/08/objective-c-runtime-message/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>系列第三篇：来看看OC的消息。包括<strong>方法查找、缓存、方法决议以及消息转发</strong></p>
+<a id="more"></a>
+<h2 id="objc-msgSend"><a href="#objc-msgSend" class="headerlink" title="objc_msgSend"></a>objc_msgSend</h2><blockquote>
+<p><code>objc_msgSend</code> 函数的原型为 <code>void objc_msgSend(id self, SEL cmd, ...)</code></p>
+</blockquote>
+<p>给一个对象发送消息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">id returnValue = [someObject messageName:parameter];</div></pre></td></tr></table></figure>
+<p>编译器会将该OC语句转换成<code>objc_msgSend</code>函数:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">id returnValue = objc_msgSend(someObject, @selector(messageName:), parameter);</div></pre></td></tr></table></figure>
+<p>其中的SEL选择子可以理解成方法的名字。</p>
+<p><strong>从这里可以看出，给OC对象发送消息，其实就是调用<code>objc_msgSend</code>函数，所有这篇文章的重点也是该函数的具体实现过程</strong></p>
+<h2 id="OC方法本质"><a href="#OC方法本质" class="headerlink" title="OC方法本质"></a>OC方法本质</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)hello:(<span class="keyword">int</span>)a;</div><div class="line"></div><div class="line"><span class="comment">// 该方法编译的时候会被转化成：</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">hello</span><span class="params">(id self, SEL <span class="number">_</span>cmd, <span class="keyword">int</span> a)</span></span>;</div></pre></td></tr></table></figure>
+<p>当有一个对象调用该方法时：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[someObj hello:<span class="number">2</span>];</div><div class="line"></div><div class="line"><span class="comment">// 编译之后就是</span></div><div class="line">objc_msgSend(someObj, @selector(hello:), <span class="number">2</span>);</div><div class="line"></div><div class="line"><span class="comment">// 当objc_msgSend找到方法的实现，也就是hello方法时，相当于调用：</span></div><div class="line">hello(someObj, @selector(hello:), <span class="number">2</span>);</div></pre></td></tr></table></figure>
+<h2 id="方法查找-amp-amp-缓存"><a href="#方法查找-amp-amp-缓存" class="headerlink" title="方法查找 &amp;&amp; 缓存"></a>方法查找 &amp;&amp; 缓存</h2><p>回忆一下<code>objc_class</code>结构体</p>
+<p><img src="/lionheart/1706/bits.png" alt="objc_class"></p>
+<p>类的方法都存放在<code>bits</code>成员变量中，而方法的缓存则是存放在<code>cache</code>成员变量中。</p>
+<p><code>objc_msgSend</code>函数通过调用<code>lookUpImpOrForward</code>函数来查找方法的实现</p>
+<h3 id="当前类查询"><a href="#当前类查询" class="headerlink" title="当前类查询"></a>当前类查询</h3><p><code>objc_msgSend</code>函数查询方法的实现，先会在当前类中查询。</p>
+<ol>
+<li>先在缓存<code>cache</code>中寻找是否存在该方法，找到就去执行</li>
+<li>如果没在缓存中找到该方法，就到<code>bits</code>中寻找方法。如果找到，会先写入缓存<code>cache</code>，再去执行方法；如果没找到，就会去<code>super_class</code>里面寻找</li>
+</ol>
+<h2 id="沿着类继承关系查询"><a href="#沿着类继承关系查询" class="headerlink" title="沿着类继承关系查询"></a>沿着类继承关系查询</h2><p>每个<code>objc_class</code>都会有指向父类的指针。当子类无法提供方法的实现时，会跑到父类来寻找该实现，过程相似：</p>
+<ol>
+<li>在父类的缓存<code>cache</code>中寻找。如果找到，写到调用该方法的类的<code>cache</code>中，再执行</li>
+<li>在缓存中没找到，就继续在父类的<code>bits</code>中查找，找到，写入缓存并执行</li>
+<li>如果还是没找到，继续沿着类继承关系寻找方法的实现</li>
+</ol>
+<h2 id="方法决议"><a href="#方法决议" class="headerlink" title="方法决议"></a>方法决议</h2><blockquote>
+<p><code>+ (BOOL)resolveInstanceMethod:(SEL)selector</code> </p>
+<p><code>+ (BOOL)resolveClassMethod:(SEL)selector</code></p>
+</blockquote>
+<p>如果在当前类以及所有父类之中都无法找到方法的实现的话，就进入了方法决议的阶段。来看看方法决议的过程：(<strong>该过程的源码也在<code>lookUpImpOrForward</code>方法中</strong>)</p>
+<ol>
+<li><p>查看当前类是否实现了resolve方法。如果没有，决议直接失败</p>
+</li>
+<li><p>如果存在resolve方法，那么执行该方法。这个方法里面一般会动态给当前类添加方法，是的之前没有找到实现的方法可以实现。例如，来实现@dynamic的属性的存取方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// 注意：以下两方法的相关实现代码已经写好</div><div class="line">id autoDictionaryGetter(id self, SEL _cmd);</div><div class="line">void autoDictionarySetter(id self, SEL _cmd, id value);</div><div class="line"></div><div class="line">+ (BOOL)resolveInstanceMethod:(SEL)selector &#123;</div><div class="line">  	NSString *selectorString = NSStringFromSelector(selector);</div><div class="line">  	if ([selectorString hasPrefix:@&quot;set&quot;]) &#123;</div><div class="line">      	class_addMethod(self, selector, (IMP)autoDictionarySetter, &quot;v@:@&quot;);</div><div class="line">  	&#125; else &#123;</div><div class="line">      	class_addMethod(self, selector, (IMP)autoDictionaryGetter, &quot;@@:&quot;);</div><div class="line">  	&#125;</div><div class="line">  	</div><div class="line">  	return YES;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这一个resolve方法里面，给类新增加了一个方法。</p>
+</li>
+<li><p>执行完resolve方法之后，会重新进行一次方法的查找。如果找到方法了，执行</p>
+</li>
+</ol>
+<h2 id="消息转发"><a href="#消息转发" class="headerlink" title="消息转发"></a>消息转发</h2><p>如果方法决议也没有用的话，会给这个方法最后一个机会：消息转发</p>
+<h3 id="备援接收者"><a href="#备援接收者" class="headerlink" title="备援接收者"></a>备援接收者</h3><blockquote>
+<p><code>- (id)forwardingTargetForSelector:(SEL)selector;</code></p>
+</blockquote>
+<p>执行该函数，看能否返回一个新的对象，这个对象可以处理该方法。具体参见<a href="https://developer.apple.com/documentation/objectivec/nsobject/1418855-forwardingtargetforselector" target="_blank" rel="external">官方文档</a></p>
+<h3 id="完整的消息转发"><a href="#完整的消息转发" class="headerlink" title="完整的消息转发"></a>完整的消息转发</h3><p>如果无法找到备胎的话，就要进行完整的消息转发了。将未处理的消息封装成<code>NSInvocation</code>对象，然后调用<code>- (void)forwardInvocation:(NSInvocation *)invocation;</code> 方法。</p>
+<p>这个转发的方法属于 <code>NSObject</code>，需要子类重写该方法。具体参见<a href="https://developer.apple.com/documentation/objectivec/nsobject/1571955-forwardinvocation" target="_blank" rel="external">官方文档</a></p>
+<h3 id="完整的消息转发图示"><a href="#完整的消息转发图示" class="headerlink" title="完整的消息转发图示"></a>完整的消息转发图示</h3><p><img src="/lionheart/1706/forward.JPG" alt="forwarding"></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p><strong>在后续的一片文章中会有详细的示例来说明消息决议和转发</strong></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://draveness.me/message.html" target="_blank" rel="external">从源代码看 ObjC 中消息的发送</a></li>
+<li>Effective Objective-C 2.0</li>
+<li><a href="https://developer.apple.com/documentation/objectivec/nsobject/1418855-forwardingtargetforselector" target="_blank" rel="external">forwardingTargetForSelector:</a></li>
+<li><a href="https://developer.apple.com/documentation/objectivec/nsobject/1571955-forwardinvocation" target="_blank" rel="external">forwardInvocation:</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag">#iOS</a>
+          
+            <a href="/tags/runtime/" rel="tag">#runtime</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/07/objective-c-runtime-category/" rel="next" title="Objective-C runtime - 分类与关联对象">
+                <i class="fa fa-chevron-left"></i> Objective-C runtime - 分类与关联对象
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/06/08/objective-c-runtime-message/"
+           data-title="Objective-C runtime - 消息" data-url="http://yoursite.com/2017/06/08/objective-c-runtime-message/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Vanney" />
+          <p class="site-author-name" itemprop="name">Vanney</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">49</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/vanney9" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/3911241332" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#objc-msgSend"><span class="nav-number">2.</span> <span class="nav-text">objc_msgSend</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OC方法本质"><span class="nav-number">3.</span> <span class="nav-text">OC方法本质</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法查找-amp-amp-缓存"><span class="nav-number">4.</span> <span class="nav-text">方法查找 && 缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#当前类查询"><span class="nav-number">4.1.</span> <span class="nav-text">当前类查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#沿着类继承关系查询"><span class="nav-number">5.</span> <span class="nav-text">沿着类继承关系查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法决议"><span class="nav-number">6.</span> <span class="nav-text">方法决议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息转发"><span class="nav-number">7.</span> <span class="nav-text">消息转发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#备援接收者"><span class="nav-number">7.1.</span> <span class="nav-text">备援接收者</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#完整的消息转发"><span class="nav-number">7.2.</span> <span class="nav-text">完整的消息转发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#完整的消息转发图示"><span class="nav-number">7.3.</span> <span class="nav-text">完整的消息转发图示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">8.</span> <span class="nav-text">其他</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">9.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vanney</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"vanney9"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
