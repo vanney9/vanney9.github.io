@@ -96,7 +96,7 @@ alloc &amp;amp;&amp;amp; init">
 
 self &amp;amp;&amp;amp; super
 alloc &amp;amp;&amp;amp; init">
-<meta property="og:updated_time" content="2017-06-10T09:24:35.000Z">
+<meta property="og:updated_time" content="2017-06-10T11:59:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Objective-C runtime - 如果还有其他的话">
 <meta name="twitter:description" content="前言系列应该是最后一篇：还真要来讲一点其他的东西：
@@ -304,6 +304,14 @@ alloc &amp;amp;&amp;amp; init">
 <li><strong>alloc &amp;&amp; init</strong></li>
 </ol>
 <a id="more"></a>
+<h2 id="self-amp-amp-super"><a href="#self-amp-amp-super" class="headerlink" title="self &amp;&amp; super"></a>self &amp;&amp; super</h2><h3 id="self"><a href="#self" class="headerlink" title="self"></a>self</h3><p>self是每个类函数中的隐藏参数，比如一个类的函数<code>- (void)someFunc;</code> 它经过编译之后会变成 <code>void someFunc(id self, SEL _cmd);</code>  当有一个对象去调用该函数时，比如 <code>[someObj someFunc];</code> 那么等价于 <code>someFunc(a, @selector(someFunc));</code> 会将a自己传入该函数</p>
+<h3 id="super"><a href="#super" class="headerlink" title="super"></a>super</h3><p>super是一个预编译命令，他会先调用父类的方法。比如在init方法中 [super init]; 该方法会先调用父类的init方法 </p>
+<h2 id="alloc-amp-amp-init"><a href="#alloc-amp-amp-init" class="headerlink" title="alloc &amp;&amp; init"></a>alloc &amp;&amp; init</h2><h3 id="alloc"><a href="#alloc" class="headerlink" title="alloc"></a>alloc</h3><p>alloc方法会生成一个类的对象，并将该类对象的isa变量初始化</p>
+<h3 id="init"><a href="#init" class="headerlink" title="init"></a>init</h3><p>讲道理，[NSObject init]方法没做啥事</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://www.jianshu.com/p/15fa5e84c897" target="_blank" rel="external">OC中的self和super</a></li>
+</ul>
+
       
     </div>
 
@@ -480,7 +488,7 @@ alloc &amp;amp;&amp;amp; init">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#self-amp-amp-super"><span class="nav-number">2.</span> <span class="nav-text">self && super</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#self"><span class="nav-number">2.1.</span> <span class="nav-text">self</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#super"><span class="nav-number">2.2.</span> <span class="nav-text">super</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#alloc-amp-amp-init"><span class="nav-number">3.</span> <span class="nav-text">alloc && init</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#alloc"><span class="nav-number">3.1.</span> <span class="nav-text">alloc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#init"><span class="nav-number">3.2.</span> <span class="nav-text">init</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
