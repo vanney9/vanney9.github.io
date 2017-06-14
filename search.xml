@@ -3990,17 +3990,17 @@ $ git branch --set-upstream-to=origin/dev dev //建立dev分支追踪
     </entry>
     
     <entry>
-      <title><![CDATA[tags]]></title>
-      <url>/tags/index.html</url>
-      <content type="html"></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[关于]]></title>
       <url>/about/index.html</url>
       <content type="html"><![CDATA[<p>大家好，我是XXX。欢迎来到我的个人技术博客。</p>
 <p>这里用markdown写下你的简介，就跟平时写md一样就可以了。</p>
 ]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[tags]]></title>
+      <url>/tags/index.html</url>
+      <content type="html"></content>
     </entry>
     
   
