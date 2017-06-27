@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-06-10T11:59:01.000Z</updated>
+  <updated>2017-06-27T14:04:50.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>关于ARC，Block以及GCD，runloop</title>
+    <link href="http://yoursite.com/2017/06/27/iOS-ARC-Block-GCD-Runloop/"/>
+    <id>http://yoursite.com/2017/06/27/iOS-ARC-Block-GCD-Runloop/</id>
+    <published>2017-06-27T11:51:42.000Z</published>
+    <updated>2017-06-27T14:04:50.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近又看了一遍 &lt;strong&gt;Objective-C高级编程 iOS与OS X多线程和内存管理&lt;/strong&gt; 这本书。对一些问题有了一些新的认识。这篇文章将讲讲下面几个话题：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;ARC，MRC 与 引用计数&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Block的实现&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GCD与runloop&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+    
+      <category term="iOS" scheme="http://yoursite.com/tags/iOS/"/>
+    
+  </entry>
   
   <entry>
     <title>Objective-C runtime - 如果还有其他的话</title>
@@ -418,24 +441,6 @@
     <summary type="html">
     
       &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;C++大学教程的读书笔记，(C++ how to program)&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="C" scheme="http://yoursite.com/tags/C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C和指针读书笔记（一）</title>
-    <link href="http://yoursite.com/2016/09/14/Pointers-on-c-reading-note-one/"/>
-    <id>http://yoursite.com/2016/09/14/Pointers-on-c-reading-note-one/</id>
-    <published>2016-09-14T06:42:12.000Z</published>
-    <updated>2017-03-22T12:49:38.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;C和指针读书笔记，第一篇。会按章节排序&lt;/p&gt;
     
     </summary>
     

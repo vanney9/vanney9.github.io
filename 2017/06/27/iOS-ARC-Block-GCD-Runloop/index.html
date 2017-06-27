@@ -7,13 +7,19 @@
 
     
 
-    <title>第 4 页 | Vanney</title>
+    <title>关于ARC，Block以及GCD，runloop | Vanney</title>
     <meta name="author" content="Vanney">
+    
+    <meta name="description" content="前言最近又看了一遍 Objective-C高级编程 iOS与OS X多线程和内存管理 这本书。对一些问题有了一些新的认识。这篇文章将讲讲下面几个话题：
+
+ARC，MRC 与 引用计数
+Block的实现
+GCD与runloop">
     
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    
+    <meta property="og:title" content="关于ARC，Block以及GCD，runloop"/>
     <meta property="og:site_name" content="Vanney"/>
 
     
@@ -230,376 +236,139 @@
 
 
     <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper teal lighten-2">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+
         
 
+        
+    </div>
+</nav>
 
-
-<div id="article-list" class="container main-container">
-    
-        <article class="simple-article">
+<article>
     <div class="card">
         <div class="card-content">
+            
+
             <div class="article-title">
                 
     
-        <h1 class="blue-grey-link-context"><a href="/2016/05/19/ios-pop-menu/">弹框按钮视图</a></h1>
+        <h1>关于ARC，Block以及GCD，runloop</h1>
     
 
 
             </div>
+            <time class="teal-link-context" datetime="2017-06-27T11:51:42.000Z"><a href="/2017/06/27/iOS-ARC-Block-GCD-Runloop/">2017-06-27</a></time>
 
-            <time class="teal-link-context" datetime="2016-05-19T01:47:22.000Z"><a href="/2016/05/19/ios-pop-menu/">2016-05-19</a></time>
+            <span id="busuanzi_container_page_pv" class="read-times-container">
+    <!--<i class="fa fa-eye"></i>-->
+    <span id="busuanzi_value_page_pv"></span>
+</span>
 
             
-
-
-            
-                <div class="entry teal-link-context">
-                    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这段时间又在忙项目的事，对<a href="https://github.com/Coding/Coding-iOS">Coding-iOS</a>源码的学习只能先暂搁一旁。今天抽空来看看一个Coding-iOS中一个有趣的实现。这个和微博里面发送微博时的动效类似。效果如下👇<br><img src="/lionheart/1605/weibo.gif" alt="weibo"></p>
-                </div>
-            
-        </div>
-
+    <div class="tags-row">
         
-        <div class="card-action teal-link-context">
-            <a href="/2016/05/19/ios-pop-menu/">阅读全文</a>
-        </ div>
+            <a href="/tags/iOS/" class="chip teal darken-1">iOS</a>
         
     </div>
-</article>
 
-    
-        <article class="simple-article">
-    <div class="card">
-        <div class="card-content">
-            <div class="article-title">
+
+            <div class="toc teal-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#前言"><span class="section table-of-contents-text">前言</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#ARC-MRC-与-引用计数"><span class="section table-of-contents-text">ARC, MRC 与 引用计数</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#引用计数"><span class="section table-of-contents-text">引用计数</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#手动引用计数-MRC"><span class="section table-of-contents-text">手动引用计数 MRC</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#alloc-new-copy-mutableCopy"><span class="section table-of-contents-text">alloc/new/copy/mutableCopy</span></a></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#retain"><span class="section table-of-contents-text">retain</span></a></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#release"><span class="section table-of-contents-text">release</span></a></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#examples"><span class="section table-of-contents-text">examples</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-5"><a class="section table-of-contents-link" href="#autorelease函数"><span class="section table-of-contents-text">autorelease函数</span></a></li><li class="section table-of-contents-item section table-of-contents-level-5"><a class="section table-of-contents-link" href="#array类对象"><span class="section table-of-contents-text">array类对象</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#MRC总结"><span class="section table-of-contents-text">MRC总结</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#自动引用计数-ARC"><span class="section table-of-contents-text">自动引用计数 ARC</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#strong"><span class="section table-of-contents-text">__strong</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-5"><a class="section table-of-contents-link" href="#总结"><span class="section table-of-contents-text">总结</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#autorelease"><span class="section table-of-contents-text">__autorelease</span></a></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#weak"><span class="section table-of-contents-text">__weak</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-5"><a class="section table-of-contents-link" href="#使用-weak变量时"><span class="section table-of-contents-text">使用__weak变量时</span></a></li></ol></li></ol></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#Block的实现"><span class="section table-of-contents-text">Block的实现</span></a></li></ol>
+</div>
+
+
+            <div class="entry teal-link-context">
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近又看了一遍 <strong>Objective-C高级编程 iOS与OS X多线程和内存管理</strong> 这本书。对一些问题有了一些新的认识。这篇文章将讲讲下面几个话题：</p>
+<ol>
+<li><strong>ARC，MRC 与 引用计数</strong></li>
+<li><strong>Block的实现</strong></li>
+<li><strong>GCD与runloop</strong></li>
+</ol>
+<a id="more"></a>
+<h2 id="ARC-MRC-与-引用计数"><a href="#ARC-MRC-与-引用计数" class="headerlink" title="ARC, MRC 与 引用计数"></a>ARC, MRC 与 引用计数</h2><h3 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h3><p>Objective C的生成的数据会存放在栈或者堆上面。对于存放在栈上面的数据（比如局部int变量等）在不需要时，系统会自动释放内存空间；对于存放在堆上面的数据（比如对象等）会使用引用计数来决定是否释放内存空间。</p>
+<p>创建一个对象时，会malloc一块对象所需大小的内存空间；当有一变量持有该对象时（一般是有一指针指向该内存时）该对象的引用计数加一；当持有该对象的变量不再持有它时（一般是指针被销毁，或指向其他地方）该对象的引用计数减一。<strong>当对象的引用计数为0时，free这一块内存</strong></p>
+<p><strong>MRC和ARC实质上都是对这个引用计数进行操作</strong></p>
+<h3 id="手动引用计数-MRC"><a href="#手动引用计数-MRC" class="headerlink" title="手动引用计数 MRC"></a>手动引用计数 MRC</h3><p>手动引用计数要确保<strong>在对象从被创建到销毁的一生中，该对象的引用计数也从1变成0</strong>。</p>
+<p>与对象引用计数相关的函数只有3个：</p>
+<ol>
+<li>alloc/new/copy/mutableCopy</li>
+<li>retain</li>
+<li>release</li>
+</ol>
+<h4 id="alloc-new-copy-mutableCopy"><a href="#alloc-new-copy-mutableCopy" class="headerlink" title="alloc/new/copy/mutableCopy"></a>alloc/new/copy/mutableCopy</h4><p>这几个函数生成一个对象，并且该对象的引用计数为1</p>
+<h4 id="retain"><a href="#retain" class="headerlink" title="retain"></a>retain</h4><p><code>retain</code>函数将对象的引用计数加1</p>
+<h4 id="release"><a href="#release" class="headerlink" title="release"></a>release</h4><p><code>release</code>函数将对象的引用计数减一</p>
+<h4 id="examples"><a href="#examples" class="headerlink" title="examples"></a>examples</h4><h5 id="autorelease函数"><a href="#autorelease函数" class="headerlink" title="autorelease函数"></a>autorelease函数</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]  // 1</div><div class="line">id obj = [[NSObject alloc] init];                           // 2</div><div class="line">[obj autorelease];                                          // 3</div><div class="line">[id dosomething];                                           // 4</div><div class="line">[pool drain];                                               // 5</div></pre></td></tr></table></figure>
+<ol>
+<li>注释2处，使用<code>alloc</code>方法新建一个对象，该对象的引用计数为1</li>
+<li>注释3处，调用了<code>autorelease</code>函数；该函数并没有更改对象的引用计数，但是它将对象注册到自动释放池中</li>
+<li>注释4处，因为注释3没有减少引用计数，所以对象的引用计数还是1。所以这个地方对象依然存在，可以正常使用对象</li>
+<li>注释5处，因为在注释3时将对象注册进pool。此时<code>[pool drain]</code>方法会去调用对象的<code>release</code>方法，将对象引用计数减1；此时引用计数为0，那么释放内存空间</li>
+</ol>
+<p>所以从上面看出：<strong><code>autorelease</code>函数并没有改变对象的引用计数，只是简单的将对象与释放池挂钩；当<code>pool drain</code>时才调用对象的<code>release</code>函数</strong>。</p>
+<p>所以 <strong><code>autorelease</code>函数实质就是延迟对象的<code>release</code>方法；可以让你放心使用对象，但又防止了你忘记释放对象</strong></p>
+<h5 id="array类对象"><a href="#array类对象" class="headerlink" title="array类对象"></a>array类对象</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">id obj = [NSMutableArray array];</div></pre></td></tr></table></figure>
+<p>这里不需要调用对象的<code>release</code>方法。因为在内部的实现是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (id)array &#123;</div><div class="line">  	id obj = [[NSMutableArray alloc] init];</div><div class="line">  	[obj autorelease];</div><div class="line">  	return obj;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>array</code>类方法返回的对象，该对象的引用计数为1；但是已经注册到自动释放池中了，会在释放池结束时调用<code>release</code>方法</p>
+<h4 id="MRC总结"><a href="#MRC总结" class="headerlink" title="MRC总结"></a>MRC总结</h4><p>对象一定成对的存在 <code>alloc</code> 和  <code>release</code>方法；或者成对的存在<code>retain</code> 和  <code>release</code> 方法。只有这样才能对引用计数有增有减，才能保证对象能正确的释放。</p>
+<p>如果没有成对的出现，但是程序又是正确的，那么这3个方法的调用肯定在某函数的内部。比如<code>[pool drain]</code> 或者 <code>[NSMutableArray array]</code> 等函数中。</p>
+<h3 id="自动引用计数-ARC"><a href="#自动引用计数-ARC" class="headerlink" title="自动引用计数 ARC"></a>自动引用计数 ARC</h3><p>ARC不再需要你来手动调用<code>retain</code> 和 <code>release</code> 函数了，系统会自己调用这些函数。那么ARC需要注意的是什么呢：</p>
+<ol>
+<li><strong>__strong</strong></li>
+<li><strong>__weak</strong></li>
+<li><strong>__autorelease</strong></li>
+</ol>
+<p>使用以上三个修饰符对对象进行修饰，那么就会自动增减引用计数</p>
+<h4 id="strong"><a href="#strong" class="headerlink" title="__strong"></a>__strong</h4><p><strong>会自动release</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id obj = [[NSObject alloc] init];</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 转化之后</div><div class="line"></div><div class="line">id obj = objc_msgSend(NSObject, @selector(alloc));</div><div class="line">objc_msgSend(obj, @selector(init));</div><div class="line">objc_release(obj);</div><div class="line"></div><div class="line">/*--------------------------分割符------------------*/</div><div class="line">&#123;</div><div class="line">  	id __strong obj = obj2;</div><div class="line">    // do something</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 转化之后</div><div class="line"></div><div class="line">id obj = obj2;</div><div class="line">[obj retain];</div><div class="line">// do something</div><div class="line">[obj release];</div></pre></td></tr></table></figure>
+<p>可以看到<code>__strong</code>会持有对象，并自动调用release将引用计数减一</p>
+<p><strong>会阻止对象注册到release pool中，并持有对象</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">   id __strong obj = [NSMutableArray array];</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 转化之后</div><div class="line"></div><div class="line">id obj = objc_msgSend(NSMutableArray, @selector(alloc));</div><div class="line">objc_msgSend(obj, @selector(init));</div><div class="line">return objc_autoreleaseReturnValue(obj);  </div><div class="line"></div><div class="line">objc_retainAutoreleasedReturnValue(obj);</div><div class="line">objc_release(obj);</div></pre></td></tr></table></figure>
+<p>可以看到，__strong会将即将注册到pool的对象抢过来，自己持有，并释放。</p>
+<h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p><code>__strong</code>修饰符会持有对象，并自动释放。有时会抢过pool的对象，来自己释放</p>
+<h4 id="autorelease"><a href="#autorelease" class="headerlink" title="__autorelease"></a>__autorelease</h4><p>不常用，基本原理：</p>
+<ol>
+<li>对于已经/或即将注册到pool的对象，没有变化。会由pool来释放该对象</li>
+<li>对于其他对象，会将对象retain，并强制注册到pool，由pool来release</li>
+</ol>
+<h4 id="weak"><a href="#weak" class="headerlink" title="__weak"></a>__weak</h4><p>weak变量不对引用计数产生影响。来看一下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id __weak obj1 = obj;</div><div class="line">id __weak obj2 = obj;</div></pre></td></tr></table></figure>
+<p>APP管理一个全局的weak表，上面这两行代码，会往该表中插入2行记录：</p>
+<p>每行记录的key是对象的首地址，也就是 <code>obj</code> ；value是存放weak变量的地址，也就是<code>&amp;obj1</code> 和 <code>&amp;obj2</code> 。</p>
+<ol>
+<li>当weak变量obj1被废弃时，将weak表中的value为<code>&amp;obj1</code>的记录删除</li>
+<li>当对象被废弃时，这时候obj1,obj2应该指向nil。这时就将weak表中，key为<code>obj</code>的记录的key置成nil</li>
+</ol>
+<p><strong>所以寻找weak变量对应的对象地址时，其实就是寻找weak表中的key值</strong></p>
+<h5 id="使用-weak变量时"><a href="#使用-weak变量时" class="headerlink" title="使用__weak变量时"></a>使用__weak变量时</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __weak o = obj;</div><div class="line">  	NSLog(@&quot;%@&quot;, o);</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 转化之后</div><div class="line"></div><div class="line">id o;</div><div class="line">objc_initWeak(&amp;o, obj);</div><div class="line">id tmp = objc_loadWeakRetained(&amp;o);</div><div class="line">objc_autorelease(tmp);</div><div class="line">NSLog(@&quot;%@&quot;, tmp);</div><div class="line">objc_destoryWeak(&amp;o);</div></pre></td></tr></table></figure>
+<p>可以看到使用weak变量时，其实是将该weak变量指向的对象交由一个tmp变量持有，并将该对象注册到pool中。这样可以保证对象万一被释放了，也至少还有tmp持有他，可以正常使用。</p>
+<h2 id="Block的实现"><a href="#Block的实现" class="headerlink" title="Block的实现"></a>Block的实现</h2>
                 
-    
-        <h1 class="blue-grey-link-context"><a href="/2016/05/12/app-download-uoload-manager/">iOS关于文件上传与下载</a></h1>
-    
+
+
+<p class="teal-link-context">
+    <a href="/2017/06/10/objective-c-runtime-other/" rel="next" title="Objective-C runtime - 如果还有其他的话">
+    下一篇：Objective-C runtime - 如果还有其他的话
+  </a>
+</p>
 
 
             </div>
-
-            <time class="teal-link-context" datetime="2016-05-12T11:06:10.000Z"><a href="/2016/05/12/app-download-uoload-manager/">2016-05-12</a></time>
-
-            
-
-
-            
-                <div class="entry teal-link-context">
-                    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近还在跟着<a href="https://github.com/Coding/Coding-iOS">Coding-iOS源码</a>学习iOS开发，现在来介绍一下Coding-iOS的文件下载和上传机制。其实说实话，在写这文章的时候我对这个机制的总体把握也不是很全面；下面我将通过源码再来熟悉一遍这个全过程。这篇文章主要介绍的是下载流程。</p>
-                </div>
-            
+			
         </div>
-
-        
-        <div class="card-action teal-link-context">
-            <a href="/2016/05/12/app-download-uoload-manager/">阅读全文</a>
-        </ div>
-        
     </div>
 </article>
 
-    
-        <article class="simple-article">
-    <div class="card">
-        <div class="card-content">
-            <div class="article-title">
-                
-    
-        <h1 class="blue-grey-link-context"><a href="/2016/05/07/NSObject-ObjectMap/">NSObject+ObjectMap 源码分析</a></h1>
-    
 
 
-            </div>
 
-            <time class="teal-link-context" datetime="2016-05-07T02:45:25.000Z"><a href="/2016/05/07/NSObject-ObjectMap/">2016-05-07</a></time>
 
-            
-
-
-            
-                <div class="entry teal-link-context">
-                    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>iOS应用从API获得的数据有很重要的一部分是以JSON格式返回的，通过AFNetworking，这种JSON格式会被转换成NSDictionary或者NSArray，从而被APP所接收。<br>这时，如果能将这些NSDictionary/NSArray转化成APP中已经封装好的各种Model，将极大的简化APP的开发。<br>有很多第三方库已经实现了这个功能，比较知名的就有<a href="https://github.com/CoderMJLee/MJExtension">MJExtension</a></p>
-<blockquote>
-<p>MJExtension: A fast, convenient and nonintrusive conversion between JSON and model. Your model class don’t need to extend another base class. You don’t need to modify any model file.</p>
-</blockquote>
-<p>嗯，这个第三方库很有名，功能强大，使用也方便，但是本文并不介绍它。在这篇文章里面，我将介绍一个小的从JSON到Model进行转换的第三方库，这个库小到没有一个像样的名字，我在github上也只找到了一个模糊的地址：<a href="https://github.com/uacaps/NSObject-ObjectMap">uacaps/NSObject-ObjectMap</a> (<em>注</em> 不能确认是否是本文所介绍的)。<br>另外，我也将本文所介绍的这个第三方库上传到我的<a href="https://github.com/vanney9/blogDemo/tree/master/NSObject%2BObjectMap">github</a>上去了。</p>
-                </div>
-            
-        </div>
-
-        
-        <div class="card-action teal-link-context">
-            <a href="/2016/05/07/NSObject-ObjectMap/">阅读全文</a>
-        </ div>
-        
-    </div>
-</article>
-
-    
-        <article class="simple-article">
-    <div class="card">
-        <div class="card-content">
-            <div class="article-title">
-                
-    
-        <h1 class="blue-grey-link-context"><a href="/2016/03/26/iOS-method-swizzling/">iOS Method Swizzling</a></h1>
-    
-
-
-            </div>
-
-            <time class="teal-link-context" datetime="2016-03-26T08:18:43.000Z"><a href="/2016/03/26/iOS-method-swizzling/">2016-03-26</a></time>
-
-            
-
-
-            
-                <div class="entry teal-link-context">
-                    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>有个奇怪的需求：每个UIViewController在viewDidAppear:和viewWillAppear:方法中都需要执行一些操作。这里介绍一种iOS Method Swizzling方法:让viewDidAppear:和customViewDidAppear:方法调换实现方式；让viewWillAppear:和customViewWillAppear:方法调换实现方式。</p>
-                </div>
-            
-        </div>
-
-        
-        <div class="card-action teal-link-context">
-            <a href="/2016/03/26/iOS-method-swizzling/">阅读全文</a>
-        </ div>
-        
-    </div>
-</article>
-
-    
-        <article class="simple-article">
-    <div class="card">
-        <div class="card-content">
-            <div class="article-title">
-                
-    
-        <h1 class="blue-grey-link-context"><a href="/2016/03/24/iOS-camera-picture-album/">iOS从图库或相机获得图片</a></h1>
-    
-
-
-            </div>
-
-            <time class="teal-link-context" datetime="2016-03-24T13:23:18.000Z"><a href="/2016/03/24/iOS-camera-picture-album/">2016-03-24</a></time>
-
-            
-
-
-            
-                <div class="entry teal-link-context">
-                    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一款App很有可能需要访问系统的图库（照片）或者通过相机来获取图片，比如更换用户头像等等。效果如图👇</p>
-<p><img src="/lionheart/1603/camerademo.gif" alt="camera demo"></p>
-<p>下面来看看如何实现</p>
-                </div>
-            
-        </div>
-
-        
-        <div class="card-action teal-link-context">
-            <a href="/2016/03/24/iOS-camera-picture-album/">阅读全文</a>
-        </ div>
-        
-    </div>
-</article>
-
-    
-        <article class="simple-article">
-    <div class="card">
-        <div class="card-content">
-            <div class="article-title">
-                
-    
-        <h1 class="blue-grey-link-context"><a href="/2016/03/24/iOS-global-setting/">iOS全局设置</a></h1>
-    
-
-
-            </div>
-
-            <time class="teal-link-context" datetime="2016-03-24T11:14:29.000Z"><a href="/2016/03/24/iOS-global-setting/">2016-03-24</a></time>
-
-            
-
-
-            
-                <div class="entry teal-link-context">
-                    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个iOS项目，有很多东西是全局通用的，比如全局常量等等。在整个项目的某个地方，对其进行全局设置，会极大的方便程序的编写，而且简化程序的结构。</p>
-<h2 id="不同类型的全局设置"><a href="#不同类型的全局设置" class="headerlink" title="不同类型的全局设置"></a>不同类型的全局设置</h2>
-                </div>
-            
-        </div>
-
-        
-        <div class="card-action teal-link-context">
-            <a href="/2016/03/24/iOS-global-setting/">阅读全文</a>
-        </ div>
-        
-    </div>
-</article>
-
-    
-        <article class="simple-article">
-    <div class="card">
-        <div class="card-content">
-            <div class="article-title">
-                
-    
-        <h1 class="blue-grey-link-context"><a href="/2016/03/19/2016-week4/">2016-week4</a></h1>
-    
-
-
-            </div>
-
-            <time class="teal-link-context" datetime="2016-03-19T08:13:01.000Z"><a href="/2016/03/19/2016-week4/">2016-03-19</a></time>
-
-            
-
-
-            
-                <div class="entry teal-link-context">
-                    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上周末去见老同学了，week3就不写了=。＝ 都是借口啊，来看看这周碰上一些什么问题。</p>
-<h2 id="问题列表"><a href="#问题列表" class="headerlink" title="问题列表"></a>问题列表</h2>
-                </div>
-            
-        </div>
-
-        
-        <div class="card-action teal-link-context">
-            <a href="/2016/03/19/2016-week4/">阅读全文</a>
-        </ div>
-        
-    </div>
-</article>
-
-    
-        <article class="simple-article">
-    <div class="card">
-        <div class="card-content">
-            <div class="article-title">
-                
-    
-        <h1 class="blue-grey-link-context"><a href="/2016/03/19/mac-colorful-terminal/">Mac Colorful Terminal</a></h1>
-    
-
-
-            </div>
-
-            <time class="teal-link-context" datetime="2016-03-19T07:46:07.000Z"><a href="/2016/03/19/mac-colorful-terminal/">2016-03-19</a></time>
-
-            
-
-
-            
-                <div class="entry teal-link-context">
-                    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>今天装完Mysql之后发现之前终端的颜色不见了，本来那颜色看的也挺操蛋的。Google之后发现了<a href="https://github.com/altercation/solarized">solarized</a>。来看看效果👇</p>
-<p><img src="/lionheart/1603/maccolorfulterminaldemo.png" alt="mac colorful terminal"></p>
-                </div>
-            
-        </div>
-
-        
-        <div class="card-action teal-link-context">
-            <a href="/2016/03/19/mac-colorful-terminal/">阅读全文</a>
-        </ div>
-        
-    </div>
-</article>
-
-    
-        <article class="simple-article">
-    <div class="card">
-        <div class="card-content">
-            <div class="article-title">
-                
-    
-        <h1 class="blue-grey-link-context"><a href="/2016/03/15/ActionSheetPicker-sourcecode-analyse/">ActionSheetPicker源码分析</a></h1>
-    
-
-
-            </div>
-
-            <time class="teal-link-context" datetime="2016-03-15T11:06:26.000Z"><a href="/2016/03/15/ActionSheetPicker-sourcecode-analyse/">2016-03-15</a></time>
-
-            
-
-
-            
-                <div class="entry teal-link-context">
-                    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/skywinder/ActionSheetPicker-3.0">ActionSheetPicker</a>可以快速生成UIPickerView+UIActionSheet的效果。效果如下👇</p>
-<p><img src="/lionheart/1603/actionsheetdemo.gif" alt="action sheet demo"></p>
-                </div>
-            
-        </div>
-
-        
-        <div class="card-action teal-link-context">
-            <a href="/2016/03/15/ActionSheetPicker-sourcecode-analyse/">阅读全文</a>
-        </ div>
-        
-    </div>
-</article>
-
-    
-        <article class="simple-article">
-    <div class="card">
-        <div class="card-content">
-            <div class="article-title">
-                
-    
-        <h1 class="blue-grey-link-context"><a href="/2016/03/08/custom-uitableviewcell/">自定义UITableViewCell</a></h1>
-    
-
-
-            </div>
-
-            <time class="teal-link-context" datetime="2016-03-08T11:27:21.000Z"><a href="/2016/03/08/custom-uitableviewcell/">2016-03-08</a></time>
-
-            
-
-
-            
-                <div class="entry teal-link-context">
-                    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文介绍自定义<code>UITableViewCell</code>的整个流程，先看看效果图👇<br><img src="/lionheart/1603/customcell.gif" alt="CustomCell"></p>
-                </div>
-            
-        </div>
-
-        
-        <div class="card-action teal-link-context">
-            <a href="/2016/03/08/custom-uitableviewcell/">阅读全文</a>
-        </ div>
-        
-    </div>
-</article>
-
-    
-
-    <ul class="pagination center-align">
-    <li class="">
-        <a href="/page/3/"><i class="fa fa-angle-left"></i></a>
-    </li>
-    
-    
-        <li class="waves-effect"><a href="/">1</a></li>
-    
-        <li class="waves-effect"><a href="/page/2">2</a></li>
-    
-        <li class="waves-effect"><a href="/page/3">3</a></li>
-    
-        <li class="active teal accent-4"><a href="/page/4">4</a></li>
-    
-        <li class="waves-effect"><a href="/page/5">5</a></li>
-    
-        <li class="waves-effect"><a href="/page/6">6</a></li>
-    
-    
-    <li class="">
-        <a href="/page/5/"><i class="fa fa-angle-right"></i></a>
-    </li>
- </ul>
 
 </div>
 

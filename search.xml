@@ -3,6 +3,85 @@
   
     
     <entry>
+      <title><![CDATA[关于ARC，Block以及GCD，runloop]]></title>
+      <url>/2017/06/27/iOS-ARC-Block-GCD-Runloop/</url>
+      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近又看了一遍 <strong>Objective-C高级编程 iOS与OS X多线程和内存管理</strong> 这本书。对一些问题有了一些新的认识。这篇文章将讲讲下面几个话题：</p>
+<ol>
+<li><strong>ARC，MRC 与 引用计数</strong></li>
+<li><strong>Block的实现</strong></li>
+<li><strong>GCD与runloop</strong></li>
+</ol>
+<a id="more"></a>
+<h2 id="ARC-MRC-与-引用计数"><a href="#ARC-MRC-与-引用计数" class="headerlink" title="ARC, MRC 与 引用计数"></a>ARC, MRC 与 引用计数</h2><h3 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h3><p>Objective C的生成的数据会存放在栈或者堆上面。对于存放在栈上面的数据（比如局部int变量等）在不需要时，系统会自动释放内存空间；对于存放在堆上面的数据（比如对象等）会使用引用计数来决定是否释放内存空间。</p>
+<p>创建一个对象时，会malloc一块对象所需大小的内存空间；当有一变量持有该对象时（一般是有一指针指向该内存时）该对象的引用计数加一；当持有该对象的变量不再持有它时（一般是指针被销毁，或指向其他地方）该对象的引用计数减一。<strong>当对象的引用计数为0时，free这一块内存</strong></p>
+<p><strong>MRC和ARC实质上都是对这个引用计数进行操作</strong></p>
+<h3 id="手动引用计数-MRC"><a href="#手动引用计数-MRC" class="headerlink" title="手动引用计数 MRC"></a>手动引用计数 MRC</h3><p>手动引用计数要确保<strong>在对象从被创建到销毁的一生中，该对象的引用计数也从1变成0</strong>。</p>
+<p>与对象引用计数相关的函数只有3个：</p>
+<ol>
+<li>alloc/new/copy/mutableCopy</li>
+<li>retain</li>
+<li>release</li>
+</ol>
+<h4 id="alloc-new-copy-mutableCopy"><a href="#alloc-new-copy-mutableCopy" class="headerlink" title="alloc/new/copy/mutableCopy"></a>alloc/new/copy/mutableCopy</h4><p>这几个函数生成一个对象，并且该对象的引用计数为1</p>
+<h4 id="retain"><a href="#retain" class="headerlink" title="retain"></a>retain</h4><p><code>retain</code>函数将对象的引用计数加1</p>
+<h4 id="release"><a href="#release" class="headerlink" title="release"></a>release</h4><p><code>release</code>函数将对象的引用计数减一</p>
+<h4 id="examples"><a href="#examples" class="headerlink" title="examples"></a>examples</h4><h5 id="autorelease函数"><a href="#autorelease函数" class="headerlink" title="autorelease函数"></a>autorelease函数</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]  // 1</div><div class="line">id obj = [[NSObject alloc] init];                           // 2</div><div class="line">[obj autorelease];                                          // 3</div><div class="line">[id dosomething];                                           // 4</div><div class="line">[pool drain];                                               // 5</div></pre></td></tr></table></figure>
+<ol>
+<li>注释2处，使用<code>alloc</code>方法新建一个对象，该对象的引用计数为1</li>
+<li>注释3处，调用了<code>autorelease</code>函数；该函数并没有更改对象的引用计数，但是它将对象注册到自动释放池中</li>
+<li>注释4处，因为注释3没有减少引用计数，所以对象的引用计数还是1。所以这个地方对象依然存在，可以正常使用对象</li>
+<li>注释5处，因为在注释3时将对象注册进pool。此时<code>[pool drain]</code>方法会去调用对象的<code>release</code>方法，将对象引用计数减1；此时引用计数为0，那么释放内存空间</li>
+</ol>
+<p>所以从上面看出：<strong><code>autorelease</code>函数并没有改变对象的引用计数，只是简单的将对象与释放池挂钩；当<code>pool drain</code>时才调用对象的<code>release</code>函数</strong>。</p>
+<p>所以 <strong><code>autorelease</code>函数实质就是延迟对象的<code>release</code>方法；可以让你放心使用对象，但又防止了你忘记释放对象</strong></p>
+<h5 id="array类对象"><a href="#array类对象" class="headerlink" title="array类对象"></a>array类对象</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">id obj = [NSMutableArray array];</div></pre></td></tr></table></figure>
+<p>这里不需要调用对象的<code>release</code>方法。因为在内部的实现是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (id)array &#123;</div><div class="line">  	id obj = [[NSMutableArray alloc] init];</div><div class="line">  	[obj autorelease];</div><div class="line">  	return obj;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>array</code>类方法返回的对象，该对象的引用计数为1；但是已经注册到自动释放池中了，会在释放池结束时调用<code>release</code>方法</p>
+<h4 id="MRC总结"><a href="#MRC总结" class="headerlink" title="MRC总结"></a>MRC总结</h4><p>对象一定成对的存在 <code>alloc</code> 和  <code>release</code>方法；或者成对的存在<code>retain</code> 和  <code>release</code> 方法。只有这样才能对引用计数有增有减，才能保证对象能正确的释放。</p>
+<p>如果没有成对的出现，但是程序又是正确的，那么这3个方法的调用肯定在某函数的内部。比如<code>[pool drain]</code> 或者 <code>[NSMutableArray array]</code> 等函数中。</p>
+<h3 id="自动引用计数-ARC"><a href="#自动引用计数-ARC" class="headerlink" title="自动引用计数 ARC"></a>自动引用计数 ARC</h3><p>ARC不再需要你来手动调用<code>retain</code> 和 <code>release</code> 函数了，系统会自己调用这些函数。那么ARC需要注意的是什么呢：</p>
+<ol>
+<li><strong>__strong</strong></li>
+<li><strong>__weak</strong></li>
+<li><strong>__autorelease</strong></li>
+</ol>
+<p>使用以上三个修饰符对对象进行修饰，那么就会自动增减引用计数</p>
+<h4 id="strong"><a href="#strong" class="headerlink" title="__strong"></a>__strong</h4><p><strong>会自动release</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id obj = [[NSObject alloc] init];</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 转化之后</div><div class="line"></div><div class="line">id obj = objc_msgSend(NSObject, @selector(alloc));</div><div class="line">objc_msgSend(obj, @selector(init));</div><div class="line">objc_release(obj);</div><div class="line"></div><div class="line">/*--------------------------分割符------------------*/</div><div class="line">&#123;</div><div class="line">  	id __strong obj = obj2;</div><div class="line">    // do something</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 转化之后</div><div class="line"></div><div class="line">id obj = obj2;</div><div class="line">[obj retain];</div><div class="line">// do something</div><div class="line">[obj release];</div></pre></td></tr></table></figure>
+<p>可以看到<code>__strong</code>会持有对象，并自动调用release将引用计数减一</p>
+<p><strong>会阻止对象注册到release pool中，并持有对象</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">   id __strong obj = [NSMutableArray array];</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 转化之后</div><div class="line"></div><div class="line">id obj = objc_msgSend(NSMutableArray, @selector(alloc));</div><div class="line">objc_msgSend(obj, @selector(init));</div><div class="line">return objc_autoreleaseReturnValue(obj);  </div><div class="line"></div><div class="line">objc_retainAutoreleasedReturnValue(obj);</div><div class="line">objc_release(obj);</div></pre></td></tr></table></figure>
+<p>可以看到，__strong会将即将注册到pool的对象抢过来，自己持有，并释放。</p>
+<h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p><code>__strong</code>修饰符会持有对象，并自动释放。有时会抢过pool的对象，来自己释放</p>
+<h4 id="autorelease"><a href="#autorelease" class="headerlink" title="__autorelease"></a>__autorelease</h4><p>不常用，基本原理：</p>
+<ol>
+<li>对于已经/或即将注册到pool的对象，没有变化。会由pool来释放该对象</li>
+<li>对于其他对象，会将对象retain，并强制注册到pool，由pool来release</li>
+</ol>
+<h4 id="weak"><a href="#weak" class="headerlink" title="__weak"></a>__weak</h4><p>weak变量不对引用计数产生影响。来看一下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id __weak obj1 = obj;</div><div class="line">id __weak obj2 = obj;</div></pre></td></tr></table></figure>
+<p>APP管理一个全局的weak表，上面这两行代码，会往该表中插入2行记录：</p>
+<p>每行记录的key是对象的首地址，也就是 <code>obj</code> ；value是存放weak变量的地址，也就是<code>&amp;obj1</code> 和 <code>&amp;obj2</code> 。</p>
+<ol>
+<li>当weak变量obj1被废弃时，将weak表中的value为<code>&amp;obj1</code>的记录删除</li>
+<li>当对象被废弃时，这时候obj1,obj2应该指向nil。这时就将weak表中，key为<code>obj</code>的记录的key置成nil</li>
+</ol>
+<p><strong>所以寻找weak变量对应的对象地址时，其实就是寻找weak表中的key值</strong></p>
+<h5 id="使用-weak变量时"><a href="#使用-weak变量时" class="headerlink" title="使用__weak变量时"></a>使用__weak变量时</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __weak o = obj;</div><div class="line">  	NSLog(@&quot;%@&quot;, o);</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 转化之后</div><div class="line"></div><div class="line">id o;</div><div class="line">objc_initWeak(&amp;o, obj);</div><div class="line">id tmp = objc_loadWeakRetained(&amp;o);</div><div class="line">objc_autorelease(tmp);</div><div class="line">NSLog(@&quot;%@&quot;, tmp);</div><div class="line">objc_destoryWeak(&amp;o);</div></pre></td></tr></table></figure>
+<p>可以看到使用weak变量时，其实是将该weak变量指向的对象交由一个tmp变量持有，并将该对象注册到pool中。这样可以保证对象万一被释放了，也至少还有tmp持有他，可以正常使用。</p>
+<h2 id="Block的实现"><a href="#Block的实现" class="headerlink" title="Block的实现"></a>Block的实现</h2>]]></content>
+      
+        
+        <tags>
+            
+            <tag> iOS </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Objective-C runtime - 如果还有其他的话]]></title>
       <url>/2017/06/10/objective-c-runtime-other/</url>
       <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>系列应该是最后一篇：还真要来讲一点其他的东西：</p>
@@ -3984,17 +4063,17 @@ $ git branch --set-upstream-to=origin/dev dev //建立dev分支追踪
   
     
     <entry>
+      <title><![CDATA[categories]]></title>
+      <url>/categories/index.html</url>
+      <content type="html"></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[关于]]></title>
       <url>/about/index.html</url>
       <content type="html"><![CDATA[<p>大家好，我是XXX。欢迎来到我的个人技术博客。</p>
 <p>这里用markdown写下你的简介，就跟平时写md一样就可以了。</p>
 ]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[categories]]></title>
-      <url>/categories/index.html</url>
-      <content type="html"></content>
     </entry>
     
     <entry>
