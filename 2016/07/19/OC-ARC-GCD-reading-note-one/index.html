@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -295,35 +295,63 @@
 </ol>
 </li>
 <li><p>自己生成的对象自己持有</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">id obj = [[NSObject alloc] new]; // alloc方法生成并持有对象</div><div class="line">// or</div><div class="line">id obj = [NSObject new]; // new 和 alloc + init 一样</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">id obj = [[NSObject alloc] new]; // alloc方法生成并持有对象
+// or
+id obj = [NSObject new]; // new 和 alloc + init 一样
+</code></pre>
 <p>另外<code>copy</code>和<code>mutableCopy</code>也是生成对象的副本，并持有。</p>
 </li>
 <li><p>非自己生成的对象，自己也能持有</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id obj = [NSMutableArray array]; // 对象存在了，但是obj对象不持有对象</div><div class="line">[obj retain]; // 现在obj已经持有对象了</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">id obj = [NSMutableArray array]; // 对象存在了，但是obj对象不持有对象
+[obj retain]; // 现在obj已经持有对象了
+</code></pre>
 </li>
 <li><p>不在需要自己持有的对象时释放</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id obj = [NSObject new]; // obj持有对象</div><div class="line">[obj release]; // obj不再需要对象时，释放对对象。 对象释放后就不能被访问到了。</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">id obj = [NSObject new]; // obj持有对象
+[obj release]; // obj不再需要对象时，释放对对象。 对象释放后就不能被访问到了。
+</code></pre>
 <ol>
 <li>不持有可以这样理解：可以使用对象，但是没有强行占用对象。</li>
 <li>无法释放非自己持有的对象</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id obj = [NSMutableArray array]; // obj自己不持有对象</div><div class="line">[obj release]; // 程序崩溃，因为不能释放不是自己持有的对象</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">id obj = [NSMutableArray array]; // obj自己不持有对象
+[obj release]; // 程序崩溃，因为不能释放不是自己持有的对象
+</code></pre>
 </li>
 <li><p>来看看如何实现alloc/retain/release/dealloc方法 （<strong>注意：这部分对于理解最为关键</strong>）。</p>
 <ol>
 <li><p>alloc的实现</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">   struct obj_layout &#123;</div><div class="line">     	NSUInteger retained;</div><div class="line">   &#125;</div><div class="line"></div><div class="line">+ (id)alloc &#123;</div><div class="line">  	int size = sizeof(struct obj_layout) + 对象大小;</div><div class="line">  	struct obj_layout *p = (struct obj_layout *)calloc(1, size); // 分配一个长度为size的连续内存空间 p为该内存空间的第一个地址。这个内存空间的内存计量单位为一个obj_layout struct</div><div class="line">  	return (id)(p + 1); // 该内存空间的第一个内存单位放的是obj_layout这个结构体，之后是对象的内存空间，已经被置为0。返回的是指向对象内存空间的首地址的指针。</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">   struct obj_layout {
+         NSUInteger retained;
+   }
+
++ (id)alloc {
+      int size = sizeof(struct obj_layout) + 对象大小;
+      struct obj_layout *p = (struct obj_layout *)calloc(1, size); // 分配一个长度为size的连续内存空间 p为该内存空间的第一个地址。这个内存空间的内存计量单位为一个obj_layout struct
+      return (id)(p + 1); // 该内存空间的第一个内存单位放的是obj_layout这个结构体，之后是对象的内存空间，已经被置为0。返回的是指向对象内存空间的首地址的指针。
+}
+</code></pre>
 </li>
 <li><p>看看retainCount的实现，这个方法用来查看对象的引用计数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (NSUInteger)retainCount &#123;</div><div class="line">  	return ((struct obj_layout *) self)[-1].retained + 1;</div><div class="line">&#125;</div><div class="line">// 因为self指向的是对象内存的首地址。将这个地址看成obj_layout,也就是地址计数以obj_layout结构体的内存大小为单位。-1就指向了对象上方存储obj_layout结构体的首地址。这样就可以取出retained。因为retained默认是0，所以需要加1。</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">- (NSUInteger)retainCount {
+      return ((struct obj_layout *) self)[-1].retained + 1;
+}
+// 因为self指向的是对象内存的首地址。将这个地址看成obj_layout,也就是地址计数以obj_layout结构体的内存大小为单位。-1就指向了对象上方存储obj_layout结构体的首地址。这样就可以取出retained。因为retained默认是0，所以需要加1。
+</code></pre>
 </li>
 <li><p>根据2，可以方便推出<strong>retain</strong>方法是将retained值加一；而<strong>release</strong>方法是将retained值减一。注意当release时发现retained值等于0，那么就不执行减一操作了，直接执行dealloc方法，因为已经没有人只有该对象了。</p>
 </li>
 <li><p>dealloc的实现</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (void)dealloc &#123;</div><div class="line">  	struct obj_layout *o = &amp;((struct obj_layout *) self)[-1];</div><div class="line">  	free(o); // 释放之前由calloc分配的内存空间</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">- (void)dealloc {
+      struct obj_layout *o = &amp;((struct obj_layout *) self)[-1];
+      free(o); // 释放之前由calloc分配的内存空间
+}
+</code></pre>
 </li>
 </ol>
 </li>
+</ol>
+<ol>
 <li><p><strong>autorelease</strong>：</p>
 <p>当变量调用对象的autorelease方法时，说明他已经不持有这个对象了。但是这个对象并没有被释        放，还是可以被取到。</p>
 <p>autorelease的使用方法：</p>
@@ -333,16 +361,49 @@
 <li>废弃NSAutoreleasePool对象</li>
 </ol>
 <p>NSAutoreleasePool对象生成和废弃的这个期间，相当于对象的作用域。当废弃NSAutoreleasePool对象时，自动调用对象的release方法。来看看代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];</div><div class="line">id obj = [[NSObject alloc] init];</div><div class="line">[obj autorelease];</div><div class="line">[pool drain]; // 这个时候才会release对象</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+id obj = [[NSObject alloc] init];
+[obj autorelease];
+[pool drain]; // 这个时候才会release对象
+</code></pre>
 <p><strong>注意</strong>：使用autorelease时，太多的需要autorelease的对象可能由于没有及时的release，会导致内存不足。<strong>PS</strong>：其实还是在dealloc的时候释放内存，但是因为在release时，若没有变量引用对象的话，会自动调用对象的dealloc方法，所以release也可以说是释放内存吧。</p>
 <p>看看下面代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id array = [NSMutableArray arrayWithCapacity:1]; // array不持有对象</div><div class="line">id array = [[NSMutableArray alloc] initWithCapacity:1] autorelease]; // array也不持有对象</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">id array = [NSMutableArray arrayWithCapacity:1]; // array不持有对象
+id array = [[NSMutableArray alloc] initWithCapacity:1] autorelease]; // array也不持有对象
+</code></pre>
 <p>上面两行代码是等价的。</p>
 </li>
 <li><p>autorelease的实现</p>
 </li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">- (id)autorelease &#123;</div><div class="line">  	[NSAutoreleasePool addObject:self];</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (void)addObject:(id)anObj &#123;</div><div class="line">  	NSAutoreleasePool *pool = 取得正在使用的NSAutoreleasePool对象;</div><div class="line">  	if (pool != nil) &#123;</div><div class="line">  		[pool addObject:anObj];</div><div class="line">	&#125; else &#123;</div><div class="line">  		NSLog(@&quot;不存在NSAutoreleasePool&quot;);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)addObject:(id)anObj &#123;</div><div class="line">  	[array addObject:anObj]; // NSAutoreleasePool对象里面有一个array数组，用来存储需要autorelease的对象</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)drain &#123;</div><div class="line">  	[self dealloc]; // 废弃NSAutoreleasePool对象</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)dealloc &#123;</div><div class="line">  	for (id obj in array) &#123;</div><div class="line">  		[obj release]; // 释放之前注册到NSAutoreleasePool的对象</div><div class="line">	&#125;</div><div class="line">	[array release]; // 释放array数组</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">   - (id)autorelease {
+         [NSAutoreleasePool addObject:self];
+   }
+
+   + (void)addObject:(id)anObj {
+         NSAutoreleasePool *pool = 取得正在使用的NSAutoreleasePool对象;
+         if (pool != nil) {
+             [pool addObject:anObj];
+       } else {
+             NSLog(@&quot;不存在NSAutoreleasePool&quot;);
+       }
+   }
+
+   - (void)addObject:(id)anObj {
+         [array addObject:anObj]; // NSAutoreleasePool对象里面有一个array数组，用来存储需要autorelease的对象
+   }
+
+   - (void)drain {
+         [self dealloc]; // 废弃NSAutoreleasePool对象
+   }
+
+   - (void)dealloc {
+         for (id obj in array) {
+             [obj release]; // 释放之前注册到NSAutoreleasePool的对象
+       }
+       [array release]; // 释放array数组
+   }
+</code></pre>
 <ol>
 <li>注意不能autorelease NSAutoreleasePool对象</li>
 </ol>
@@ -362,21 +423,62 @@
 </ol>
 </li>
 <li><p><strong>__strong</strong>修饰符：是id类型和所有对象类型默认的所有权修饰符。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">id obj = [[NSObject alloc] init]; </div><div class="line">// 上面实际的代码如下</div><div class="line">id __strong obj = [[NSObject alloc] init];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">id obj = [[NSObject alloc] init]; 
+// 上面实际的代码如下
+id __strong obj = [[NSObject alloc] init];
+</code></pre>
 <p>再来看看一下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/* ARC下 */</div><div class="line">&#123;</div><div class="line">  	id __strong obj = [[NSObject alloc] init];</div><div class="line">&#125; // 出了作用域，obj对象自动被释放</div><div class="line"></div><div class="line">/* 非ARC下的等价代码 */</div><div class="line">&#123;</div><div class="line">  	id obj = [[NSObject alloc] init];</div><div class="line">  	[obj release]; // 出作用域之前要记得释放obj对象，不然会导致内存泄漏</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">/* ARC下 */
+{
+      id __strong obj = [[NSObject alloc] init];
+} // 出了作用域，obj对象自动被释放
+
+/* 非ARC下的等价代码 */
+{
+      id obj = [[NSObject alloc] init];
+      [obj release]; // 出作用域之前要记得释放obj对象，不然会导致内存泄漏
+}
+</code></pre>
 <p>__strong修饰符表示对对象的强引用。在超出作用域时，强引用变量被废弃(<strong>obj指针被废弃</strong>)，与此同时它引用的对象也会被释放(<strong>对象被释放</strong>)。</p>
 <p>看看对于非自己生成的对象：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/* ARC下 */</div><div class="line">&#123;</div><div class="line">  	id __strong obj = [NSMutableArray array]; // 这里的obj是持有对象的</div><div class="line">  	// do something here</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 非ARC下的等价代码 */</div><div class="line">&#123;</div><div class="line">  	id obj = [NSMutableArray array];</div><div class="line">  	[obj retain];  // obj要手动持有</div><div class="line">  	// do something here</div><div class="line">  	</div><div class="line">  	[obj release];  // 出作用域时要手动释放</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">/* ARC下 */
+{
+      id __strong obj = [NSMutableArray array]; // 这里的obj是持有对象的
+      // do something here
+}
+
+/* 非ARC下的等价代码 */
+{
+      id obj = [NSMutableArray array];
+      [obj retain];  // obj要手动持有
+      // do something here
+
+      [obj release];  // 出作用域时要手动释放
+}
+</code></pre>
 </li>
 <li><p><strong>__weak</strong>修饰符主要是为了防止相互引用。__weak指的是弱引用，也就是变量不能持有对象。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __strong obj0 = [[NSObject alloc] init]; // obj0强引用对象，持有</div><div class="line">  	id __weak obj1 = obj0; // obj1弱引用对象，不持有</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">{
+      id __strong obj0 = [[NSObject alloc] init]; // obj0强引用对象，持有
+      id __weak obj1 = obj0; // obj1弱引用对象，不持有
+}
+</code></pre>
 <p>所以在出作用域时obj0废弃，不在有变量持有对象，对象被释放。可以通过检查附有__weak修饰符的变量是否为nil，来判断对象是否已经被释放。</p>
 </li>
 <li><p><strong>__unsafe_unretained</strong>作用和__weak一样，但是如名字所言，它是不安全的。当这种变量指向的对象被释放时，weak型的变量就被置成nil(正确的做法)，但是unsafe的变量可能还指向某个地址(不安全的，因为那个地址的对象已经被释放了)。</p>
 </li>
 <li><p>来看看autorelease，先看段代码：（<strong>PS</strong>：有点迷糊）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/* ARC无效 */</div><div class="line">NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];</div><div class="line">id obj = [[NSObject alloc] init];</div><div class="line">[obj autorelease];</div><div class="line">[pool drain];</div><div class="line"></div><div class="line">/* ARC有效 */</div><div class="line">@autoreleasepool &#123;</div><div class="line">  	id __autoreleasing obj = [[NSObject alloc] init];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">/* ARC无效 */
+NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+id obj = [[NSObject alloc] init];
+[obj autorelease];
+[pool drain];
+
+/* ARC有效 */
+@autoreleasepool {
+      id __autoreleasing obj = [[NSObject alloc] init];
+}
+</code></pre>
 <p>但是通常不需要再@autorelease里面显式的使用__autoreleasing修饰符。</p>
 </li>
 <li><p>在ARC有效时有以下规定：</p>
@@ -411,14 +513,57 @@
 </ol>
 </li>
 <li><p><strong>__strong</strong>的实现</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __strong obj = [[NSObject alloc] init];</div><div class="line">  	// do something</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 经过编译之后 */</div><div class="line">id obj = objc_msgSend(NSObject, @selector(alloc)); // 执行alloc方法，obj变量持有对象，也就是强引用</div><div class="line">objc_msgSend(obj, @selector(init)); // 执行init方法，进行一些初始化操作，无关ARC</div><div class="line">// do something</div><div class="line">objc_release(obj); // 在变量出作用域时，编译器自动释放对象</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __strong obj = [NSMutableArray array];  // obj是持有对象的</div><div class="line">  	// do something</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 经过编译之后 */</div><div class="line">id obj objc_msgSend(NSMutableArray, @selector(array)); // 执行array方法，此时对象“照理来说”是已经被注册到NSAutoreleasePool里面，obj变量此时是不持有对象的</div><div class="line">objc_retainAutoreleasedReturnValue(obj); // 编译器帮obj持有注册到NSAutoreleasePool中的变量</div><div class="line">// do something</div><div class="line">objc_release(obj); // 变量要出作用域了，编译器自动释放对象</div><div class="line"></div><div class="line">/* array函数实质 */</div><div class="line">+ (id)array &#123;</div><div class="line">  	return [[NSMutableArray alloc] init];</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 经过编译之后 */</div><div class="line">+ (id)array &#123;</div><div class="line">  	id obj = objc_msgSend(NSMutableArray, @selector(alloc)); // 生成对象，obj持有</div><div class="line">  	objc_msgSend(obj, @selector(init)); // 初始化，无关ARC</div><div class="line">  	return objc_autoreleaseReturnValue(obj); // 讲道理，这一步是要将对象注册到NSAutoreleasePool中，obj不再持有对象(可以说是obj将对象持有权转交给了NSAutoreleasePool)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">{
+      id __strong obj = [[NSObject alloc] init];
+      // do something
+}
+
+/* 经过编译之后 */
+id obj = objc_msgSend(NSObject, @selector(alloc)); // 执行alloc方法，obj变量持有对象，也就是强引用
+objc_msgSend(obj, @selector(init)); // 执行init方法，进行一些初始化操作，无关ARC
+// do something
+objc_release(obj); // 在变量出作用域时，编译器自动释放对象
+</code></pre>
+<pre><code class="objective-c">{
+      id __strong obj = [NSMutableArray array];  // obj是持有对象的
+      // do something
+}
+
+/* 经过编译之后 */
+id obj objc_msgSend(NSMutableArray, @selector(array)); // 执行array方法，此时对象“照理来说”是已经被注册到NSAutoreleasePool里面，obj变量此时是不持有对象的
+objc_retainAutoreleasedReturnValue(obj); // 编译器帮obj持有注册到NSAutoreleasePool中的变量
+// do something
+objc_release(obj); // 变量要出作用域了，编译器自动释放对象
+
+/* array函数实质 */
++ (id)array {
+      return [[NSMutableArray alloc] init];
+}
+
+/* 经过编译之后 */
++ (id)array {
+      id obj = objc_msgSend(NSMutableArray, @selector(alloc)); // 生成对象，obj持有
+      objc_msgSend(obj, @selector(init)); // 初始化，无关ARC
+      return objc_autoreleaseReturnValue(obj); // 讲道理，这一步是要将对象注册到NSAutoreleasePool中，obj不再持有对象(可以说是obj将对象持有权转交给了NSAutoreleasePool)
+}
+</code></pre>
 <p>按上面的说法来看，最终持有array对象的有2个：一个是NSAutoreleasePool，一个是obj。但是其实是做了优化的。<code>objc_autoreleaseReturnValue(obj);</code>这个函数观察到紧接着它自己调用的函数如果是<code>objc_retainAutoreleasedReturnValue(obj);</code>的话，就不会将对象注册到NSAutoreleasePool，直接将对象给obj让它持有就行了。这个优化就是因为__strong修饰符要持有对象，与其先将对象注册到NSAutoreleasePool，再从NSAutoreleasePool中拿到这个对象给obj持有一遍；还不如直接跳过注册，直接让obj持有对象。说到底，使用NSAutoreleasePool的原因就是怕没有变量持有对象，那么就取不到这个对象了，所以让NSAutoreleasePool暂时持有对象。</p>
 <p><strong>PS</strong>：让NSAutoreleasePool暂时持有对象这个说法不知道靠不靠谱</p>
 <p>todo add a picture</p>
 </li>
 <li><p><strong>__weak</strong>的实现</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __weak obj1 = obj; // 这里obj是强引用</div><div class="line">  	// do something</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 编译之后 */</div><div class="line">id = obj1;</div><div class="line">obj1 = 0;</div><div class="line">objc_storeWeak(&amp;obj1, obj);</div><div class="line">// do something</div><div class="line">objc_storeWeak(&amp;obj1, 0);</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">{
+      id __weak obj1 = obj; // 这里obj是强引用
+      // do something
+}
+
+/* 编译之后 */
+id = obj1;
+obj1 = 0;
+objc_storeWeak(&amp;obj1, obj);
+// do something
+objc_storeWeak(&amp;obj1, 0);
+</code></pre>
 <p><code>objc_storeWeak(&amp;obj1, obj);</code>函数将obj指向对象的地址作为key，将obj1变量的地址作为value，注册到weak表中，并将obj1指向对象。因为一个对象可以赋给多个值，所以一个key可以对应多个值。如果第二个参数是0的话，就将obj1这个变量的地址从weak表中删除（删除value为obj1地址的那条记录，废弃obj1对象）。<strong>PS</strong>：这么说的话，其实将obj1变量的地址当成key，更方便理解。</p>
 <p><strong>PS</strong>：我们来看看另外一种情况，就是释放对象时，但是weak变量还存在。这个时候会将weak变量置为nil。这是如何实现的呢？</p>
 <ol>
@@ -429,18 +574,67 @@
 <p>由上面说明可以知道，大量使用weak变量也会消耗相应的CPU资源，所以只在需要避免循环引用时使用。</p>
 </li>
 <li><p>看看weak和unsafe_unretained的区别</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __weak obj = [[NSObject alloc] init];</div><div class="line">  	// do something</div><div class="line">&#125;</div><div class="line">/* 编译之后 */</div><div class="line">id = obj;</div><div class="line">id tmp = objc_msgSend(NSObject, @selector(alloc));</div><div class="line">objc_msgSend(tmp, @selector(init));</div><div class="line">objc_initWeak(&amp;obj, tmp);  // 在weak表中插入对象，将obj指向对象</div><div class="line">objc_release(tmp); // 释放对象后，不在有变量持有对象，这时候会将obj置为nil。安全</div><div class="line">// do something</div><div class="line">objc_destroyWeak(&amp;obj); // 删除记录（上一步已经做了，这里就不做了），废弃obj变量</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __unsafe_unretained obj = [[NSObject alloc] init];</div><div class="line">  	// do something</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 编译之后 */</div><div class="line">id obj = objc_msgSend(NSObject, @selector(alloc));</div><div class="line">objc_msgSend(obj, @selector(init));</div><div class="line">objc_release(obj); // 因为没有变量持有对象，所以释放对象，但是obj变量还指向了原对象。危险</div><div class="line">// do something</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">{
+      id __weak obj = [[NSObject alloc] init];
+      // do something
+}
+/* 编译之后 */
+id = obj;
+id tmp = objc_msgSend(NSObject, @selector(alloc));
+objc_msgSend(tmp, @selector(init));
+objc_initWeak(&amp;obj, tmp);  // 在weak表中插入对象，将obj指向对象
+objc_release(tmp); // 释放对象后，不在有变量持有对象，这时候会将obj置为nil。安全
+// do something
+objc_destroyWeak(&amp;obj); // 删除记录（上一步已经做了，这里就不做了），废弃obj变量
+</code></pre>
+<pre><code class="objective-c">{
+      id __unsafe_unretained obj = [[NSObject alloc] init];
+      // do something
+}
+
+/* 编译之后 */
+id obj = objc_msgSend(NSObject, @selector(alloc));
+objc_msgSend(obj, @selector(init));
+objc_release(obj); // 因为没有变量持有对象，所以释放对象，但是obj变量还指向了原对象。危险
+// do something
+</code></pre>
 </li>
 <li><p>还有就是要注意使用__weak变量时</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">NSLog(@&quot;%@&quot;, obj); // 假设这里的obj是weak变量</div><div class="line">/* 编译之后 */</div><div class="line">id tmp = objc_loadWeakRetained(&amp;obj);</div><div class="line">objc_autorelease(tmp);  // 这两句说的是将obj弱引用的对象交给NSAutoreleasePool持有，以保证这个对象可以被取到。</div><div class="line">NSLog(@&quot;%@&quot;, tmp); // 做正事</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">NSLog(@&quot;%@&quot;, obj); // 假设这里的obj是weak变量
+/* 编译之后 */
+id tmp = objc_loadWeakRetained(&amp;obj);
+objc_autorelease(tmp);  // 这两句说的是将obj弱引用的对象交给NSAutoreleasePool持有，以保证这个对象可以被取到。
+NSLog(@&quot;%@&quot;, tmp); // 做正事
+</code></pre>
 <p>上面说的这个是，当使用weak变量的时候，会先将weak变量指向的对象交给NSAutoreleasePool持有，以保证这个对象万一被强引用它的变量释放的时候，还是可以取到。但是当多次使用weak变量的话，最好先将weak变量的对象给一个变量，让它强引用，这样就不用多次去和NSAutoreleasePool打交道，耗时间了。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id tmp = obj; // 让tmp强引用对象，这里会发生一次和NSAutoreleasePool的交互，因为使用到了obj这个weak变量。这一步过后tmp和NSAutoreleasePool都持有对象</div><div class="line">// 使用tmp做正事，而不是频繁使用obj</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">id tmp = obj; // 让tmp强引用对象，这里会发生一次和NSAutoreleasePool的交互，因为使用到了obj这个weak变量。这一步过后tmp和NSAutoreleasePool都持有对象
+// 使用tmp做正事，而不是频繁使用obj
+</code></pre>
 </li>
 <li><p><strong>__autoreleasing</strong>的实现</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@autoreleasepool &#123;</div><div class="line">  	id __autoreleasing obj = [[NSObject alloc] init];</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 编译之后 */</div><div class="line">id pool = objc_autoreleasePoolPush();</div><div class="line">id obj = objc_msgSend(NSObject, @selector(alloc));</div><div class="line">objc_msgSend(obj, @selector(init));</div><div class="line">objc_autorelease(obj); // 交给NSAutoreleasePool持有</div><div class="line">objc_autoreleasePoolPop(pool); // 废除NSAutoreleasePool，释放对象</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">@autoreleasepool {
+      id __autoreleasing obj = [[NSObject alloc] init];
+}
+
+/* 编译之后 */
+id pool = objc_autoreleasePoolPush();
+id obj = objc_msgSend(NSObject, @selector(alloc));
+objc_msgSend(obj, @selector(init));
+objc_autorelease(obj); // 交给NSAutoreleasePool持有
+objc_autoreleasePoolPop(pool); // 废除NSAutoreleasePool，释放对象
+</code></pre>
 <p>看看对于非自己生成并持有的对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@autoreleasepool &#123;</div><div class="line">  	id __autoreleasing obj = [NSMutableArray array];</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 编译之后 */</div><div class="line">id pool = objc_autoreleasePoolPush();</div><div class="line">id obj = objc_msgSend(NSMutableAttay, @selector(array)); // 不持有</div><div class="line">objc_retainAutoreleasedReturnValue(obj); // 又重新持有对象。。。</div><div class="line">objc_autorelease(obj); // 又交给NSAutoreleasePool持有</div><div class="line">objc_autoreleasePoolPop(pool); // 废除NSAutoreleasePool，释放对象</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">@autoreleasepool {
+      id __autoreleasing obj = [NSMutableArray array];
+}
+
+/* 编译之后 */
+id pool = objc_autoreleasePoolPush();
+id obj = objc_msgSend(NSMutableAttay, @selector(array)); // 不持有
+objc_retainAutoreleasedReturnValue(obj); // 又重新持有对象。。。
+objc_autorelease(obj); // 又交给NSAutoreleasePool持有
+objc_autoreleasePoolPop(pool); // 废除NSAutoreleasePool，释放对象
+</code></pre>
 </li>
 <li><p><code>uintptr_t _objc_rootRetainCount(id obj);</code>函数可以获得obj对象当前的引用计数，也就是有多少个变量强引用该对象。注意注册到NSAutoreleasePool中的对象也算一次引用计数。也就是如同上面一直说的，可以说是NSAutoreleasePool持有对象。注意，这个函数不一定可信。。。</p>
 </li>
@@ -743,7 +937,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -291,9 +291,9 @@
 </ol>
 <h3 id="UINavigationBar内部结构"><a href="#UINavigationBar内部结构" class="headerlink" title="UINavigationBar内部结构:"></a>UINavigationBar内部结构:</h3><p>导航栏(UINavigationBar)内部可以包含多个UINavigationItem，UINavigationBar的UINavigationItem可以通过它的items属性获得。<br>UINavigationBar通过类似进栈和出栈的方式压入和弹出UINavigationItem。通常只需一个UINavigationItem。</p>
 <ol>
-<li>向UINavigationBar中插入UINavigationItem:<pre><code>- (void)pushNavigationItem:(UINavigationItem *)item animated:(BOOL)animated
+<li>向UINavigationBar中插入UINavigationItem:<pre><code> - (void)pushNavigationItem:(UINavigationItem *)item animated:(BOOL)animated
 </code></pre></li>
-<li>弹出最上方的一个UINavigationItem:<pre><code>- (UINavigationItem *)popNavigationItemAnimated:(BOOL)animated
+<li>弹出最上方的一个UINavigationItem:<pre><code> - (UINavigationItem *)popNavigationItemAnimated:(BOOL)animated
 </code></pre></li>
 <li>获取最上方的UINavigationItem: 通过UINavigationBar的topItem属性</li>
 </ol>
@@ -304,17 +304,17 @@
 <li><strong>rightBarButtonItem</strong>: 右侧按钮</li>
 </ol>
 <h4 id="左右侧按钮设置"><a href="#左右侧按钮设置" class="headerlink" title="左右侧按钮设置"></a>左右侧按钮设置</h4><p>左右侧按钮通常都是UIBarButtonItem对象，可以通过如下代码设置：</p>
-<pre><code>UIBarButtonItem *btnLeft = [[UIBarButtonItem alloc] initWithTitle:@&quot;Back&quot; style:UIBarButtonItemStyleDone target:self action:nil];
+<pre><code>    UIBarButtonItem *btnLeft = [[UIBarButtonItem alloc] initWithTitle:@&quot;Back&quot; style:UIBarButtonItemStyleDone target:self action:nil];
 </code></pre><h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现:"></a>代码实现:</h3><p><img src="/lionheart/1601/navbarcode.png" alt="navbar code"></p>
 <h2 id="状态栏设置-Status-Bar"><a href="#状态栏设置-Status-Bar" class="headerlink" title="状态栏设置(Status Bar)"></a>状态栏设置(Status Bar)</h2><p>状态栏就是现实时间，运营商，电量的地方；如果导航栏背景色为深色的话，默认的状态栏无法清楚的显示。<br>状态栏的设置步骤有如下几步：</p>
 <ol>
 <li>在.plist文件将 UIViewControllerBasedStatusBarAppearance 设置为 YES</li>
-<li>在 viewDidLoad 方法中添加<pre><code>[self setNeedsStatusBarAppearanceUpdate];
+<li>在 viewDidLoad 方法中添加<pre><code> [self setNeedsStatusBarAppearanceUpdate];
 </code></pre></li>
-<li>添加 preferredStatusBarStyle 方法：<pre><code>- (UIStatusBarStyle)preferredStatusBarStyle
-{
-    return UIStatusBarStyleLightContent;
-}
+<li>添加 preferredStatusBarStyle 方法：<pre><code> - (UIStatusBarStyle)preferredStatusBarStyle
+ {
+     return UIStatusBarStyleLightContent;
+ }
 </code></pre></li>
 </ol>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
@@ -618,7 +618,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

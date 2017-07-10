@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -291,8 +291,10 @@
 </ol>
 <p>这4种picker都是继承自AbstractActionSheetPicker。下面以ActionSheetStringPicker为例，来分析ActionSheetPicker的源码。</p>
 <h2 id="ActionSheetStringPicker使用示例"><a href="#ActionSheetStringPicker使用示例" class="headerlink" title="ActionSheetStringPicker使用示例"></a>ActionSheetStringPicker使用示例</h2><p>ActionSheetStringPicker的使用很简单，示例代码如下👇</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[ActionSheetStringPicker showPickerWithTitle:nil rows:@[@&quot;男&quot;, @&quot;女&quot;, @&quot;未知&quot;] initialSelection:1 doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) &#123;</div><div class="line"></div><div class="line">&#125; cancelBlock:nil origin:self.view];</div></pre></td></tr></table></figure>
-<p>效果如下👇</p>
+<pre><code>                [ActionSheetStringPicker showPickerWithTitle:nil rows:@[@&quot;男&quot;, @&quot;女&quot;, @&quot;未知&quot;] initialSelection:1 doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
+
+                } cancelBlock:nil origin:self.view];
+</code></pre><p>效果如下👇</p>
 <p><img src="/lionheart/1603/stringpickerdemo.png" alt="stringPicker demo"></p>
 <h2 id="ActionSheetStringPicker实现过程"><a href="#ActionSheetStringPicker实现过程" class="headerlink" title="ActionSheetStringPicker实现过程"></a>ActionSheetStringPicker实现过程</h2><ol>
 <li>新建一个CGSize为(Screen_Width, 260)的UIView，这个view也是picker最外层的view，我们称它为<code>masterView</code>。</li>
@@ -325,8 +327,10 @@
 <h2 id="P-S"><a href="#P-S" class="headerlink" title="P.S"></a>P.S</h2><p>这个库是不能直接简单的实现下面的效果的👇</p>
 <p><img src="/lionheart/1603/custompickerdemo.gif" alt="custom picker demo"></p>
 <p>所以呢？<br>我写了一个<code>ActionSheetStringDictPicker</code>类,用法如下👇</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[ActionSheetStringDictPicker showPickerWithTitle:nil firstRow:firstArray secondDict:secondDict initialIndexs:@[@1, @1] doneBlock:^(ActionSheetStringDictPicker *picker, NSArray *selectedIndexs, id selectedValues) &#123;</div><div class="line">		// do something here</div><div class="line">&#125; cancelBlock:nil origin:self.view];</div></pre></td></tr></table></figure>
-<p>参数设置:</p>
+<pre><code>                [ActionSheetStringDictPicker showPickerWithTitle:nil firstRow:firstArray secondDict:secondDict initialIndexs:@[@1, @1] doneBlock:^(ActionSheetStringDictPicker *picker, NSArray *selectedIndexs, id selectedValues) {
+                        // do something here
+                } cancelBlock:nil origin:self.view];
+</code></pre><p>参数设置:</p>
 <ol>
 <li><code>firstRow</code>: picker中第一列的内容,是一个<code>NSArray</code></li>
 <li><code>secondDict</code>: picker中第二列的内容,是一个<code>NSDictionary</code>。这个NSDictionary的键是第一列firstRow的值;每个键对应的值是一个NSArray,这个数组是第二列的内容。当第一列的值变化时，第二列的内容会实时变化。</li>
@@ -629,7 +633,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -283,13 +283,21 @@
 <a id="more"></a>
 <h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="类的深入剖析"><a href="#类的深入剖析" class="headerlink" title="类的深入剖析"></a>类的深入剖析</h3><ol>
 <li><p>构建头文件时注意使用：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> CLASS_H</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> CLASS_H</span></div><div class="line"><span class="comment">/* definition here */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<pre><code class="c">#ifndef CLASS_H
+#define CLASS_H
+/* definition here */
+#endif
+</code></pre>
 <p>这样可以防止重复引用</p>
 </li>
 <li><p>类中的数据成员，若没有初始化，会被默认初始化成0</p>
 </li>
 <li><p>看看以下代码：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Time sunset; <span class="comment">// 创建一个Time类 sunset</span></div><div class="line">Time arrayOfTimes[<span class="number">5</span>]; <span class="comment">// 创建一个指向Time类的数组</span></div><div class="line">Time &amp;dinnerTime = sunset; <span class="comment">// dinnerTime是sunset的引用，其实就是sunset，一个Time类的实例</span></div><div class="line">Time *timePtr = &amp;dinnerTime; <span class="comment">// timePtr是一个指向Time的指针，他指向的是sunset这一个实例</span></div></pre></td></tr></table></figure>
+<pre><code class="c">Time sunset; // 创建一个Time类 sunset
+Time arrayOfTimes[5]; // 创建一个指向Time类的数组
+Time &amp;dinnerTime = sunset; // dinnerTime是sunset的引用，其实就是sunset，一个Time类的实例
+Time *timePtr = &amp;dinnerTime; // timePtr是一个指向Time的指针，他指向的是sunset这一个实例
+</code></pre>
 </li>
 <li><p>关于类或者一个类实例的大小，也就是<code>sizeof(Class);</code> 他其实只包含类的数据成员，并不包含类的函数成员。类的函数成员在内存中只有一份，存放在独立于所有类对象的地方，它被所有的类对象共享，但是不算进<code>sizeof</code>的大小</p>
 </li>
@@ -302,14 +310,33 @@
 <li><p>使用const可以将对象指定为不可修改，<code>const Time noon(12, 0, 0);</code> 记得要及时初始化，不然之后不能修改了</p>
 </li>
 <li><p>对于const对象，只能调用对象的const成员函数，不能调用不是const的成员函数。const函数里面不能修改 对象的数据成员。将函数指定为const，需要在声明和定义2个地方都指定const，如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">getHour</span><span class="params">()</span> <span class="keyword">const</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">getHour</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</div><div class="line">  	<span class="comment">// ....</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="c">int getHour() const;
+int getHour() const {
+      // ....
+}
+</code></pre>
 </li>
 <li><p>const函数不能调用同一对象上的非const成员函数</p>
 </li>
 <li><p>对于包含const数据成员的对象初始化，必须使用成员初始化器</p>
 </li>
 </ol>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">Class Increment &#123;</div><div class="line">  <span class="keyword">public</span>:</div><div class="line">  Increment(<span class="keyword">int</span> c= <span class="number">0</span>, <span class="keyword">int</span> i = <span class="number">1</span>);</div><div class="line">  <span class="keyword">private</span>:</div><div class="line">  <span class="keyword">int</span> count;</div><div class="line">  <span class="keyword">const</span> <span class="keyword">int</span> increment;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Increment::Increment(<span class="keyword">int</span> c, <span class="keyword">int</span> i) : count(c), increment(i) &#123;</div><div class="line">  <span class="comment">// empty</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">int</span> main &#123;</div><div class="line">  <span class="function">Increment <span class="title">value</span><span class="params">(<span class="number">10</span>, <span class="number">5</span>)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="c++">   Class Increment {
+     public:
+     Increment(int c= 0, int i = 1);
+     private:
+     int count;
+     const int increment;
+   }
+
+   Increment::Increment(int c, int i) : count(c), increment(i) {
+     // empty
+   }
+
+   int main {
+     Increment value(10, 5);
+   }
+</code></pre>
 <p>   注意，对于const成员变量一定要使用成员初始化，非const成员变量，也可以使用</p>
 <ol>
 <li><p>每个类都有一个默认的复制构造函数</p>
@@ -327,12 +354,53 @@
 <li><p>注意 <code>() [] -&gt;</code> 必须作为类的成员函数进行重载</p>
 </li>
 <li><p>来看看重载 <code>&lt;&lt;</code> 和 <code>&gt;&gt;</code> 的示例代码：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// PhoneNumber.h</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line">Class PhoneNumber &#123;</div><div class="line">  	<span class="keyword">friend</span> ostream &amp;<span class="keyword">operator</span>&lt;&lt;(ostream &amp;, <span class="keyword">const</span> PhoneNumnber &amp;);</div><div class="line">  	<span class="keyword">friend</span> istream &amp;<span class="keyword">operator</span>&gt;&gt;(istream &amp;, PhoneNumber &amp;);</div><div class="line"><span class="keyword">private</span>:</div><div class="line">  	<span class="built_in">string</span> areaCode;</div><div class="line">  	<span class="built_in">string</span> exchange;</div><div class="line">  	<span class="built_in">string</span> line;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// PhoneNumber.cpp</span></div><div class="line">include &lt;iomanip&gt;</div><div class="line">include <span class="string">"PhoneNumber.h"</span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line">ostream &amp;<span class="keyword">operator</span>&lt;&lt;(ostream &amp;output, <span class="keyword">const</span> PhoneNumber &amp;number) &#123;</div><div class="line">  output &lt;&lt; <span class="string">"("</span> &lt;&lt; number.areaCode &lt;&lt; <span class="string">") "</span> &lt;&lt; number.exchange &lt;&lt; <span class="string">"-"</span> &lt;&lt; number.line;</div><div class="line">  <span class="keyword">return</span> output;</div><div class="line">&#125;</div><div class="line"></div><div class="line">input &amp;<span class="keyword">operator</span>&lt;&lt;(istream &amp;input, PhoneNumber &amp;number) &#123;</div><div class="line">  input.ignore();</div><div class="line">  input &gt;&gt; setw(<span class="number">3</span>) &gt;&gt; number.areaCode;</div><div class="line">  input.ignore(<span class="number">2</span>);</div><div class="line">  input &gt;&gt; setw(<span class="number">3</span>) &gt;&gt; number.exchange;</div><div class="line">  input &gt;&gt; ignore();</div><div class="line">  input &gt;&gt; setw(<span class="number">4</span>) &gt;&gt; number.line;</div><div class="line">  <span class="keyword">return</span> input;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="c++">// PhoneNumber.h
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+Class PhoneNumber {
+      friend ostream &amp;operator&lt;&lt;(ostream &amp;, const PhoneNumnber &amp;);
+      friend istream &amp;operator&gt;&gt;(istream &amp;, PhoneNumber &amp;);
+private:
+      string areaCode;
+      string exchange;
+      string line;
+}
+
+// PhoneNumber.cpp
+include &lt;iomanip&gt;
+include &quot;PhoneNumber.h&quot;
+
+using namespace std;
+
+ostream &amp;operator&lt;&lt;(ostream &amp;output, const PhoneNumber &amp;number) {
+  output &lt;&lt; &quot;(&quot; &lt;&lt; number.areaCode &lt;&lt; &quot;) &quot; &lt;&lt; number.exchange &lt;&lt; &quot;-&quot; &lt;&lt; number.line;
+  return output;
+}
+
+input &amp;operator&lt;&lt;(istream &amp;input, PhoneNumber &amp;number) {
+  input.ignore();
+  input &gt;&gt; setw(3) &gt;&gt; number.areaCode;
+  input.ignore(2);
+  input &gt;&gt; setw(3) &gt;&gt; number.exchange;
+  input &gt;&gt; ignore();
+  input &gt;&gt; setw(4) &gt;&gt; number.line;
+  return input;
+}
+</code></pre>
 </li>
 <li><p>C++通过 <code>new</code> 和 <code>delete</code> 可以在运行时动态的分配和释放内存，这种内存是在 <strong>自由存储区</strong> ，也称之为 <strong>堆(heap)</strong> 。例如 ： <code>TIme *timePtr = new Time;</code> 他会分配一个Time对象大小的内存空间，调用Time类的构造函数，并将该内存空间的首地址给timePtr指针；要释放这个内存空间，调用 <code>delete timePtr;</code> 即可，他会先调用Time的析构函数，再释放内存</p>
 </li>
 <li><p>还可以使用 <code>new</code> 和 <code>delete</code> 来动态的分配和释放数组内存。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> *<span class="built_in">array</span> = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</div><div class="line"><span class="keyword">delete</span> [] <span class="built_in">array</span>;</div><div class="line"></div><div class="line"><span class="comment">// 体现动态分配</span></div><div class="line"><span class="keyword">int</span> i = <span class="number">10</span>;</div><div class="line"><span class="keyword">int</span> *dynamicArray = <span class="keyword">new</span> <span class="keyword">int</span>[i];</div><div class="line"><span class="keyword">delete</span> [] dynamicArray;</div></pre></td></tr></table></figure>
+<pre><code class="c++">int *array = new int[10];
+delete [] array;
+
+// 体现动态分配
+int i = 10;
+int *dynamicArray = new int[i];
+delete [] dynamicArray;
+</code></pre>
 </li>
 </ol>
 <h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><ol>
@@ -361,22 +429,84 @@
 <li><p>通过按名引用特定对象和使用点成员运算符调用virtual函数，是静态绑定，也就是在编译时就绑定了，不存在多态。 <code>squareObject.draw();</code></p>
 </li>
 <li><p>将类中的一个或多个函数声明为纯玩virtual函数，可以使一个类成为抽象类。纯虚函数不需要提供函数的实现</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>= <span class="number">0</span>; <span class="comment">// pure virtual function</span></div></pre></td></tr></table></figure>
+<pre><code class="c++">virtual void draw() = 0; // pure virtual function
+</code></pre>
 </li>
 <li><p>实例化一个抽象类会导致编译错误</p>
 </li>
 </ol>
 <h3 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h3><ol>
 <li><p>函数模板的定义由关键字 <code>template</code> 开头，后面的尖括号里面的是模板类型的形参列表。每个表示类型的模板形参前面必须加上关键字 <code>class</code> 或 <code>typename</code></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="comment">// or</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> ElementType&gt;</div><div class="line"><span class="comment">// or</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Type1, <span class="keyword">typename</span> Type2&gt;</div></pre></td></tr></table></figure>
+<pre><code class="c++">template &lt;typename T&gt;
+// or
+template &lt;class ElementType&gt;
+// or
+template &lt;typename Type1, typename Type2&gt;
+</code></pre>
 </li>
 <li><p>来看一个例子</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="comment">// function template</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">printArray</span><span class="params">(<span class="keyword">const</span> T * <span class="keyword">const</span> <span class="built_in">array</span>, <span class="keyword">int</span> count)</span> </span>&#123;</div><div class="line">  	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; ++i) &#123;</div><div class="line">      	<span class="built_in">cout</span> &lt;&lt; <span class="built_in">array</span>[i] &lt;&lt; <span class="string">" "</span>;</div><div class="line">  	&#125;</div><div class="line">  	<span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">  	<span class="keyword">const</span> <span class="keyword">int</span> aCount = <span class="number">5</span>;</div><div class="line">  	<span class="keyword">const</span> <span class="keyword">int</span> bCount = <span class="number">7</span>;</div><div class="line">  	<span class="keyword">const</span> <span class="keyword">int</span> cCount = <span class="number">6</span>;</div><div class="line">  </div><div class="line">  	<span class="keyword">int</span> a[aCount] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</div><div class="line">  	<span class="keyword">double</span> b[bCount] = &#123;<span class="number">1.1</span>, <span class="number">2.2</span>, <span class="number">3.3</span>, <span class="number">4.4</span>, <span class="number">5.5</span>, <span class="number">6.6</span>, <span class="number">7.7</span>&#125;;</div><div class="line">  	<span class="keyword">char</span> c[cCount] = <span class="string">"HELLO"</span>;</div><div class="line">  </div><div class="line">  	printArray(a, aCount);</div><div class="line">  	printArray(b, bCount);</div><div class="line">  	printArray(c, cCount);</div><div class="line">  </div><div class="line">  	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="c++">#include &lt;iostream&gt;
+using namespace std;
+
+// function template
+template &lt;typename T&gt;
+void printArray(const T * const array, int count) {
+      for (int i = 0; i &lt; count; ++i) {
+          cout &lt;&lt; array[i] &lt;&lt; &quot; &quot;;
+      }
+      cout &lt;&lt; endl;
+}
+
+int main() {
+      const int aCount = 5;
+      const int bCount = 7;
+      const int cCount = 6;
+
+      int a[aCount] = {1, 2, 3, 4, 5};
+      double b[bCount] = {1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7};
+      char c[cCount] = &quot;HELLO&quot;;
+
+      printArray(a, aCount);
+      printArray(b, bCount);
+      printArray(c, cCount);
+
+      return 0;
+}
+</code></pre>
 </li>
 <li><p>模板的形参名自能在模板头部的参数列表中声明一次，但是可以在函数头和函数体中重复使用</p>
 </li>
 <li><p>看一个类模板的例子</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Stack &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  	Stack(<span class="keyword">int</span> = <span class="number">10</span>);</div><div class="line">  	~Stack() &#123;</div><div class="line">      	<span class="keyword">delete</span> [] stackPtr;</div><div class="line">  	&#125;</div><div class="line">  </div><div class="line">  	<span class="function"><span class="keyword">bool</span> <span class="title">push</span><span class="params">(<span class="keyword">const</span> T &amp;)</span> </span>&#123;</div><div class="line">      	<span class="comment">//...</span></div><div class="line">  	&#125;</div><div class="line">  	<span class="function"><span class="keyword">bool</span> <span class="title">pop</span><span class="params">(T &amp;)</span> </span>&#123;</div><div class="line">      	<span class="comment">//...</span></div><div class="line">  	&#125;</div><div class="line">  	<span class="function"><span class="keyword">bool</span> <span class="title">isEmpty</span><span class="params">()</span></span>;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">  	<span class="keyword">int</span> size, top;</div><div class="line">  	T *stackPtr;</div><div class="line">&#125;</div><div class="line"></div><div class="line">templete &lt;<span class="keyword">typename</span> T&gt;</div><div class="line">Stack&lt;T&gt;::Stack(<span class="keyword">int</span> s) &#123;</div><div class="line">   <span class="comment">//...</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">void</span> Stack&lt;T&gt;::isEmpty() &#123;</div><div class="line">   <span class="comment">//...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="c++">template &lt;typename T&gt;
+class Stack {
+public:
+      Stack(int = 10);
+      ~Stack() {
+          delete [] stackPtr;
+      }
+
+      bool push(const T &amp;) {
+          //...
+      }
+      bool pop(T &amp;) {
+          //...
+      }
+      bool isEmpty();
+private:
+      int size, top;
+      T *stackPtr;
+}
+
+templete &lt;typename T&gt;
+Stack&lt;T&gt;::Stack(int s) {
+   //...
+}
+
+template &lt;typename T&gt;
+void Stack&lt;T&gt;::isEmpty() {
+   //...
+}
+</code></pre>
 </li>
 <li><p>使用类模板的时候： <code>Stack&lt;double&gt; doubleStack(5);</code></p>
 </li>
@@ -683,7 +813,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

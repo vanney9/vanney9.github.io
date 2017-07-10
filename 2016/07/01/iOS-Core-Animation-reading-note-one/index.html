@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -293,7 +293,8 @@
 <li><p>CALayer可以包含一个图片；图片里面，你想显示啥就显示啥。这就是CALayer的<em>backing image</em>。</p>
 </li>
 <li><p>CALayer有一个<strong>contents</strong>属性，给这个contents属性赋值入锅不是CGImage的话，这个Layer还是什么都没有显示。要这般赋值：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">layer.contents = (__bridge id)image.CGImage;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">layer.contents = (__bridge id)image.CGImage;
+</code></pre>
 <p>因为，要真正赋值给contents属性的应该是一个CGImageRef，它是一个指针，指向CGImage的结构体；而UIImage的CGImage属性就是一个CGImageRef，但由于不是一个OC对象，无法赋值给id，所以需要使用(__bridge id)来转换。</p>
 </li>
 <li><p>CALyer的<strong>contentsGravity</strong>属性类似于UIView的contentMode。</p>
@@ -325,11 +326,13 @@
 <li><p>有一个CALayerDelegate的协议，当CALayer需要对它的content进行填充时，会去请求该协议的方法。</p>
 </li>
 <li><p>CALayer先会请求下列方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (void)displayLayer:(CALayer *)layer;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">- (void)displayLayer:(CALayer *)layer;
+</code></pre>
 <p>在这个方法里面可以直接设置CALayer的contents属性。如果实现了这个方法，那么CALayer不会再去请求其他的方法来填充它的内容。</p>
 </li>
 <li><p>如果上一步未实现该方法，CALayer会去请求下面的方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
+</code></pre>
 <p>在请求这个方法之前，<strong>CALayer会创建一个空白的backing image</strong>，和一个匹配该backing image的context。然后调用这个方法进行绘图。</p>
 </li>
 <li><p>只有在调用了<code>[layer display];</code>方法之后，上面说的这些delegate才会被调用。</p>
@@ -368,11 +371,18 @@
 <li><p>UIView的<strong>transform</strong>属性是一个CGAffineTransform，CALayer的<strong>transform</strong>属性是一个CATransform3D。CALayer中和UIView的transform等同的一个属性叫做<strong>affineTransform</strong>。其实对UIView的transform属性进行操作，实际上也是对CALayer进行操作，它只是一个向上的包装而已。</p>
 </li>
 <li><p>通过如下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CGAffineTransform transform = CGAffineTransformIdentity;</div><div class="line">transform = CGAffineTransformScale(transform, 0.5, 0.5);</div><div class="line">transform = CGAffineTransformRotate(transform, M_PI / 180 * 30);</div><div class="line">transform = CGAffineTransformTranslate(transform, 200, 0);</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">CGAffineTransform transform = CGAffineTransformIdentity;
+transform = CGAffineTransformScale(transform, 0.5, 0.5);
+transform = CGAffineTransformRotate(transform, M_PI / 180 * 30);
+transform = CGAffineTransformTranslate(transform, 200, 0);
+</code></pre>
 <p>记住，这里最后一步向右平移200点，其实并没有平移200点。因为，这样连续的变化，向右平移200点的transform受到了之前两步transform的影响。它其实被scale了一半，然后被旋转了30度。可以想象成向右200的向量吧(不确定)。</p>
 </li>
 <li><p>还有一种变换无法用translate， rotate和scale来表示。那就是：原View是矩形，变换之后了View变成了平行四边形。有点类似投影。那样的话就得直接修改CGAffineTransform矩阵中的值了。如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">CGAffineTransform transform = CGAffineTransformIdentity;</div><div class="line">transform.c = -x;</div><div class="line">transform.b = y;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">CGAffineTransform transform = CGAffineTransformIdentity;
+transform.c = -x;
+transform.b = y;
+</code></pre>
 </li>
 </ol>
 <h4 id="3D-Transforms"><a href="#3D-Transforms" class="headerlink" title="3D Transforms"></a>3D Transforms</h4><ol>
@@ -395,7 +405,11 @@
 <li><p>CAShapeLayer的<strong>path</strong>属性是一个CGPath，但是使用UIBezierPath，可以简化我们的使用，不用手动去释放CGPath。</p>
 </li>
 <li><p>创建一个只有3个角的bezierPath：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CGRect rect = CGRectMake(50, 50, 100, 100); CGSize radii = CGSizeMake(20, 20); UIRectCorner corners = UIRectCornerTopRight |</div><div class="line">UIRectCornerBottomRight | UIRectCornerBottomLeft;</div><div class="line">//create path</div><div class="line">UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:corners cornerRadii:radii];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">CGRect rect = CGRectMake(50, 50, 100, 100); CGSize radii = CGSizeMake(20, 20); UIRectCorner corners = UIRectCornerTopRight |
+UIRectCornerBottomRight | UIRectCornerBottomLeft;
+//create path
+UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:corners cornerRadii:radii];
+</code></pre>
 <p>可以把这个CGPath构成的CAShapeLayer当做某个CALayer的mask。</p>
 </li>
 </ol>
@@ -413,7 +427,11 @@
 <li><p>CALayer不太支持autolayout和autoresizing…</p>
 </li>
 <li><p><strong>如何让一个UIView的root layer不是普通的CALayer呢？</strong>UIView通过<code>+ (Class)layerClass;</code>方法来返回root layer的类型；所以只需要在我们自己的View类里面重写该方法就可以。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@implementation LayerLabel  // 自定义的UIView</div><div class="line">+ (Class)layerClass &#123;  // override layerClass of UIView</div><div class="line">  	return [CATextLayer class];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">@implementation LayerLabel  // 自定义的UIView
++ (Class)layerClass {  // override layerClass of UIView
+      return [CATextLayer class];
+}
+</code></pre>
 <p>那么这时就不会调用<code>-drawRect:</code>方法来绘图，而是使用CATextLayer自己来渲染文字。将CATextLayer作为UILabel的root layer还有个好处，就是不需要设置contentsScale。因为这个被UIView自己设置了。这也佐证了使用带layer的View比单独使用layer要方便。</p>
 </li>
 </ol>
@@ -423,7 +441,92 @@
 <li><p>CATransformLayer不能用于显示任何内容，它必须包含一些sublayer。它有可以应用于sublayer的transform，可以使sublayer立体化起来。</p>
 </li>
 <li><p>这个例子很赞：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div></pre></td><td class="code"><pre><div class="line">@interface ViewController ()</div><div class="line">@property (nonatomic, weak) IBOutlet UIView *containerView; </div><div class="line">@end</div><div class="line">@implementation ViewController</div><div class="line">- (CALayer *)faceWithTransform:(CATransform3D)transform &#123;</div><div class="line">	//create cube face layer</div><div class="line">	CALayer *face = [CALayer layer];</div><div class="line">	face.frame = CGRectMake(-50, -50, 100, 100);</div><div class="line"></div><div class="line">	//apply a random color</div><div class="line">	CGFloat red = (rand() / (double)INT_MAX); </div><div class="line">	CGFloat green = (rand() / (double)INT_MAX); </div><div class="line">	CGFloat blue = (rand() / (double)INT_MAX); </div><div class="line">	face.backgroundColor = [UIColor colorWithRed:red green:green blue:blue alpha:1.0].CGColor;</div><div class="line"></div><div class="line"> 	//apply the transform and return</div><div class="line">	face.transform = transform;</div><div class="line">	</div><div class="line">	return face; </div><div class="line">&#125;</div><div class="line"></div><div class="line">- (CALayer *)cubeWithTransform:(CATransform3D)transform &#123;</div><div class="line">	//create cube layer</div><div class="line">	CATransformLayer *cube = [CATransformLayer layer];</div><div class="line">	</div><div class="line">	//add cube face 1</div><div class="line">	CATransform3D ct = CATransform3DMakeTranslation(0, 0, 50); </div><div class="line">	[cube addSublayer:[self faceWithTransform:ct]];</div><div class="line"></div><div class="line">	//add cube face 2</div><div class="line">	ct = CATransform3DMakeTranslation(50, 0, 0); </div><div class="line">	ct = CATransform3DRotate(ct, M_PI_2, 0, 1, 0); </div><div class="line">	[cube addSublayer:[self faceWithTransform:ct]];</div><div class="line"></div><div class="line">	//add cube face 3</div><div class="line">	ct = CATransform3DMakeTranslation(0, -50, 0); </div><div class="line">	ct = CATransform3DRotate(ct, M_PI_2, 1, 0, 0); </div><div class="line">	[cube addSublayer:[self faceWithTransform:ct]];</div><div class="line"></div><div class="line">	//add cube face 4</div><div class="line">	ct = CATransform3DMakeTranslation(0, 50, 0); </div><div class="line">	ct = CATransform3DRotate(ct, -M_PI_2, 1, 0, 0); </div><div class="line">	[cube addSublayer:[self faceWithTransform:ct]];</div><div class="line"></div><div class="line">	//add cube face 5</div><div class="line">	ct = CATransform3DMakeTranslation(-50, 0, 0); </div><div class="line">	ct = CATransform3DRotate(ct, -M_PI_2, 0, 1, 0); </div><div class="line">	[cube addSublayer:[self faceWithTransform:ct]];</div><div class="line">	</div><div class="line">	//add cube face 6</div><div class="line">	ct = CATransform3DMakeTranslation(0, 0, -50); </div><div class="line">	ct = CATransform3DRotate(ct, M_PI, 0, 1, 0); </div><div class="line">	[cube addSublayer:[self faceWithTransform:ct]];</div><div class="line"></div><div class="line">	//center the cube layer within the container</div><div class="line">	CGSize containerSize = self.containerView.bounds.size; </div><div class="line">	cube.position = CGPointMake(containerSize.width / 2.0, containerSize.height / 2.0);</div><div class="line"></div><div class="line">	//apply the transform and return</div><div class="line">	cube.transform = transform;</div><div class="line">	return cube; </div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)viewDidLoad &#123; </div><div class="line">	[super viewDidLoad];</div><div class="line">	//set up the perspective transform</div><div class="line">	CATransform3D pt = CATransform3DIdentity; </div><div class="line">	pt.m34 = -1.0 / 500.0; </div><div class="line">	self.containerView.layer.sublayerTransform = pt;</div><div class="line"></div><div class="line">	//set up the transform for cube 1 and add it</div><div class="line">	CATransform3D c1t = CATransform3DIdentity; </div><div class="line">	c1t = CATransform3DTranslate(c1t, -100, 0, 0); </div><div class="line">	CALayer *cube1 = [self cubeWithTransform:c1t]; </div><div class="line">	[self.containerView.layer addSublayer:cube1];</div><div class="line"></div><div class="line">	//set up the transform for cube 2 and add it</div><div class="line">	CATransform3D c2t = CATransform3DIdentity;</div><div class="line">	c2t = CATransform3DTranslate(c2t, 100, 0, 0); </div><div class="line">	c2t = CATransform3DRotate(c2t, -M_PI_4, 1, 0, 0); </div><div class="line">	c2t = CATransform3DRotate(c2t, -M_PI_4, 0, 1, 0); </div><div class="line">	CALayer *cube2 = [self cubeWithTransform:c2t]; </div><div class="line">	[self.containerView.layer addSublayer:cube2];</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">@interface ViewController ()
+@property (nonatomic, weak) IBOutlet UIView *containerView; 
+@end
+@implementation ViewController
+- (CALayer *)faceWithTransform:(CATransform3D)transform {
+    //create cube face layer
+    CALayer *face = [CALayer layer];
+    face.frame = CGRectMake(-50, -50, 100, 100);
+
+    //apply a random color
+    CGFloat red = (rand() / (double)INT_MAX); 
+    CGFloat green = (rand() / (double)INT_MAX); 
+    CGFloat blue = (rand() / (double)INT_MAX); 
+    face.backgroundColor = [UIColor colorWithRed:red green:green blue:blue alpha:1.0].CGColor;
+
+     //apply the transform and return
+    face.transform = transform;
+
+    return face; 
+}
+
+- (CALayer *)cubeWithTransform:(CATransform3D)transform {
+    //create cube layer
+    CATransformLayer *cube = [CATransformLayer layer];
+
+    //add cube face 1
+    CATransform3D ct = CATransform3DMakeTranslation(0, 0, 50); 
+    [cube addSublayer:[self faceWithTransform:ct]];
+
+    //add cube face 2
+    ct = CATransform3DMakeTranslation(50, 0, 0); 
+    ct = CATransform3DRotate(ct, M_PI_2, 0, 1, 0); 
+    [cube addSublayer:[self faceWithTransform:ct]];
+
+    //add cube face 3
+    ct = CATransform3DMakeTranslation(0, -50, 0); 
+    ct = CATransform3DRotate(ct, M_PI_2, 1, 0, 0); 
+    [cube addSublayer:[self faceWithTransform:ct]];
+
+    //add cube face 4
+    ct = CATransform3DMakeTranslation(0, 50, 0); 
+    ct = CATransform3DRotate(ct, -M_PI_2, 1, 0, 0); 
+    [cube addSublayer:[self faceWithTransform:ct]];
+
+    //add cube face 5
+    ct = CATransform3DMakeTranslation(-50, 0, 0); 
+    ct = CATransform3DRotate(ct, -M_PI_2, 0, 1, 0); 
+    [cube addSublayer:[self faceWithTransform:ct]];
+
+    //add cube face 6
+    ct = CATransform3DMakeTranslation(0, 0, -50); 
+    ct = CATransform3DRotate(ct, M_PI, 0, 1, 0); 
+    [cube addSublayer:[self faceWithTransform:ct]];
+
+    //center the cube layer within the container
+    CGSize containerSize = self.containerView.bounds.size; 
+    cube.position = CGPointMake(containerSize.width / 2.0, containerSize.height / 2.0);
+
+    //apply the transform and return
+    cube.transform = transform;
+    return cube; 
+}
+
+- (void)viewDidLoad { 
+    [super viewDidLoad];
+    //set up the perspective transform
+    CATransform3D pt = CATransform3DIdentity; 
+    pt.m34 = -1.0 / 500.0; 
+    self.containerView.layer.sublayerTransform = pt;
+
+    //set up the transform for cube 1 and add it
+    CATransform3D c1t = CATransform3DIdentity; 
+    c1t = CATransform3DTranslate(c1t, -100, 0, 0); 
+    CALayer *cube1 = [self cubeWithTransform:c1t]; 
+    [self.containerView.layer addSublayer:cube1];
+
+    //set up the transform for cube 2 and add it
+    CATransform3D c2t = CATransform3DIdentity;
+    c2t = CATransform3DTranslate(c2t, 100, 0, 0); 
+    c2t = CATransform3DRotate(c2t, -M_PI_4, 1, 0, 0); 
+    c2t = CATransform3DRotate(c2t, -M_PI_4, 0, 1, 0); 
+    CALayer *cube2 = [self cubeWithTransform:c2t]; 
+    [self.containerView.layer addSublayer:cube2];
+}
+@end
+</code></pre>
 <p>todo add picture</p>
 </li>
 </ol>
@@ -439,7 +542,42 @@
 <li><p><strong>instanceCount</strong>属性指定copy的个数，<strong>instanceTransform</strong>属性指定变化，各个变化是叠加的。</p>
 </li>
 <li><p>说不清楚，直接上代码…</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">@interface ViewController ()</div><div class="line">@property (nonatomic, weak) IBOutlet UIView *containerView; </div><div class="line">@end</div><div class="line"></div><div class="line">@implementation ViewController</div><div class="line">- (void)viewDidLoad &#123;</div><div class="line">	[super viewDidLoad];</div><div class="line"></div><div class="line">	//create a replicator layer and add it to our view</div><div class="line">	CAReplicatorLayer *replicator = [CAReplicatorLayer layer]; </div><div class="line">	replicator.frame = self.containerView.bounds; </div><div class="line">	[self.containerView.layer addSublayer:replicator];</div><div class="line"></div><div class="line">	//configure the replicator</div><div class="line">	replicator.instanceCount = 10;</div><div class="line"></div><div class="line">	//apply a transform for each instance</div><div class="line">	CATransform3D transform = CATransform3DIdentity;</div><div class="line">	transform = CATransform3DTranslate(transform, 0, 200, 0); </div><div class="line">	transform = CATransform3DRotate(transform, M_PI / 5.0, 0, 0, 1);</div><div class="line"> </div><div class="line">	transform = CATransform3DTranslate(transform, 0, -200, 0); </div><div class="line">	replicator.instanceTransform = transform;</div><div class="line"></div><div class="line">	//apply a color shift for each instance</div><div class="line">	replicator.instanceBlueOffset = -0.1; </div><div class="line">	replicator.instanceGreenOffset = -0.1;</div><div class="line"></div><div class="line">	//create a sublayer and place it inside the replicator</div><div class="line">	CALayer *layer = [CALayer layer];</div><div class="line">	layer.frame = CGRectMake(100.0f, 100.0f, 100.0f, 100.0f); </div><div class="line">	layer.backgroundColor = [UIColor whiteColor].CGColor; </div><div class="line">	[replicator addSublayer:layer];</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">@interface ViewController ()
+@property (nonatomic, weak) IBOutlet UIView *containerView; 
+@end
+
+@implementation ViewController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    //create a replicator layer and add it to our view
+    CAReplicatorLayer *replicator = [CAReplicatorLayer layer]; 
+    replicator.frame = self.containerView.bounds; 
+    [self.containerView.layer addSublayer:replicator];
+
+    //configure the replicator
+    replicator.instanceCount = 10;
+
+    //apply a transform for each instance
+    CATransform3D transform = CATransform3DIdentity;
+    transform = CATransform3DTranslate(transform, 0, 200, 0); 
+    transform = CATransform3DRotate(transform, M_PI / 5.0, 0, 0, 1);
+
+    transform = CATransform3DTranslate(transform, 0, -200, 0); 
+    replicator.instanceTransform = transform;
+
+    //apply a color shift for each instance
+    replicator.instanceBlueOffset = -0.1; 
+    replicator.instanceGreenOffset = -0.1;
+
+    //create a sublayer and place it inside the replicator
+    CALayer *layer = [CALayer layer];
+    layer.frame = CGRectMake(100.0f, 100.0f, 100.0f, 100.0f); 
+    layer.backgroundColor = [UIColor whiteColor].CGColor; 
+    [replicator addSublayer:layer];
+}
+@end
+</code></pre>
 <p>todo add picture</p>
 </li>
 </ol>
@@ -747,7 +885,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

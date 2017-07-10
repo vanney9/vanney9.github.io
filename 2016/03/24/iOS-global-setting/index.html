@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -286,22 +286,68 @@
 <h2 id="用户登录，用户数据全局存储"><a href="#用户登录，用户数据全局存储" class="headerlink" title="用户登录，用户数据全局存储"></a>用户登录，用户数据全局存储</h2><p>用户登录时，对用户数据进行存储，在全局都可以获得当前登录用户的数据。来看看如何实现</p>
 <h3 id="NSUserDefaults"><a href="#NSUserDefaults" class="headerlink" title="NSUserDefaults"></a><code>NSUserDefaults</code></h3><p><a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSUserDefaults_Class/" target="_blank" rel="external">NSUserDefaults</a>用来存储轻量级的本地数据灰常合适，就比如说当前的登录用户数据（用户名，密码等等）。NSUserDefaults存储时支持的数据类型有 NSNumber, NSString, NSDate, NSArray, NSDictionary, BOOL。它有点类似键值对。</p>
 <h3 id="plist"><a href="#plist" class="headerlink" title="plist"></a><code>plist</code></h3><p>plist是<code>Property List</code>的缩写，它是一个xml格式的文件，用来存储串行化后的对象。因此plist文件可以用来存储历史登录用户的数据。</p>
-<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><h4 id="用户登录时"><a href="#用户登录时" class="headerlink" title="用户登录时"></a>用户登录时</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">+ (void)doLogin:(NSDictionary *)loginData &#123;</div><div class="line">    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults]; // 获取默认的NSUserDefaults</div><div class="line">    [defaults setObject:[NSNumber numberWithBool:YES] forKey:@&quot;loginStatus&quot;]; // 设置登录状态为已登录</div><div class="line">    [defaults setObject:loginData forKey:@&quot;loginData&quot;]; // 存储当前登录用户数据。注：loginData为NSDictionary，里面可以存放username、password、email等信息</div><div class="line">    [defaults synchronize]; // 同步数据</div><div class="line">    [self saveLoginData:loginData]; // 使用plist存储历史登录用户数据，在后文会有介绍</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里使用NSUserDefaults存储登录时的数据：</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><h4 id="用户登录时"><a href="#用户登录时" class="headerlink" title="用户登录时"></a>用户登录时</h4><pre><code>        + (void)doLogin:(NSDictionary *)loginData {
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults]; // 获取默认的NSUserDefaults
+            [defaults setObject:[NSNumber numberWithBool:YES] forKey:@&quot;loginStatus&quot;]; // 设置登录状态为已登录
+            [defaults setObject:loginData forKey:@&quot;loginData&quot;]; // 存储当前登录用户数据。注：loginData为NSDictionary，里面可以存放username、password、email等信息
+            [defaults synchronize]; // 同步数据
+            [self saveLoginData:loginData]; // 使用plist存储历史登录用户数据，在后文会有介绍
+        }
+</code></pre><p>这里使用NSUserDefaults存储登录时的数据：</p>
 <ol>
 <li>使用loginStatus键来存储登录状态：YES表示已登录，NO表示未登陆</li>
 <li>使用loginData键来存储登录用户的数据：该键对应的值是一个NSDictionary，该字典里面可以包含username、password、email等与当前用户相关的数据</li>
 <li>[defaults synchronize]; 该方法表示将NSUserDefaults数据同步到磁盘，此举避免了程序意外退出而导致数据未存储的情况</li>
 <li>saveLoginData方法将这个用户数据写入plist文件，达到存储历史数据的目的，后面会介绍</li>
 </ol>
-<h4 id="用户退出时"><a href="#用户退出时" class="headerlink" title="用户退出时"></a>用户退出时</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">+ (void)doLogout &#123;</div><div class="line">    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults]; // 获取默认的NSUserDefaults</div><div class="line">    [defaults setObject:[NSNumber numberWithBool:NO] forKey:@&quot;loginStatus&quot;]; // 设置登录状态为未登陆</div><div class="line">    [defaults synchronize]; // 同步数据</div><div class="line">    // do something else, like clear cookies</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里将用户登录状态设置为未登陆，并同步数据</p>
-<h4 id="判断是否登录"><a href="#判断是否登录" class="headerlink" title="判断是否登录"></a>判断是否登录</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+ (BOOL)isLogin &#123;</div><div class="line">    NSNumber *loginStatus = [NSUserDefaults standardUserDefaults] objectForKey:@&quot;loginStatus&quot;]; // 获取用户登录状态</div><div class="line">    if (loginStatus.boolValue) &#123; // 判断用户是否登录，并返回</div><div class="line">        return YES;</div><div class="line">    &#125; else &#123;</div><div class="line">        return NO;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>获取NSUserDefaults中loginStatus键的值来获取用户的登录状态</p>
-<h4 id="获取当前登录用户"><a href="#获取当前登录用户" class="headerlink" title="获取当前登录用户"></a>获取当前登录用户</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (User *)curLoginUser &#123;</div><div class="line">    NSDictionary *loginData = [NSUserDefaults standardUserDefaults] objectForKey:@&quot;loginData&quot;]; // 获取当前用户数据</div><div class="line">    User *curLoginUser = loginData ? [NSObject objectOfClass:@&quot;User&quot; fromJSON:loginData]; // 转化为User对象</div><div class="line">    return curLoginUser;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>获取NSUserDefaults中loginData的NSDictionary，并转化为User对象返回。注：User对象为一个model。</p>
-<h4 id="存储历史数据"><a href="#存储历史数据" class="headerlink" title="存储历史数据"></a>存储历史数据</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">+ (NSString *)loginDataListPath &#123;</div><div class="line">    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]; // 返回app存放数据的Documents文件夹路径</div><div class="line">    NSString *listPath = [documentPath stringByAppendingPathComponent:@&quot;login_list.plist&quot;]; // 返回存放历史数据的plist文件的路径，他在Documents文件夹里面</div><div class="line">    return listPath;</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (NSMutableDictionary *)readLoginDataList &#123;</div><div class="line">    NSMutableDictionary *loginDataList = [NSMutableDictionary dictionaryWithContentsOfFile:[self loginDataListPath]]; // 读取plist文件内容，并将它存放在NSMutableDictionary中返回</div><div class="line">    return loginDataList;</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (BOOL)saveLoginData:(NSDictionary *)loginData &#123;</div><div class="line">    BOOL save = NO;</div><div class="line">    if (loginData) &#123;</div><div class="line">        NSMutableDictionary *loginDataList = [self readLoginDataList]; // 获取已经存储的用户数据</div><div class="line">        User *curUser = [NSObject objectOfClass:@&quot;User&quot; fromJSON:loginData]; // 转化为User对象</div><div class="line">        if (curUser.username.length &gt; 0) &#123;</div><div class="line">            [loginDataList setObject:loginData forKey:curUser.username]; // 更新历史数据中该用户的数据</div><div class="line">            save = YES;</div><div class="line">        &#125;</div><div class="line">        if (save) &#123;</div><div class="line">          save = [loginDataList writeToFile:[self loginDataListPath] atomically:YES]; // 将数据写入plist文件</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>以上代码中包括三个函数：</p>
+<h4 id="用户退出时"><a href="#用户退出时" class="headerlink" title="用户退出时"></a>用户退出时</h4><pre><code>+ (void)doLogout {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults]; // 获取默认的NSUserDefaults
+    [defaults setObject:[NSNumber numberWithBool:NO] forKey:@&quot;loginStatus&quot;]; // 设置登录状态为未登陆
+    [defaults synchronize]; // 同步数据
+    // do something else, like clear cookies
+}
+</code></pre><p>这里将用户登录状态设置为未登陆，并同步数据</p>
+<h4 id="判断是否登录"><a href="#判断是否登录" class="headerlink" title="判断是否登录"></a>判断是否登录</h4><pre><code>+ (BOOL)isLogin {
+    NSNumber *loginStatus = [NSUserDefaults standardUserDefaults] objectForKey:@&quot;loginStatus&quot;]; // 获取用户登录状态
+    if (loginStatus.boolValue) { // 判断用户是否登录，并返回
+        return YES;
+    } else {
+        return NO;
+    }
+}
+</code></pre><p>获取NSUserDefaults中loginStatus键的值来获取用户的登录状态</p>
+<h4 id="获取当前登录用户"><a href="#获取当前登录用户" class="headerlink" title="获取当前登录用户"></a>获取当前登录用户</h4><pre><code>+ (User *)curLoginUser {
+    NSDictionary *loginData = [NSUserDefaults standardUserDefaults] objectForKey:@&quot;loginData&quot;]; // 获取当前用户数据
+    User *curLoginUser = loginData ? [NSObject objectOfClass:@&quot;User&quot; fromJSON:loginData]; // 转化为User对象
+    return curLoginUser;
+}
+</code></pre><p>获取NSUserDefaults中loginData的NSDictionary，并转化为User对象返回。注：User对象为一个model。</p>
+<h4 id="存储历史数据"><a href="#存储历史数据" class="headerlink" title="存储历史数据"></a>存储历史数据</h4><pre><code>+ (NSString *)loginDataListPath {
+    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]; // 返回app存放数据的Documents文件夹路径
+    NSString *listPath = [documentPath stringByAppendingPathComponent:@&quot;login_list.plist&quot;]; // 返回存放历史数据的plist文件的路径，他在Documents文件夹里面
+    return listPath;
+}
+
++ (NSMutableDictionary *)readLoginDataList {
+    NSMutableDictionary *loginDataList = [NSMutableDictionary dictionaryWithContentsOfFile:[self loginDataListPath]]; // 读取plist文件内容，并将它存放在NSMutableDictionary中返回
+    return loginDataList;
+}
+
++ (BOOL)saveLoginData:(NSDictionary *)loginData {
+    BOOL save = NO;
+    if (loginData) {
+        NSMutableDictionary *loginDataList = [self readLoginDataList]; // 获取已经存储的用户数据
+        User *curUser = [NSObject objectOfClass:@&quot;User&quot; fromJSON:loginData]; // 转化为User对象
+        if (curUser.username.length &gt; 0) {
+            [loginDataList setObject:loginData forKey:curUser.username]; // 更新历史数据中该用户的数据
+            save = YES;
+        }
+        if (save) {
+          save = [loginDataList writeToFile:[self loginDataListPath] atomically:YES]; // 将数据写入plist文件
+        }
+    }
+}
+</code></pre><p>以上代码中包括三个函数：</p>
 <ol>
 <li>loginDataListPath: 该函数返回plist文件的路径</li>
 <li>readLoginDataList: 该函数读取plist文件中的数据，以NSDictionary的方式返回</li>
@@ -609,7 +655,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

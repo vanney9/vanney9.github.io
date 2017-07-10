@@ -39,7 +39,7 @@ forwardInvocation
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -317,33 +317,139 @@ forwardInvocation
 <li><code>attributes</code> : 属性的特性</li>
 <li><code>attributeCount</code> : 属性特性数量</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// runtime add property</div><div class="line">objc_property_attribute_t attribute1 = &#123;&quot;T&quot;, @encode(NSString *)&#125;;</div><div class="line">objc_property_attribute_t attribute2 = &#123;&quot;N&quot;, &quot;&quot;&#125;;</div><div class="line">objc_property_attribute_t attribute3 = &#123;&quot;&amp;&quot;, &quot;&quot;&#125;;</div><div class="line">objc_property_attribute_t attribute[] = &#123;attribute1, attribute2, attribute3&#125;;</div><div class="line">class_addProperty([HCBase class], &quot;sb&quot;, attribute, 3);</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">// runtime add property
+objc_property_attribute_t attribute1 = {&quot;T&quot;, @encode(NSString *)};
+objc_property_attribute_t attribute2 = {&quot;N&quot;, &quot;&quot;};
+objc_property_attribute_t attribute3 = {&quot;&amp;&quot;, &quot;&quot;};
+objc_property_attribute_t attribute[] = {attribute1, attribute2, attribute3};
+class_addProperty([HCBase class], &quot;sb&quot;, attribute, 3);
+</code></pre>
 <p>如上代码，添加了一个属性<code>sb</code>，该属性有3个特性：1. NSString类型 2. nonatomic 3. strong</p>
 <h4 id="添加关联对象"><a href="#添加关联对象" class="headerlink" title="添加关联对象"></a>添加关联对象</h4><p>为了向正常属性那样访问，给该类添加<code>sb</code>属性的存取方法<code>sb</code> 和 <code>setSb:</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// add property getter and setter</div><div class="line">//class_addMethod([HCBase class], @selector(sb), (IMP) sb, &quot;@@:&quot;);</div><div class="line">class_addMethod([HCBase class], NSSelectorFromString(@&quot;sb&quot;), (IMP) customGetter, &quot;@@:&quot;);</div><div class="line">//class_addMethod([HCBase class], @selector(setSb:), (IMP) setSb, &quot;v@:@&quot;);</div><div class="line">class_addMethod([HCBase class], NSSelectorFromString(@&quot;setSb:&quot;), (IMP) customSetter, &quot;v@:@&quot;);</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">// add property getter and setter
+//class_addMethod([HCBase class], @selector(sb), (IMP) sb, &quot;@@:&quot;);
+class_addMethod([HCBase class], NSSelectorFromString(@&quot;sb&quot;), (IMP) customGetter, &quot;@@:&quot;);
+//class_addMethod([HCBase class], @selector(setSb:), (IMP) setSb, &quot;v@:@&quot;);
+class_addMethod([HCBase class], NSSelectorFromString(@&quot;setSb:&quot;), (IMP) customSetter, &quot;v@:@&quot;);
+</code></pre>
 <p>注意该方法的最后一个参数是添加的方法的签名：<code>返回类型 + self + selector + 参数</code> 的字符串：</p>
 <ol>
 <li><code>sb</code>方法，返回类型为id(<strong>@</strong>)，self为id(<strong>@</strong>)，选择子(<strong>:</strong>)，参数为空 =&gt; @@:</li>
 <li><code>setSb:</code>方法，返回类型为void(<strong>v</strong>)，self为id(<strong>@</strong>)，选择子(<strong>:</strong>)，参数为id(<strong>@</strong>) =&gt;  v@:@</li>
 </ol>
 <p>现在来看看setter和getter的通用实现方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">// custom getter &amp;&amp; setter</div><div class="line"></div><div class="line">void customSetter(id self, SEL _cmd, id value) &#123;</div><div class="line">    NSString *propertyStr = NSStringFromSelector(_cmd);</div><div class="line">    // divide set</div><div class="line">    NSString *realProperty = [propertyStr substringFromIndex:3];</div><div class="line">    realProperty = [realProperty substringToIndex:realProperty.length - 1];</div><div class="line">    realProperty = [realProperty lowercaseString];</div><div class="line">    //const NSString *key = [realProperty copy];</div><div class="line">    objc_setAssociatedObject(self, NSSelectorFromString(realProperty), value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">    //objc_setAssociatedObject(self, &quot;sb&quot;, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">&#125;</div><div class="line"></div><div class="line">id customGetter(id self, SEL _cmd) &#123;</div><div class="line">    id result = objc_getAssociatedObject(self, _cmd);</div><div class="line">    //id result = objc_getAssociatedObject(self, &quot;sb&quot;);</div><div class="line">    return result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">// custom getter &amp;&amp; setter
+
+void customSetter(id self, SEL _cmd, id value) {
+    NSString *propertyStr = NSStringFromSelector(_cmd);
+    // divide set
+    NSString *realProperty = [propertyStr substringFromIndex:3];
+    realProperty = [realProperty substringToIndex:realProperty.length - 1];
+    realProperty = [realProperty lowercaseString];
+    //const NSString *key = [realProperty copy];
+    objc_setAssociatedObject(self, NSSelectorFromString(realProperty), value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    //objc_setAssociatedObject(self, &quot;sb&quot;, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+id customGetter(id self, SEL _cmd) {
+    id result = objc_getAssociatedObject(self, _cmd);
+    //id result = objc_getAssociatedObject(self, &quot;sb&quot;);
+    return result;
+}
+</code></pre>
 <p>这两个方法通过判断selector来判断要添加的是哪一个属性的关联对象，也就是说这个方法是对任何属性通用的（之后新添加其他的属性，也可以使用该实现）</p>
 <p>注意：<code>objc_setAssociationObject</code> 和 <code>objc_getAssociationObject</code>方法中的第二个参数，也就是对象的key是一个 <code>const void *</code> 类型：常量指针；正好@selector也是常量指针。</p>
-<h4 id="访问属性"><a href="#访问属性" class="headerlink" title="访问属性"></a>访问属性</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// new HCBase and set &amp;&amp; printf sb</div><div class="line">HCBase *baseOBJ = [[HCBase alloc] init];</div><div class="line">//[baseOBJ performSelector:@selector(setSb:) withObject:@&quot;sb&quot;];</div><div class="line">[baseOBJ performSelector:NSSelectorFromString(@&quot;setSb:&quot;) withObject:@&quot;sb&quot;];</div><div class="line">//NSLog(@&quot;vanney code log : new property is %@&quot;, [baseOBJ performSelector:@selector(sb)]);</div><div class="line">NSLog(@&quot;vanney code log : new property is %@&quot;, [baseOBJ performSelector:NSSelectorFromString(@&quot;sb&quot;)]);</div></pre></td></tr></table></figure>
+<h4 id="访问属性"><a href="#访问属性" class="headerlink" title="访问属性"></a>访问属性</h4><pre><code class="objective-c">// new HCBase and set &amp;&amp; printf sb
+HCBase *baseOBJ = [[HCBase alloc] init];
+//[baseOBJ performSelector:@selector(setSb:) withObject:@&quot;sb&quot;];
+[baseOBJ performSelector:NSSelectorFromString(@&quot;setSb:&quot;) withObject:@&quot;sb&quot;];
+//NSLog(@&quot;vanney code log : new property is %@&quot;, [baseOBJ performSelector:@selector(sb)]);
+NSLog(@&quot;vanney code log : new property is %@&quot;, [baseOBJ performSelector:NSSelectorFromString(@&quot;sb&quot;)]);
+</code></pre>
 <p>已经添加了属性，并添加了存取方法。现在可以使用<code>performSelector</code>方法来执行存取方法</p>
 <h3 id="方法决议"><a href="#方法决议" class="headerlink" title="方法决议"></a>方法决议</h3><blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt; + (BOOL)resolveInstanceMethod:(SEL)sel;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">+ (BOOL)resolveInstanceMethod:(SEL)sel;
+</code></pre>
 </blockquote>
 <p>当没有找到方法的实现时，会执行该方法，可以在该方法里面动态添加缺失的方法的实现。</p>
 <p>来看看两个类的声明：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">/*--------- HCBase -----------*/</div><div class="line">#import &quot;runtime.h&quot;</div><div class="line">#import &lt;Foundation/Foundation.h&gt;</div><div class="line"></div><div class="line">@interface HCBase : NSObject</div><div class="line"></div><div class="line">//@property (nonatomic, strong) NSString *curry;</div><div class="line">//@property (nonatomic, copy) NSString *kd;</div><div class="line">//@property (nonatomic, assign) int kt;</div><div class="line"></div><div class="line">- (void)needResolve;</div><div class="line"></div><div class="line">- (void)needForwardTarget;</div><div class="line"></div><div class="line">- (void)needFinalForward;</div><div class="line"></div><div class="line">@end</div><div class="line"></div><div class="line">/*----------- HCSon -----------*/</div><div class="line">#import &quot;HCBase.h&quot;</div><div class="line"></div><div class="line">@interface HCSon : HCBase</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">/*--------- HCBase -----------*/
+#import &quot;runtime.h&quot;
+#import &lt;Foundation/Foundation.h&gt;
+
+@interface HCBase : NSObject
+
+//@property (nonatomic, strong) NSString *curry;
+//@property (nonatomic, copy) NSString *kd;
+//@property (nonatomic, assign) int kt;
+
+- (void)needResolve;
+
+- (void)needForwardTarget;
+
+- (void)needFinalForward;
+
+@end
+
+/*----------- HCSon -----------*/
+#import &quot;HCBase.h&quot;
+
+@interface HCSon : HCBase
+
+@end
+</code></pre>
 <p><code>HCSon</code> 继承自 <code>HCBase</code> 类，另外<code>HCBase</code>中声明了一个方法<code>needResolve</code>，但是没有提供实现。</p>
 <p>那么当一个<code>HCSon</code>对象调用<code>needResolve</code>方法时，无法找到实现；接着会去寻找<code>resolveInstanceMethod:</code>，并执行该方法。但是该<code>resolveInstanceMethod</code>方法定义在父类<code>HCBase</code>里面</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">void resolveImp(id self, SEL _cmd) &#123;</div><div class="line">    NSLog(@&quot;vanney code log : resolved function&quot;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">@implementation HCBase</div><div class="line">+ (BOOL)resolveInstanceMethod:(SEL)sel &#123;</div><div class="line">    if ([NSStringFromSelector(sel) isEqualToString:@&quot;needResolve&quot;]) &#123;</div><div class="line">        class_addMethod(self, @selector(needResolve), (IMP) resolveImp, &quot;v@:&quot;);</div><div class="line">        return YES;</div><div class="line">    &#125; else &#123;</div><div class="line">        return [[self superclass] resolveInstanceMethod:sel];</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">void resolveImp(id self, SEL _cmd) {
+    NSLog(@&quot;vanney code log : resolved function&quot;);
+}
+
+@implementation HCBase
++ (BOOL)resolveInstanceMethod:(SEL)sel {
+    if ([NSStringFromSelector(sel) isEqualToString:@&quot;needResolve&quot;]) {
+        class_addMethod(self, @selector(needResolve), (IMP) resolveImp, &quot;v@:&quot;);
+        return YES;
+    } else {
+        return [[self superclass] resolveInstanceMethod:sel];
+    }
+}
+@end
+</code></pre>
 <p>该方法给self类添加一个<code>needResolve</code>方法，之后会重新执行<code>needResolve</code>方法。</p>
 <p>现在来看看一个HCSon对象调用<code>needResolve</code>的过程</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">// resolve</div><div class="line"></div><div class="line">// print method</div><div class="line">int methodCount;</div><div class="line">Method *methodList = class_copyMethodList([HCBase class], &amp;methodCount);</div><div class="line">for (int j = 0; j &lt; methodCount; ++j) &#123;</div><div class="line">Method curMethod = methodList[j];</div><div class="line">printf(&quot;before HCBase method name is %s, and type encoding is %s\n&quot;, method_getName(curMethod), method_getTypeEncoding(curMethod));</div><div class="line">&#125;</div><div class="line"></div><div class="line">int methodCountS;</div><div class="line">Method *methodListS = class_copyMethodList([HCSon class], &amp;methodCountS);</div><div class="line">for (int j = 0; j &lt; methodCountS; ++j) &#123;</div><div class="line">Method curMethod = methodListS[j];</div><div class="line">printf(&quot;before HCSon method name is %s, and type encoding is %s\n&quot;, method_getName(curMethod), method_getTypeEncoding(curMethod));</div><div class="line">&#125;</div><div class="line"></div><div class="line">HCSon *son = [[HCSon alloc] init];</div><div class="line">//[baseOBJ needResolve];</div><div class="line">[son needResolve];</div><div class="line"></div><div class="line">Method *newMethodList = class_copyMethodList([HCBase class], &amp;methodCount);</div><div class="line">for (int j = 0; j &lt; methodCount; ++j) &#123;</div><div class="line">Method curMethod = newMethodList[j];</div><div class="line">printf(&quot;new HCBase method name is %s, and type encoding is %s\n&quot;, method_getName(curMethod), method_getTypeEncoding(curMethod));</div><div class="line">&#125;</div><div class="line"></div><div class="line">Method *newMethodListS = class_copyMethodList([HCSon class], &amp;methodCountS);</div><div class="line">for (int j = 0; j &lt; methodCountS; ++j) &#123;</div><div class="line">Method curMethod = newMethodListS[j];</div><div class="line">printf(&quot;new HCSon method name is %s, and type encoding is %s\n&quot;, method_getName(curMethod), method_getTypeEncoding(curMethod));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">// resolve
+
+// print method
+int methodCount;
+Method *methodList = class_copyMethodList([HCBase class], &amp;methodCount);
+for (int j = 0; j &lt; methodCount; ++j) {
+Method curMethod = methodList[j];
+printf(&quot;before HCBase method name is %s, and type encoding is %s\n&quot;, method_getName(curMethod), method_getTypeEncoding(curMethod));
+}
+
+int methodCountS;
+Method *methodListS = class_copyMethodList([HCSon class], &amp;methodCountS);
+for (int j = 0; j &lt; methodCountS; ++j) {
+Method curMethod = methodListS[j];
+printf(&quot;before HCSon method name is %s, and type encoding is %s\n&quot;, method_getName(curMethod), method_getTypeEncoding(curMethod));
+}
+
+HCSon *son = [[HCSon alloc] init];
+//[baseOBJ needResolve];
+[son needResolve];
+
+Method *newMethodList = class_copyMethodList([HCBase class], &amp;methodCount);
+for (int j = 0; j &lt; methodCount; ++j) {
+Method curMethod = newMethodList[j];
+printf(&quot;new HCBase method name is %s, and type encoding is %s\n&quot;, method_getName(curMethod), method_getTypeEncoding(curMethod));
+}
+
+Method *newMethodListS = class_copyMethodList([HCSon class], &amp;methodCountS);
+for (int j = 0; j &lt; methodCountS; ++j) {
+Method curMethod = newMethodListS[j];
+printf(&quot;new HCSon method name is %s, and type encoding is %s\n&quot;, method_getName(curMethod), method_getTypeEncoding(curMethod));
+}
+</code></pre>
 <p>在执行<code>[son needResolve]</code>之前，先打印父类和子类的方法，可以发现都没有<code>needResolve</code>方法；执行之后再次打印，发现<code>HCSon</code>里面增加了<code>needResolve</code>方法。</p>
 <p><strong>因为执行<code>resolveInstanceMethod</code>方法时，传入的<code>self</code>是<code>HCSon</code>，所以方法就添加在<code>HCSon</code>里面</strong></p>
 <p><img src="/lionheart/1706/resolve.png" alt="resolve"></p>
@@ -352,9 +458,44 @@ forwardInvocation
 <p><code>- (id)forwardingTargetForSelector:(SEL)selector;</code></p>
 </blockquote>
 <p><code>HCBase</code>声明了<code>needForwardTarget</code>方法，但是没有实现；但是<code>HCBeitai</code>类有该方法。可以使用<code>forwardingTargetForSelector</code>方法，返回一个<code>HCBeitai</code>对象，让该对象来执行<code>needForwardTarget</code>方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">/*------------ HCBeiTai -----------*/</div><div class="line">#import &lt;Foundation/Foundation.h&gt;</div><div class="line"></div><div class="line">@interface HCBeiTai : NSObject</div><div class="line"></div><div class="line">- (void)needForwardTarget;</div><div class="line"></div><div class="line">- (void)beitaiForwarding:(int)index;</div><div class="line"></div><div class="line">@end</div><div class="line"></div><div class="line">@implementation HCBeiTai</div><div class="line"></div><div class="line">- (void)needForwardTarget &#123;</div><div class="line">    NSLog(@&quot;bei tai 作用了&quot;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)beitaiForwarding:(int)index &#123;</div><div class="line">    NSLog(@&quot;vanney code log : bei tai 终极forwarding起作用了 : index is %d&quot;, index);</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div><div class="line">  </div><div class="line">/*-------------- HCBase ------------*/</div><div class="line">- (id)forwardingTargetForSelector:(SEL)aSelector &#123;</div><div class="line">    if (aSelector == @selector(needForwardTarget)) &#123;</div><div class="line">        NSLog(@&quot;vanney code log : forwarding Target start&quot;);</div><div class="line">        HCBeiTai *beitai = [[HCBeiTai alloc] init];</div><div class="line">        return beitai;</div><div class="line">    &#125; else &#123;</div><div class="line">        return [super forwardingTargetForSelector:aSelector];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">/*------------ HCBeiTai -----------*/
+#import &lt;Foundation/Foundation.h&gt;
+
+@interface HCBeiTai : NSObject
+
+- (void)needForwardTarget;
+
+- (void)beitaiForwarding:(int)index;
+
+@end
+
+@implementation HCBeiTai
+
+- (void)needForwardTarget {
+    NSLog(@&quot;bei tai 作用了&quot;);
+}
+
+- (void)beitaiForwarding:(int)index {
+    NSLog(@&quot;vanney code log : bei tai 终极forwarding起作用了 : index is %d&quot;, index);
+}
+
+@end
+
+/*-------------- HCBase ------------*/
+- (id)forwardingTargetForSelector:(SEL)aSelector {
+    if (aSelector == @selector(needForwardTarget)) {
+        NSLog(@&quot;vanney code log : forwarding Target start&quot;);
+        HCBeiTai *beitai = [[HCBeiTai alloc] init];
+        return beitai;
+    } else {
+        return [super forwardingTargetForSelector:aSelector];
+    }
+}
+</code></pre>
 <p>这么一来，就好像<code>HCBase</code>继承了<code>HCBeitai</code>一样，可以用来模拟多重继承。来看看运行的结果：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// forwardingTarget</div><div class="line">[baseOBJ needForwardTarget];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">// forwardingTarget
+[baseOBJ needForwardTarget];
+</code></pre>
 <p><img src="/lionheart/1706/forwarding1.png" alt="forwarding1"></p>
 <h4 id="完整的消息转发"><a href="#完整的消息转发" class="headerlink" title="完整的消息转发"></a>完整的消息转发</h4><blockquote>
 <p><code>- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector;</code></p>
@@ -362,12 +503,77 @@ forwardInvocation
 </blockquote>
 <p>当所有的手段都无法处理该方法时，就开启了完整的消息转发。先调用<code>methodSignatureForSelector</code>方法，给该未知方法签名— 类似<strong>@@:</strong> 。当签名不为空时，调用<code>forwardInvocation</code>，将位置方法的所有信息存放在<code>NSInvocation</code>对象中；这时可以更改方法的信息，比如selector，signature等等，然后交由其他对象来执行更改之后的方法。</p>
 <p>来看看一个示例：<code>HCBase</code>声明了<code>needFinalForward</code>方法，但是没有提供实现；<code>HCBeitai</code>实现了<code>beitaiForwarding:</code>方法。消息转发，将给<code>HCBase</code>对象的<code>needFinalForward</code>方法 转发给了 <code>HCBeitai</code>对象的<code>beitaiForwarding:</code>方法。<strong>注意：这两个方法的selector和signature都不一样</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector &#123;</div><div class="line">    NSLog(@&quot;vanney code log : selector is %@&quot;, NSStringFromSelector(aSelector));</div><div class="line">    NSMethodSignature *methodSignature = [super methodSignatureForSelector:aSelector];</div><div class="line">    if (!methodSignature) &#123;</div><div class="line">        NSLog(@&quot;vanney code log : inside create method signature&quot;);</div><div class="line">        methodSignature = [NSMethodSignature signatureWithObjCTypes:&quot;v@:i&quot;];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return methodSignature;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)forwardInvocation:(NSInvocation *)anInvocation &#123;</div><div class="line">    NSLog(@&quot;vanney code log : forwarding invocation selector is %@&quot;, NSStringFromSelector(anInvocation.selector));</div><div class="line">    NSLog(@&quot;vanney code log : invocation is %@, and method signature is %@&quot;, anInvocation, anInvocation.methodSignature);</div><div class="line"></div><div class="line">    if (anInvocation.selector == @selector(needFinalForward)) &#123;</div><div class="line">        NSLog(@&quot;vanney code log : inside forwarding&quot;);</div><div class="line">        anInvocation.selector = NSSelectorFromString(@&quot;beitaiForwarding:&quot;);</div><div class="line">        int *a;</div><div class="line">        *a = 99;</div><div class="line">        [anInvocation setArgument:a atIndex:2];</div><div class="line">        HCBeiTai *beiTai = [[HCBeiTai alloc] init];</div><div class="line">        [anInvocation invokeWithTarget:beiTai];</div><div class="line">    &#125; else &#123;</div><div class="line">        NSLog(@&quot;vanney code log : else forwarding&quot;);</div><div class="line">        [super forwardInvocation:anInvocation];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
+    NSLog(@&quot;vanney code log : selector is %@&quot;, NSStringFromSelector(aSelector));
+    NSMethodSignature *methodSignature = [super methodSignatureForSelector:aSelector];
+    if (!methodSignature) {
+        NSLog(@&quot;vanney code log : inside create method signature&quot;);
+        methodSignature = [NSMethodSignature signatureWithObjCTypes:&quot;v@:i&quot;];
+    }
+
+    return methodSignature;
+}
+
+- (void)forwardInvocation:(NSInvocation *)anInvocation {
+    NSLog(@&quot;vanney code log : forwarding invocation selector is %@&quot;, NSStringFromSelector(anInvocation.selector));
+    NSLog(@&quot;vanney code log : invocation is %@, and method signature is %@&quot;, anInvocation, anInvocation.methodSignature);
+
+    if (anInvocation.selector == @selector(needFinalForward)) {
+        NSLog(@&quot;vanney code log : inside forwarding&quot;);
+        anInvocation.selector = NSSelectorFromString(@&quot;beitaiForwarding:&quot;);
+        int *a;
+        *a = 99;
+        [anInvocation setArgument:a atIndex:2];
+        HCBeiTai *beiTai = [[HCBeiTai alloc] init];
+        [anInvocation invokeWithTarget:beiTai];
+    } else {
+        NSLog(@&quot;vanney code log : else forwarding&quot;);
+        [super forwardInvocation:anInvocation];
+    }
+
+}
+</code></pre>
 <p>转发的同时，还可以设置参数。把99传递给新的方法。来看看运行结果：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// final forwarding</div><div class="line">[baseOBJ needFinalForward];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">// final forwarding
+[baseOBJ needFinalForward];
+</code></pre>
 <p><img src="/lionheart/1706/forwarding2.png" alt="forwarding2"></p>
 <h2 id="runtime应用"><a href="#runtime应用" class="headerlink" title="runtime应用"></a>runtime应用</h2><h3 id="Method-Swizzling"><a href="#Method-Swizzling" class="headerlink" title="Method Swizzling"></a>Method Swizzling</h3><p>可以在类的<code>load</code>方法中，通过<code>class_addMethod</code> <code>class_replaceMethod</code>来改变方法的默认实现方式。因为<code>load</code>方法执行时，所有类的方法都有了，但都还没有执行过一次</p>
-<h3 id="JSON-gt-Model"><a href="#JSON-gt-Model" class="headerlink" title="JSON -&gt; Model"></a>JSON -&gt; Model</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">- (instancetype)initWithDict:(NSDictionary *)dict &#123;</div><div class="line"></div><div class="line">    if (self = [self init]) &#123;</div><div class="line">        //(1)获取类的属性及属性对应的类型</div><div class="line">        NSMutableArray * keys = [NSMutableArray array];</div><div class="line">        NSMutableArray * attributes = [NSMutableArray array];</div><div class="line">        /*</div><div class="line">         * 例子</div><div class="line">         * name = value3 attribute = T@&quot;NSString&quot;,C,N,V_value3</div><div class="line">         * name = value4 attribute = T^i,N,V_value4</div><div class="line">         */</div><div class="line">        unsigned int outCount;</div><div class="line">        objc_property_t * properties = class_copyPropertyList([self class], &amp;outCount);</div><div class="line">        for (int i = 0; i &lt; outCount; i ++) &#123;</div><div class="line">            objc_property_t property = properties[i];</div><div class="line">            //通过property_getName函数获得属性的名字</div><div class="line">            NSString * propertyName = [NSString stringWithCString:property_getName(property) encoding:NSUTF8StringEncoding];</div><div class="line">            [keys addObject:propertyName];</div><div class="line">            //通过property_getAttributes函数可以获得属性的名字和@encode编码</div><div class="line">            NSString * propertyAttribute = [NSString stringWithCString:property_getAttributes(property) encoding:NSUTF8StringEncoding];</div><div class="line">            [attributes addObject:propertyAttribute];</div><div class="line">        &#125;</div><div class="line">        //立即释放properties指向的内存</div><div class="line">        free(properties);</div><div class="line"></div><div class="line">        //(2)根据类型给属性赋值</div><div class="line">        for (NSString * key in keys) &#123;</div><div class="line">            if ([dict valueForKey:key] == nil) continue;</div><div class="line">            [self setValue:[dict valueForKey:key] forKey:key];</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return self;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="JSON-gt-Model"><a href="#JSON-gt-Model" class="headerlink" title="JSON -&gt; Model"></a>JSON -&gt; Model</h3><pre><code class="objective-c">- (instancetype)initWithDict:(NSDictionary *)dict {
+
+    if (self = [self init]) {
+        //(1)获取类的属性及属性对应的类型
+        NSMutableArray * keys = [NSMutableArray array];
+        NSMutableArray * attributes = [NSMutableArray array];
+        /*
+         * 例子
+         * name = value3 attribute = T@&quot;NSString&quot;,C,N,V_value3
+         * name = value4 attribute = T^i,N,V_value4
+         */
+        unsigned int outCount;
+        objc_property_t * properties = class_copyPropertyList([self class], &amp;outCount);
+        for (int i = 0; i &lt; outCount; i ++) {
+            objc_property_t property = properties[i];
+            //通过property_getName函数获得属性的名字
+            NSString * propertyName = [NSString stringWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+            [keys addObject:propertyName];
+            //通过property_getAttributes函数可以获得属性的名字和@encode编码
+            NSString * propertyAttribute = [NSString stringWithCString:property_getAttributes(property) encoding:NSUTF8StringEncoding];
+            [attributes addObject:propertyAttribute];
+        }
+        //立即释放properties指向的内存
+        free(properties);
+
+        //(2)根据类型给属性赋值
+        for (NSString * key in keys) {
+            if ([dict valueForKey:key] == nil) continue;
+            [self setValue:[dict valueForKey:key] forKey:key];
+        }
+    }
+    return self;
+
+}
+</code></pre>
 <p>该方法参考自<a href="http://www.jianshu.com/p/07b6c4a40a90" target="_blank" rel="external">[iOS] runtime 的使用场景–实战篇</a></p>
 <h3 id="KVO-KVC"><a href="#KVO-KVC" class="headerlink" title="KVO, KVC"></a>KVO, KVC</h3><p>海带学习</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
@@ -671,7 +877,7 @@ forwardInvocation
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -293,7 +293,15 @@
 <li><p><code>typedef int (^blk_t)(int);</code> 那么blk_t代表一个Block变量</p>
 </li>
 <li><p>Block会自动截获和保存变量值。但是不能更改保存的变量值，除非你使用__block。如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">int val = 0;</div><div class="line">void (^blk)(void) = ^&#123;val = 1&#125;; // 更改自动保存的变量值 报错</div><div class="line">blk();</div><div class="line"></div><div class="line">/* 使用__block之后 */</div><div class="line">__block int val = 0;</div><div class="line">void (^blk)(void) = ^&#123;val = 1&#125;; // 不报错</div><div class="line">blk();</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">int val = 0;
+void (^blk)(void) = ^{val = 1}; // 更改自动保存的变量值 报错
+blk();
+
+/* 使用__block之后 */
+__block int val = 0;
+void (^blk)(void) = ^{val = 1}; // 不报错
+blk();
+</code></pre>
 <p><strong>PS</strong>：如果是截获的OC对象，比如截获了NSMutableArray对象array，可以使用array：<code>[array addObject:obj];</code>；但是不能给array赋值：<code>array = [[NSMutableArray alloc] init];</code>。若要给他赋值，还是得使用__block修饰符。</p>
 <p><strong>PS</strong>：不会自动截获C语言数组：<code>char text[] = &quot;hello&quot;;</code>；但是可以截获指针：<code>char *text = &quot;hallo&quot;;</code>。</p>
 </li>
@@ -302,7 +310,56 @@
 <li><p>Block其实就是Objective-C对象 </p>
 </li>
 <li><p>来看看具体实现</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">int main() &#123;</div><div class="line">  	void (^blk)(void) = ^&#123;printf(&quot;Bolck.../n&quot;);&#125;;</div><div class="line">  	blk();</div><div class="line">  	return 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 经过编译器转化之后 */</div><div class="line"></div><div class="line">/* 下面的结构体表示的是Block对象 */</div><div class="line">struct __main_block_impl_0 &#123;</div><div class="line">  	void *isa; // OC对象都有一个isa指向它的类，表明这个对象是一个什么类</div><div class="line">  	</div><div class="line">  	/* 无关紧要的一些成员 */</div><div class="line">  	int Flags;</div><div class="line">  	int Reserved;</div><div class="line">  	struct __main_block_desc_0 *Desc; // 一个结构体指针，后面会有定义，大概和系统有关</div><div class="line">  </div><div class="line">  	void *FuncPtr; // 函数指针，指向这个Block的匿名函数，也就是 &#123;printf(&quot;Block.../n&quot;);&#125;</div><div class="line">  </div><div class="line">  	/* 结构体的初始化函数 */</div><div class="line">  	__main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags = 0) &#123;</div><div class="line">      	// 传入的参数是匿名函数的函数指针，__main_block_desc_0结构体指针和flags</div><div class="line">      	isa = &amp;_NSConcreteStackBlock; // 初始化isa</div><div class="line">      	Flags = flags;</div><div class="line">      	FuncPtr = fp;</div><div class="line">      	Desc = desc;</div><div class="line">  	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 下面代码的结构体 就是上面Block结构体中的那个无关理解的结构体指针成员的定义 */</div><div class="line">static struct __main_block_desc_0 &#123;</div><div class="line">  	unsigned long reserved;</div><div class="line">  	unsigned long Block_size;</div><div class="line">&#125; __main_block_desc_0_DATA = &#123;</div><div class="line">  	0,</div><div class="line">  	sizeof(struct __main_block_impl_0)</div><div class="line">&#125;;</div><div class="line"></div><div class="line">/* 匿名函数的定义，传入的参数是Block结构体指针 */</div><div class="line">static void __main_block_func_0(struct __main_block_impl_0 *__cself) &#123;</div><div class="line">  	printf(&quot;Block.../n&quot;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* main函数的实现 */</div><div class="line">int main &#123;</div><div class="line">  	void (*blk)(void) = &amp;__main_block_impl_0(__main_block_func_0, &amp;__main_block_desc_0_DATA); // 初始化Block，其实也就是创建Block结构体</div><div class="line">  	blk-&gt;FuncPtr(blk); // 执行Block，也就是执行Block结构体中的函数，传入结构体本身</div><div class="line">  	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">int main() {
+      void (^blk)(void) = ^{printf(&quot;Bolck.../n&quot;);};
+      blk();
+      return 0;
+}
+
+/* 经过编译器转化之后 */
+
+/* 下面的结构体表示的是Block对象 */
+struct __main_block_impl_0 {
+      void *isa; // OC对象都有一个isa指向它的类，表明这个对象是一个什么类
+
+      /* 无关紧要的一些成员 */
+      int Flags;
+      int Reserved;
+      struct __main_block_desc_0 *Desc; // 一个结构体指针，后面会有定义，大概和系统有关
+
+      void *FuncPtr; // 函数指针，指向这个Block的匿名函数，也就是 {printf(&quot;Block.../n&quot;);}
+
+      /* 结构体的初始化函数 */
+      __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags = 0) {
+          // 传入的参数是匿名函数的函数指针，__main_block_desc_0结构体指针和flags
+          isa = &amp;_NSConcreteStackBlock; // 初始化isa
+          Flags = flags;
+          FuncPtr = fp;
+          Desc = desc;
+      }
+}
+
+/* 下面代码的结构体 就是上面Block结构体中的那个无关理解的结构体指针成员的定义 */
+static struct __main_block_desc_0 {
+      unsigned long reserved;
+      unsigned long Block_size;
+} __main_block_desc_0_DATA = {
+      0,
+      sizeof(struct __main_block_impl_0)
+};
+
+/* 匿名函数的定义，传入的参数是Block结构体指针 */
+static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
+      printf(&quot;Block.../n&quot;);
+}
+
+/* main函数的实现 */
+int main {
+      void (*blk)(void) = &amp;__main_block_impl_0(__main_block_func_0, &amp;__main_block_desc_0_DATA); // 初始化Block，其实也就是创建Block结构体
+      blk-&gt;FuncPtr(blk); // 执行Block，也就是执行Block结构体中的函数，传入结构体本身
+      return 0;
+}
+</code></pre>
 <p>上面这个编译的过程就是：</p>
 <ol>
 <li>在main函数外面，先对Block做定义：Block是一个结构体，他有一个成员是匿名函数的函数指针；这个结构体的构造函数需要传入匿名函数的函数指针。</li>
@@ -312,12 +369,107 @@
 <p><strong>PS</strong>：结构体的初始化里面的<code>isa = &amp;_NSConcreteStackBlock;</code>就是在将结构体当做OC对象在处理，他将OC对象的信息放在isa里面。</p>
 </li>
 <li><p>看看如何截获自动变量</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">int main() &#123;</div><div class="line">  	int dmy = 256; // 不会被截获的变量</div><div class="line">  	int val = 10; // 被截获</div><div class="line">  	const chat *fmt = &quot;val = %d/n&quot;;</div><div class="line">  	void (^blk)(void) = ^&#123;printf(fmt, val);&#125;;</div><div class="line">  	blk();</div><div class="line">  	return 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 经过编译之后 */</div><div class="line"></div><div class="line">/* Block结构体定义 */</div><div class="line">struct __main_block_impl_0 &#123;</div><div class="line">  	/* 如前所诉 */</div><div class="line">  	void *isa;</div><div class="line">  	int Flags;</div><div class="line">  	int Reserved;</div><div class="line">  	void *FuncPtr;</div><div class="line">  	struct __main_block_desc_0 *Desc;</div><div class="line">  	</div><div class="line">  	/* 截获的自动变量，变成了结构体成员 */</div><div class="line">  	const char *fmt;</div><div class="line">  	int val;</div><div class="line">  </div><div class="line">  	/* 初始化函数，这里会使用截获的自动变量对成员进行赋值 */</div><div class="line">  	__main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, const char *_fmt, int _val, int flags = 0) :fmt(_fmt), val(_val) &#123;</div><div class="line">      	/* 如前所诉,就省略了 */</div><div class="line">      	//...</div><div class="line">  	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* __main_block_desc_0结构体定义，同上，省略 */</div><div class="line"></div><div class="line">/* 匿名函数定义 */</div><div class="line">static void __main_block_func_0(struct __main_block_impl_0 *__cself) &#123;</div><div class="line">  	const char *fmt = __cself-&gt;fmt;</div><div class="line">  	int val = __cself-&gt;val;</div><div class="line">  	</div><div class="line">  	printf(fmt, val);</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* main函数实现 */</div><div class="line">int main() &#123;</div><div class="line">  	int dmy = 256;</div><div class="line">  	int val = 10;</div><div class="line">  	const char *fmt = &quot;val = %d/n&quot;;</div><div class="line">  	</div><div class="line">  	void (*blk)(void) = &amp;__main_block_impl_0(__main_block_func_0, &amp;main_block_desc_0_DATA, fmt, val); // 这里进行Block的初始化</div><div class="line">  	 blk-&gt;FuncPtr(blk); // 执行Block</div><div class="line">  		</div><div class="line">  	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">int main() {
+      int dmy = 256; // 不会被截获的变量
+      int val = 10; // 被截获
+      const chat *fmt = &quot;val = %d/n&quot;;
+      void (^blk)(void) = ^{printf(fmt, val);};
+      blk();
+      return 0;
+}
+
+/* 经过编译之后 */
+
+/* Block结构体定义 */
+struct __main_block_impl_0 {
+      /* 如前所诉 */
+      void *isa;
+      int Flags;
+      int Reserved;
+      void *FuncPtr;
+      struct __main_block_desc_0 *Desc;
+
+      /* 截获的自动变量，变成了结构体成员 */
+      const char *fmt;
+      int val;
+
+      /* 初始化函数，这里会使用截获的自动变量对成员进行赋值 */
+      __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, const char *_fmt, int _val, int flags = 0) :fmt(_fmt), val(_val) {
+          /* 如前所诉,就省略了 */
+          //...
+      }
+}
+
+/* __main_block_desc_0结构体定义，同上，省略 */
+
+/* 匿名函数定义 */
+static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
+      const char *fmt = __cself-&gt;fmt;
+      int val = __cself-&gt;val;
+
+      printf(fmt, val);
+}
+
+/* main函数实现 */
+int main() {
+      int dmy = 256;
+      int val = 10;
+      const char *fmt = &quot;val = %d/n&quot;;
+
+      void (*blk)(void) = &amp;__main_block_impl_0(__main_block_func_0, &amp;main_block_desc_0_DATA, fmt, val); // 这里进行Block的初始化
+       blk-&gt;FuncPtr(blk); // 执行Block
+
+      return 0;
+}
+</code></pre>
 <p>从上面可以看出，在初始化得时候，将自动变量传入了Block结构体的初始化函数，进行保存。所以之后对这些自动变量进行修改，Block结构体里面的这些保存在结构体成员里的变量是不受影响的。</p>
 </li>
 <li><p><strong>__block</strong>的实现</p>
 <p>__block变量也定义在main函数之外，不在只是一个简单的变量，而是变成了结构体：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">struct __Block_byref_val_0 &#123;</div><div class="line">  	void *isa;</div><div class="line">  	__Block_byref_val_0 *__forwarding; // 指向自己的指针</div><div class="line">  	int __flags;</div><div class="line">  	int __size;</div><div class="line">  	int val; // 原来的自动变量</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* Block里面含有__block变量的结构体指针 */</div><div class="line">struct __main_block_impl_0 &#123;</div><div class="line">  	/* 同上的成员省略 */</div><div class="line">  	__Block_byref_val_0 *val; // 指向val结构体的指针</div><div class="line">  	</div><div class="line">  	/* 结构体初始化函数，使用val结构体的__forwarding成员变量初始化Block结构体的val指针 */</div><div class="line">  	__main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, __Block_byref_val_0 *_val, int flags = 0) : val(_val-&gt;forwarding) &#123;</div><div class="line">      	/* 同上 省略 */</div><div class="line">  	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 匿名函数 */</div><div class="line">static void __main_block_func_0(struct __main_block_impl_0 *__cself) &#123;</div><div class="line">  	__Block_byref_val_0 *val = __cself-&gt;val;</div><div class="line">  	val-&gt;forwarding-&gt;val = 1; // 在这里 val和val-&gt;forwarding其实都指的是自己</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* main函数里面 */</div><div class="line">int main() &#123;</div><div class="line">  	int val = 10;</div><div class="line">  	void (^blk)(void) = ^&#123;val = 1;&#125;;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 转化之后 val变成结构体 */</div><div class="line">int main() &#123;</div><div class="line">  	__Block_byref_val_0 val = &#123;</div><div class="line">      	0,</div><div class="line">      	&amp;val, // 指向自身的指针</div><div class="line">      	0,</div><div class="line">      	sizeof(__Block_byref_val_0),</div><div class="line">      	10 // 初始化</div><div class="line">  	&#125;;</div><div class="line">  	</div><div class="line">  	blk = &amp;__main_block_impl_0(__main_block_func_0, &amp;__main_block_desc_0_DATA, &amp;val); // 初始化Block结构体时将val结构体地址传过去</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">struct __Block_byref_val_0 {
+      void *isa;
+      __Block_byref_val_0 *__forwarding; // 指向自己的指针
+      int __flags;
+      int __size;
+      int val; // 原来的自动变量
+}
+
+/* Block里面含有__block变量的结构体指针 */
+struct __main_block_impl_0 {
+      /* 同上的成员省略 */
+      __Block_byref_val_0 *val; // 指向val结构体的指针
+
+      /* 结构体初始化函数，使用val结构体的__forwarding成员变量初始化Block结构体的val指针 */
+      __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, __Block_byref_val_0 *_val, int flags = 0) : val(_val-&gt;forwarding) {
+          /* 同上 省略 */
+      }
+}
+
+/* 匿名函数 */
+static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
+      __Block_byref_val_0 *val = __cself-&gt;val;
+      val-&gt;forwarding-&gt;val = 1; // 在这里 val和val-&gt;forwarding其实都指的是自己
+}
+
+/* main函数里面 */
+int main() {
+      int val = 10;
+      void (^blk)(void) = ^{val = 1;};
+}
+
+/* 转化之后 val变成结构体 */
+int main() {
+      __Block_byref_val_0 val = {
+          0,
+          &amp;val, // 指向自身的指针
+          0,
+          sizeof(__Block_byref_val_0),
+          10 // 初始化
+      };
+
+      blk = &amp;__main_block_impl_0(__main_block_func_0, &amp;__main_block_desc_0_DATA, &amp;val); // 初始化Block结构体时将val结构体地址传过去
+}
+</code></pre>
 <p>将val变量变成存放在栈上的结构体，这也就是__block变量</p>
 </li>
 <li><p>Block存储域</p>
@@ -328,19 +480,68 @@
 </ol>
 <p>存放在数据区域的Block相当于全局变量，不能截获自动变量，全局只有一个实例。所有不需要截获自动变量的Block都是这种类型的。</p>
 <p>其他的Block都现在栈上生成，但是当超过这个Block的作用域，但是又要使用该Block时，就会将Block从栈上复制到堆上。例如下面的例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">typedef int (^blk_t)(int);</div><div class="line">blk_t func(int rate) &#123;</div><div class="line">  	return ^(int count)(return rate *count);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">typedef int (^blk_t)(int);
+blk_t func(int rate) {
+      return ^(int count)(return rate *count);
+}
+</code></pre>
 <p>这里Block在函数内生成后，返回时就已经离开Block的作用域了。这时候就需要将他copy到堆上</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">blkt func(int rate) &#123;</div><div class="line">  	blkt tmp = &amp;__func_block_impl_0(__func_block_func_0, &amp;__func_block_desc_0_DATA, rate);</div><div class="line">  	tmp = _Block_copy(tmp); // 将栈上的Block复制到堆上</div><div class="line">  	return objc_autoreleaseReturnValue(tmp); // 将tmp注册到NSAutoreleasePool，说明Block也是OC对象</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">blkt func(int rate) {
+      blkt tmp = &amp;__func_block_impl_0(__func_block_func_0, &amp;__func_block_desc_0_DATA, rate);
+      tmp = _Block_copy(tmp); // 将栈上的Block复制到堆上
+      return objc_autoreleaseReturnValue(tmp); // 将tmp注册到NSAutoreleasePool，说明Block也是OC对象
+}
+</code></pre>
 <p>出了函数之后，栈上的Block就会被释放，这个时候只能使用在堆上的Block了。很多情况下编译器会帮助我们自动复制的，但是NSArray得<code>initWithObjects</code>方法就不会自动复制：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">- (id)getBlockArray &#123;</div><div class="line">  	int val = 10;</div><div class="line">  	return [[NSArray alloc] initWithObjects:</div><div class="line">           ^&#123;NSLog(@&quot;haha&quot;);&#125;,</div><div class="line">           ^&#123;NSLog(@&quot;yaya&quot;);&#125;, nil];</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 这种情况下返回的NSArray，如果去获取NSArray中的Block对象，是会出错的，因为这些Block在出函数时被废弃了， 这时就需要我们手动复制了，也就是调用copy方法</div><div class="line"></div><div class="line">- (id)getBlockArray &#123;</div><div class="line">  	int val = 10;</div><div class="line">  	return [[NSArray alloc] initWithObjects:</div><div class="line">           [^&#123;NSLog(@&quot;haha&quot;);&#125; copy],</div><div class="line">           [^&#123;NSLog(@&quot;yaya&quot;);&#125; copy], nil];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">- (id)getBlockArray {
+      int val = 10;
+      return [[NSArray alloc] initWithObjects:
+           ^{NSLog(@&quot;haha&quot;);},
+           ^{NSLog(@&quot;yaya&quot;);}, nil];
+}
+
+// 这种情况下返回的NSArray，如果去获取NSArray中的Block对象，是会出错的，因为这些Block在出函数时被废弃了， 这时就需要我们手动复制了，也就是调用copy方法
+
+- (id)getBlockArray {
+      int val = 10;
+      return [[NSArray alloc] initWithObjects:
+           [^{NSLog(@&quot;haha&quot;);} copy],
+           [^{NSLog(@&quot;yaya&quot;);} copy], nil];
+}
+</code></pre>
 <p><strong>PS</strong>：当Block被复制到堆上时，它 <strong>使用</strong> 的__block变量也会从栈上被复制到堆上，这个时候该变量会被Block <strong>持有</strong>。如果还有在栈上的其他Block使用block变量的话，block变量还会保留在栈上，但是他的 <strong>forwarding</strong>指针已经指向堆上的block变量了，所以改变block变量的话，始终改变的都是同一个结构体。</p>
 </li>
 <li><p>看看如何截获OC对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id array = [[NSMutableArray alloc] init];</div><div class="line">  	blk = [^(id obj) &#123;</div><div class="line">      	[array addObject:obj];</div><div class="line">  	&#125; copy];</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 注意 可以理解成 Block里面的array结构体成员强引用NSMutableArray对象 */</div><div class="line">struct __main_block_impl_0 &#123;</div><div class="line">  	id __strong array; // 强引用</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">{
+      id array = [[NSMutableArray alloc] init];
+      blk = [^(id obj) {
+          [array addObject:obj];
+      } copy];
+}
+
+/* 注意 可以理解成 Block里面的array结构体成员强引用NSMutableArray对象 */
+struct __main_block_impl_0 {
+      id __strong array; // 强引用
+}
+</code></pre>
 <p>但实际上结构体对__strong是没有概念的，不过此时的结构体会手动加上ARC的概念上去。当Block从栈上复制到堆上时，OC对象被Block持有；当Block从堆上废弃时，OC对象被释放。所以，<strong>很重要的一点</strong>：只有Block被复制到堆上时，OC对象，才能被Block持有；也就是要调用Block的copy函数。</p>
 </li>
 <li><p>__block类型的OC对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">__block id obj = [[NSObject alloc] init];</div><div class="line"></div><div class="line">/* 编译之后 */</div><div class="line">struct __Block_byref_obj_0 &#123;</div><div class="line">  	void *isa;</div><div class="line">  	__Block_byref_obj_0 *__forwarding;</div><div class="line">  	int __flags;</div><div class="line">  	int __size;</div><div class="line">  </div><div class="line">  	void (*__Block_byref_id_object_copy)(void*, void*); // 用来使Block持有对象</div><div class="line">  	void (*__Block_byref_id_object_dispose)(void*); // 用来使Block释放对象</div><div class="line">  	</div><div class="line">  	__strong id obj;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">__block id obj = [[NSObject alloc] init];
+
+/* 编译之后 */
+struct __Block_byref_obj_0 {
+      void *isa;
+      __Block_byref_obj_0 *__forwarding;
+      int __flags;
+      int __size;
+
+      void (*__Block_byref_id_object_copy)(void*, void*); // 用来使Block持有对象
+      void (*__Block_byref_id_object_dispose)(void*); // 用来使Block释放对象
+
+      __strong id obj;
+}
+</code></pre>
 <p>所以__block类型的OC对象也是讲OC对象封装成一个结构体，和之前的block类型的自动变量一样，只不过添加了retain和release的概念而已。</p>
 <p><strong>PS</strong>：如果对象是weak类型的，和上一篇里面分析weak和strong的一样。Block也只是含有一个指向对象的指针而已，如果该指针为weak，那么该置成nil，还是要置成nil。</p>
 </li>
@@ -645,7 +846,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

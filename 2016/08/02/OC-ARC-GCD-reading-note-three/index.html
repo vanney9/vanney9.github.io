@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -293,7 +293,8 @@
 </li>
 <li><p><code>dispatch_queue_create;</code></p>
 <p>这个API用来生成Dispatch Queue。看看下面代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t mySerialDispatchQueue = dispatch_queue_create(&quot;com.vanney9.serialQueue&quot;, NULL);</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">dispatch_queue_t mySerialDispatchQueue = dispatch_queue_create(&quot;com.vanney9.serialQueue&quot;, NULL);
+</code></pre>
 <p>上面的代码用来生成一个Serial dispatch queue，这个函数有两个参数：第一个是queue的名字，最好唯一；第二个是代表生成的queue的类型，若指定为NULL，则生成serial dispatch queue，若指定为<code>DISPATCH_QUEUE_CONCURRENT</code>，则生成concurrent dispatch queue。返回类型是<em>dispatch_queue_t</em>。</p>
 <p><strong>PS</strong>：生成的queue，要通过<code>dispatch_release</code>函数手动释放。</p>
 </li>
@@ -305,26 +306,57 @@
 </li>
 <li><p><code>dispatch_set_target_queue</code> （有点晕）</p>
 <p>该函数用来设置queue的优先级。默认情况下，使用<code>dispatch_queue_create</code>生成的queue都是和Global dispatch queue的默认优先级相同。可以使用该函数来改变优先级：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t mySerialQueue = dispatch_queue_create(&quot;com.vanney9.serialQueue&quot;, NULL); // 优先级为Default Priority</div><div class="line">dispatch_queue_t globalBackgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0); // 获取Background Priority的queue</div><div class="line">dispatch_set_target_queue(mySerialQueue, globalBackgroundQueue); // 设置mySerialQueue的优先级和globalBackgroundQueue的相同</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">dispatch_queue_t mySerialQueue = dispatch_queue_create(&quot;com.vanney9.serialQueue&quot;, NULL); // 优先级为Default Priority
+dispatch_queue_t globalBackgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0); // 获取Background Priority的queue
+dispatch_set_target_queue(mySerialQueue, globalBackgroundQueue); // 设置mySerialQueue的优先级和globalBackgroundQueue的相同
+</code></pre>
 </li>
 <li><p><code>dispatch_after(time, queue, block);</code></p>
 <p>该函数表示在time时间之后（比如3s后）将block加到queue中。</p>
 </li>
 <li><p>Dispatch Group</p>
 <p>追加到dispatch queue中的多个处理都结束时，想进行一些处理该如何实现呢？对于serial dispatch queue，这很简单；但是如果是concurrent dispatch queue，这时候就需要<strong>Dispatch Group</strong>。如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0); //先创建一个concurrent queue</div><div class="line">dispatch_group_t group = dispatch_group_create(); // 创建一个group</div><div class="line"></div><div class="line">/* 再将3个Block添加到这个queue中，并且属于同一个group */</div><div class="line">dispatch_group_async(group, queue, ^&#123;NSLog(@&quot;blk1&quot;);&#125;);</div><div class="line">dispatch_group_async(group, queue, ^&#123;NSLog(@&quot;blk2&quot;);&#125;);</div><div class="line">dispatch_group_async(group, queue, ^&#123;NSLog(@&quot;blk3&quot;);&#125;);</div><div class="line"></div><div class="line">dispatch_group_notify(group, dispatch_get_main_queue(), ^&#123;NSLog(@&quot;Done&quot;);&#125;); // 全部结束后通知主线程，将Block追加到主线程中</div><div class="line"></div><div class="line">dispatch_release(group); // 释放group。因为Global dispatch queue不需要我们手动释放</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0); //先创建一个concurrent queue
+dispatch_group_t group = dispatch_group_create(); // 创建一个group
+
+/* 再将3个Block添加到这个queue中，并且属于同一个group */
+dispatch_group_async(group, queue, ^{NSLog(@&quot;blk1&quot;);});
+dispatch_group_async(group, queue, ^{NSLog(@&quot;blk2&quot;);});
+dispatch_group_async(group, queue, ^{NSLog(@&quot;blk3&quot;);});
+
+dispatch_group_notify(group, dispatch_get_main_queue(), ^{NSLog(@&quot;Done&quot;);}); // 全部结束后通知主线程，将Block追加到主线程中
+
+dispatch_release(group); // 释放group。因为Global dispatch queue不需要我们手动释放
+</code></pre>
 <p>上面的<code>dispatch_group_notify</code>函数在group中的三个block全部都执行完之后，才会将<code>^{NSLog(@&quot;Done&quot;);}</code>这一个Block追加到主线程中去。还可以使用<code>dispatch_group_wait</code>函数，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 1ull *NSEC_PER_SEC); // 1s的时间</div><div class="line">long result = dispatch_group_wait(group, time); // 表示group经过1s之后，是什么结果</div><div class="line">if (result == 0) &#123;</div><div class="line">  	/* result == 0，那么group中的Block已经全部处理完 */</div><div class="line">&#125; else &#123;</div><div class="line">  	/* result != 0， 那么还没处理完 */</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 1ull *NSEC_PER_SEC); // 1s的时间
+long result = dispatch_group_wait(group, time); // 表示group经过1s之后，是什么结果
+if (result == 0) {
+      /* result == 0，那么group中的Block已经全部处理完 */
+} else {
+      /* result != 0， 那么还没处理完 */
+}
+</code></pre>
 <p><strong>PS</strong>：注意，执行<code>dispatch_gropu_wait</code>的线程是处于停滞状态的，只有当该函数返回后，才会执行之后的操作，所以还是推荐使用<code>dispatch_group_notify;</code>，异步，无阻塞。</p>
 </li>
 <li><p><code>dispatch_barrier_async</code></p>
 <p>该函数和concurrent dispatch queue一起使用，看看例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">dispatch_async(queue, blk_reading1); // 注意这里queue是concurrent dispatch queue </div><div class="line">dispatch_async(queue, blk_reading2);</div><div class="line">dispatch_async(queue, blk_reading3);</div><div class="line">dispatch_barrier_async(queue, blk_writing);</div><div class="line">dispatch_async(queue, blk_reading4);</div><div class="line">dispatch_async(queue, blk_reading5);</div><div class="line">dispatch_async(queue, blk_reading6);</div><div class="line">dispatch_async(queue, blk_reading7);</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">dispatch_async(queue, blk_reading1); // 注意这里queue是concurrent dispatch queue 
+dispatch_async(queue, blk_reading2);
+dispatch_async(queue, blk_reading3);
+dispatch_barrier_async(queue, blk_writing);
+dispatch_async(queue, blk_reading4);
+dispatch_async(queue, blk_reading5);
+dispatch_async(queue, blk_reading6);
+dispatch_async(queue, blk_reading7);
+</code></pre>
 <p>上面的代码会同时先执行blk_reading1,blk_reading2和blk_reading3这三个读取操作，然后等执行完后再单独执行blk_writing这一写入操作，最后等写入完成后再开始同时执行之后的4的读取操作。</p>
 </li>
 <li><p><code>dispatch_sync</code></p>
 <p>该函数同步执行block，也就是说block不执行完，就一直停留在这个函数这里，容易导致死锁。看看例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t queue = dispatch_get_main_queue(); // 注意，这段代码在主线程上执行。获取主线程</div><div class="line">dispatch_sync(queue, block); // 死锁</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">dispatch_queue_t queue = dispatch_get_main_queue(); // 注意，这段代码在主线程上执行。获取主线程
+dispatch_sync(queue, block); // 死锁
+</code></pre>
 <p><code>dispatch_sync</code>在主线程上将block追加到主线程去处理，这时候程序一直卡在<code>dispatch_sync</code>这里。因为该函数一直在等待block处理结束；但是block的处理也是在主线程上，需要等当前这些操作结束后，才会去执行block。这样就卡住了，死锁，GG。</p>
 </li>
 <li><p><code>dispatch_apply</code></p>
@@ -641,7 +673,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

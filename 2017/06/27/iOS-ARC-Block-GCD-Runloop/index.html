@@ -33,7 +33,7 @@ GCD与runloop">
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -303,7 +303,12 @@ GCD与runloop">
 <h4 id="alloc-new-copy-mutableCopy"><a href="#alloc-new-copy-mutableCopy" class="headerlink" title="alloc/new/copy/mutableCopy"></a>alloc/new/copy/mutableCopy</h4><p>这几个函数生成一个对象，并且该对象的引用计数为1</p>
 <h4 id="retain"><a href="#retain" class="headerlink" title="retain"></a>retain</h4><p><code>retain</code>函数将对象的引用计数加1</p>
 <h4 id="release"><a href="#release" class="headerlink" title="release"></a>release</h4><p><code>release</code>函数将对象的引用计数减一</p>
-<h4 id="examples"><a href="#examples" class="headerlink" title="examples"></a>examples</h4><h5 id="autorelease函数"><a href="#autorelease函数" class="headerlink" title="autorelease函数"></a>autorelease函数</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]  // 1</div><div class="line">id obj = [[NSObject alloc] init];                           // 2</div><div class="line">[obj autorelease];                                          // 3</div><div class="line">[id dosomething];                                           // 4</div><div class="line">[pool drain];                                               // 5</div></pre></td></tr></table></figure>
+<h4 id="examples"><a href="#examples" class="headerlink" title="examples"></a>examples</h4><h5 id="autorelease函数"><a href="#autorelease函数" class="headerlink" title="autorelease函数"></a>autorelease函数</h5><pre><code class="objective-c">NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]  // 1
+id obj = [[NSObject alloc] init];                           // 2
+[obj autorelease];                                          // 3
+[id dosomething];                                           // 4
+[pool drain];                                               // 5
+</code></pre>
 <ol>
 <li>注释2处，使用<code>alloc</code>方法新建一个对象，该对象的引用计数为1</li>
 <li>注释3处，调用了<code>autorelease</code>函数；该函数并没有更改对象的引用计数，但是它将对象注册到自动释放池中</li>
@@ -312,9 +317,15 @@ GCD与runloop">
 </ol>
 <p>所以从上面看出：<strong><code>autorelease</code>函数并没有改变对象的引用计数，只是简单的将对象与释放池挂钩；当<code>pool drain</code>时才调用对象的<code>release</code>函数</strong>。</p>
 <p>所以 <strong><code>autorelease</code>函数实质就是延迟对象的<code>release</code>方法；可以让你放心使用对象，但又防止了你忘记释放对象</strong></p>
-<h5 id="array类对象"><a href="#array类对象" class="headerlink" title="array类对象"></a>array类对象</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">id obj = [NSMutableArray array];</div></pre></td></tr></table></figure>
+<h5 id="array类对象"><a href="#array类对象" class="headerlink" title="array类对象"></a>array类对象</h5><pre><code class="objective-c">id obj = [NSMutableArray array];
+</code></pre>
 <p>这里不需要调用对象的<code>release</code>方法。因为在内部的实现是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (id)array &#123;</div><div class="line">  	id obj = [[NSMutableArray alloc] init];</div><div class="line">  	[obj autorelease];</div><div class="line">  	return obj;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">+ (id)array {
+      id obj = [[NSMutableArray alloc] init];
+      [obj autorelease];
+      return obj;
+}
+</code></pre>
 <p><code>array</code>类方法返回的对象，该对象的引用计数为1；但是已经注册到自动释放池中了，会在释放池结束时调用<code>release</code>方法</p>
 <h4 id="MRC总结"><a href="#MRC总结" class="headerlink" title="MRC总结"></a>MRC总结</h4><p>对象一定成对的存在 <code>alloc</code> 和  <code>release</code>方法；或者成对的存在<code>retain</code> 和  <code>release</code> 方法。只有这样才能对引用计数有增有减，才能保证对象能正确的释放。</p>
 <p>如果没有成对的出现，但是程序又是正确的，那么这3个方法的调用肯定在某函数的内部。比如<code>[pool drain]</code> 或者 <code>[NSMutableArray array]</code> 等函数中。</p>
@@ -326,10 +337,44 @@ GCD与runloop">
 </ol>
 <p>使用以上三个修饰符对对象进行修饰，那么就会自动增减引用计数</p>
 <h4 id="strong"><a href="#strong" class="headerlink" title="__strong"></a>__strong</h4><p><strong>会自动release</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id obj = [[NSObject alloc] init];</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 转化之后</div><div class="line"></div><div class="line">id obj = objc_msgSend(NSObject, @selector(alloc));</div><div class="line">objc_msgSend(obj, @selector(init));</div><div class="line">objc_release(obj);</div><div class="line"></div><div class="line">/*--------------------------分割符------------------*/</div><div class="line">&#123;</div><div class="line">  	id __strong obj = obj2;</div><div class="line">    // do something</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 转化之后</div><div class="line"></div><div class="line">id obj = obj2;</div><div class="line">[obj retain];</div><div class="line">// do something</div><div class="line">[obj release];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">{
+      id obj = [[NSObject alloc] init];
+}
+
+// 转化之后
+
+id obj = objc_msgSend(NSObject, @selector(alloc));
+objc_msgSend(obj, @selector(init));
+objc_release(obj);
+
+/*--------------------------分割符------------------*/
+{
+      id __strong obj = obj2;
+    // do something
+}
+
+// 转化之后
+
+id obj = obj2;
+[obj retain];
+// do something
+[obj release];
+</code></pre>
 <p>可以看到<code>__strong</code>会持有对象，并自动调用release将引用计数减一</p>
 <p><strong>会阻止对象注册到release pool中，并持有对象</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">   id __strong obj = [NSMutableArray array];</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 转化之后</div><div class="line"></div><div class="line">id obj = objc_msgSend(NSMutableArray, @selector(alloc));</div><div class="line">objc_msgSend(obj, @selector(init));</div><div class="line">return objc_autoreleaseReturnValue(obj);  </div><div class="line"></div><div class="line">objc_retainAutoreleasedReturnValue(obj);</div><div class="line">objc_release(obj);</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">{
+   id __strong obj = [NSMutableArray array];
+}
+
+// 转化之后
+
+id obj = objc_msgSend(NSMutableArray, @selector(alloc));
+objc_msgSend(obj, @selector(init));
+return objc_autoreleaseReturnValue(obj);  
+
+objc_retainAutoreleasedReturnValue(obj);
+objc_release(obj);
+</code></pre>
 <p>可以看到，__strong会将即将注册到pool的对象抢过来，自己持有，并释放。</p>
 <h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p><code>__strong</code>修饰符会持有对象，并自动释放。有时会抢过pool的对象，来自己释放</p>
 <h4 id="autorelease"><a href="#autorelease" class="headerlink" title="__autorelease"></a>__autorelease</h4><p>不常用，基本原理：</p>
@@ -338,7 +383,9 @@ GCD与runloop">
 <li>对于其他对象，会将对象retain，并强制注册到pool，由pool来release</li>
 </ol>
 <h4 id="weak"><a href="#weak" class="headerlink" title="__weak"></a>__weak</h4><p>weak变量不对引用计数产生影响。来看一下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id __weak obj1 = obj;</div><div class="line">id __weak obj2 = obj;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">id __weak obj1 = obj;
+id __weak obj2 = obj;
+</code></pre>
 <p>APP管理一个全局的weak表，上面这两行代码，会往该表中插入2行记录：</p>
 <p>每行记录的key是对象的首地址，也就是 <code>obj</code> ；value是存放weak变量的地址，也就是<code>&amp;obj1</code> 和 <code>&amp;obj2</code> 。</p>
 <ol>
@@ -346,27 +393,176 @@ GCD与runloop">
 <li>当对象被废弃时，这时候obj1,obj2应该指向nil。这时就将weak表中，key为<code>obj</code>的记录的key置成nil</li>
 </ol>
 <p><strong>所以寻找weak变量对应的对象地址时，其实就是寻找weak表中的key值</strong></p>
-<h5 id="使用-weak变量时"><a href="#使用-weak变量时" class="headerlink" title="使用__weak变量时"></a>使用__weak变量时</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	id __weak o = obj;</div><div class="line">  	NSLog(@&quot;%@&quot;, o);</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 转化之后</div><div class="line"></div><div class="line">id o;</div><div class="line">objc_initWeak(&amp;o, obj);</div><div class="line">id tmp = objc_loadWeakRetained(&amp;o);</div><div class="line">objc_autorelease(tmp);</div><div class="line">NSLog(@&quot;%@&quot;, tmp);</div><div class="line">objc_destoryWeak(&amp;o);</div></pre></td></tr></table></figure>
+<h5 id="使用-weak变量时"><a href="#使用-weak变量时" class="headerlink" title="使用__weak变量时"></a>使用__weak变量时</h5><pre><code class="objective-c">{
+      id __weak o = obj;
+      NSLog(@&quot;%@&quot;, o);
+}
+
+// 转化之后
+
+id o;
+objc_initWeak(&amp;o, obj);
+id tmp = objc_loadWeakRetained(&amp;o);
+objc_autorelease(tmp);
+NSLog(@&quot;%@&quot;, tmp);
+objc_destoryWeak(&amp;o);
+</code></pre>
 <p>可以看到使用weak变量时，其实是将该weak变量指向的对象交由一个tmp变量持有，并将该对象注册到pool中。这样可以保证对象万一被释放了，也至少还有tmp持有他，可以正常使用。</p>
 <h2 id="Block的实现"><a href="#Block的实现" class="headerlink" title="Block的实现"></a>Block的实现</h2><p><strong>使用clang的<code>-rewrite-objc</code>选项，可以将OC代码转换成C++代码。这样就可以看到Block的C++的实现</strong></p>
-<h3 id="不截获任何变量的Block"><a href="#不截获任何变量的Block" class="headerlink" title="不截获任何变量的Block"></a>不截获任何变量的Block</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">int main() &#123;</div><div class="line">  void (^blk)(void) = ^&#123;printf(&quot;Block\n&quot;);&#125;;</div><div class="line">  blk();</div><div class="line">  return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="不截获任何变量的Block"><a href="#不截获任何变量的Block" class="headerlink" title="不截获任何变量的Block"></a>不截获任何变量的Block</h3><pre><code class="objective-c">int main() {
+  void (^blk)(void) = ^{printf(&quot;Block\n&quot;);};
+  blk();
+  return 0;
+}
+</code></pre>
 <p>经过 <code>clang -rewrite-objc main.m</code> 转化之后，生成<code>main.cpp</code> 。来看看Block在C++中如何表现：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 只截取关键代码</span></div><div class="line"><span class="keyword">struct</span> <span class="number">__</span>main_block_impl_0 &#123;</div><div class="line">  <span class="keyword">void</span> *isa;</div><div class="line">  <span class="keyword">int</span> Flags;</div><div class="line">  <span class="keyword">int</span> Reserved;</div><div class="line">  <span class="keyword">void</span> *FuncPtr;</div><div class="line">  <span class="keyword">struct</span> <span class="number">__</span>main_block_desc_0 *Desc;</div><div class="line">  </div><div class="line">  <span class="number">__</span>main_block_impl_0(<span class="keyword">void</span> *fp) &#123;</div><div class="line">    isa = &amp;<span class="number">_</span>NSConcreteStackBlock;</div><div class="line">    FuncPtr = fp;</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">void</span> <span class="number">__</span>main_block_func_0(<span class="keyword">struct</span> <span class="number">__</span>main_block_impl_0 *<span class="number">__</span>cself) &#123;</div><div class="line">  <span class="built_in">printf</span>(<span class="string">"Block\n"</span>);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">struct</span> <span class="number">__</span>main_block_impl_0 tmp = <span class="number">__</span>main_block_impl_0(<span class="number">__</span>main_block_func_0);</div><div class="line">  <span class="keyword">struct</span> <span class="number">__</span>main_block_impl_0 *blk = &amp;tmp;</div><div class="line">  (*blk-&gt;FuncPtr)(blk);</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="c">// 只截取关键代码
+struct __main_block_impl_0 {
+  void *isa;
+  int Flags;
+  int Reserved;
+  void *FuncPtr;
+  struct __main_block_desc_0 *Desc;
+
+  __main_block_impl_0(void *fp) {
+    isa = &amp;_NSConcreteStackBlock;
+    FuncPtr = fp;
+  }
+};
+
+static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
+  printf(&quot;Block\n&quot;);
+};
+
+int main() {
+  struct __main_block_impl_0 tmp = __main_block_impl_0(__main_block_func_0);
+  struct __main_block_impl_0 *blk = &amp;tmp;
+  (*blk-&gt;FuncPtr)(blk);
+  return 0;
+}
+</code></pre>
 <p><strong>可以发现Block实际上是一个结构体，blk变量是指向<code>__main_block_impl_0</code>结构体的指针。该结构体中有一个函数指针 <code>FuncPtr</code>，执行Block时，其实就是执行该结构体中函数指针对应的函数。</strong></p>
-<h3 id="截获变量但不修改的Block"><a href="#截获变量但不修改的Block" class="headerlink" title="截获变量但不修改的Block"></a>截获变量但不修改的Block</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int main() &#123;</div><div class="line">  int val = 10;</div><div class="line">  void (^blk)(void) = ^&#123;printf(&quot;%d&quot;, val);&#125;;</div><div class="line">  blk();</div><div class="line">  return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="截获变量但不修改的Block"><a href="#截获变量但不修改的Block" class="headerlink" title="截获变量但不修改的Block"></a>截获变量但不修改的Block</h3><pre><code class="objective-c">int main() {
+  int val = 10;
+  void (^blk)(void) = ^{printf(&quot;%d&quot;, val);};
+  blk();
+  return 0;
+}
+</code></pre>
 <p>相同的方法，来看一下转化之后的结果：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="number">__</span>main_block_impl_0 &#123;</div><div class="line">  <span class="keyword">void</span> *fp;</div><div class="line">  <span class="keyword">int</span> Flags;</div><div class="line">  <span class="keyword">int</span> Reserved;</div><div class="line">  <span class="keyword">void</span> *FuncPtr;</div><div class="line">  <span class="keyword">struct</span> <span class="number">__</span>main_block_desc_0 *Desc;</div><div class="line">  </div><div class="line">  <span class="keyword">int</span> val;</div><div class="line">  </div><div class="line">  <span class="number">__</span>main_block_impl_0(<span class="keyword">void</span> *fp, <span class="keyword">int</span> <span class="number">_</span>val) : val(<span class="number">_</span>val) &#123;</div><div class="line">    isa = &amp;<span class="number">_</span>NSConcreteStackBlock;</div><div class="line">    FuncPtr = fp;</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">void</span> <span class="number">__</span>main_block_func_0(<span class="keyword">struct</span> <span class="number">__</span>main_block_impl_0 *<span class="number">__</span>cself) &#123;</div><div class="line">  <span class="keyword">int</span> val = <span class="number">__</span>cself-&gt;val;</div><div class="line">  <span class="built_in">printf</span>(<span class="string">"%d"</span>, val);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">int</span> val = <span class="number">10</span>;</div><div class="line">  <span class="keyword">struct</span> <span class="number">__</span>main_block_impl_0 = <span class="number">__</span>main_block_impl_0(<span class="number">__</span>main_block_func_0, val);</div><div class="line">  <span class="keyword">struct</span> <span class="number">__</span>main_block_impl_0 *blk = &amp;tmp;</div><div class="line">  (*blk-&gt;FuncPtr)(blk);</div><div class="line">  </div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="c">struct __main_block_impl_0 {
+  void *fp;
+  int Flags;
+  int Reserved;
+  void *FuncPtr;
+  struct __main_block_desc_0 *Desc;
+
+  int val;
+
+  __main_block_impl_0(void *fp, int _val) : val(_val) {
+    isa = &amp;_NSConcreteStackBlock;
+    FuncPtr = fp;
+  }
+};
+
+static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
+  int val = __cself-&gt;val;
+  printf(&quot;%d&quot;, val);
+}
+
+int main() {
+  int val = 10;
+  struct __main_block_impl_0 = __main_block_impl_0(__main_block_func_0, val);
+  struct __main_block_impl_0 *blk = &amp;tmp;
+  (*blk-&gt;FuncPtr)(blk);
+
+  return 0;
+}
+</code></pre>
 <p><strong>可以看到，对于截获但是未曾改变的变量<code>val</code>，Block结构体会将该变量拷贝到结构体中的同名成员变量中。所以当main函数里面定义的val之后无论如何改变，都不会影响到Block中存储的val变量；因为他们两个是不同的两个变量。</strong></p>
 <h3 id="截获-block变量"><a href="#截获-block变量" class="headerlink" title="截获__block变量"></a>截获__block变量</h3><p>当要在Block里面改变截获的变量时，需要使用<strong>__block</strong>修饰符。</p>
-<h4 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> global_val = <span class="number">2</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="comment">// do something</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h4><pre><code class="c">int global_val = 2;
+int main() {
+  // do something
+}
+</code></pre>
 <p>对于全局变量，Block可以直接访问，不需要做任何的改变</p>
-<h4 id="静态局部变量"><a href="#静态局部变量" class="headerlink" title="静态局部变量"></a>静态局部变量</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">int main() &#123;</div><div class="line">  static int static_val = 3;</div><div class="line">  void (^blk)(void) = ^&#123;</div><div class="line">    static_val += 1;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="静态局部变量"><a href="#静态局部变量" class="headerlink" title="静态局部变量"></a>静态局部变量</h4><pre><code class="objective-c">int main() {
+  static int static_val = 3;
+  void (^blk)(void) = ^{
+    static_val += 1;
+  }
+
+  return 0;
+}
+</code></pre>
 <p>来看转化之后：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="number">__</span>main_block_impl_0 &#123;</div><div class="line">  <span class="comment">// 一些其他成员</span></div><div class="line">  <span class="keyword">int</span> *static_val;</div><div class="line">  </div><div class="line">  <span class="number">__</span>main_block_impl_0(<span class="keyword">void</span> *fp, <span class="keyword">int</span> *<span class="number">_</span>static_val) : static_val(<span class="number">_</span>static_val) &#123;</div><div class="line">    isa = &amp;<span class="number">_</span>NSConcreteStackBlock;</div><div class="line">    FuncPrt = fp;</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">void</span> <span class="number">__</span>main_block_func_0(<span class="keyword">struct</span> <span class="number">__</span>main_block_impl_0 *<span class="number">__</span>cself) &#123;</div><div class="line">  <span class="keyword">int</span> *static_val = <span class="number">__</span>cself-&gt;static_val;</div><div class="line">  *static_val += <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">static</span> <span class="keyword">int</span> static_val = <span class="number">3</span>;</div><div class="line">  blk = &amp;<span class="number">__</span>main_block_impl_0(<span class="number">__</span>main_block_func_0, &amp;static_val);</div><div class="line">  </div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="c">struct __main_block_impl_0 {
+  // 一些其他成员
+  int *static_val;
+
+  __main_block_impl_0(void *fp, int *_static_val) : static_val(_static_val) {
+    isa = &amp;_NSConcreteStackBlock;
+    FuncPrt = fp;
+  }
+};
+
+static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
+  int *static_val = __cself-&gt;static_val;
+  *static_val += 1;
+}
+
+int main() {
+  static int static_val = 3;
+  blk = &amp;__main_block_impl_0(__main_block_func_0, &amp;static_val);
+
+  return 0;
+}
+</code></pre>
 <p><strong>可以看到，对于静态局部变量，Block的结构体中存放的是指向该变量的指针，所以可以通过指针来改变该静态局部变量。这是因为，静态局部变量即使其作用域已经结束，但是它并不会被销毁，其内存空间是一直存在的</strong></p>
-<h4 id="局部变量"><a href="#局部变量" class="headerlink" title="局部变量"></a>局部变量</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">int main() &#123;</div><div class="line">  __block int val = 10;</div><div class="line">  void (^blk)(void) = ^&#123;val = 1;&#125;;</div><div class="line">  return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="局部变量"><a href="#局部变量" class="headerlink" title="局部变量"></a>局部变量</h4><pre><code class="objective-c">int main() {
+  __block int val = 10;
+  void (^blk)(void) = ^{val = 1;};
+  return 0;
+}
+</code></pre>
 <p><strong>在Block中改变局部自动变量需要使用<code>__block</code>修饰符</strong>；转化成C++代码：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="number">__B</span>lock_byref_val_0 &#123;</div><div class="line">  <span class="keyword">void</span> *<span class="number">__</span>isa;</div><div class="line">  <span class="number">__B</span>lock_byref_val_0 *<span class="number">__f</span>orwarding;</div><div class="line">  <span class="keyword">int</span> <span class="number">__f</span>lags;</div><div class="line">  <span class="keyword">int</span> <span class="number">__</span>size;</div><div class="line">  <span class="keyword">int</span> val;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">struct</span> <span class="number">__</span>main_block_impl_0 &#123;</div><div class="line">  <span class="comment">// 其他成员变量</span></div><div class="line">  </div><div class="line">  <span class="number">__B</span>lock_byref_val_0 *val;</div><div class="line">  </div><div class="line">  <span class="number">__</span>main_block_impl_0(<span class="keyword">void</span> *fp, <span class="number">__B</span>lock_byref_val_0 *<span class="number">_</span>val) : val(<span class="number">_</span>val-&gt;<span class="number">__f</span>orwarding) &#123;</div><div class="line">    <span class="comment">//</span></div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">void</span> <span class="number">__</span>main_block_func_0(<span class="keyword">struct</span> <span class="number">__</span>main_block_impl_0 *<span class="number">__</span>cself) &#123;</div><div class="line">  <span class="number">__B</span>lock_byref_val_0 *val = <span class="number">__</span>cself-&gt;val;</div><div class="line">  (val-&gt;forwarding-&gt;val) = <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="number">__B</span>lock_byref_val_0 val = &#123;</div><div class="line">    <span class="number">0</span>,</div><div class="line">    &amp;val,</div><div class="line">    <span class="number">0</span>,</div><div class="line">    <span class="keyword">sizeof</span>(<span class="number">__B</span>lock_byref_val_0),</div><div class="line">    <span class="number">10</span></div><div class="line">  &#125;;</div><div class="line">  </div><div class="line">  blk = &amp;<span class="number">__</span>main_block_impl_0(<span class="number">__</span>main_block_func_0, &amp;val);</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="c">struct __Block_byref_val_0 {
+  void *__isa;
+  __Block_byref_val_0 *__forwarding;
+  int __flags;
+  int __size;
+  int val;
+};
+
+struct __main_block_impl_0 {
+  // 其他成员变量
+
+  __Block_byref_val_0 *val;
+
+  __main_block_impl_0(void *fp, __Block_byref_val_0 *_val) : val(_val-&gt;__forwarding) {
+    //
+  }
+};
+
+static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
+  __Block_byref_val_0 *val = __cself-&gt;val;
+  (val-&gt;forwarding-&gt;val) = 1;
+}
+
+int main() {
+  __Block_byref_val_0 val = {
+    0,
+    &amp;val,
+    0,
+    sizeof(__Block_byref_val_0),
+    10
+  };
+
+  blk = &amp;__main_block_impl_0(__main_block_func_0, &amp;val);
+  return 0;
+}
+</code></pre>
 <p>可以看到_<em>block变量val其实是一个结构体 \</em>_Block_byref_val_0。在里面有val这个变量。</p>
 <p>因为正常生成的Block都是在栈上面的，但是在合适的情况下面，栈上的Block会被拷贝到堆上；与此同时，Block所拥有的__block结构体也会被拷贝到堆上，相当于Block持有__block变量。</p>
 <p>当block变量还在栈上时，它的forwarding指向自己；当被拷贝到堆上时，forwarding指向堆上的block变量。在使用时全部使用forwarding，这样可以保证改变的是同一个变量。</p>
@@ -401,6 +597,12 @@ GCD与runloop">
 </ul>
 
                 
+<p class="teal-link-context">
+    <a href="/2017/07/07/JSPatch-source-analyze/" rel="next" title="JSPatch源码分析">
+    上一篇：JSPatch源码分析
+  </a>
+</p>
+
 
 
 <p class="teal-link-context">
@@ -690,7 +892,7 @@ GCD与runloop">
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -286,15 +286,15 @@
                 <h4 id="记录下一些小技巧或是走过的坑…"><a href="#记录下一些小技巧或是走过的坑…" class="headerlink" title="记录下一些小技巧或是走过的坑…"></a>记录下一些小技巧或是走过的坑…</h4><a id="more"></a>
 <ol>
 <li><p>运用apt-cache搜索不知全名的包<br>比如你要apt-get安装一个貌似叫做libmemcache什么的包的时候，可以通过一下命令搜索：</p>
-<pre><code>sudo apt-cache search libmemcache | grep memcache
+<pre><code>         sudo apt-cache search libmemcache | grep memcache
 </code></pre><p>于是就会出现下面的结果:</p>
 <p> <img src="/images/lionheart/apt-cache.png" alt="apt-cache"></p>
 <p> 图中的libmemcached-dev或许就会是你要的结果。</p>
 </li>
 <li><p>iOS中，将HTML代码转化成NSAttributedString</p>
-<pre><code>NSString *htmlString = @&quot;&lt;h1&gt;Header&lt;/h1&gt;&lt;h2&gt;Subheader&lt;/h2&gt;&lt;p&gt;Some &lt;em&gt;text&lt;/em&gt;&lt;/p&gt;&lt;img src=&apos;http://vanney9.com/images/default_avatar.jpg&apos; width=70 height=100 /&gt;&quot;;
-NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
-textView.attributedText = attributedString;
+<pre><code>         NSString *htmlString = @&quot;&lt;h1&gt;Header&lt;/h1&gt;&lt;h2&gt;Subheader&lt;/h2&gt;&lt;p&gt;Some &lt;em&gt;text&lt;/em&gt;&lt;/p&gt;&lt;img src=&#39;http://vanney9.com/images/default_avatar.jpg&#39; width=70 height=100 /&gt;&quot;;
+         NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+         textView.attributedText = attributedString;
 </code></pre><p>运行结果如下：</p>
 <p> <img src="/lionheart/1512/htmltonsattributedstring.png" alt="html string TO NSAttributedString"></p>
 <p> 参考：<a href="http://stackoverflow.com/questions/2454067/display-html-text-in-uitextview" target="_blank" rel="external">Display html text in uitextview</a></p>
@@ -597,7 +597,7 @@ textView.attributedText = attributedString;
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

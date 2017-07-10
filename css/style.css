@@ -802,8 +802,12 @@ article pre {
   color: #333;
   font-size: 1em;
 }
-article p code,
 article li code {
+  margin: 0 3px;
+  padding: 0 5px;
+  color: #212121;
+}
+article p code {
   margin: 0 3px;
   padding: 0 5px;
   border-radius: 5px;

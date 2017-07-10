@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -293,9 +293,23 @@
 <li><p>记住一点：在MRC中，将指针指向对象是不会增加reference count的，必须手动加1</p>
 </li>
 <li><p>看看下面的MRC代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (NSString *)stringValue &#123;</div><div class="line">  	NSString *str = [[NSString alloc]] initWithFormat:@&quot;vanney&quot;; // 1</div><div class="line">  	return str;</div><div class="line">&#125;</div><div class="line"></div><div class="line">NSString *str = [self stringValue];</div><div class="line">[str retain]; // 2</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">- (NSString *)stringValue {
+      NSString *str = [[NSString alloc]] initWithFormat:@&quot;vanney&quot;; // 1
+      return str;
+}
+
+NSString *str = [self stringValue];
+[str retain]; // 2
+</code></pre>
 <p>上面的代码在注释1，和注释2处分别增加了一次reference count，但是讲道理这个时候只需要一个reference count就可以了，所以会出现一些些小问题。这就需要<strong>Auto Release Pool</strong>了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (NSString *)stringValue &#123;</div><div class="line">  	NSString *str = [[NSString alloc]] initWithFormat:@&quot;vanney&quot;;</div><div class="line">  	return [str autorelease];</div><div class="line">&#125;</div><div class="line"></div><div class="line">NSString *str = [self stringValue];</div><div class="line">[str retain];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">- (NSString *)stringValue {
+      NSString *str = [[NSString alloc]] initWithFormat:@&quot;vanney&quot;;
+      return [str autorelease];
+}
+
+NSString *str = [self stringValue];
+[str retain];
+</code></pre>
 </li>
 <li><p>注意retain cycle，也就是相互引用</p>
 </li>
@@ -316,7 +330,11 @@
 </ol>
 <h3 id="以弱引用避免保留环"><a href="#以弱引用避免保留环" class="headerlink" title="以弱引用避免保留环"></a>以弱引用避免保留环</h3><h3 id="以“自动释放池块”降低内存峰值"><a href="#以“自动释放池块”降低内存峰值" class="headerlink" title="以“自动释放池块”降低内存峰值"></a>以“自动释放池块”降低内存峰值</h3><ol>
 <li><p>自动释放池还有变量可见范围的限制</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@autoreleasepool &#123;</div><div class="line">  	id object = [self createObject];</div><div class="line">&#125;</div><div class="line">[self useObject:object]; // 报错，因为object变量已经不可见了</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">@autoreleasepool {
+      id object = [self createObject];
+}
+[self useObject:object]; // 报错，因为object变量已经不可见了
+</code></pre>
 </li>
 </ol>
 <h3 id="用“僵尸对象”调试内存管理问题"><a href="#用“僵尸对象”调试内存管理问题" class="headerlink" title="用“僵尸对象”调试内存管理问题"></a>用“僵尸对象”调试内存管理问题</h3><ol>
@@ -630,7 +648,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

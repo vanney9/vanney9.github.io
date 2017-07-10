@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -288,19 +288,19 @@
 <p>再来设计UITableView的共有特性:</p>
 <p><img src="/lionheart/1601/tableviewbaseproperty.png" alt="UITableView Property"></p>
 <h3 id="Section-number和Cell-number"><a href="#Section-number和Cell-number" class="headerlink" title="Section number和Cell number"></a>Section number和Cell number</h3><p>UITableView整体设计结束后，就该想想这个UITableView给有多少个Section，以及每个Section该有几个Cell。它其实都包含在上一步的DataSource的数组中。<br>UITableView通过一下两个UITableViewDataSource方法得到Section和Cell得数目：</p>
-<pre><code>- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+<pre><code>    - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
+    - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
 </code></pre><h3 id="Section-Header设计"><a href="#Section-Header设计" class="headerlink" title="Section Header设计"></a>Section Header设计</h3><p>Section Header的设计包括设计Header的高度以及Header的View，通过如下两个UITableViewDataSource实现：</p>
-<pre><code>- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section;    //  返回Section Header高度
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section;     //  返回Section Header的View
+<pre><code>    - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section;    //  返回Section Header高度
+    - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section;     //  返回Section Header的View
 </code></pre><p>具体代码如下：</p>
 <p><img src="/lionheart/1601/sectionheader.png" alt="Section Header"></p>
 <h3 id="Section-Cell设计"><a href="#Section-Cell设计" class="headerlink" title="Section Cell设计"></a>Section Cell设计</h3><p>Cell设计就是实现并返回一个UITableViewCell，它通过UITableViewDataSource方法实现：</p>
-<pre><code>- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+<pre><code>    - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 </code></pre><p>注意到：</p>
 <ol>
 <li><p>iOS会复用上面代码注册的UITableViewCell，</p>
-<pre><code>UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@&quot;stefanie&quot;];
+<pre><code> UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@&quot;stefanie&quot;];
 </code></pre></li>
 <li><p>每个UITableViewCell有一个textLabel属性用来设置Cell的标题，该属性是一个UILabel对象</p>
 </li>
@@ -310,9 +310,9 @@
 <p><img src="/lionheart/1601/tableviewcell.png" alt="UITableViewCell"></p>
 <h3 id="其他相关"><a href="#其他相关" class="headerlink" title="其他相关"></a>其他相关</h3><ol>
 <li><p>当手指选中某个Cell时，改变UITableViewCell的背景色；当手指离开时背景色还原。只需实现如下UITableViewDelegate就可：</p>
-<pre><code>- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
+<pre><code> - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+ }
 </code></pre></li>
 <li><p>默认情况下<span id="jump"></span>，Header的上下都没有分割线，只有在两个Cell之间才有分割线，而且不到最左边但到最右边。这也解释了上面为什么要多设计一个与UITableView背景色相同的空的Section。因为如果只有4个Section，最后的“退出当前账号”下方会有一个奇怪的分割线。</p>
 </li>
@@ -617,7 +617,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

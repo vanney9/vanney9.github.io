@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -283,16 +283,111 @@
 <p><img src="/lionheart/1603/camerademo.gif" alt="camera demo"></p>
 <p>下面来看看如何实现</p>
 <a id="more"></a>
-<h2 id="查看访问权限"><a href="#查看访问权限" class="headerlink" title="查看访问权限"></a>查看访问权限</h2><p>App在第一次访问系统照片或者相机时，通常需要询问是否有权限去access相片图库或者使用相机。可以通过下面代码得知目前该app的权限👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">@import AVFoundation;</div><div class="line">@import Photos;</div><div class="line"></div><div class="line">// 检查使用相片的权限， YES为可以访问，NO为不能使用</div><div class="line">+ (BOOL)checkPhotoLibraryAuthorizationStatus &#123;</div><div class="line">    if ([PHPhotoLibrary responseToSelector:@selector(authorizationStatus)]) &#123;</div><div class="line">        PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus]; // 获取当前app对相片的权限</div><div class="line">        if (status == PHAuthorizationStatusDenied || status == PHAuthorizationStatusRestricted) &#123; // 若当前权限为不允许使用</div><div class="line">            [self showSettingAlertStr:@&quot;请在iPhone的“设置-&gt;隐私-&gt;照片”中打开本应用的访问权限&quot;]; // 提示用户去**设置**中更改权限</div><div class="line">            return NO;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return YES;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 检查使用相机的权限， YES为可以使用， NO为不能访问</div><div class="line">+ (BOOL)checkCameraAuthorizationStatus &#123;</div><div class="line">    if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) &#123; // 判断该设备是否支持拍照</div><div class="line">        alert(@&quot;该设备不能拍照&quot;)；</div><div class="line">        return NO;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if ([AVCaptureDevice responseToSelector:@selector(authorizationStatusForMediaType:)]) &#123;</div><div class="line">        AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo]; // 获取当前app对相机的权限</div><div class="line">        if (status == AVAuthorizationStatusDenied || status == AVAuthorizationStatusRestricted) &#123; // 若当前权限为不允许使用</div><div class="line">            [self showSettingAlertStr:@&quot;请在iPhone的“设置-&gt;隐私-&gt;相机”中打开本应用的访问权限&quot;]; // 提示用户去**设置**中更改权限</div><div class="line">            return NO;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return YES;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 提示用户去设置中更改权限</div><div class="line">+ (void)showSettingAlertStr:(NSString *)tipStr &#123;</div><div class="line">    if (floor(NSFoundationVersionNumber) &gt; NSFoundationVersionNumber_iOS_7_1) &#123; // iOS7.1之后的可以直接进入设置</div><div class="line">        // 新建提示弹框</div><div class="line">        UIAlertView *alertView = [UIAlertView bk_alertViewWithTitle:@&quot;提示&quot; message:tipStr];</div><div class="line">        [alertView bk_setCancelButtonWithTitle:@&quot;取消&quot; handler:nil];</div><div class="line">        [alertView bk_addButtonWithTitle:@&quot;&quot; handler:nil];</div><div class="line">        [alertView bk_setDidDismissBlock:^(UIAlertView *alertView, NSInteger buttonIndex) &#123;</div><div class="line">            if (buttonIndex == 1) &#123;</div><div class="line">                // 跳转到设置界面进行设置</div><div class="line">                UIApplication *app = [UIApplication sharedApplication];</div><div class="line">                NSURL *settingsURL = [NSURL urlWithString:UIApplicationOpenSettingsURLString];</div><div class="line">                if ([app canOpenURL:settingsURL]) &#123;</div><div class="line">                    [app openURL:settingsURL];</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>效果如下👇<br><img src="/lionheart/1603/authorizationdemo.gif" alt="autorization demo"></p>
+<h2 id="查看访问权限"><a href="#查看访问权限" class="headerlink" title="查看访问权限"></a>查看访问权限</h2><p>App在第一次访问系统照片或者相机时，通常需要询问是否有权限去access相片图库或者使用相机。可以通过下面代码得知目前该app的权限👇</p>
+<pre><code>        @import AVFoundation;
+        @import Photos;
+
+        // 检查使用相片的权限， YES为可以访问，NO为不能使用
+        + (BOOL)checkPhotoLibraryAuthorizationStatus {
+            if ([PHPhotoLibrary responseToSelector:@selector(authorizationStatus)]) {
+                PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus]; // 获取当前app对相片的权限
+                if (status == PHAuthorizationStatusDenied || status == PHAuthorizationStatusRestricted) { // 若当前权限为不允许使用
+                    [self showSettingAlertStr:@&quot;请在iPhone的“设置-&gt;隐私-&gt;照片”中打开本应用的访问权限&quot;]; // 提示用户去**设置**中更改权限
+                    return NO;
+                }
+            }
+
+            return YES;
+        }
+
+        // 检查使用相机的权限， YES为可以使用， NO为不能访问
+        + (BOOL)checkCameraAuthorizationStatus {
+            if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) { // 判断该设备是否支持拍照
+                alert(@&quot;该设备不能拍照&quot;)；
+                return NO;
+            }
+
+            if ([AVCaptureDevice responseToSelector:@selector(authorizationStatusForMediaType:)]) {
+                AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo]; // 获取当前app对相机的权限
+                if (status == AVAuthorizationStatusDenied || status == AVAuthorizationStatusRestricted) { // 若当前权限为不允许使用
+                    [self showSettingAlertStr:@&quot;请在iPhone的“设置-&gt;隐私-&gt;相机”中打开本应用的访问权限&quot;]; // 提示用户去**设置**中更改权限
+                    return NO;
+                }
+            }
+
+            return YES;
+        }
+
+        // 提示用户去设置中更改权限
+        + (void)showSettingAlertStr:(NSString *)tipStr {
+            if (floor(NSFoundationVersionNumber) &gt; NSFoundationVersionNumber_iOS_7_1) { // iOS7.1之后的可以直接进入设置
+                // 新建提示弹框
+                UIAlertView *alertView = [UIAlertView bk_alertViewWithTitle:@&quot;提示&quot; message:tipStr];
+                [alertView bk_setCancelButtonWithTitle:@&quot;取消&quot; handler:nil];
+                [alertView bk_addButtonWithTitle:@&quot;&quot; handler:nil];
+                [alertView bk_setDidDismissBlock:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                    if (buttonIndex == 1) {
+                        // 跳转到设置界面进行设置
+                        UIApplication *app = [UIApplication sharedApplication];
+                        NSURL *settingsURL = [NSURL urlWithString:UIApplicationOpenSettingsURLString];
+                        if ([app canOpenURL:settingsURL]) {
+                            [app openURL:settingsURL];
+                        }
+                    }
+                }];
+            }
+        }
+</code></pre><p>效果如下👇<br><img src="/lionheart/1603/authorizationdemo.gif" alt="autorization demo"></p>
 <h2 id="UIImagePickerController"><a href="#UIImagePickerController" class="headerlink" title="UIImagePickerController"></a>UIImagePickerController</h2><p><a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImagePickerController_Class/" target="_blank" rel="external">UIImagePickerController</a>是系统提供的用来拍照或者使用系统相片的用户界面。</p>
 <p>使用UIImagePickerController需注意：</p>
 <ol>
 <li>sourceType属性: 该属性说明UIImagePickerController会如何显示界面。如果sourceType为UIImagePickerControllerSourceTypeCamera，那么系统会呈现一个拍照的界面；如果sourceType为UIImagePickerControllerSourceTypeSavedPhotosAlbum，那么系统会呈现一个选取系统照片的界面</li>
 <li>检查app是否有权限使用相机或者系统相片</li>
 </ol>
-<p>下面来看看使用示例👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">+ (void)showImagePickerController &#123;</div><div class="line">    UIImagePickerController *pickerController = [UIImagePickerController alloc] init]; // 初始化</div><div class="line">    pickerController.delegate = self;</div><div class="line">    pickerController.allowsEditing = YES; //允许用户编辑拍摄的图片或者选取的相册的图片</div><div class="line">    if (camera) &#123; // 选择相机</div><div class="line">        if (![Helper checkCameraAuthorizationStatus]) &#123; // 根据上文的函数，判断是否有使用相机的权限</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line">        pickerController.sourceType = UIImagePickerControllerSourceTypeCamera; // 指定sourceType为Camera，pickerController将会提供一个拍摄的界面</div><div class="line">    &#125; else &#123; // 选择系统图库</div><div class="line">        if (![Helper checkPhotoLibraryAuthorizationStatus]) &#123; // 根据上文函数，判断是否能够access系统图库</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line">        pickerController.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum; // 指定sourceType为SavedPhotosAlbum，pickerController将会提供一个选取系统相片的界面</div><div class="line">    &#125;</div><div class="line">    [self presentViewController:pickerController animated:YES completion:nil]; // 展示UIImagePickerController</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">// UIImagePickerControllerDelegate</div><div class="line"></div><div class="line">// 进入UIImagePickerController后如果选择`cancel` 就不做什么处理</div><div class="line">- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker &#123;</div><div class="line">    [picker dismissViewControllerAnimated:YES completion:nil];</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 进入UIImagePickerController后如果选择`done` 做一些处理</div><div class="line">- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary&lt;NSString *, id&gt;*)info &#123;</div><div class="line">    // 推出UIImagePickerController并处理选取的图片</div><div class="line">    [picker dismissViewControllerAnimated:YES completion:^&#123;</div><div class="line">        UIImage *editedImage, *originalImage;</div><div class="line">        editedImage = [info objectForKey:UIImagePickerControllerEditedImage]; // 获取编辑后的图片</div><div class="line"></div><div class="line">        // do something here: like take this edited image as user avatar or something else</div><div class="line"></div><div class="line">        // 如果是相机拍摄的图片，那么将原图保存到系统图库</div><div class="line">        if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) &#123;</div><div class="line">            originalImage = [info objectForKey:UIImagePickerControllerOriginalImage]; // 获取编辑之前的图片</div><div class="line">            UIImageWriteToSavedPhotosAlbum(originalImage, self, nil, NULL); //将图片保存</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="P-S"><a href="#P-S" class="headerlink" title="P.S"></a>P.S</h2><p>本文代码都参考自<a href="https://github.com/Coding/Coding-iOS" target="_blank" rel="external">Coding-iOS</a></p>
+<p>下面来看看使用示例👇</p>
+<pre><code>        + (void)showImagePickerController {
+            UIImagePickerController *pickerController = [UIImagePickerController alloc] init]; // 初始化
+            pickerController.delegate = self;
+            pickerController.allowsEditing = YES; //允许用户编辑拍摄的图片或者选取的相册的图片
+            if (camera) { // 选择相机
+                if (![Helper checkCameraAuthorizationStatus]) { // 根据上文的函数，判断是否有使用相机的权限
+                    return;
+                }
+                pickerController.sourceType = UIImagePickerControllerSourceTypeCamera; // 指定sourceType为Camera，pickerController将会提供一个拍摄的界面
+            } else { // 选择系统图库
+                if (![Helper checkPhotoLibraryAuthorizationStatus]) { // 根据上文函数，判断是否能够access系统图库
+                    return;
+                }
+                pickerController.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum; // 指定sourceType为SavedPhotosAlbum，pickerController将会提供一个选取系统相片的界面
+            }
+            [self presentViewController:pickerController animated:YES completion:nil]; // 展示UIImagePickerController
+        }
+
+
+        // UIImagePickerControllerDelegate
+
+        // 进入UIImagePickerController后如果选择`cancel` 就不做什么处理
+        - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+            [picker dismissViewControllerAnimated:YES completion:nil];
+        }
+
+        // 进入UIImagePickerController后如果选择`done` 做一些处理
+        - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary&lt;NSString *, id&gt;*)info {
+            // 推出UIImagePickerController并处理选取的图片
+            [picker dismissViewControllerAnimated:YES completion:^{
+                UIImage *editedImage, *originalImage;
+                editedImage = [info objectForKey:UIImagePickerControllerEditedImage]; // 获取编辑后的图片
+
+                // do something here: like take this edited image as user avatar or something else
+
+                // 如果是相机拍摄的图片，那么将原图保存到系统图库
+                if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
+                    originalImage = [info objectForKey:UIImagePickerControllerOriginalImage]; // 获取编辑之前的图片
+                    UIImageWriteToSavedPhotosAlbum(originalImage, self, nil, NULL); //将图片保存
+                }
+            }];
+        }
+</code></pre><h2 id="P-S"><a href="#P-S" class="headerlink" title="P.S"></a>P.S</h2><p>本文代码都参考自<a href="https://github.com/Coding/Coding-iOS" target="_blank" rel="external">Coding-iOS</a></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://github.com/Coding/Coding-iOS" target="_blank" rel="external">Coding-iOS</a></li>
 </ul>
@@ -593,7 +688,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

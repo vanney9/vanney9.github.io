@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -282,7 +282,8 @@
 <h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><p><strong>YYCache</strong> 是一个线程安全的 <strong>key-value</strong> 的缓存框架。使用 <strong>YYMemoryCache</strong> 来将对象存放在小且快的内存中；使用 <strong>YYDiskCache</strong> 来将对象存放在较慢的磁盘上。</p>
 <h2 id="YYCache"><a href="#YYCache" class="headerlink" title="YYCache"></a>YYCache</h2><p>先来看看 <strong>YYCache</strong> 的工作流程。</p>
 <h3 id="创建Cache-init"><a href="#创建Cache-init" class="headerlink" title="创建Cache(init)"></a>创建Cache(init)</h3><p>使用下面代码可以创建一个叫做vanney的新的cache。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">YYCache *newCache = [YYCache alloc] initWithName:@&quot;vanney&quot;];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">YYCache *newCache = [YYCache alloc] initWithName:@&quot;vanney&quot;];
+</code></pre>
 <p>这句语句所做的事情如下：</p>
 <ol>
 <li>物理层面<ol>
@@ -308,20 +309,23 @@
 </li>
 </ol>
 <h3 id="往Cache里面新增记录-set"><a href="#往Cache里面新增记录-set" class="headerlink" title="往Cache里面新增记录(set)"></a>往Cache里面新增记录(set)</h3><p>也就是所谓的 <strong>set</strong> 方法。使用下面代码可以新增一条cache记录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[newCache setObject:@&quot;New Record&quot; forKey:@&quot;New Key&quot;];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">[newCache setObject:@&quot;New Record&quot; forKey:@&quot;New Key&quot;];
+</code></pre>
 <p>这里newCache做了两件事：</p>
 <ol>
 <li>往YYMemoryCache里面写入这条数据</li>
 <li>往YYDiskCache里面写入这条数据</li>
 </ol>
 <h3 id="向Cache中读取缓存记录-get"><a href="#向Cache中读取缓存记录-get" class="headerlink" title="向Cache中读取缓存记录(get)"></a>向Cache中读取缓存记录(get)</h3><p>也就是所谓的 <strong>get</strong>  方法。使用下面代码可以读取一条cache记录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSString *cacheValue = [newCache objectForKey:@&quot;New Key&quot;];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">NSString *cacheValue = [newCache objectForKey:@&quot;New Key&quot;];
+</code></pre>
 <ol>
 <li>现从memory里面获取这个cache，也就是从YYMemoryCache里面获取</li>
 <li>如果没有发现的话，就从YYDiskCache里面获取，再将它存放到YYMemoryCache中</li>
 </ol>
 <h3 id="从Cache中删除记录-remove"><a href="#从Cache中删除记录-remove" class="headerlink" title="从Cache中删除记录(remove)"></a>从Cache中删除记录(remove)</h3><p>也就是 <strong>remove</strong> 方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[newCache removeObjectForKey:@&quot;New Key&quot;];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">[newCache removeObjectForKey:@&quot;New Key&quot;];
+</code></pre>
 <ol>
 <li>从YYMemoryCache中删除</li>
 <li>从YYDiskCache中删除</li>
@@ -332,7 +336,8 @@
 <li>大于某个限额的cache以文件形式存放，在数据库中记录下该cache对应的文件名；而对于小型的cache就直接将二进制的数据存放在数据库里面就好了</li>
 </ol>
 <h3 id="初始化-init"><a href="#初始化-init" class="headerlink" title="初始化(init)"></a>初始化(init)</h3><p>使用下面的代码初始化一个YYDIskCache，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">YYDiskCache *diskCache = [YYDiskCache alloc] iniwtWithPath:path];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">YYDiskCache *diskCache = [YYDiskCache alloc] iniwtWithPath:path];
+</code></pre>
 <ol>
 <li>有一个全局的存放YYDiskCache的 <strong>NSMapTable</strong> ，以path为 <strong>key</strong> 。这里的path就是上面所说的 <strong>vanney</strong> 目录，以YYDiskCache为 <strong>value</strong> 。</li>
 <li>先从这个NSMapTable中找看是否有这个path的YYDiskCache，有就直接返回</li>
@@ -345,47 +350,54 @@
 <li>添加一些观测事件</li>
 </ol>
 <h3 id="写入缓存-set"><a href="#写入缓存-set" class="headerlink" title="写入缓存(set)"></a>写入缓存(set)</h3><p>使用下面的代码写入Disk缓存：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[diskCache setObject:@&quot;DiskCache&quot; forKey:@&quot;DiskCacheKey&quot;];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">[diskCache setObject:@&quot;DiskCache&quot; forKey:@&quot;DiskCacheKey&quot;];
+</code></pre>
 <ol>
 <li>先将object，这里就是 <em>DiskCache</em> 字符串压缩，使他变成一个 <strong>NSData</strong></li>
 <li>如果NSData大小没超过限制，那么将这条cache以 <strong>key : DiskCacheKey</strong>  <strong>value:NSData</strong> <strong>filename:NULL</strong> 的形式写入manifest数据库</li>
 <li>如果NSData的大小超过限制的话，先将NSData写入文件名为 <strong>md5(DiskCacheKey)</strong> 的文件中，文件存放在 <strong>data</strong> 文件夹；然后再将这条cache以 <strong>key:DiskCacheKey</strong> <strong>value:NULL</strong> <strong>filename:md5(DiskCacheKey)</strong> 的形式写入manifest数据库</li>
 </ol>
 <h3 id="读取缓存-get"><a href="#读取缓存-get" class="headerlink" title="读取缓存(get)"></a>读取缓存(get)</h3><p>使用下面的代码读取Disk缓存:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSString *diskCacheValue = [diskCache objectForKey:@&quot;DiskCacheKey&quot;];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">NSString *diskCacheValue = [diskCache objectForKey:@&quot;DiskCacheKey&quot;];
+</code></pre>
 <ol>
 <li>进入数据库获取key为DiskCacheKey的记录，并且修改这条记录的 <strong>last_access_time</strong> </li>
 <li>如果是将cache存放在数据库的话，获取数据库的value字段；如果是以文件形式存在的话，读取存放NSData的文件</li>
 <li>将cache的NSData解压，还原成最初的形式，返回</li>
 </ol>
 <h3 id="删除缓存-remove"><a href="#删除缓存-remove" class="headerlink" title="删除缓存(remove)"></a>删除缓存(remove)</h3><p>使用下面的代码删除Disk的缓存：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[diskCache removeObjectForKey:@&quot;DiskCacheKey&quot;];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">[diskCache removeObjectForKey:@&quot;DiskCacheKey&quot;];
+</code></pre>
 <ol>
 <li>删除数据库中key为DiskCacheKey的记录</li>
 <li>如果存在文件的话，删除</li>
 </ol>
 <h2 id="YYMemoryCache"><a href="#YYMemoryCache" class="headerlink" title="YYMemoryCache"></a>YYMemoryCache</h2><p>YYMemoryCache维护着一个双向链表(<strong>YYLinkedMap</strong>)，链表里面的每一个节点就是一个memory的缓存记录，表头的节点表示最近访问过的，表尾的节点很久没去访问了。每个节点是一个 <strong>YYLinkedMapNode</strong> 对象，这个对象里面有指向前后节点的指针，和包含缓存信息的 <strong>key</strong> 和 <strong>value</strong> 属，以及一些缓存的其他属性：<strong>cost</strong> 和 <strong>time</strong> </p>
 <h3 id="初始化-init-1"><a href="#初始化-init-1" class="headerlink" title="初始化(init)"></a>初始化(init)</h3><p>使用下面的代码初始化一个YYMemoryCache：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">YYMemoryCache *memoryCache = [YYMemoryCache new];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">YYMemoryCache *memoryCache = [YYMemoryCache new];
+</code></pre>
 <ol>
 <li>新建一个YYLinkedMap</li>
 <li>添加一些监听事件，设置一些属性等等</li>
 </ol>
 <h3 id="写入缓存-set-1"><a href="#写入缓存-set-1" class="headerlink" title="写入缓存(set)"></a>写入缓存(set)</h3><p>使用下面的代码写入缓存：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[memoryCache setObject:@&quot;Memory Cache&quot; forKey:@&quot;MemoryCacheKey&quot;];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">[memoryCache setObject:@&quot;Memory Cache&quot; forKey:@&quot;MemoryCacheKey&quot;];
+</code></pre>
 <ol>
 <li>先在YYLinkedMap中寻找是否有这个key，YYLinkedMap对象中有一个dic属性，它是一个键值对，键就是每个cache的key，值就是每个cache对应的YYLinkedMapNode</li>
 <li>如果存在的话，那就修改这个key对应的YYLinkedMapNode的value为<code>@&quot;Memory Cache&quot;</code>，并且修改它的其他属性，将time属性改为现在的时间，并将这个Node放在链表的表头。</li>
 <li>如果不存在的话，就直接生成一个YYLinkedMapNode，放在链表的表头</li>
 </ol>
 <h3 id="读取缓存-get-1"><a href="#读取缓存-get-1" class="headerlink" title="读取缓存(get)"></a>读取缓存(get)</h3><p>使用下面的代码读取缓存：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSString *cacheValue = [memoryCache objectForKey:@&quot;MemoryCacheKey&quot;];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">NSString *cacheValue = [memoryCache objectForKey:@&quot;MemoryCacheKey&quot;];
+</code></pre>
 <ol>
 <li>从YYLinkedMap的dic中获取key为MemoryCacheKey的YYLinkedMapNode，修改node的time，并将这个node放在链表的表头</li>
 <li>返回所需的缓存，也就是node的value属性</li>
 </ol>
 <h3 id="删除缓存-remove-1"><a href="#删除缓存-remove-1" class="headerlink" title="删除缓存(remove)"></a>删除缓存(remove)</h3><p>使用下面的代码删除缓存：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[memoryCache removeObjectForKey:@&quot;MemoryCacheKey&quot;];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">[memoryCache removeObjectForKey:@&quot;MemoryCacheKey&quot;];
+</code></pre>
 <ol>
 <li>删除YYLinkedMap中的dic里面的key为MemoryCacheKey的YYLinkedMapNode</li>
 <li>调整双向链表</li>
@@ -396,7 +408,8 @@
 <li><p>还有一个信号量也为1的全局的锁 <em>_globalInstancesLock</em> ，它用来对存储每个YYDiskCache的NSMapTable进行加锁，对这个NSMapTable进行读写的操作只能同时存在一个。</p>
 </li>
 <li><p>每一个YYDiskCache有一个并行的queue，这个queue用来执行读写删之后的block。因为有这样的API:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (void)objectForKey:(NSString *)key withBlock:(void(^)(NSString *key, id&lt;NSCoding&gt; _Nullable object))block;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">- (void)objectForKey:(NSString *)key withBlock:(void(^)(NSString *key, id&lt;NSCoding&gt; _Nullable object))block;
+</code></pre>
 <p>所以这里的block就在这个queue里面执行，达到多线程操作的效果</p>
 </li>
 </ol>
@@ -707,7 +720,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

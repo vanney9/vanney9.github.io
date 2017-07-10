@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -286,21 +286,22 @@
 <li>文本自动调整大小</li>
 <li>AppStore, Settings页面跳转</li>
 </ol>
-<h2 id="edgesForExtendedLayout"><a href="#edgesForExtendedLayout" class="headerlink" title="edgesForExtendedLayout"></a><code>edgesForExtendedLayout</code></h2><p>经常会碰到的一个问题：UITabBarController包含多个UINavgationController，每个UINavgationController又包含着自己的ViewController。这个时候ViewController的frame占据了整个屏幕（既包括了NavBar的地方，又包括了TabBar的地方），很烦；如何让这样的ViewController的View只占据NavBar和TabBar之间的区域呢？<br>这时就需要<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIViewController_Class/#//apple_ref/occ/instp/UIViewController/edgesForExtendedLayout" target="_blank" rel="external">edgesForExtendedLayout</a>属性了。<br><code>edgesForExtendedLayout</code>是UIViewController的一个属性，它只在ViewController嵌在其他容器内时才起作用，比如UINavgationController。默认的值是UIRectEdgeAll，将它设置为UIRectEdgeNone时可以解决上述问题。如下👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 在ViewController的viewDidLoad里面设置</div><div class="line">self.edgesForExtendedLayout = UIRectEdgeNone;</div></pre></td></tr></table></figure></p>
-<p>效果如下👇<br><img src="/lionheart/1603/edges.png" alt="edgesForExtendedLayout"></p>
-<h2 id="获取版本号"><a href="#获取版本号" class="headerlink" title="获取版本号"></a>获取版本号</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSString *version = [NSBundle mainBundle] objectForInfoDictionaryKey:@&quot;CFBundleVersion&quot;];</div></pre></td></tr></table></figure>
-<h2 id="文本自动调整大小"><a href="#文本自动调整大小" class="headerlink" title="文本自动调整大小"></a>文本自动调整大小</h2><p>UILabel一下2个属性，可以让文本字体大小自动调整以适应UILabel的frame:</p>
+<h2 id="edgesForExtendedLayout"><a href="#edgesForExtendedLayout" class="headerlink" title="edgesForExtendedLayout"></a><code>edgesForExtendedLayout</code></h2><p>经常会碰到的一个问题：UITabBarController包含多个UINavgationController，每个UINavgationController又包含着自己的ViewController。这个时候ViewController的frame占据了整个屏幕（既包括了NavBar的地方，又包括了TabBar的地方），很烦；如何让这样的ViewController的View只占据NavBar和TabBar之间的区域呢？<br>这时就需要<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIViewController_Class/#//apple_ref/occ/instp/UIViewController/edgesForExtendedLayout" target="_blank" rel="external">edgesForExtendedLayout</a>属性了。<br><code>edgesForExtendedLayout</code>是UIViewController的一个属性，它只在ViewController嵌在其他容器内时才起作用，比如UINavgationController。默认的值是UIRectEdgeAll，将它设置为UIRectEdgeNone时可以解决上述问题。如下👇</p>
+<pre><code>        // 在ViewController的viewDidLoad里面设置
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+</code></pre><p>效果如下👇<br><img src="/lionheart/1603/edges.png" alt="edgesForExtendedLayout"></p>
+<h2 id="获取版本号"><a href="#获取版本号" class="headerlink" title="获取版本号"></a>获取版本号</h2><pre><code>        NSString *version = [NSBundle mainBundle] objectForInfoDictionaryKey:@&quot;CFBundleVersion&quot;];
+</code></pre><h2 id="文本自动调整大小"><a href="#文本自动调整大小" class="headerlink" title="文本自动调整大小"></a>文本自动调整大小</h2><p>UILabel一下2个属性，可以让文本字体大小自动调整以适应UILabel的frame:</p>
 <ol>
 <li><code>adjustsFontSizeToFitWidth</code>: 该属性默认为NO。当设置它为YES时，当文本的长度超过UILabel时，会自动缩小文本字体，以适应UILabel的frame。该属性要配合minimumScaleFactor使用。</li>
 <li><code>minimumScaleFactor</code>: 该属性表示UILabel的字体最小的缩放程度。它的默认值为0，但并不是说字体大小为0，而是使用当前指定的字体大小。</li>
 </ol>
 <h2 id="AppStore-Settings页面跳转"><a href="#AppStore-Settings页面跳转" class="headerlink" title="AppStore, Settings页面跳转"></a>AppStore, Settings页面跳转</h2><ol>
-<li><p>跳转到AppStore界面<br>经常需要对app进行评分，这时就需要跳转到AppStore，跳转方法如下👇</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">NSString *appStoreUrlStr = @&quot;itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple    +Software&amp;id=923676989&quot;; // 获取Coding的AppStore的url, 注意这里要将https:换成itms-apps: 貌似是为了避免重定向</div><div class="line">[UIApplication sharedApplication] openURL:[NSURL urlWithString:appStoreUrlStr]; // 跳转到AppStore</div></pre></td></tr></table></figure>
-</li>
-<li><p>跳转到设置页面</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[UIApplication sharedApplication] openURL:[NSURL urlWithString:UIApplicationOpenSettingsURLString];</div></pre></td></tr></table></figure>
-</li>
+<li>跳转到AppStore界面<br>经常需要对app进行评分，这时就需要跳转到AppStore，跳转方法如下👇<pre><code>     NSString *appStoreUrlStr = @&quot;itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple    +Software&amp;id=923676989&quot;; // 获取Coding的AppStore的url, 注意这里要将https:换成itms-apps: 貌似是为了避免重定向
+     [UIApplication sharedApplication] openURL:[NSURL urlWithString:appStoreUrlStr]; // 跳转到AppStore
+</code></pre></li>
+<li>跳转到设置页面<pre><code>     [UIApplication sharedApplication] openURL:[NSURL urlWithString:UIApplicationOpenSettingsURLString];
+</code></pre></li>
 </ol>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="http://stackoverflow.com/questions/433907/how-to-link-to-apps-on-the-app-store" target="_blank" rel="external">How to link to apps on the app store</a></li>
@@ -602,7 +603,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -280,15 +280,44 @@
                 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近还在跟着<a href="https://github.com/Coding/Coding-iOS" target="_blank" rel="external">Coding-iOS源码</a>学习iOS开发，现在来介绍一下Coding-iOS的文件下载和上传机制。其实说实话，在写这文章的时候我对这个机制的总体把握也不是很全面；下面我将通过源码再来熟悉一遍这个全过程。这篇文章主要介绍的是下载流程。</p>
 <a id="more"></a>
 <h2 id="源码先行"><a href="#源码先行" class="headerlink" title="源码先行"></a>源码先行</h2><h3 id="Coding-FileManager"><a href="#Coding-FileManager" class="headerlink" title="Coding_FileManager"></a><code>Coding_FileManager</code></h3><p>Coding-iOS中将文件下载与上传有关的方法都封装在<code>Coding_FileManager.h</code>和<code>Coding_FileManager.m</code>文件里面。先来看看其中的主要代码👇<br><code>Coding_FileManager</code>里面包含3个类：<code>Coding_FileManager</code>类，<code>Coding_DownloadTask</code>类和<code>Coding_UploadTask</code>类。其中的Coding_UploadTask类与上传有关，这里不做介绍。</p>
-<h4 id="Coding-DownloadTask类"><a href="#Coding-DownloadTask类" class="headerlink" title="Coding_DownloadTask类"></a><code>Coding_DownloadTask</code>类</h4><p>Coding_DownloadTask类用来封装每一个下载任务，它包含一个下载任务，下载进度和当前下载的文件名，代码如下👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@interface Coding_DownloadTask : NSObject</div><div class="line">@property (nonatomic, strong) NSURLSessionDownloadTask *task;  // 下载任务</div><div class="line">@property (nonatomic, strong) NSProgress *progress;  // 下载进度</div><div class="line">@property (nonatomic, strong) NSString *fileName;  // 下载文件名</div><div class="line"></div><div class="line">+ (Coding_DownloadTask *)cDownloadTaskWith:(NSURLSessionDownloadTask *)task progress:(NSProgress *)progress fileName:(NSString *)fileName;  // 初始化函数</div><div class="line">- (void)cancel;  // 取消当前下载函数</div><div class="line">@end</div></pre></td></tr></table></figure></p>
-<p>他的两个方法的实现也很简单：👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">+ (Coding_DownloadTask *)cDownloadTaskWith:(NSURLSessionDownloadTask *)task progress:(NSProgress *)progress fileName:(NSString *)fileName &#123;</div><div class="line">    Coding_DownloadTask *cDownloadTask = [Coding_DownloadTask alloc] init];</div><div class="line">    cDownloadTask.task = task;</div><div class="line">    cDownloadTask.progress = progress;</div><div class="line">    cDownloadTask.fileName = fileName;</div><div class="line"></div><div class="line">    return cDownloadTask;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)cancel &#123;</div><div class="line">    if (_task &amp;&amp; (_task.state == NSURLSessionTaskStateRunning || _task.state == NSURLSessionTaskStateSuspended)) &#123;</div><div class="line">        [_task cancel];  // 先判断task的state， 如果可以取消， 那就取消</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h4 id="Coding-FileManager类"><a href="#Coding-FileManager类" class="headerlink" title="Coding_FileManager类"></a><code>Coding_FileManager</code>类</h4><p>这个类是文件下载上传机制里面的最最最核心的类，好好来看看👇</p>
+<h4 id="Coding-DownloadTask类"><a href="#Coding-DownloadTask类" class="headerlink" title="Coding_DownloadTask类"></a><code>Coding_DownloadTask</code>类</h4><p>Coding_DownloadTask类用来封装每一个下载任务，它包含一个下载任务，下载进度和当前下载的文件名，代码如下👇</p>
+<pre><code>        @interface Coding_DownloadTask : NSObject
+        @property (nonatomic, strong) NSURLSessionDownloadTask *task;  // 下载任务
+        @property (nonatomic, strong) NSProgress *progress;  // 下载进度
+        @property (nonatomic, strong) NSString *fileName;  // 下载文件名
+
+        + (Coding_DownloadTask *)cDownloadTaskWith:(NSURLSessionDownloadTask *)task progress:(NSProgress *)progress fileName:(NSString *)fileName;  // 初始化函数
+        - (void)cancel;  // 取消当前下载函数
+        @end
+</code></pre><p>他的两个方法的实现也很简单：👇</p>
+<pre><code>        + (Coding_DownloadTask *)cDownloadTaskWith:(NSURLSessionDownloadTask *)task progress:(NSProgress *)progress fileName:(NSString *)fileName {
+            Coding_DownloadTask *cDownloadTask = [Coding_DownloadTask alloc] init];
+            cDownloadTask.task = task;
+            cDownloadTask.progress = progress;
+            cDownloadTask.fileName = fileName;
+
+            return cDownloadTask;
+        }
+
+        - (void)cancel {
+            if (_task &amp;&amp; (_task.state == NSURLSessionTaskStateRunning || _task.state == NSURLSessionTaskStateSuspended)) {
+                [_task cancel];  // 先判断task的state， 如果可以取消， 那就取消
+            }
+        }
+</code></pre><h4 id="Coding-FileManager类"><a href="#Coding-FileManager类" class="headerlink" title="Coding_FileManager类"></a><code>Coding_FileManager</code>类</h4><p>这个类是文件下载上传机制里面的最最最核心的类，好好来看看👇</p>
 <ol>
 <li><p>类的声明</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">@interface Coding_FileManager : NSObject</div><div class="line">+ (Coding_FileManager *)sharedManager;  // 单例模式</div><div class="line">+ (AFURLSessionManager *)af_manager;</div><div class="line">- (AFURLSessionManager *)af_manager;</div><div class="line"></div><div class="line">+ (Coding_DownloadTask *)cDownloadTaskForKey:(NSString *)storage_key;  // 根据特定的key获取特定的Coding_DownloadTask</div><div class="line">+ (NSURL *)diskDownloadUrlForKey:(NSString *)storage_key;  // 暂时不明</div><div class="line">- (Coding_DownloadTask *)addDownloadTaskForObj:(id)obj completionHandler:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler;  // 对于新文件，新建下载任务</div><div class="line">@end</div></pre></td></tr></table></figure>
-</li>
-<li><p>类的实现</p>
-</li>
+<pre><code>     @interface Coding_FileManager : NSObject
+     + (Coding_FileManager *)sharedManager;  // 单例模式
+     + (AFURLSessionManager *)af_manager;
+     - (AFURLSessionManager *)af_manager;
+
+     + (Coding_DownloadTask *)cDownloadTaskForKey:(NSString *)storage_key;  // 根据特定的key获取特定的Coding_DownloadTask
+     + (NSURL *)diskDownloadUrlForKey:(NSString *)storage_key;  // 暂时不明
+     - (Coding_DownloadTask *)addDownloadTaskForObj:(id)obj completionHandler:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler;  // 对于新文件，新建下载任务
+     @end
+</code></pre></li>
+<li>类的实现</li>
 </ol>
 <ul>
 <li><code>属性</code><ol>
@@ -300,32 +329,146 @@
 <li><p><code>方法</code></p>
 <ol>
 <li><p><code>sharedManager</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 单例模式初始化Coding_FileManager</div><div class="line">+ (Coding_FileManager *)sharedManager &#123;</div><div class="line">    static Coding_FileManager *manager = nil;</div><div class="line">    static dispatch_once_t onceToken;</div><div class="line">    dispatch_once(&amp;onceToken, ^&#123;</div><div class="line">        manager = [Coding_FileManager alloc] init];</div><div class="line">        // 创建存放下载文件的文件夹</div><div class="line">        [manager urlForDownloadFolder];</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    return manager;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<pre><code>       // 单例模式初始化Coding_FileManager
+       + (Coding_FileManager *)sharedManager {
+           static Coding_FileManager *manager = nil;
+           static dispatch_once_t onceToken;
+           dispatch_once(&amp;onceToken, ^{
+               manager = [Coding_FileManager alloc] init];
+               // 创建存放下载文件的文件夹
+               [manager urlForDownloadFolder];
+           });
+
+           return manager;
+       }
+</code></pre></li>
 <li><p><code>init</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// 初始化</div><div class="line">- (instancetype)init &#123;</div><div class="line">    self = [super init];</div><div class="line">    if (self) &#123;</div><div class="line">        [[self class] createFolder:[[self class] downloadPath]]; // 创建下载目录</div><div class="line">        _downloadDict = [NSMutableDictionary alloc] init]; // 初始化存放下载任务的字典</div><div class="line">        _diskDownloadDict = [NSMutableDictionary alloc] init]; //</div><div class="line">        _downloadDirectoryURL = nil; //初始化下载目录的文件夹URL</div><div class="line">        _docDownloadWatcher = [DirectoryWatcher watchFolderWithPath:[[self class] downloadPath] delegate:self]; // 添加文件夹状态监控器</div><div class="line">        [self directoryDidChange:_docDownloadWatcher]; // 初始化的时候先来之行一遍监控程序</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return self;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<pre><code>       // 初始化
+       - (instancetype)init {
+           self = [super init];
+           if (self) {
+               [[self class] createFolder:[[self class] downloadPath]]; // 创建下载目录
+               _downloadDict = [NSMutableDictionary alloc] init]; // 初始化存放下载任务的字典
+               _diskDownloadDict = [NSMutableDictionary alloc] init]; //
+               _downloadDirectoryURL = nil; //初始化下载目录的文件夹URL
+               _docDownloadWatcher = [DirectoryWatcher watchFolderWithPath:[[self class] downloadPath] delegate:self]; // 添加文件夹状态监控器
+               [self directoryDidChange:_docDownloadWatcher]; // 初始化的时候先来之行一遍监控程序
+           }
+
+           return self;
+       }
+</code></pre></li>
 <li><p><code>urlForDownloadFolder</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 创建存放下载图片的文件夹</div><div class="line">- (NSURL *)urlForDownloadFolder &#123;</div><div class="line">    if (!_downloadDirectoryURL) &#123;</div><div class="line">        if ([self class] createFolder:[[self class] downloadPath]) &#123; // 创建存放下载文件的文件夹</div><div class="line">            // 文件夹创建成功</div><div class="line">            _downloadDirectoryURL = [NSURL fileURLWithPath:[[self class] downloadPath] isDirectory:YES];</div><div class="line">        &#125; else &#123;</div><div class="line">            // alert create folder error</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return _downloadDirectoryURL;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p><code>downloadPath</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// 得到下载目录文件夹的路径, 该APP的Document目录下面的Coding_Download文件夹</div><div class="line">+ (NSString *)downloadPath &#123;</div><div class="line">    NSString *documentPath = [NSSearchPathForDirecrotiesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];</div><div class="line">    NSString *downloadPath = [documentPath stringByAppendingPathComponent:@&quot;Coding_Download&quot;];</div><div class="line">    return downloadPath;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<pre><code>       // 创建存放下载图片的文件夹
+       - (NSURL *)urlForDownloadFolder {
+           if (!_downloadDirectoryURL) {
+               if ([self class] createFolder:[[self class] downloadPath]) { // 创建存放下载文件的文件夹
+                   // 文件夹创建成功
+                   _downloadDirectoryURL = [NSURL fileURLWithPath:[[self class] downloadPath] isDirectory:YES];
+               } else {
+                   // alert create folder error
+               }
+           }
+
+           return _downloadDirectoryURL;
+       }
+</code></pre></li>
+<li><code>downloadPath</code><pre><code>       // 得到下载目录文件夹的路径, 该APP的Document目录下面的Coding_Download文件夹
+       + (NSString *)downloadPath {
+           NSString *documentPath = [NSSearchPathForDirecrotiesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+           NSString *downloadPath = [documentPath stringByAppendingPathComponent:@&quot;Coding_Download&quot;];
+           return downloadPath;
+       }
+</code></pre></li>
 <li><p><code>createFolder</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// 创建文件夹</div><div class="line">+ (BOOL) createFolder:(NSString *)path &#123;</div><div class="line">    BOOL isDir = NO;</div><div class="line">    NSFileManager *fileManager = [NSFileManager defaultManager];</div><div class="line">    BOOL existed = [fileManager fileExistsAtPath:path isDirectory:&amp;isDir];</div><div class="line">    BOOL isCreated = NO;</div><div class="line">    if (!(isDir == YES &amp;&amp; existed == YES)) &#123;</div><div class="line">        isCreated = [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];</div><div class="line">    &#125; else &#123;</div><div class="line">        isCreated = YES;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return isCreated;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<pre><code>       // 创建文件夹
+       + (BOOL) createFolder:(NSString *)path {
+           BOOL isDir = NO;
+           NSFileManager *fileManager = [NSFileManager defaultManager];
+           BOOL existed = [fileManager fileExistsAtPath:path isDirectory:&amp;isDir];
+           BOOL isCreated = NO;
+           if (!(isDir == YES &amp;&amp; existed == YES)) {
+               isCreated = [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
+           } else {
+               isCreated = YES;
+           }
+
+           return isCreated;
+       }
+</code></pre></li>
 <li><p><code>cDownloadTaskForKey</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+ (Coding_DownloadTask *)cDownloadTaskForKey:(NSString *)storage_key &#123;</div><div class="line">    if (!storage_key) &#123;</div><div class="line">        return nil;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 当前的每个下载任务 Coding_DownloadTask 都存放在 _downloadDict 里面，对应的key是storage_key</div><div class="line">    return [self sharedManager].downloadDict objectForKey:storage_key];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<pre><code>       + (Coding_DownloadTask *)cDownloadTaskForKey:(NSString *)storage_key {
+           if (!storage_key) {
+               return nil;
+           }
+
+           // 当前的每个下载任务 Coding_DownloadTask 都存放在 _downloadDict 里面，对应的key是storage_key
+           return [self sharedManager].downloadDict objectForKey:storage_key];
+       }
+</code></pre></li>
 <li><p><code>directoryDidChange:(DirectoryWatcher *)folderWatcher</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">// DirectoryWatcher的delegate， 当文件夹里面的文件变动时触发</div><div class="line">- (void)directoryDidChange:(DirectoryWatcher *)folderWatcher &#123;</div><div class="line">    NSMutableDictionary *diskDict = _diskDownloadDict;</div><div class="line">    NSString *path = [[self class] downloadPath];</div><div class="line">    BOOL isDownload = YES;</div><div class="line"></div><div class="line">    /* 先移除diskDict里面的所有文件URL，再将当前下载目录里面的所有文件URL添加到diskDict里面 */</div><div class="line">    [diskDict removeAllObjects];</div><div class="line">    NSArray *fileContents = [NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:NULL]; // 获取path文件夹下面的所有内容，将所有文件名存放在fileContents数组里面</div><div class="line">    for (NSString *curFileName in [fileContents objectEnumerator]) &#123; // 遍历文件名</div><div class="line">        NSString *filePath = [path stringByAppendingPathComponent:curFileName]; // 当前文件的完整的路径</div><div class="line">        NSURL *fileUrl = [NSURL fileURLWithPath:filePath]; // 当前文件的URL</div><div class="line">        BOOL isDirectory;</div><div class="line">        [NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:&amp;isDirectory]; // 判断当前文件是否是文件夹</div><div class="line">        if (!isDirectory) &#123; // 如果不是文件夹， 存入diskDict</div><div class="line">            NSString *keyStr = [curFileName componentsSeparatedByString:@&quot;|&quot;].lastObject; // 因为下载文件名命名为&apos;IMG_0002.JPG|||264314|||QiniuStorage|c09bd7ea-6be9-431c-afc1-884293895719.JPG&apos;， 最后的|后面是storage_key</div><div class="line">            [diskDict setObject:fileUrl forKey:keyStr];</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<pre><code>       // DirectoryWatcher的delegate， 当文件夹里面的文件变动时触发
+       - (void)directoryDidChange:(DirectoryWatcher *)folderWatcher {
+           NSMutableDictionary *diskDict = _diskDownloadDict;
+           NSString *path = [[self class] downloadPath];
+           BOOL isDownload = YES;
+
+           /* 先移除diskDict里面的所有文件URL，再将当前下载目录里面的所有文件URL添加到diskDict里面 */
+           [diskDict removeAllObjects];
+           NSArray *fileContents = [NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:NULL]; // 获取path文件夹下面的所有内容，将所有文件名存放在fileContents数组里面
+           for (NSString *curFileName in [fileContents objectEnumerator]) { // 遍历文件名
+               NSString *filePath = [path stringByAppendingPathComponent:curFileName]; // 当前文件的完整的路径
+               NSURL *fileUrl = [NSURL fileURLWithPath:filePath]; // 当前文件的URL
+               BOOL isDirectory;
+               [NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:&amp;isDirectory]; // 判断当前文件是否是文件夹
+               if (!isDirectory) { // 如果不是文件夹， 存入diskDict
+                   NSString *keyStr = [curFileName componentsSeparatedByString:@&quot;|&quot;].lastObject; // 因为下载文件名命名为&#39;IMG_0002.JPG|||264314|||QiniuStorage|c09bd7ea-6be9-431c-afc1-884293895719.JPG&#39;， 最后的|后面是storage_key
+                   [diskDict setObject:fileUrl forKey:keyStr];
+               }
+           }
+       }
+</code></pre></li>
 <li><p><code>addDownloadTaskForObj:completionHandler</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 新建下载任务</div><div class="line">- (void)addDownloadTaskForObj:(id)obj completionHandler:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler &#123;</div><div class="line">    Coding_DownloadTask *cTask = nil;</div><div class="line">    ProjectFile *file = (ProjectFile *)obj; // Coding-iOS中的一个model</div><div class="line">    cTask = [self addDownloadTaskWithPath:file.downloadPath diskFileName:fileDiskFileName storage_key:file.storage_key completionHandler:completionHandler];</div><div class="line"></div><div class="line">    return cTask;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<pre><code>       // 新建下载任务
+       - (void)addDownloadTaskForObj:(id)obj completionHandler:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler {
+           Coding_DownloadTask *cTask = nil;
+           ProjectFile *file = (ProjectFile *)obj; // Coding-iOS中的一个model
+           cTask = [self addDownloadTaskWithPath:file.downloadPath diskFileName:fileDiskFileName storage_key:file.storage_key completionHandler:completionHandler];
+
+           return cTask;
+       }
+</code></pre></li>
 <li><p><code>addDownloadTaskWithPath:diskFileName:storage_key:completionHandler</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">// 新建下载任务 具体的</div><div class="line">- (void)addDownloadTaskWithPath:(NSString *)downloadPath diskFileName:(NSString *)diskFileName storage_key:(NSString)storage_key completionHandler:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler &#123;</div><div class="line">    NSProgress *progress;</div><div class="line">    NSURL *downloadPath = [NSURL URLWithString:downloadPath];</div><div class="line">    NSURLRequest *request = [NSURLRequest requestWithURL:downloadPath];</div><div class="line">    NSURLSessionDownloadTask *downloadTask = [self.af_manager downloadTaskWithRequest:request progress:&amp;progress destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) &#123;</div><div class="line">        NSURL *downloadURL = [Coding_FileManager sharedManager] urlForDownloadFolder];</div><div class="line">        Coding_DownloadTask *cDownloadTask = [Coding_FileManager cDownloadTaskForResponse:response];</div><div class="line">        if (cDownloadTask) &#123;</div><div class="line">            downloadUrl = [downloadUrl URLByAppendingPathComponent:cDownloadTask.diskFileName];</div><div class="line">        &#125; else &#123;</div><div class="line">            downloadUrl = [downloadUrl URLByAppendingPathComponent:[response suggestedFileName]];</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        return downloadUrl; // 返回存储的目标位置</div><div class="line">    &#125; completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) &#123;</div><div class="line">        if (error) &#123;</div><div class="line">            [Coding_FileManager cancelCDownloadTaskForKey:storage_key];</div><div class="line">        &#125; else &#123;</div><div class="line">            [Coding_FileManager cancelCDownloadTaskForResponse:response];</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line"></div><div class="line">    Coding_DownloadTask *cDownloadTask = [Coding_DownloadTask cDownloadTaskWithTask:downloadTask progress:progress fileName:diskFileName];</div><div class="line"></div><div class="line">    [self.downloadDict setObject:cDownloadTask forKey:storage_key];</div><div class="line">    [downloadTask resume];</div><div class="line">    return cDownloadTask;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<pre><code>       // 新建下载任务 具体的
+       - (void)addDownloadTaskWithPath:(NSString *)downloadPath diskFileName:(NSString *)diskFileName storage_key:(NSString)storage_key completionHandler:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler {
+           NSProgress *progress;
+           NSURL *downloadPath = [NSURL URLWithString:downloadPath];
+           NSURLRequest *request = [NSURLRequest requestWithURL:downloadPath];
+           NSURLSessionDownloadTask *downloadTask = [self.af_manager downloadTaskWithRequest:request progress:&amp;progress destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+               NSURL *downloadURL = [Coding_FileManager sharedManager] urlForDownloadFolder];
+               Coding_DownloadTask *cDownloadTask = [Coding_FileManager cDownloadTaskForResponse:response];
+               if (cDownloadTask) {
+                   downloadUrl = [downloadUrl URLByAppendingPathComponent:cDownloadTask.diskFileName];
+               } else {
+                   downloadUrl = [downloadUrl URLByAppendingPathComponent:[response suggestedFileName]];
+               }
+
+               return downloadUrl; // 返回存储的目标位置
+           } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+               if (error) {
+                   [Coding_FileManager cancelCDownloadTaskForKey:storage_key];
+               } else {
+                   [Coding_FileManager cancelCDownloadTaskForResponse:response];
+               }
+           }];
+
+           Coding_DownloadTask *cDownloadTask = [Coding_DownloadTask cDownloadTaskWithTask:downloadTask progress:progress fileName:diskFileName];
+
+           [self.downloadDict setObject:cDownloadTask forKey:storage_key];
+           [downloadTask resume];
+           return cDownloadTask;
+       }
+</code></pre></li>
 </ol>
 </li>
 </ul>
@@ -645,7 +788,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

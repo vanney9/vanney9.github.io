@@ -33,7 +33,7 @@ MJExtension: A fast, convenient and nonintrusive conversion between JSON and mod
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -293,12 +293,37 @@ MJExtension: A fast, convenient and nonintrusive conversion between JSON and mod
 <li>该JSON格式的数据经过AFNetworking返回给APP的数据形式是<code>NSDictionary</code>({…})或者<code>NSArray</code>([…])</li>
 <li>这些数据经过<code>NSObject+ObjectMap</code>转化成最终的model对象，如下👇<br><img src="/lionheart/1605/model.png" alt="Model"></li>
 </ol>
-<h2 id="正经的源码分析"><a href="#正经的源码分析" class="headerlink" title="正经的源码分析"></a>正经的源码分析</h2><h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>从Network Request中得到的数据如下👇<br><img src="/lionheart/1605/json.png" alt="JSON"><br>调用NSObject+ObjectMap中的函数，将JSON-&gt;Model<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">id resultData = [data valueForKeyPath:@&quot;data&quot;];</div><div class="line">ProjectTopics *resultT = [NSObject objectOfClass:@&quot;ProjectTopics&quot; fromJSON:resultData];</div></pre></td></tr></table></figure></p>
-<h3 id="正经实现"><a href="#正经实现" class="headerlink" title="正经实现"></a>正经实现</h3><p><code>+(id)objectOfClass:(NSString *)object fromJSON:(NSDictionary *)dict;</code><br>该函数是本文分析的核心，它实现了将JSON-&gt;Model，来看看它具体是如何实现的。</p>
-<h4 id="初始化Model对象-例子中使用的是ProjectTopics对象-，借助NSClassFromString的帮助"><a href="#初始化Model对象-例子中使用的是ProjectTopics对象-，借助NSClassFromString的帮助" class="headerlink" title="初始化Model对象(例子中使用的是ProjectTopics对象)，借助NSClassFromString的帮助"></a>初始化Model对象(例子中使用的是<code>ProjectTopics</code>对象)，借助<code>NSClassFromString</code>的帮助</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">id newObject = [[NSClassFromString(object) alloc] init];</div></pre></td></tr></table></figure>
-<h4 id="获取ProjectTopics对象的全部属性"><a href="#获取ProjectTopics对象的全部属性" class="headerlink" title="获取ProjectTopics对象的全部属性"></a>获取<code>ProjectTopics</code>对象的全部属性</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[newObject propertyDictionary];</div></pre></td></tr></table></figure>
-<p>具体看看如何实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">- (NSDictionary *)propertyDictionary &#123;</div><div class="line">      NSMutableDictionary *dict = [NSMutableDictionary dictionary];</div><div class="line"></div><div class="line">      unsigned count;</div><div class="line">      objc_property_t *properties = class_copyPropertyList([self class], &amp;count);</div><div class="line"></div><div class="line">      for (int i = 0; i &lt; count; i++) &#123;</div><div class="line">          NSString *key = [NSString stringWithUTF8String:property_getName(properties[i])];</div><div class="line">          [dict setObject:key forKey:key];</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      free(properties);</div><div class="line"></div><div class="line">      // Add all superclass properties as well, until it hits NSObject</div><div class="line">      NSString *superClassName = [[self superclass] nameOfClass];</div><div class="line">      if (![superClassName isEqualToString:@&quot;NSObject&quot;]) &#123;</div><div class="line">          for (NSString *property in [[[self superclass] propertyDictionary] allKeys]) &#123;</div><div class="line">              [dict setObject:property forKey:property];</div><div class="line">          &#125;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      return dict;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
-<p><strong> 关键函数 </strong></p>
+<h2 id="正经的源码分析"><a href="#正经的源码分析" class="headerlink" title="正经的源码分析"></a>正经的源码分析</h2><h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>从Network Request中得到的数据如下👇<br><img src="/lionheart/1605/json.png" alt="JSON"><br>调用NSObject+ObjectMap中的函数，将JSON-&gt;Model</p>
+<pre><code>        id resultData = [data valueForKeyPath:@&quot;data&quot;];
+        ProjectTopics *resultT = [NSObject objectOfClass:@&quot;ProjectTopics&quot; fromJSON:resultData];
+</code></pre><h3 id="正经实现"><a href="#正经实现" class="headerlink" title="正经实现"></a>正经实现</h3><p><code>+(id)objectOfClass:(NSString *)object fromJSON:(NSDictionary *)dict;</code><br>该函数是本文分析的核心，它实现了将JSON-&gt;Model，来看看它具体是如何实现的。</p>
+<h4 id="初始化Model对象-例子中使用的是ProjectTopics对象-，借助NSClassFromString的帮助"><a href="#初始化Model对象-例子中使用的是ProjectTopics对象-，借助NSClassFromString的帮助" class="headerlink" title="初始化Model对象(例子中使用的是ProjectTopics对象)，借助NSClassFromString的帮助"></a>初始化Model对象(例子中使用的是<code>ProjectTopics</code>对象)，借助<code>NSClassFromString</code>的帮助</h4><pre><code>        id newObject = [[NSClassFromString(object) alloc] init];
+</code></pre><h4 id="获取ProjectTopics对象的全部属性"><a href="#获取ProjectTopics对象的全部属性" class="headerlink" title="获取ProjectTopics对象的全部属性"></a>获取<code>ProjectTopics</code>对象的全部属性</h4><pre><code>        [newObject propertyDictionary];
+</code></pre><p>具体看看如何实现</p>
+<pre><code>        - (NSDictionary *)propertyDictionary {
+              NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+
+              unsigned count;
+              objc_property_t *properties = class_copyPropertyList([self class], &amp;count);
+
+              for (int i = 0; i &lt; count; i++) {
+                  NSString *key = [NSString stringWithUTF8String:property_getName(properties[i])];
+                  [dict setObject:key forKey:key];
+              }
+
+              free(properties);
+
+              // Add all superclass properties as well, until it hits NSObject
+              NSString *superClassName = [[self superclass] nameOfClass];
+              if (![superClassName isEqualToString:@&quot;NSObject&quot;]) {
+                  for (NSString *property in [[[self superclass] propertyDictionary] allKeys]) {
+                      [dict setObject:property forKey:property];
+                  }
+              }
+
+              return dict;
+          }
+</code></pre><p><strong> 关键函数 </strong></p>
 <ul>
 <li><code>objc_property_t *class_copyPropertyList(Class cls, unsigned int *outCount)</code>:<br>该函数将ProjectTopics类的属性拷贝到一个数组中，并返回该数组。数组中的每个元素是<code>objc_property_t</code>类型</li>
 <li><code>const char *property_getName(objc_property_t property)</code><br>该函数传入一个objc_property_t参数，并返回该属性的属性名</li>
@@ -312,26 +337,53 @@ MJExtension: A fast, convenient and nonintrusive conversion between JSON and mod
 <h4 id="遍历传入的NSDictionary：dict-为ProjectTopics类的各个属性赋值"><a href="#遍历传入的NSDictionary：dict-为ProjectTopics类的各个属性赋值" class="headerlink" title="遍历传入的NSDictionary：dict,为ProjectTopics类的各个属性赋值"></a>遍历传入的NSDictionary：<code>dict</code>,为ProjectTopics类的各个属性赋值</h4><p>先再来看看这个dict👇<br><img src="/lionheart/1605/json.png" alt="JSON"><br>因为传入<code>dict</code>中的每个key其实就是ProjectTopics类中的每个属性名，所以就可以直接赋值了。当然其中也分3中情况，</p>
 <ol>
 <li><p>最简单的情况，这个key对应的值既不是NSArray，也不是NSDictionary(比如id, owner_id等)。对于这种情况，直接赋值，代码如下👇</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">objc_property_t property = class_getProperty([newObject class], [propertyName UTF8String]);</div><div class="line">if (!property) &#123;</div><div class="line">    continue;</div><div class="line">&#125;</div><div class="line">NSString *classType = [newObject typeFromProperty:property];</div><div class="line"></div><div class="line">// check if NSDate or not</div><div class="line">if ([classType isEqualToString:@&quot;T@\&quot;NSDate\&quot;&quot;]) &#123;</div><div class="line">    //                1970年的long型数字</div><div class="line">    NSObject *obj = [dict objectForKey:key];</div><div class="line">    if ([obj isKindOfClass:[NSNumber class]]) &#123;</div><div class="line">        NSNumber *timeSince1970 = (NSNumber *)obj;</div><div class="line">        NSTimeInterval timeSince1970TimeInterval = timeSince1970.doubleValue/1000;</div><div class="line">        NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeSince1970TimeInterval];</div><div class="line">        [newObject setValue:date forKey:propertyName];</div><div class="line">    &#125;else&#123;</div><div class="line">        //                            日期字符串</div><div class="line">        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];</div><div class="line">        [formatter setDateFormat:OMDateFormat];</div><div class="line">        [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:OMTimeZone]];</div><div class="line">        NSString *dateString = [[dict objectForKey:key] stringByReplacingOccurrencesOfString:@&quot;T&quot; withString:@&quot; &quot;];</div><div class="line">        [newObject setValue:[formatter dateFromString:dateString] forKey:propertyName];</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">else &#123;</div><div class="line">    if ([dict objectForKey:key] != [NSNull null]) &#123;</div><div class="line">        [newObject setValue:[dict objectForKey:key] forKey:propertyName];</div><div class="line">    &#125;</div><div class="line">    else &#123;</div><div class="line">        [newObject setValue:nil forKey:propertyName];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上述代码说了很多，但是主要是区分该属性是否是一个NSDate,如果不是的话就直接通过下面代码赋值就完成了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[newObject setValue:[dict objectForKey:key] forKey:propertyName]; // KVO</div></pre></td></tr></table></figure>
-<p>至于如何判断属性是否是NSDate，有以下几个关键函数</p>
+<pre><code>       objc_property_t property = class_getProperty([newObject class], [propertyName UTF8String]);
+       if (!property) {
+           continue;
+       }
+       NSString *classType = [newObject typeFromProperty:property];
+
+       // check if NSDate or not
+       if ([classType isEqualToString:@&quot;T@\&quot;NSDate\&quot;&quot;]) {
+           //                1970年的long型数字
+           NSObject *obj = [dict objectForKey:key];
+           if ([obj isKindOfClass:[NSNumber class]]) {
+               NSNumber *timeSince1970 = (NSNumber *)obj;
+               NSTimeInterval timeSince1970TimeInterval = timeSince1970.doubleValue/1000;
+               NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeSince1970TimeInterval];
+               [newObject setValue:date forKey:propertyName];
+           }else{
+               //                            日期字符串
+               NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+               [formatter setDateFormat:OMDateFormat];
+               [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:OMTimeZone]];
+               NSString *dateString = [[dict objectForKey:key] stringByReplacingOccurrencesOfString:@&quot;T&quot; withString:@&quot; &quot;];
+               [newObject setValue:[formatter dateFromString:dateString] forKey:propertyName];
+           }
+       }
+       else {
+           if ([dict objectForKey:key] != [NSNull null]) {
+               [newObject setValue:[dict objectForKey:key] forKey:propertyName];
+           }
+           else {
+               [newObject setValue:nil forKey:propertyName];
+           }
+       }
+</code></pre><p>上述代码说了很多，但是主要是区分该属性是否是一个NSDate,如果不是的话就直接通过下面代码赋值就完成了</p>
+<pre><code>       [newObject setValue:[dict objectForKey:key] forKey:propertyName]; // KVO
+</code></pre><p>至于如何判断属性是否是NSDate，有以下几个关键函数</p>
 <ul>
 <li><code>objc_property_t class_getProperty(Class cls, const char *name)</code><br>该函数传入类和字符串，返回一个<code>objc_property_t</code>类型的属性</li>
-<li><p><code>- (NSString *)typeFromProperty:(objc_property_t)property;</code><br>该函数的实现如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">return [[NSString stringWithUTF8String:property_getAttributes(property)] componentsSeparatedByString:@&quot;,&quot;][0];</div></pre></td></tr></table></figure>
-<p>它返回的NSString是长这样的：T@”NSDate”,&amp;,N,V_last_activity_at ／ T@”NSString”,&amp;,N,V_company；所以可以根据是否有NSDate进行判断</p>
-</li>
+<li><code>- (NSString *)typeFromProperty:(objc_property_t)property;</code><br>该函数的实现如下<pre><code>       return [[NSString stringWithUTF8String:property_getAttributes(property)] componentsSeparatedByString:@&quot;,&quot;][0];
+</code></pre>它返回的NSString是长这样的：T@”NSDate”,&amp;,N,V_last_activity_at ／ T@”NSString”,&amp;,N,V_company；所以可以根据是否有NSDate进行判断</li>
 </ul>
 </li>
-<li><p>如果这个key对应的是一个NSDictionary对象，那么说明这个属性也是另外一个Model对象，对该属性递归调用上面方法即可实现赋值。代码如下👇</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSString *propertyType = [newObject classOfPropertyNamed:propertyName];</div><div class="line">id nestedObj = [NSObject objectOfClass:propertyType fromJSON:[dict objectForKey:key]];</div><div class="line">[newObject setValue:nestedObj forKey:propertyName];</div></pre></td></tr></table></figure>
-<p>其中的propertyType其实就是通过上面讲道的<code>property_getAttributes</code>函数，并解析<code>T@&quot;User&quot;,&amp;,N,V_owner ／ T@&quot;Project&quot;,&amp;,N,V_project</code>这种类似的字符串，来得到这个Model对象的类型(比如 User， Project类型等)</p>
-</li>
-<li><p>如果这个key对应的是一个NSArray对象，那么就得通过<code>ProjectTopics.m</code>中的<code>propertyArrayMap</code>得知这个NSArray里面装的到底是什么对象。<br>先来看看ProjectTopics.m里面对propertyArrayMap的设置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">_propertyArrayMap = [NSDictionary dictionaryWithObjectsAndKeys:@&quot;ProjectTopic&quot;, @&quot;list&quot;, nil];</div></pre></td></tr></table></figure>
-<p>从上面可以看出，<code>ProjectTopics</code>的<code>list</code>属性是一个NSArray对象，这个NSArray里面装的是一个一个的<code>ProjectTopic</code>对象。这就好办了，对这些ProjectTopic对象按照上述的方法对他们进行赋值。</p>
-</li>
+<li>如果这个key对应的是一个NSDictionary对象，那么说明这个属性也是另外一个Model对象，对该属性递归调用上面方法即可实现赋值。代码如下👇<pre><code>       NSString *propertyType = [newObject classOfPropertyNamed:propertyName];
+       id nestedObj = [NSObject objectOfClass:propertyType fromJSON:[dict objectForKey:key]];
+       [newObject setValue:nestedObj forKey:propertyName];
+</code></pre>其中的propertyType其实就是通过上面讲道的<code>property_getAttributes</code>函数，并解析<code>T@&quot;User&quot;,&amp;,N,V_owner ／ T@&quot;Project&quot;,&amp;,N,V_project</code>这种类似的字符串，来得到这个Model对象的类型(比如 User， Project类型等)</li>
+<li>如果这个key对应的是一个NSArray对象，那么就得通过<code>ProjectTopics.m</code>中的<code>propertyArrayMap</code>得知这个NSArray里面装的到底是什么对象。<br>先来看看ProjectTopics.m里面对propertyArrayMap的设置：<pre><code>       _propertyArrayMap = [NSDictionary dictionaryWithObjectsAndKeys:@&quot;ProjectTopic&quot;, @&quot;list&quot;, nil];
+</code></pre>从上面可以看出，<code>ProjectTopics</code>的<code>list</code>属性是一个NSArray对象，这个NSArray里面装的是一个一个的<code>ProjectTopic</code>对象。这就好办了，对这些ProjectTopic对象按照上述的方法对他们进行赋值。</li>
 </ol>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总算写完了。。。感觉写的很乱。。。<br>总之就是对关于对象的几个属性进行操作：</p>
 <ol>
@@ -642,7 +694,7 @@ MJExtension: A fast, convenient and nonintrusive conversion between JSON and mod
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

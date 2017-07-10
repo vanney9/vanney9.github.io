@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -284,21 +284,21 @@
 </ol>
 <h2 id="实现步骤"><a href="#实现步骤" class="headerlink" title="实现步骤"></a>实现步骤</h2><h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ol>
 <li><p>使用cocoapod添加JazzHands</p>
-<pre><code>pod &apos;JazzHands&apos;, &apos;2.0.8&apos;
+<pre><code> pod &#39;JazzHands&#39;, &#39;2.0.8&#39;
 </code></pre></li>
 <li><p>创建工程，新增<code>JazzHandsViewController</code>,<br>继承自<code>IFTTTAnimatedPagingScrollViewController</code></p>
 </li>
 <li><p>导入头文件</p>
-<pre><code>#import &lt;IFTTTJazzHands.h&gt;
+<pre><code> #import &lt;IFTTTJazzHands.h&gt;
 </code></pre></li>
 </ol>
 <h3 id="定义页面页数"><a href="#定义页面页数" class="headerlink" title="定义页面页数"></a>定义页面页数</h3><p>其实就是重写 <code>- (NSUInteger)numberOfPages;</code> 函数</p>
 <h3 id="添加subView"><a href="#添加subView" class="headerlink" title="添加subView"></a>添加subView</h3><p>将每张图片封装到UIImageView,并添加到<code>JazzHandsViewController</code>的subView里面<br>关键代码:<br><img src="/lionheart/1602/jazzhandscode1.png" alt="JazzHands code1"></p>
 <h3 id="定义每张图片位置"><a href="#定义每张图片位置" class="headerlink" title="定义每张图片位置"></a>定义每张图片位置</h3><p>使用<code>keepView:onPages:</code>或者<code>keepView:onPages:atTimes:</code>定义位置</p>
-<h4 id="keepView-onPages"><a href="#keepView-onPages" class="headerlink" title="keepView:onPages:"></a>keepView:onPages:</h4><pre><code>[self keepView:iconView onPage:i];
+<h4 id="keepView-onPages"><a href="#keepView-onPages" class="headerlink" title="keepView:onPages:"></a>keepView:onPages:</h4><pre><code>    [self keepView:iconView onPage:i];
 </code></pre><p>i表示目前处于介绍页面的第i页，该函数说明<code>iconView</code>只能显示在第i页面上</p>
 <h4 id="keepView-onPages-atTimes"><a href="#keepView-onPages-atTimes" class="headerlink" title="keepView:onPages:atTimes:"></a>keepView:onPages:atTimes:</h4><p><strong>这篇文章的精华所在＝。＝</strong></p>
-<pre><code>[self keepView:tipView onPages:@[@(i + 1), @(i), @(i - 1)] atTimes:@[@(i - 1), @(i), @(i + 1)]];
+<pre><code>    [self keepView:tipView onPages:@[@(i + 1), @(i), @(i - 1)] atTimes:@[@(i - 1), @(i), @(i + 1)]];
 </code></pre><p>上面的语句说明了3件事:(将i设为2进行说明， 所有 <strong>3</strong> 对应 <strong>i + 1</strong>, <strong>2</strong> 对应 <strong>i</strong>, <strong>1</strong> 对应 <strong>i - 1</strong>)</p>
 <ol>
 <li><code>tipView</code>可以显示在第3，2，1页面上</li>
@@ -617,7 +617,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

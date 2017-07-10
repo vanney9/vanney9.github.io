@@ -1,0 +1,1147 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>JSPatch源码分析 | Vanney</title>
+    <meta name="author" content="Vanney">
+    
+    <meta name="description" content="前言JSPatch是一个可以动态更新iOS APP的开源库。通过JSPatch，可以使用JS书写原生代码，动态更新APP，替换项目原生代码修复Bug。
+JSPatch充分应用了Objective-C的runtime，来实现自己的功能。
+这篇文章将结合Demo，来分析JSPatch的主要的实现过程。包括：
+
+使用JS新建类
+使用JS替换原有方法
+使用JS添加全新方法
+OC调用JS定义的方法
+JS调用OC定义的方法">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="JSPatch源码分析"/>
+    <meta property="og:site_name" content="Vanney"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="Vanney" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="blue-grey">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">Vanney</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-about " href="/about" >
+                            <i class="fa fa-user "></i>
+                            
+                            关于
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav teal lighten-2" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="/lionheart/avatar.jpeg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">vanney</p>
+                        <p class="desc">iOS开发</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-about " href="/about" >
+                    <i class="fa fa-user "></i>
+                    
+                    关于
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav teal lighten-2" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/周记/">
+                    周记 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/iOS/">
+                    iOS <span class="right">18 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-1" collapse-level="1">
+                <a class="no-padding" href="/categories/iOS/源码分析/">
+                    源码分析 <span class="right">3 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-2" collapse-level="2">
+                <a class="no-padding" href="/categories/iOS/源码分析/因缺斯听/">
+                    因缺斯听 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-1" collapse-level="1">
+                <a class="no-padding" href="/categories/iOS/心得/">
+                    心得 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/杂七杂八/">
+                    杂七杂八 <span class="right">5 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/OS-X/">
+                    OS-X <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-1" collapse-level="1">
+                <a class="no-padding" href="/categories/OS-X/乱七八糟/">
+                    乱七八糟 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/心得/">
+                    心得 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper teal lighten-2">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>JSPatch源码分析</h1>
+    
+
+
+            </div>
+            <time class="teal-link-context" datetime="2017-07-07T01:26:28.000Z"><a href="/2017/07/07/JSPatch-source-analyze/">2017-07-07</a></time>
+
+            <span id="busuanzi_container_page_pv" class="read-times-container">
+    <!--<i class="fa fa-eye"></i>-->
+    <span id="busuanzi_value_page_pv"></span>
+</span>
+
+            
+    <div class="tags-row">
+        
+            <a href="/tags/iOS/" class="chip teal darken-1">iOS</a>
+        
+    </div>
+
+
+            <div class="toc teal-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#前言"><span class="section table-of-contents-text">前言</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#Demo"><span class="section table-of-contents-text">Demo</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#JPViewController"><span class="section table-of-contents-text">JPViewController</span></a></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#demo-js"><span class="section table-of-contents-text">demo.js</span></a></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#JPEngine-m-和-JSPatch-js"><span class="section table-of-contents-text">JPEngine.m 和 JSPatch.js</span></a></li></ol></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#源码分析"><span class="section table-of-contents-text">源码分析</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#使用JS创建Objective-C的类"><span class="section table-of-contents-text">使用JS创建Objective-C的类</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#使用JS替换原有方法"><span class="section table-of-contents-text">使用JS替换原有方法</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#使用JS创建新的方法"><span class="section table-of-contents-text">使用JS创建新的方法</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#OC调用JS定义的方法"><span class="section table-of-contents-text">OC调用JS定义的方法</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#JS调用OC的方法"><span class="section table-of-contents-text">JS调用OC的方法</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#JSPatch核心方法"><span class="section table-of-contents-text">JSPatch核心方法</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#JPEngine-m"><span class="section table-of-contents-text">JPEngine.m</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#JSPatch-js"><span class="section table-of-contents-text">JSPatch.js</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#总结"><span class="section table-of-contents-text">总结</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#参考"><span class="section table-of-contents-text">参考</span></a></li></ol>
+</div>
+
+
+            <div class="entry teal-link-context">
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/bang590/JSPatch" target="_blank" rel="external">JSPatch</a>是一个可以动态更新iOS APP的开源库。通过JSPatch，可以使用JS书写原生代码，动态更新APP，替换项目原生代码修复Bug。</p>
+<p>JSPatch充分应用了Objective-C的runtime，来实现自己的功能。</p>
+<p>这篇文章将结合Demo，来分析JSPatch的主要的实现过程。包括：</p>
+<ol>
+<li>使用JS新建类</li>
+<li>使用JS替换原有方法</li>
+<li>使用JS添加全新方法</li>
+<li>OC调用JS定义的方法</li>
+<li>JS调用OC定义的方法</li>
+</ol>
+<a id="more"></a>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p>使用官方提供的<a href="https://github.com/bang590/JSPatch/tree/master/Demo/iOSDemo" target="_blank" rel="external">Demo</a>。先来看看Demo的关键代码：</p>
+<h4 id="JPViewController"><a href="#JPViewController" class="headerlink" title="JPViewController"></a>JPViewController</h4><pre><code class="objective-c">@implementation JPViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 50)];
+    [btn setTitle:@&quot;Push JPTableViewController&quot; forState:UIControlStateNormal];
+    [btn addTarget:self action:@selector(handleBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [btn setBackgroundColor:[UIColor grayColor]];
+    [self.view addSubview:btn];
+}
+
+- (void)handleBtn:(id)sender
+{
+}
+
+@end
+</code></pre>
+<p>这个JPViewController创建了一个button，并给该button赋予了一个点击事件。<strong>但是该点击事件<code>- (void)handleBtn:(id)sender;</code>没做任何事情</strong></p>
+<h4 id="demo-js"><a href="#demo-js" class="headerlink" title="demo.js"></a>demo.js</h4><pre><code class="javascript">/* 给JPViewController重新定义 handleBtn: 方法 */
+defineClass(&#39;JPViewController&#39;, {
+  handleBtn: function(sender) {
+    var tableViewCtrl = JPTableViewController.alloc().init()
+    self.navigationController().pushViewController_animated(tableViewCtrl, YES)
+  }
+})
+
+// 定义了一个新的类型 JPTableViewController
+defineClass(&#39;JPTableViewController : UITableViewController &lt;UIAlertViewDelegate&gt;&#39;, [&#39;data&#39;], {
+  dataSource: function() {
+    var data = self.data();
+    if (data) return data;
+    var data = [];
+    for (var i = 0; i &lt; 20; i ++) {
+      data.push(&quot;cell from js &quot; + i);
+    }
+    self.setData(data)
+    return data;
+  },
+  numberOfSectionsInTableView: function(tableView) {
+    return 1;
+  },
+  tableView_numberOfRowsInSection: function(tableView, section) {
+    return self.dataSource().length;
+  },
+  tableView_cellForRowAtIndexPath: function(tableView, indexPath) {
+    var cell = tableView.dequeueReusableCellWithIdentifier(&quot;cell&quot;) 
+    if (!cell) {
+      cell = require(&#39;UITableViewCell&#39;).alloc().initWithStyle_reuseIdentifier(0, &quot;cell&quot;)
+    }
+    cell.textLabel().setText(self.dataSource()[indexPath.row()])
+    return cell
+  },
+  tableView_heightForRowAtIndexPath: function(tableView, indexPath) {
+    return 60
+  },
+  tableView_didSelectRowAtIndexPath: function(tableView, indexPath) {
+     var alertView = require(&#39;UIAlertView&#39;).alloc().initWithTitle_message_delegate_cancelButtonTitle_otherButtonTitles(&quot;Alert&quot;,self.dataSource()[indexPath.row()], self, &quot;OK&quot;,  null);
+     alertView.show()
+  },
+  alertView_willDismissWithButtonIndex: function(alertView, idx) {
+    console.log(&#39;click btn &#39; + alertView.buttonTitleAtIndex(idx).toJS())
+  }
+})
+</code></pre>
+<p>该JS是Demo的唯一一个JS。它做了两件事：</p>
+<ol>
+<li>重新定义<code>JPViewController</code>的<code>handleBtn:</code>方法；现在点击该button的话，会新建一个tableView</li>
+<li>定义一个新的类型 <code>JPTableViewController</code>；这个新的类型负责创建相关的tableView</li>
+</ol>
+<h4 id="JPEngine-m-和-JSPatch-js"><a href="#JPEngine-m-和-JSPatch-js" class="headerlink" title="JPEngine.m 和 JSPatch.js"></a>JPEngine.m 和 JSPatch.js</h4><p> 这是JSPatch库的最核心的两个文件。</p>
+<p><strong>该Demo创建了一个button，点击button之后，会调用JS里面的方法：该JS方法会创建一个tableView，并给每个cell设置一个click事件</strong></p>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><h3 id="使用JS创建Objective-C的类"><a href="#使用JS创建Objective-C的类" class="headerlink" title="使用JS创建Objective-C的类"></a>使用JS创建Objective-C的类</h3><p>在<code>demo.js</code>中使用了 <code>defineClass</code> 方法来创建新的Objective-C类。这个方法定义在<code>JSPatch.js</code>中。现在来看看它的实现：(<strong>只显示了核心代码</strong>)</p>
+<pre><code class="javascript">global.defineClass = function(declaration, properties, instMethods, clsMethods) {
+    var newInstMethods = {}, newClsMethods = {}
+
+    // 获得类名，忽略冒号之后的superClass以及protocol //
+    var realClsName = declaration.split(&#39;:&#39;)[0].trim()
+
+    // JS &lt;=&gt; OC 的一些格式化 暂时不管，这一步之后将会产生
+    _formatDefineMethods(instMethods, newInstMethods, realClsName)
+    _formatDefineMethods(clsMethods, newClsMethods, realClsName)
+
+    // 核心代码： 在_OC_defineClass中调用OC的方法，创建新的Objective-C类，并添加或者替代方法
+    var ret = _OC_defineClass(declaration, newInstMethods, newClsMethods)
+
+    /* 此处省略800字 */
+    return require(className)
+}
+</code></pre>
+<p>使用iOS7引入的<strong>JavaScriptCore框架</strong> ，可以实现在JS中调用OC的方法（具体参考<a href="http://nshipster.cn/javascriptcore/" target="_blank" rel="external">JavaScriptCore</a>）。<code>defineClass</code>方法中，调用<code>_OC_defineClass</code>方法来创建新的类，以及替换原有方法或者生成新的方法。</p>
+<p>来看看定义在<code>JPEngine.m</code>文件中的这个方法：</p>
+<pre><code class="objective-c">+ (void)startEngine {
+  context[@&quot;_OC_defineClass&quot;] = ^(NSString *classDeclaration, JSValue *instanceMethods, JSValue *classMethods) {
+    return defineClass(classDeclaration, instanceMethods, classMethods);
+  };
+}
+</code></pre>
+<p>这里的<code>context</code> 变量是<strong>JSContext</strong>变量，也就是JS的执行环境；在该执行环境里面定义了一个<code>_OC_defineClass</code> Block。那么JS就可以调用该<code>_OC_defineClass</code>方法，并执行Block，也就是执行OC代码。</p>
+<p>来看看Block里面的<code>defineClass</code>这一个C方法</p>
+<pre><code class="objective-c">static NSDictionary *defineClass(NSString *classDeclaration, JSValue *instanceMethods, JSValue *classMethods)
+{
+      // 这里的classDeclaration类似这种格式 ： ClassName : NSObject &lt;protocolName&gt;
+    NSScanner *scanner = [NSScanner scannerWithString:classDeclaration];
+
+    NSString *className;
+    NSString *superClassName;
+    NSString *protocolNames;
+
+      /* 此处省略800字 解析生成className  superClassName 和 protocolName*/
+
+    Class cls = NSClassFromString(className);
+
+    // 如果OC中不存在这个类 则新建class
+    if (!cls) {
+        Class superCls = NSClassFromString(superClassName);
+        cls = objc_allocateClassPair(superCls, className.UTF8String, 0);
+        objc_registerClassPair(cls);
+    }
+
+    // 给该类添加协议
+    if (protocols.count &gt; 0) {
+        for (NSString* protocolName in protocols) {
+            Protocol *protocol = objc_getProtocol([trim(protocolName) cStringUsingEncoding:NSUTF8StringEncoding]);
+            class_addProtocol (cls, protocol);
+        }
+    }
+
+      /* 此处省略800字 */
+}
+</code></pre>
+<p><strong>总结： 可以看到，在JS中创建的类名会被传入OC。OC会判断该类名对应的类是否存在；如果不存在，就会使用runtime方法来动态创建这个类</strong></p>
+<h3 id="使用JS替换原有方法"><a href="#使用JS替换原有方法" class="headerlink" title="使用JS替换原有方法"></a>使用JS替换原有方法</h3><p>再来看一下<code>demo.js</code></p>
+<pre><code class="javascript">defineClass(&#39;JPViewController&#39;, {
+  handleBtn: function(sender) {
+    var tableViewCtrl = JPTableViewController.alloc().init()
+    self.navigationController().pushViewController_animated(tableViewCtrl, YES)
+  }
+})
+</code></pre>
+<p>这里使用JS定义了<code>JPViewController</code>类的<code>handleBtn:</code>方法；执行完<code>defineClass</code>这个JS方法之后，这里的实现会替换原来的<code>handleBtn:</code>的实现。</p>
+<p>先来说一下<strong>方法替换</strong>的具体流程：</p>
+<ol>
+<li>创建一个<code>ORIGhandleBtn:</code>  selector，指向<code>handleBtn:</code>的IMP</li>
+<li>创建一个<code>ORIGforwardInvocation:</code> selector，指向<code>JPViewController</code> 的 <code>forwardInvocation:</code> 的IMP</li>
+<li>将<code>handleBtn:</code> selector 指向 <code>_objc_msgForward</code> ；也就是说执行<code>handleBtn:</code>这个方法的时候，不会去查找它的实现，会直接进行消息转发(关于消息转发，可以看我的这篇文章 <a href="http://vanney9.com/2017/06/08/objective-c-runtime-message/" target="_blank" rel="external">Objective-C runtime - 消息</a>)</li>
+<li>在OC的全局变量 <code>_JSOverideMethods</code> 中保存这个方法的实现，也就是保存JS中定义的这个方法</li>
+<li>将<code>forwardInvocation:</code> 这个selector指向 <code>JPForwardInvocation</code>的实现；<strong><code>JPForwardInvocation</code>又是JSPatch里面的一个核心方法</strong>。在这个方法里面会寻找JS定义的<code>handleBtn</code>，并调用该方法</li>
+</ol>
+<p>来看看代码</p>
+<pre><code class="objective-c">static NSDictionary *defineClass(NSString *classDeclaration, JSValue *instanceMethods, JSValue *classMethods)
+{
+    /* 此处省略800字 */
+
+      // i == 0 添加实例方法； i == 1 添加类方法
+    for (int i = 0; i &lt; 2; i ++) {
+        BOOL isInstance = i == 0;
+        JSValue *jsMethods = isInstance ? instanceMethods: classMethods;
+
+        Class currCls = isInstance ? cls: objc_getMetaClass(className.UTF8String);
+
+          // 获取方法列表，for循环逐个给类添加方法
+        NSDictionary *methodDict = [jsMethods toDictionary];
+        for (NSString *jsMethodName in methodDict.allKeys) {
+            JSValue *jsMethodArr = [jsMethods valueForProperty:jsMethodName];
+            int numberOfArg = [jsMethodArr[0] toInt32];
+            NSString *selectorName = convertJPSelectorString(jsMethodName);
+            if ([selectorName componentsSeparatedByString:@&quot;:&quot;].count - 1 &lt; numberOfArg) {
+                selectorName = [selectorName stringByAppendingString:@&quot;:&quot;];
+            }
+
+            JSValue *jsMethod = jsMethodArr[1];
+            if (class_respondsToSelector(currCls, NSSelectorFromString(selectorName))) {
+                // 已经有对应的方法了，替换方法
+                overrideMethod(currCls, selectorName, jsMethod, !isInstance, NULL);
+            } else {
+                // 新增方法
+               /* 先省略800字 后文再说 */
+            }
+        }
+    }
+
+      // 添加统一的setter/getter函数
+    class_addMethod(cls, @selector(getProp:), (IMP)getPropIMP, &quot;@@:@&quot;);
+    class_addMethod(cls, @selector(setProp:forKey:), (IMP)setPropIMP, &quot;v@:@@&quot;);
+
+    return @{@&quot;cls&quot;: className, @&quot;superCls&quot;: superClassName};
+}
+</code></pre>
+<p>看来替换方法的核心还在<code>overrideMethod</code> 里面，来看看这个方法</p>
+<pre><code class="objective-c">static void overrideMethod(Class cls, NSString *selectorName, JSValue *function, BOOL isClassMethod, const char *typeDescription)
+{
+      // 获取方法名对应的selector
+    SEL selector = NSSelectorFromString(selectorName);
+
+    // 获取method的typeDescription:也就是获取方法的typeEncoding
+    if (!typeDescription) {
+        Method method = class_getInstanceMethod(cls, selector);
+        typeDescription = (char *)method_getTypeEncoding(method);
+    }
+
+      // 获取方法的最初的实现
+    IMP originalImp = class_respondsToSelector(cls, selector) ? class_getMethodImplementation(cls, selector) : NULL;
+
+      // 获取_objc_msgForward的实现
+    IMP msgForwardIMP = _objc_msgForward;
+
+    // 保留forwardInvocation:的原有实现，并将它指向JPForwardInvocation这个新的实现上面
+    if (class_getMethodImplementation(cls, @selector(forwardInvocation:)) != (IMP)JPForwardInvocation) {
+        IMP originalForwardImp = class_replaceMethod(cls, @selector(forwardInvocation:), (IMP)JPForwardInvocation, &quot;v@:@&quot;);
+        if (originalForwardImp) {
+            class_addMethod(cls, @selector(ORIGforwardInvocation:), originalForwardImp, &quot;v@:@&quot;);
+        }
+    }
+
+    // 保留将要替换的方法：使用ORIGselectorName这一个selector指向原有的实现
+    if (class_respondsToSelector(cls, selector)) {
+        NSString *originalSelectorName = [NSString stringWithFormat:@&quot;ORIG%@&quot;, selectorName];
+        SEL originalSelector = NSSelectorFromString(originalSelectorName);
+        if(!class_respondsToSelector(cls, originalSelector)) {
+            class_addMethod(cls, originalSelector, originalImp, typeDescription);
+        }
+    }
+
+      // 将JS定义的实现保存到OC的全局变量中
+    NSString *JPSelectorName = [NSString stringWithFormat:@&quot;_JP%@&quot;, selectorName];
+    _initJPOverideMethods(cls);
+    _JSOverideMethods[cls][JPSelectorName] = function;
+
+       // 将要替换的方法，指向_objc_msgForward这一函数，直接进行消息转发
+    class_replaceMethod(cls, selector, msgForwardIMP, typeDescription);
+}
+</code></pre>
+<h3 id="使用JS创建新的方法"><a href="#使用JS创建新的方法" class="headerlink" title="使用JS创建新的方法"></a>使用JS创建新的方法</h3><p>还是先来看看<code>demo.js</code></p>
+<pre><code class="javascript">defineClass(&#39;JPTableViewController : UITableViewController &lt;UIAlertViewDelegate&gt;&#39;, [&#39;data&#39;], {
+  dataSource: function() {
+    var data = self.data();
+    if (data) return data;
+    var data = [];
+    for (var i = 0; i &lt; 20; i ++) {
+      data.push(&quot;cell from js &quot; + i);
+    }
+    self.setData(data)
+    return data;
+  },
+  numberOfSectionsInTableView: function(tableView) {
+    return 1;
+  },
+  tableView_numberOfRowsInSection: function(tableView, section) {
+    return self.dataSource().length;
+  },
+  tableView_cellForRowAtIndexPath: function(tableView, indexPath) {
+    var cell = tableView.dequeueReusableCellWithIdentifier(&quot;cell&quot;) 
+    if (!cell) {
+      cell = require(&#39;UITableViewCell&#39;).alloc().initWithStyle_reuseIdentifier(0, &quot;cell&quot;)
+    }
+    cell.textLabel().setText(self.dataSource()[indexPath.row()])
+    return cell
+  },
+  tableView_heightForRowAtIndexPath: function(tableView, indexPath) {
+    return 60
+  },
+  tableView_didSelectRowAtIndexPath: function(tableView, indexPath) {
+     var alertView = require(&#39;UIAlertView&#39;).alloc().initWithTitle_message_delegate_cancelButtonTitle_otherButtonTitles(&quot;Alert&quot;,self.dataSource()[indexPath.row()], self, &quot;OK&quot;,  null);
+     alertView.show()
+  },
+  alertView_willDismissWithButtonIndex: function(alertView, idx) {
+    console.log(&#39;click btn &#39; + alertView.buttonTitleAtIndex(idx).toJS())
+  }
+})
+</code></pre>
+<p>在这个JS方法里面，不仅定义了一个新的OC类<code>JPTableViewController</code>，并给他添加了多个方法。来看看具体实现：</p>
+<pre><code class="objective-c">static NSDictionary *defineClass(NSString *classDeclaration, JSValue *instanceMethods, JSValue *classMethods)
+{
+    /* 上文提过，省略 */
+
+      // i == 0 添加实例方法； i == 1 添加类方法
+    for (int i = 0; i &lt; 2; i ++) {
+        BOOL isInstance = i == 0;
+        JSValue *jsMethods = isInstance ? instanceMethods: classMethods;
+
+        Class currCls = isInstance ? cls: objc_getMetaClass(className.UTF8String);
+        NSDictionary *methodDict = [jsMethods toDictionary];
+        for (NSString *jsMethodName in methodDict.allKeys) {
+            JSValue *jsMethodArr = [jsMethods valueForProperty:jsMethodName];
+            int numberOfArg = [jsMethodArr[0] toInt32];
+            NSString *selectorName = convertJPSelectorString(jsMethodName);
+            if ([selectorName componentsSeparatedByString:@&quot;:&quot;].count - 1 &lt; numberOfArg) {
+                selectorName = [selectorName stringByAppendingString:@&quot;:&quot;];
+            }
+
+            JSValue *jsMethod = jsMethodArr[1];
+            if (class_respondsToSelector(currCls, NSSelectorFromString(selectorName))) {
+                overrideMethod(currCls, selectorName, jsMethod, !isInstance, NULL);
+            } else {
+                /* 开始新增方法 */
+                BOOL overrided = NO;
+
+                // 先添加protocol的方法
+                for (NSString *protocolName in protocols) {
+                      // 通过protocol获取方法的typeEncoding
+                    char *types = methodTypesInProtocol(protocolName, selectorName, isInstance, YES);
+                    if (!types) types = methodTypesInProtocol(protocolName, selectorName, isInstance, NO);
+                    if (types) {
+                          // 还是使用 overrideMethod 方法来创建新的方法。走的是消息转发的那一套
+                        overrideMethod(currCls, selectorName, jsMethod, !isInstance, types);
+                        free(types);
+                        overrided = YES;
+                        break;
+                    }
+                }
+
+                // 不是protocol方法，新增类的方法
+                if (!overrided) {
+                    if (![[jsMethodName substringToIndex:1] isEqualToString:@&quot;_&quot;]) {
+                        NSMutableString *typeDescStr = [@&quot;@@:&quot; mutableCopy];
+                        for (int i = 0; i &lt; numberOfArg; i ++) {
+                            [typeDescStr appendString:@&quot;@&quot;];
+                        }
+                        overrideMethod(currCls, selectorName, jsMethod, !isInstance, [typeDescStr cStringUsingEncoding:NSUTF8StringEncoding]);
+                    }
+                }
+            }
+        }
+    }
+
+      /* 省略无关代码 */
+
+    return @{@&quot;cls&quot;: className, @&quot;superCls&quot;: superClassName};
+}
+</code></pre>
+<p><strong>可以看到：新增方法其实和替换方法是一个原理，走的都是消息转发那一套；但是新增方法没有必要保留原有方法的实现，因为本来就不存在原有的方法</strong></p>
+<h3 id="OC调用JS定义的方法"><a href="#OC调用JS定义的方法" class="headerlink" title="OC调用JS定义的方法"></a>OC调用JS定义的方法</h3><p>现在JS已经定义好了需要的类，以及需要的方法了。那么何时来调用这些方法，以及如何调用呢？</p>
+<p>回顾一下<code>JPViewController.m</code></p>
+<pre><code class="objective-c">#import &quot;JPViewController.h&quot;
+
+@implementation JPViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 50)];
+    [btn setTitle:@&quot;Push JPTableViewController&quot; forState:UIControlStateNormal];
+    [btn addTarget:self action:@selector(handleBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [btn setBackgroundColor:[UIColor grayColor]];
+    [self.view addSubview:btn];
+}
+
+- (void)handleBtn:(id)sender
+{
+}
+
+@end
+</code></pre>
+<p>这个文件很简单：创建一个button，给button添加一个执行方法<code>handleBtn:</code> 。那么当运行APP，并点击这一button的时候；会去调用<code>handleBtn:</code>方法。但是由上面的分析可知：<code>handleBtn:</code>方法已经指向<code>_objc_msgForward</code>，也就是说会对这一方法直接进行转发，调用<code>forwardInvocation:</code>方法。下面来看看这个<code>JPForwardInvocation</code>方法：</p>
+<pre><code class="objective-c">static void JPForwardInvocation(__unsafe_unretained id assignSlf, SEL selector, NSInvocation *invocation)
+{
+      // 根据Invocation，来获取方法的参数信息等等
+    BOOL deallocFlag = NO;
+    id slf = assignSlf;
+    NSMethodSignature *methodSignature = [invocation methodSignature];
+    NSInteger numberOfArguments = [methodSignature numberOfArguments];
+    NSString *selectorName = NSStringFromSelector(invocation.selector);
+    NSString *JPSelectorName = [NSString stringWithFormat:@&quot;_JP%@&quot;, selectorName];
+
+      // 从全局JS方法列表中获取当前的JS方法
+    JSValue *jsFunc = getJSFunctionInObjectHierachy(slf, JPSelectorName);
+
+    // JS 没有定义该方法 那么就走原始的转发方法
+    if (!jsFunc) {
+        JPExecuteORIGForwardInvocation(slf, selector, invocation);
+        return;
+    }
+
+    NSMutableArray *argList = [[NSMutableArray alloc] init];
+    /* 省略800字 */
+
+    // 从Invocation中根据method的 type Encoding 来获取参数列表，并将其添置argList数组中
+    for (NSUInteger i = 2; i &lt; numberOfArguments; i++) {
+        const char *argumentType = [methodSignature getArgumentTypeAtIndex:i];
+
+        // 根据type Encoding来添加相应的参数。r代表const
+        switch(argumentType[0] == &#39;r&#39; ? argumentType[1] : argumentType[0]) {
+            /* 此处省略不只800字。。 具体实现看源码 */
+
+          // for example
+          case &#39;@&#39;:
+              // 这个参数是一个OC对象，所以需要往argList中添加对象
+              id arg;
+              [invocation getArgument:&amp;arg atIndex:i];
+              [argList addObject:arg];
+              break;
+          case &#39;:&#39;:
+              // 添加selector对应的NSString
+        }
+    }
+
+    /* 此处省略800字 */
+
+      // 参数列表，将OC对象转化成JS可以使用的对象
+    NSArray *params = _formatOCToJSList(argList);
+
+      // 保存返回值的类型
+    char returnType[255];
+    strcpy(returnType, [methodSignature methodReturnType]);
+
+      // 根据返回类型来调用JS函数
+    switch (returnType[0] == &#39;r&#39; ? returnType[1] : returnType[0]) {
+        /* 此处省略不只800字  这一块是该函数的核心代码  下面只说主要过程 */
+
+          // jsval用来存储JS调用的返回值
+          JSValue *jsval;
+
+           // JS调用时单线程，需要加锁
+        [_JSMethodForwardCallLock lock];
+
+          // !!!  核心代码出现啦  OC调用JS定义的方法  !!!  */
+        jsval = [jsFunc callWithArguments:params];
+        [_JSMethodForwardCallLock unlock];
+
+          // 检查JS方法的返回值，看是否需要执行回调函数
+        while (![jsval isNull] &amp;&amp; ![jsval isUndefined] &amp;&amp; [jsval hasProperty:@&quot;__isPerformInOC&quot;]) {
+            NSArray *args = nil;
+            JSValue *cb = jsval[@&quot;cb&quot;];
+            if ([jsval hasProperty:@&quot;sel&quot;]) {
+                id callRet = callSelector(![jsval[@&quot;clsName&quot;] isUndefined] ? [jsval[@&quot;clsName&quot;] toString] : nil, [jsval[@&quot;sel&quot;] toString], jsval[@&quot;args&quot;], ![jsval[@&quot;obj&quot;] isUndefined] ? jsval[@&quot;obj&quot;] : nil, NO);
+                args = @[[_context[@&quot;_formatOCToJS&quot;] callWithArguments:callRet ? @[callRet] : _formatOCToJSList(@[_nilObj])]];
+            }
+            [_JSMethodForwardCallLock lock];
+              //  执行回调函数，该回调函数也是在JS中定义的
+            jsval = [cb callWithArguments:args];
+            [_JSMethodForwardCallLock unlock];
+        }
+
+          // 设置消息转发的调用结果，也就是设置 invocation 的 returnValue
+          [invocation setReturnValue:&amp;jsval];
+    }
+
+    /* 此处省略800字 和对象释放相关的 */
+}
+</code></pre>
+<p>了解了这个消息转发的过程之后，就会知道OC调用JS定义的方法是在<code>JSForwardInvocation</code>中。它回去查找定义在OC里面的存储JS方法的全局变量，找到该JS方法，并执行。</p>
+<h3 id="JS调用OC的方法"><a href="#JS调用OC的方法" class="headerlink" title="JS调用OC的方法"></a>JS调用OC的方法</h3><p>回顾一下<code>demo.js</code>的代码：</p>
+<pre><code class="javascript">defineClass(&#39;JPViewController&#39;, {
+  handleBtn: function(sender) {
+    var tableViewCtrl = JPTableViewController.alloc().init()
+    self.navigationController().pushViewController_animated(tableViewCtrl, YES)
+  }
+})
+</code></pre>
+<p>当OC调用<code>handleBtn:</code>方法时，实际上执行的是这个JS定义的方法。在这个JS方法里面会创建一个<code>JPTableViewController</code>对象，并将该对象显示出来。来看看JS如何调用OC的代码：</p>
+<pre><code class="javascript">__c: function(methodName) {
+  /* 省略一系列迷人的JS操作 */
+
+  return function(){
+    var args = Array.prototype.slice.call(arguments)
+    // 获取调用方法的类名，调用方法的对象，调用的方法的参数，并且执行这个 _methodFunc 方法
+    return _methodFunc(slf.__obj, slf.__clsName, methodName, args, slf.__isSuper)
+  }
+},
+</code></pre>
+<p>在JS里面调用OC方法：如 <code>UIView.alloc().init()</code> 都会被转化成这种格式 <code>UIView.__c(&#39;alloc&#39;)().__c(&#39;init&#39;)()</code>。也就是调用上述的<code>__c</code>方法。</p>
+<p>而<code>__c()</code>方法也就是获取调用该方法的类名，对象；以及该方法的参数。并将这些全部传给<code>_methodFunc()</code>方法。所以说<code>__c()</code>方法有点像OC的<code>objc_megSend(id self, selector, ...)</code>，它只是一个转发器。</p>
+<p>真正调用OC的JS方法是这个<code>_methodFunc</code>（定义在<code>JSPatch.js</code>中）：</p>
+<pre><code class="javascript">var _methodFunc = function(instance, clsName, methodName, args, isSuper, isPerformSelector) {
+  // 做一些准备活动：将JS方法名转成相应的OC方法名(驼峰命名)
+  var selectorName = methodName
+  if (!isPerformSelector) {
+    methodName = methodName.replace(/__/g, &quot;-&quot;)
+    selectorName = methodName.replace(/_/g, &quot;:&quot;).replace(/-/g, &quot;_&quot;)
+    var marchArr = selectorName.match(/:/g)
+    var numOfArgs = marchArr ? marchArr.length : 0
+    if (args.length &gt; numOfArgs) {
+      selectorName += &quot;:&quot;
+    }
+  }
+
+  // 使用_OC_callI / _OC_callC 来调用OC的方法。传递给这两方法的参数是对象，参数，selector等等
+  var ret = instance ? _OC_callI(instance, selectorName, args, isSuper):
+  _OC_callC(clsName, selectorName, args)
+  return _formatOCToJS(ret)
+}
+</code></pre>
+<p>我们以<code>_OC_callI</code>为例 （定义在<code>JPEngine.m</code>中）：</p>
+<pre><code class="objective-c">context[@&quot;_OC_callI&quot;] = ^id(JSValue *obj, NSString *selectorName, JSValue *arguments, BOOL isSuper) {
+    return callSelector(nil, selectorName, arguments, obj, isSuper);
+};
+</code></pre>
+<p>在OC中，这个方法接收obj，selectorName，arguments等参数；实际调用的<code>callSelector</code>方法：</p>
+<pre><code class="objective-c">static id callSelector(NSString *className, NSString *selectorName, JSValue *arguments, JSValue *instance, BOOL isSuper)
+{
+      /* 省略800字 做一些前期准备：获取类，selector，格式化参数列表等等 */
+
+       /* 再省略800字 设置Invocation的target 这个调用还是以消息转发的形式来的 */
+      [invocation setTarget:instance];
+
+      // 和OC调用JS一样，set Invocation的调用参数
+      // 注意：在OC调用JS中，这里是 get Invocation的参数
+    for (NSUInteger i = 2; i &lt; numberOfArguments; i++) {
+        const char *argumentType = [methodSignature getArgumentTypeAtIndex:i];
+        id valObj = argumentsObj[i-2];
+        switch (argumentType[0] == &#39;r&#39; ? argumentType[1] : argumentType[0]) {
+              // 代码省略了
+             [invocation setArgument:&amp;value atIndex:i];       
+        }
+    }
+
+      // 执行OC代码，也就是设置好这一个invocation之后，invoke它
+      [invocation invoke];
+
+    char returnType[255];
+    strcpy(returnType, [methodSignature methodReturnType]);
+
+      // 使用returnValue来存储Invocation返回值
+    id returnValue;
+    [invocation getReturnValue:&amp;result];
+
+    // 根据返回值类型来创建returnValue，并返回。 for example
+      returnValue = (__bridge id)result;
+      return returnValue;
+}
+</code></pre>
+<p>这样就实现了OC代码的调用。</p>
+<h2 id="JSPatch核心方法"><a href="#JSPatch核心方法" class="headerlink" title="JSPatch核心方法"></a>JSPatch核心方法</h2><h3 id="JPEngine-m"><a href="#JPEngine-m" class="headerlink" title="JPEngine.m"></a>JPEngine.m</h3><ol>
+<li>defineClass</li>
+<li>overrideMethod</li>
+<li>JPForwardInvocation</li>
+<li>callSelector</li>
+</ol>
+<h3 id="JSPatch-js"><a href="#JSPatch-js" class="headerlink" title="JSPatch.js"></a>JSPatch.js</h3><ol>
+<li>__c()</li>
+<li>_methodFunc()</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>JSPatch充分应用了 <strong>runtime</strong> 和 <strong>JavaScriptCore</strong> 两大技术，实现了OC和JS的通信。</p>
+<p>对于OC调用JS，和JS调用OC 都是使用的消息转发的机制；这两种调用是一个相反的过程。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://github.com/bang590/JSPatch/wiki/JSPatch-%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3" target="_blank" rel="external">JSPatch 实现原理详解</a></li>
+<li><a href="http://nshipster.cn/javascriptcore/" target="_blank" rel="external">JavaScriptCore</a></li>
+<li><a href="http://vanney9.com/2017/06/08/objective-c-runtime-message/" target="_blank" rel="external">Objective-C runtime - 消息</a></li>
+</ul>
+
+                
+
+
+<p class="teal-link-context">
+    <a href="/2017/06/27/iOS-ARC-Block-GCD-Runloop/" rel="next" title="关于ARC，Block以及GCD，runloop">
+    下一篇：关于ARC，Block以及GCD，runloop
+  </a>
+</p>
+
+
+            </div>
+			
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large lime">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect lime darken-1" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse lime darken-2"  data-activates="main-menu" title="菜单"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer blue-grey darken-1">
+    
+    <div class="footer-container container">
+        <div class="row">
+            
+            <div class="social-group col m4 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/3911241332" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/vanney9" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+                
+
+            </div>
+            
+
+            
+            <div class="col m8 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http://raytaylorlin.com/" target="_blank">实验室前端大神，博客主题作者 寿寿</a>
+                
+                    <a class="social-link" href="http://tutuge.me/" target="_blank">实验室iOS大神 土哥</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright teal-link-context">
+        <div class="container">
+            © 2017 vanney9.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="https://hexo.io">Hexo</a> 强力驱动 | 主题 <a href="https://github.com/raytaylorlin/hexo-theme-raytaylorism">raytaylorism</a></p>
+            <script src="https://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+
+            // 目录随屏幕滚动（防止目录过长越过footer）
+            var $toc = $('.toc');
+            var scrollTargetTop = 0;
+            $(window).scroll(function() {
+                var $activeLink = $toc.find('a.active.section');
+                if ($(window).scrollTop() < 100) {
+                    scrollTargetTop = 0;
+                } else {
+                    if ($activeLink[0]) {
+                        scrollTargetTop = $activeLink.offset().top - $toc.offset().top;
+                    }
+                }
+                $toc.css('top', '-' + scrollTargetTop + 'px');
+            });
+
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('teal accent-1 lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-about').append('<span class="new badge lime lighten-1"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword teal lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword teal lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/google/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+
+
+</body>
+</html>

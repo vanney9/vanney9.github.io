@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -322,7 +322,33 @@
 <li><p>UIImage的<code>+imageNamed;</code>方法与其他的方法不同的是，它在加载完图片后就立马开始解压，但是其他的方法会在开始画图时才去解压图片。还有一个方法就是直接将image制定为UIImageView的image属性或是layer的contents属性，但是这样的话只能在主线程中执行。</p>
 </li>
 <li><p>来看段代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath &#123;</div><div class="line">	//dequeue cell</div><div class="line">	UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@&quot;Cell&quot; forIndexPath:indexPath];</div><div class="line"></div><div class="line">	...</div><div class="line">	//switch to background thread</div><div class="line">	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^&#123;</div><div class="line">		//load image</div><div class="line">		NSInteger index = indexPath.row;</div><div class="line">		NSString *imagePath = self.imagePaths[index];</div><div class="line">		UIImage *image = [UIImage imageWithContentsOfFile:imagePath];</div><div class="line"></div><div class="line">		//redraw image using device context</div><div class="line">		UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, YES, 0); </div><div class="line">		[image drawInRect:imageView.bounds];</div><div class="line">		image = UIGraphicsGetImageFromCurrentImageContext(); </div><div class="line">		UIGraphicsEndImageContext();</div><div class="line">		//set image on main thread, but only if index still matches up</div><div class="line">		dispatch_async(dispatch_get_main_queue(), ^&#123;</div><div class="line">			if (index == imageView.tag) &#123;</div><div class="line">				imageView.image = image; </div><div class="line">			&#125;</div><div class="line">		&#125;); </div><div class="line">	&#125;);</div><div class="line">	return cell; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    //dequeue cell
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@&quot;Cell&quot; forIndexPath:indexPath];
+
+    ...
+    //switch to background thread
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        //load image
+        NSInteger index = indexPath.row;
+        NSString *imagePath = self.imagePaths[index];
+        UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
+
+        //redraw image using device context
+        UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, YES, 0); 
+        [image drawInRect:imageView.bounds];
+        image = UIGraphicsGetImageFromCurrentImageContext(); 
+        UIGraphicsEndImageContext();
+        //set image on main thread, but only if index still matches up
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (index == imageView.tag) {
+                imageView.image = image; 
+            }
+        }); 
+    });
+    return cell; 
+}
+</code></pre>
 </li>
 <li><p><code>+imageNamed:</code>方法还会缓存解压之后的图片，以供以后使用。无论你是否还有指针指向这个UIImage。</p>
 </li>
@@ -628,7 +654,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -287,24 +287,34 @@
 </ol>
 <h2 id="Terminal设置"><a href="#Terminal设置" class="headerlink" title="Terminal设置"></a>Terminal设置</h2><ol>
 <li><p>github下载solarized</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git clone git://github.com/altercation/solarized.git</div></pre></td></tr></table></figure>
-</li>
+<pre><code>     $ git clone git://github.com/altercation/solarized.git
+</code></pre></li>
 <li><p>导入terminal配置文件</p>
 <p>打开<code>Terminal</code>的偏好设置，导入下面的配置文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">solarized/osx-terminal.app-colors-solarized/Solarized Dark ansi.terminal</div></pre></td></tr></table></figure>
-</li>
+<pre><code>     solarized/osx-terminal.app-colors-solarized/Solarized Dark ansi.terminal
+</code></pre></li>
 </ol>
-<h2 id="Vim设置"><a href="#Vim设置" class="headerlink" title="Vim设置"></a><code>Vim</code>设置</h2><p>Vim保持和Terminal相同的配色，设置如下👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ cd solarized</div><div class="line">$ cd vim-colors-solarized/colors</div><div class="line">$ mkdir -p ~/.vim/colors</div><div class="line">$ cp solarized.vim ~/.vim/colors/</div><div class="line"></div><div class="line">$ vim ~/.vimrc</div><div class="line">syntax enable</div><div class="line">set background=dark</div><div class="line">colorscheme solarized</div></pre></td></tr></table></figure></p>
-<h2 id="ls设置"><a href="#ls设置" class="headerlink" title="ls设置"></a><code>ls</code>设置</h2><ol>
-<li><p>安装<code>Coreutils</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ brew install coreutils</div></pre></td></tr></table></figure>
-</li>
-<li><p>生成颜色配置文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gdircolors --print-database &gt; ~/.dir_colors</div></pre></td></tr></table></figure>
-</li>
-<li><p>编辑配置文件(.bash_profile)<br>在.bash_profile文件中添加下面几行👇</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">if brew list | grep coreutils &gt; /dev/null ; then</div><div class="line">    PATH=&quot;$(brew --prefix coreutils)/libexec/gnubin:$PATH&quot;</div><div class="line">    alias ls=&apos;ls -F --show-control-chars --color=auto&apos;</div><div class="line">    eval `gdircolors -b $HOME/.dir_colors`</div><div class="line">fi</div></pre></td></tr></table></figure>
-</li>
+<h2 id="Vim设置"><a href="#Vim设置" class="headerlink" title="Vim设置"></a><code>Vim</code>设置</h2><p>Vim保持和Terminal相同的配色，设置如下👇</p>
+<pre><code>        $ cd solarized
+        $ cd vim-colors-solarized/colors
+        $ mkdir -p ~/.vim/colors
+        $ cp solarized.vim ~/.vim/colors/
+
+        $ vim ~/.vimrc
+        syntax enable
+        set background=dark
+        colorscheme solarized
+</code></pre><h2 id="ls设置"><a href="#ls设置" class="headerlink" title="ls设置"></a><code>ls</code>设置</h2><ol>
+<li>安装<code>Coreutils</code><pre><code>     $ brew install coreutils
+</code></pre></li>
+<li>生成颜色配置文件<pre><code>     $ gdircolors --print-database &gt; ~/.dir_colors
+</code></pre></li>
+<li>编辑配置文件(.bash_profile)<br>在.bash_profile文件中添加下面几行👇<pre><code>     if brew list | grep coreutils &gt; /dev/null ; then
+         PATH=&quot;$(brew --prefix coreutils)/libexec/gnubin:$PATH&quot;
+         alias ls=&#39;ls -F --show-control-chars --color=auto&#39;
+         eval `gdircolors -b $HOME/.dir_colors`
+     fi
+</code></pre></li>
 </ol>
 <p><strong>p.s</strong> 照做就好了=。=</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
@@ -609,7 +619,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

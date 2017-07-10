@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-06-28T07:35:26.000Z</updated>
+  <updated>2017-07-10T08:44:25.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JSPatch源码分析</title>
+    <link href="http://yoursite.com/2017/07/07/JSPatch-source-analyze/"/>
+    <id>http://yoursite.com/2017/07/07/JSPatch-source-analyze/</id>
+    <published>2017-07-07T01:26:28.000Z</published>
+    <updated>2017-07-10T08:44:25.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/bang590/JSPatch&quot;&gt;JSPatch&lt;/a&gt;是一个可以动态更新iOS APP的开源库。通过JSPatch，可以使用JS书写原生代码，动态更新APP，替换项目原生代码修复Bug。&lt;/p&gt;
+&lt;p&gt;JSPatch充分应用了Objective-C的runtime，来实现自己的功能。&lt;/p&gt;
+&lt;p&gt;这篇文章将结合Demo，来分析JSPatch的主要的实现过程。包括：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;使用JS新建类&lt;/li&gt;
+&lt;li&gt;使用JS替换原有方法&lt;/li&gt;
+&lt;li&gt;使用JS添加全新方法&lt;/li&gt;
+&lt;li&gt;OC调用JS定义的方法&lt;/li&gt;
+&lt;li&gt;JS调用OC定义的方法&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+    
+      <category term="iOS" scheme="http://yoursite.com/tags/iOS/"/>
+    
+  </entry>
   
   <entry>
     <title>关于ARC，Block以及GCD，runloop</title>
@@ -118,7 +145,7 @@
     <link href="http://yoursite.com/2017/06/08/objective-c-runtime-message/"/>
     <id>http://yoursite.com/2017/06/08/objective-c-runtime-message/</id>
     <published>2017-06-08T06:46:01.000Z</published>
-    <updated>2017-06-08T09:19:54.000Z</updated>
+    <updated>2017-07-07T09:28:07.000Z</updated>
     
     <summary type="html">
     
@@ -428,24 +455,6 @@
     
     
       <category term="杂七杂八" scheme="http://yoursite.com/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++大学教程读书笔记 - 与C++相关</title>
-    <link href="http://yoursite.com/2016/10/17/c-how-to-progarm-reading-note/"/>
-    <id>http://yoursite.com/2016/10/17/c-how-to-progarm-reading-note/</id>
-    <published>2016-10-17T11:52:56.000Z</published>
-    <updated>2016-11-02T06:55:48.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;C++大学教程的读书笔记，(C++ how to program)&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="C" scheme="http://yoursite.com/tags/C/"/>
     
   </entry>
   

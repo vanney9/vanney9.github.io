@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -291,7 +291,21 @@
 </ol>
 <h3 id="多用块枚举，少用for循环"><a href="#多用块枚举，少用for循环" class="headerlink" title="多用块枚举，少用for循环"></a>多用块枚举，少用for循环</h3><ol>
 <li><p>使用OC1.0的 <strong>NSEnumerator</strong> 来遍历</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">NSArray *array = /*...*/;</div><div class="line">NSEnumerator *enumerator = [array objectEnumerator];</div><div class="line">id object;</div><div class="line">while ((object = [enumerator nextObject]) != nil) &#123;</div><div class="line">  	// do something</div><div class="line">&#125;</div><div class="line"></div><div class="line">NSDictionary *dict = /*...*/;</div><div class="line">NSEnumerator *enum = [dict keyEnumerator];</div><div class="line">id key;</div><div class="line">while ((key = [enum nextObject]) != nil) &#123;</div><div class="line">  	id value = dict[key];</div><div class="line">  	// do something</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">NSArray *array = /*...*/;
+NSEnumerator *enumerator = [array objectEnumerator];
+id object;
+while ((object = [enumerator nextObject]) != nil) {
+      // do something
+}
+
+NSDictionary *dict = /*...*/;
+NSEnumerator *enum = [dict keyEnumerator];
+id key;
+while ((key = [enum nextObject]) != nil) {
+      id value = dict[key];
+      // do something
+}
+</code></pre>
 </li>
 <li><p>框架还提供反向遍历的enum接口</p>
 </li>
@@ -302,7 +316,9 @@
 </ol>
 <h3 id="对自定义其内存管理语义的collection使用无缝桥接"><a href="#对自定义其内存管理语义的collection使用无缝桥接" class="headerlink" title="对自定义其内存管理语义的collection使用无缝桥接"></a>对自定义其内存管理语义的collection使用无缝桥接</h3><ol>
 <li><p>使用无缝桥接来转换Foundation和CoreFoundation</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">NSArray *array = @[@1， @2， @3]；</div><div class="line">CFArrayRef aCFArray = (__bridge CFArrayRef)array;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">NSArray *array = @[@1， @2， @3]；
+CFArrayRef aCFArray = (__bridge CFArrayRef)array;
+</code></pre>
 </li>
 <li><p>__bridge 还有疑问</p>
 </li>
@@ -621,7 +637,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

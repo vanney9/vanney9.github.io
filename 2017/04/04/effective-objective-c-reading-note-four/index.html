@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -287,7 +287,10 @@
 <a id="more"></a>
 <h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="理解“块”这以概念"><a href="#理解“块”这以概念" class="headerlink" title="理解“块”这以概念"></a>理解“块”这以概念</h3><ol>
 <li><p>block其实也是一个数据类型，块也是对象类型</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">void (^someBlock)() = ^&#123;</div><div class="line">  	// do something here</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">void (^someBlock)() = ^{
+      // do something here
+}
+</code></pre>
 </li>
 <li><p>块的强大之处在于：在声明块的范围里面，所有的变量都可以为其所捕获，在快内可以使用这些变量</p>
 </li>
@@ -302,10 +305,29 @@
 </ol>
 </li>
 <li><p>定义块的时候，块所占的内存是分配在栈中的，来看看下面的例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">void (^block)(); // 声明一个block，是一个指针</div><div class="line">if (/* some condition */) &#123;</div><div class="line">  	block = ^&#123;</div><div class="line">      	// do something</div><div class="line">  	&#125;</div><div class="line">&#125; else &#123;</div><div class="line">  	block = ^&#123;</div><div class="line">      	// do something</div><div class="line">  	&#125;</div><div class="line">&#125;</div><div class="line">block();</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">void (^block)(); // 声明一个block，是一个指针
+if (/* some condition */) {
+      block = ^{
+          // do something
+      }
+} else {
+      block = ^{
+          // do something
+      }
+}
+block();
+</code></pre>
 <p>注释：在if和else中，分别创建了block，这个block是一个栈对象，也就是他们的内存是在栈上面的；然后<strong>将该栈内存的首地址赋予block</strong>。但是这个对象出了<code>{}</code> ，其内存可能被覆写，那么block变量指向的就不是一个真正的块了</p>
 <p><strong>注意，这里的block是一个指针；和一般的int理解上有所不同</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">int a;</div><div class="line">if (/* some condition */) &#123;</div><div class="line">  	int tmp = 2;</div><div class="line">  	a = tmp;</div><div class="line">&#125; else &#123;</div><div class="line">  	int tmp = 3;</div><div class="line">  	a = tmp;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">int a;
+if (/* some condition */) {
+      int tmp = 2;
+      a = tmp;
+} else {
+      int tmp = 3;
+      a = tmp;
+}
+</code></pre>
 <p>这里tmp的内存在出了<code>{}</code>之后也是会被覆写的，但是在<code>{}</code>里面，直接将tmp的内存中的值写到了a的内存中，所以a还是可以使用的。<strong>但是，写到block内存中的是这个栈对象的地址，地址还是可以使用的，但是地址里面的内容就不一定是原来的块对象了</strong></p>
 <p>至于，栈和堆的区别可以看看 <a href="http://ios.jobbole.com/81900/" target="_blank" rel="external">Objective-C 拾遗：从Heap and Stack到Block</a> 这篇文章</p>
 </li>
@@ -316,7 +338,11 @@
 </ol>
 <h3 id="为常用的块类型创建typedef"><a href="#为常用的块类型创建typedef" class="headerlink" title="为常用的块类型创建typedef"></a>为常用的块类型创建typedef</h3><ol>
 <li><p>定义块变量是非常不符合常理，不好记住，所以要使用 <strong>typedef</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">typedef int (^EOCSomeBlock)(BOOL flag, int value);</div><div class="line">EOCSomeBlock block = ^(BOOL flag, int value) &#123;</div><div class="line">  	// block implememtation</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">typedef int (^EOCSomeBlock)(BOOL flag, int value);
+EOCSomeBlock block = ^(BOOL flag, int value) {
+      // block implememtation
+};
+</code></pre>
 <p>上面的EOCSomeBlock表示 <strong>接受2个参数，并返回int的block类型</strong></p>
 </li>
 </ol>
@@ -328,14 +354,44 @@
 <li><p><code>dispatch_sync(queue, block);</code> 等待block执行完，再执行后面的语句；<code>dispatch_async(queue, block);</code> 不等待block执行完，立刻执行后续语句。具体参考<a href="http://blog.csdn.net/zhangping871/article/details/44098773" target="_blank" rel="external">dispatch_async 和 dispatch_sync 的区别</a></p>
 </li>
 <li><p>来个例子说明一下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">_syncQueue = dispatch_queue_create(&quot;com.vanney9.queue&quot;, NULL);</div><div class="line"></div><div class="line">- (NSString *)someString &#123;</div><div class="line">  	__block NSString *localSomeString;</div><div class="line">  	dispatch_sync(_syncQueue, ^&#123;      // 1</div><div class="line">      	localSomeThing = _someString;</div><div class="line">  	&#125;);</div><div class="line">  	return localSomeString;   // 2</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)setSomeString:(NSString *)someString &#123;</div><div class="line">  	dispatch_async(_syncQueue, ^&#123;    // 3</div><div class="line">      	_someString = someString;</div><div class="line">  	&#125;);</div><div class="line">  	return;    // 4</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">_syncQueue = dispatch_queue_create(&quot;com.vanney9.queue&quot;, NULL);
+
+- (NSString *)someString {
+      __block NSString *localSomeString;
+      dispatch_sync(_syncQueue, ^{      // 1
+          localSomeThing = _someString;
+      });
+      return localSomeString;   // 2
+}
+
+- (void)setSomeString:(NSString *)someString {
+      dispatch_async(_syncQueue, ^{    // 3
+          _someString = someString;
+      });
+      return;    // 4
+}
+</code></pre>
 <ol>
 <li>get方法使用同步派发(<strong>dispatch_sync</strong>)：因为必须等待block执行完，才能返回localString，如果使用异步派发(<strong>dispatch_async</strong>)的话，block还没有执行，也就是localString还没有设置，就返回了，那么就返回空值了。。</li>
 <li>set方法使用异步派发，因为不需要等待block执行完</li>
 </ol>
 </li>
 <li><p>上面的例子使用的queue都是串行队列，也就是必须等待注册到该序列中的前面的block执行完了，才能执行自己的bloc；但是对于读操作来说是可以并行的，只要写操作和其他的操作串行化就可以了。所以可以使用 <strong>并行序列+栅栏</strong> 来实现</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">_syncQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0); // 1</div><div class="line">- (NSString *)someString &#123;</div><div class="line">  	__block NSString *localSomeString;</div><div class="line">  	dispatch_sync(_syncQueue, ^&#123;  // 2</div><div class="line">      	localSomeString = _someString;</div><div class="line">  	&#125;);</div><div class="line">  	return localSomeString;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)setSomeString:(NSString *)someString &#123;</div><div class="line">  	dispatch_barrier_async(_syncQueue, ^&#123;  // 3</div><div class="line">      	_someString = somString;</div><div class="line">  	&#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">_syncQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0); // 1
+- (NSString *)someString {
+      __block NSString *localSomeString;
+      dispatch_sync(_syncQueue, ^{  // 2
+          localSomeString = _someString;
+      });
+      return localSomeString;
+}
+
+- (void)setSomeString:(NSString *)someString {
+      dispatch_barrier_async(_syncQueue, ^{  // 3
+          _someString = somString;
+      });
+}
+</code></pre>
 <p>注释1：创建了一个并发队列</p>
 <p>注释2：使用并发队列，可以同时执行get方法</p>
 <p>注释3：使用栅栏技术，让写操作执行的时候，队列中的其他操作无法执行</p>
@@ -343,7 +399,14 @@
 </ol>
 <h3 id="多用GCD，少用performSelector系列方法"><a href="#多用GCD，少用performSelector系列方法" class="headerlink" title="多用GCD，少用performSelector系列方法"></a>多用GCD，少用performSelector系列方法</h3><ol>
 <li><p>先来说说<code>performSelector</code>方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">SEL selector;</div><div class="line">if (/* some condition*/) &#123;</div><div class="line">  	selector = @selector(foo);</div><div class="line">&#125;  else &#123;</div><div class="line">  	selector = @selector(bar);</div><div class="line">&#125;</div><div class="line">[object performSelector:selector];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">SEL selector;
+if (/* some condition*/) {
+      selector = @selector(foo);
+}  else {
+      selector = @selector(bar);
+}
+[object performSelector:selector];
+</code></pre>
 <p>动态绑定之上再动态绑定</p>
 </li>
 <li><p>为什么不推荐使用呢？因为该方法返回的是id类型，也就是一个指向任意OC对象的指针（在32位架构上占32位，4字节；在64位架构上占64位，8字节）。但是如果selector方法返回int，float等类型时就不好转换了</p>
@@ -371,7 +434,15 @@
 <li><p>这个常用于单例模式</p>
 </li>
 <li><p>example：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+ (id)sharedInstance &#123;</div><div class="line">  	static ECOClass *sharedInstanced = nil;</div><div class="line">  	static dispatch_once_t onceToken;</div><div class="line">  	dispatch_once(&amp;onceToken, ^&#123;</div><div class="line">      	sharedInstance = [[self alloc] init];</div><div class="line">  	&#125;);</div><div class="line">  	return sharedInstance;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">+ (id)sharedInstance {
+      static ECOClass *sharedInstanced = nil;
+      static dispatch_once_t onceToken;
+      dispatch_once(&amp;onceToken, ^{
+          sharedInstance = [[self alloc] init];
+      });
+      return sharedInstance;
+}
+</code></pre>
 <p>在函数中的static变量：只在函数中可见，但是其生命期为整个程序。具体见 <a href="http://stackoverflow.com/questions/5033627/static-variable-inside-of-a-function-in-c" target="_blank" rel="external">Static variable inside of a function in C</a></p>
 </li>
 </ol>
@@ -678,7 +749,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

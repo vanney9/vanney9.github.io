@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -286,7 +286,11 @@
 <h2 id="bits"><a href="#bits" class="headerlink" title="bits"></a>bits</h2><p>先回忆一下objc_class的结构</p>
 <p><img src="/lionheart/1706/bits.png" alt="objc_class"></p>
 <p><code>bits</code> 用来存储类的属性，方法，协议等信息。它是一个<code>class_data_bits_t</code>类型</p>
-<h3 id="class-data-bits-t"><a href="#class-data-bits-t" class="headerlink" title="class_data_bits_t"></a>class_data_bits_t</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="keyword">class_data_bits_t</span> &#123;</div><div class="line">    <span class="keyword">uintptr_t</span> bits;</div><div class="line">    <span class="comment">// method here</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="class-data-bits-t"><a href="#class-data-bits-t" class="headerlink" title="class_data_bits_t"></a>class_data_bits_t</h3><pre><code class="c++">struct class_data_bits_t {
+    uintptr_t bits;
+    // method here
+}
+</code></pre>
 <p>这个结构体只有一个64bit的成员变量<code>bits</code>，先来看看这64bit分别存放的什么信息：</p>
 <p><img src="/lionheart/1706/class_bits.png" alt="class_data_bits_t"></p>
 <p><code>is_swift</code> : 第一个bit，判断类是否是Swift类</p>
@@ -294,7 +298,37 @@
 <p><code>require_raw_isa</code> ：第三个bit， 判断当前类的实例是否需要raw_isa (不是很懂)</p>
 <p><code>data</code> ：第4-48位，存放一个指向class_rw_t结构体的指针，该结构体包含了该类的属性，方法，协议等信息。至于为何只用44bit来存放地址，可以参考<a href="http://vanney9.com/2017/06/03/objective-c-runtime-class-object/" target="_blank" rel="external">Objective-C runtime - 类和对象</a></p>
 <h3 id="class-rw-t-和-class-ro-t"><a href="#class-rw-t-和-class-ro-t" class="headerlink" title="class_rw_t 和 class_ro_t"></a>class_rw_t 和 class_ro_t</h3><p>先来看看两个结构体的内部成员变量</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="keyword">class_rw_t</span> &#123;</div><div class="line">    <span class="keyword">uint32_t</span> flags;</div><div class="line">    <span class="keyword">uint32_t</span> version;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">class_ro_t</span> *ro;</div><div class="line"></div><div class="line">    <span class="keyword">method_array_t</span> methods;</div><div class="line">    <span class="keyword">property_array_t</span> properties;</div><div class="line">    <span class="keyword">protocol_array_t</span> protocols;</div><div class="line"></div><div class="line">    Class firstSubclass;</div><div class="line">    Class nextSiblingClass;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">struct</span> <span class="keyword">class_ro_t</span> &#123;</div><div class="line">    <span class="keyword">uint32_t</span> flags;</div><div class="line">    <span class="keyword">uint32_t</span> instanceStart;</div><div class="line">    <span class="keyword">uint32_t</span> instanceSize;</div><div class="line">    <span class="keyword">uint32_t</span> reserved;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">uint8_t</span> * ivarLayout;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> * name;</div><div class="line">    <span class="keyword">method_list_t</span> * baseMethodList;</div><div class="line">    <span class="keyword">protocol_list_t</span> * baseProtocols;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">ivar_list_t</span> * ivars;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">uint8_t</span> * weakIvarLayout;</div><div class="line">    <span class="keyword">property_list_t</span> *baseProperties;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<pre><code class="c++">struct class_rw_t {
+    uint32_t flags;
+    uint32_t version;
+
+    const class_ro_t *ro;
+
+    method_array_t methods;
+    property_array_t properties;
+    protocol_array_t protocols;
+
+    Class firstSubclass;
+    Class nextSiblingClass;
+};
+
+struct class_ro_t {
+    uint32_t flags;
+    uint32_t instanceStart;
+    uint32_t instanceSize;
+    uint32_t reserved;
+
+    const uint8_t * ivarLayout;
+
+    const char * name;
+    method_list_t * baseMethodList;
+    protocol_list_t * baseProtocols;
+    const ivar_list_t * ivars;
+
+    const uint8_t * weakIvarLayout;
+    property_list_t *baseProperties;
+};
+</code></pre>
 <p>可以看出，class_rw_t结构体内有一个指向class_ro_t结构体的指针。</p>
 <p>每个类都对应有一个class_ro_t结构体和一个class_rw_t结构体。在编译期间，class_ro_t结构体就已经确定，objc_class中的bits的data部分存放着该结构体的地址。在runtime运行之后，具体说来是在运行runtime的<code>realizeClass</code> 方法时，会生成class_rw_t结构体，该结构体包含了class_ro_t，并且更新data部分，换成class_rw_t结构体的地址。</p>
 <p>用两张图来说明这个过程：</p>
@@ -305,7 +339,11 @@
 <p>细看两个结构体的成员变量会发现很多相同的地方，他们都存放着当前类的属性、实例变量、方法、协议等等。区别在于：class_ro_t存放的是编译期间就确定的；而class_rw_t是在runtime时才确定，它会先将class_ro_t的内容拷贝过去，然后再将当前类的分类的这些属性、方法等拷贝到其中。所以可以说class_rw_t是class_ro_t的超集，<strong>当然实际访问类的方法、属性等也都是访问的class_rw_t中的内容</strong></p>
 <h2 id="属性和实例变量"><a href="#属性和实例变量" class="headerlink" title="属性和实例变量"></a>属性和实例变量</h2><p>现在知道了属性(<strong>property</strong>)存放在class_rw_t中，实例变量(<strong>ivar</strong>)存放在class_ro_t中。下面来看看他们的真实面目。</p>
 <p>先看一段代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@interface TestOBJ : NSObject &#123;</div><div class="line">  	NSInteger ivarInt;</div><div class="line">&#125;</div><div class="line">@property (nonatomic, assign) NSInteger propertyInt;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">@interface TestOBJ : NSObject {
+      NSInteger ivarInt;
+}
+@property (nonatomic, assign) NSInteger propertyInt;
+</code></pre>
 <p>这个TestOBJ类有一个实例变量<code>ivarInt</code> 和 一个属性<code>propertyInt</code> 。使用lldb打印出class_ro_t的ivars：</p>
 <p><img src="/lionheart/1706/ivars.png" alt="ivars list"></p>
 <p>再使用lldb打印出class_ro_t的baseProperties:</p>
@@ -315,10 +353,27 @@
 <p>从上面三张lldb的结果可以看出：<strong>TestOBJ类含有2个实例变量，1个属性和2个方法</strong>。但是代码里只有一个实例变量一个属性和0个方法。原因就是声明一个属性的同时，会同时生成一个实例变量和该实例变量的存取方法。</p>
 <p>以<code>propertyInt</code>为例：生成了 <code>_propertyInt</code> 实例变量和 <code>- (NSInteger)propertyInt;</code> 以及 <code>- (void)setPropertyInt:(NSInteger)propertyInt</code> 两个存取方法</p>
 <h3 id="property-t"><a href="#property-t" class="headerlink" title="property_t"></a>property_t</h3><p><em>class_ro_t</em>中<em>的baseProperties</em>是一个存放<em>property_t</em>结构体的list。<strong>property_t</strong>结构体用来存放属性的信息</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="keyword">property_t</span> &#123;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *attributes;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<pre><code class="c++">struct property_t {
+    const char *name;
+    const char *attributes;
+};
+</code></pre>
 <p>该结构体保存了属性的名字和type encoding。</p>
 <h3 id="ivar-t"><a href="#ivar-t" class="headerlink" title="ivar_t"></a>ivar_t</h3><p>其实到这里你就会发现<em>property_t</em>结构体中存放的信息没啥用，真正有用的还是存放实例变量的结构体<strong>ivar_t</strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="keyword">ivar_t</span> &#123;</div><div class="line">    <span class="keyword">int32_t</span> *offset;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *type;</div><div class="line">    <span class="comment">// alignment is sometimes -1; use alignment() instead</span></div><div class="line">    <span class="keyword">uint32_t</span> alignment_raw;</div><div class="line">    <span class="keyword">uint32_t</span> size;</div><div class="line"></div><div class="line">    <span class="keyword">uint32_t</span> alignment() <span class="keyword">const</span> &#123;</div><div class="line">        <span class="keyword">if</span> (alignment_raw == ~(<span class="keyword">uint32_t</span>)<span class="number">0</span>) <span class="keyword">return</span> <span class="number">1U</span> &lt;&lt; WORD_SHIFT;</div><div class="line">        <span class="keyword">return</span> <span class="number">1</span> &lt;&lt; alignment_raw;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<pre><code class="c++">struct ivar_t {
+    int32_t *offset;
+    const char *name;
+    const char *type;
+    // alignment is sometimes -1; use alignment() instead
+    uint32_t alignment_raw;
+    uint32_t size;
+
+    uint32_t alignment() const {
+        if (alignment_raw == ~(uint32_t)0) return 1U &lt;&lt; WORD_SHIFT;
+        return 1 &lt;&lt; alignment_raw;
+    }
+};
+</code></pre>
 <p>以<em>TestOBJ</em>中的 <strong>ivarInt</strong> 实例变量为例来说明，先使用lldb打印该实例变量的详细信息：</p>
 <p><img src="/lionheart/1706/ivar_t.png" alt="ivar_t"></p>
 <p><code>name</code> : <strong>实例变量的名字</strong> -&gt; ivarInt</p>
@@ -333,7 +388,10 @@
 <h3 id="类继承关系中的对象的内存空间结构"><a href="#类继承关系中的对象的内存空间结构" class="headerlink" title="类继承关系中的对象的内存空间结构"></a>类继承关系中的对象的内存空间结构</h3><p>先看看没有继承关系的类 TestOBJ：</p>
 <p><img src="/lionheart/1706/testObj.png" alt="testObj"></p>
 <p>再看看继承TestOBJ的Son类：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@interface Son : TestOBJ</div><div class="line">@property (nonatomic, strong) NSString *sonStr</div><div class="line">@end</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">@interface Son : TestOBJ
+@property (nonatomic, strong) NSString *sonStr
+@end
+</code></pre>
 <p>它的对象既存储了TestOBJ的实例变量，也存放了Son自己的实例变量</p>
 <p><img src="/lionheart/1706/son.png" alt="son"></p>
 <p>使用lldb打印son的class_ro_t:</p>
@@ -346,15 +404,74 @@
 <p><img src="/lionheart/1706/realmethods.png" alt="methods"></p>
 <p>可以看到这里的<code>methods</code>和上面打印出来的class_ro_t中的<code>baseMethodList</code>一模一样。这是因为这个类没有分类，只是简单的将baseMethodList的内容拷贝过去。</p>
 <h3 id="method-t"><a href="#method-t" class="headerlink" title="method_t"></a>method_t</h3><p>runtime使用<code>method_t</code>结构体来存放方法：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="keyword">method_t</span> &#123;</div><div class="line">    SEL name;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *types;</div><div class="line">    IMP imp;</div><div class="line"></div><div class="line">    <span class="keyword">struct</span> SortBySELAddress :</div><div class="line">        <span class="keyword">public</span> <span class="built_in">std</span>::binary_function&lt;<span class="keyword">const</span> <span class="keyword">method_t</span>&amp;,</div><div class="line">                                    <span class="keyword">const</span> <span class="keyword">method_t</span>&amp;, <span class="keyword">bool</span>&gt;</div><div class="line">    &#123;</div><div class="line">        <span class="function"><span class="keyword">bool</span> <span class="title">operator</span><span class="params">()</span> <span class="params">(<span class="keyword">const</span> <span class="keyword">method_t</span>&amp; lhs,</span></span></div><div class="line">                         <span class="keyword">const</span> <span class="keyword">method_t</span>&amp; rhs)</div><div class="line">        &#123; <span class="keyword">return</span> lhs.name &lt; rhs.name; &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<pre><code class="c++">struct method_t {
+    SEL name;
+    const char *types;
+    IMP imp;
+
+    struct SortBySELAddress :
+        public std::binary_function&lt;const method_t&amp;,
+                                    const method_t&amp;, bool&gt;
+    {
+        bool operator() (const method_t&amp; lhs,
+                         const method_t&amp; rhs)
+        { return lhs.name &lt; rhs.name; }
+    };
+};
+</code></pre>
 <p><code>name</code> : 方法名，类型为<code>SEL</code>选择子，可以简单地理解成方法的id，字符串类型</p>
 <p><code>types</code> : 方法的type encoding</p>
 <p><code>imp</code> : 方法的实现，类型为<code>IMP</code>。IMP是函数指针，指向方法的实现，也就是指向实现该方法的代码区</p>
-<h2 id="底层存储方式"><a href="#底层存储方式" class="headerlink" title="底层存储方式"></a>底层存储方式</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="keyword">class_rw_t</span> &#123;</div><div class="line">    <span class="keyword">uint32_t</span> flags;</div><div class="line">    <span class="keyword">uint32_t</span> version;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">class_ro_t</span> *ro;</div><div class="line"></div><div class="line">    <span class="keyword">method_array_t</span> methods;</div><div class="line">    <span class="keyword">property_array_t</span> properties;</div><div class="line">    <span class="keyword">protocol_array_t</span> protocols;</div><div class="line"></div><div class="line">    Class firstSubclass;</div><div class="line">    Class nextSiblingClass;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">struct</span> <span class="keyword">class_ro_t</span> &#123;</div><div class="line">    <span class="keyword">uint32_t</span> flags;</div><div class="line">    <span class="keyword">uint32_t</span> instanceStart;</div><div class="line">    <span class="keyword">uint32_t</span> instanceSize;</div><div class="line">    <span class="keyword">uint32_t</span> reserved;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">uint8_t</span> * ivarLayout;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> * name;</div><div class="line">    <span class="keyword">method_list_t</span> * baseMethodList;</div><div class="line">    <span class="keyword">protocol_list_t</span> * baseProtocols;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">ivar_list_t</span> * ivars;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">uint8_t</span> * weakIvarLayout;</div><div class="line">    <span class="keyword">property_list_t</span> *baseProperties;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="底层存储方式"><a href="#底层存储方式" class="headerlink" title="底层存储方式"></a>底层存储方式</h2><pre><code class="c++">struct class_rw_t {
+    uint32_t flags;
+    uint32_t version;
+
+    const class_ro_t *ro;
+
+    method_array_t methods;
+    property_array_t properties;
+    protocol_array_t protocols;
+
+    Class firstSubclass;
+    Class nextSiblingClass;
+};
+
+struct class_ro_t {
+    uint32_t flags;
+    uint32_t instanceStart;
+    uint32_t instanceSize;
+    uint32_t reserved;
+
+    const uint8_t * ivarLayout;
+
+    const char * name;
+    method_list_t * baseMethodList;
+    protocol_list_t * baseProtocols;
+    const ivar_list_t * ivars;
+
+    const uint8_t * weakIvarLayout;
+    property_list_t *baseProperties;
+};
+</code></pre>
 <p>class_ro_t里面的<code>method_list_t</code> 和 <code>ivar_list_t</code> 都是 <code>entsize_list_tt</code> 的结构体；class_rw_t里面的 <code>method_array_t</code> 和 <code>property_array_t</code> 都是 <code>list_array_tt</code> 的结构体。来看看这个底层存储方式</p>
-<h3 id="entsize-list-tt"><a href="#entsize-list-tt" class="headerlink" title="entsize_list_tt"></a>entsize_list_tt</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Element, <span class="keyword">typename</span> List, <span class="keyword">uint32_t</span> FlagMask&gt;</div><div class="line"><span class="keyword">struct</span> entsize_list_tt &#123;</div><div class="line">    <span class="keyword">uint32_t</span> entsizeAndFlags;</div><div class="line">    <span class="keyword">uint32_t</span> count;</div><div class="line">    Element first;</div><div class="line">  	<span class="comment">// other code</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="entsize-list-tt"><a href="#entsize-list-tt" class="headerlink" title="entsize_list_tt"></a>entsize_list_tt</h3><pre><code class="c++">template &lt;typename Element, typename List, uint32_t FlagMask&gt;
+struct entsize_list_tt {
+    uint32_t entsizeAndFlags;
+    uint32_t count;
+    Element first;
+      // other code
+}
+</code></pre>
 <p>一个存储Element的序列，可以使用<code>get(index)</code>方法获取特定index的Element；它也提供了iterator遍历器，具体实现细节可以查看代码。<code>objc-runtime-new.h</code></p>
-<h3 id="list-array-tt"><a href="#list-array-tt" class="headerlink" title="list_array_tt"></a>list_array_tt</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Element, <span class="keyword">typename</span> List&gt;</div><div class="line"><span class="keyword">class</span> list_array_tt &#123;</div><div class="line">	<span class="keyword">private</span>:</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        List* <span class="built_in">list</span>;</div><div class="line">        <span class="keyword">uintptr_t</span> arrayAndFlag;</div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="list-array-tt"><a href="#list-array-tt" class="headerlink" title="list_array_tt"></a>list_array_tt</h3><pre><code class="c++">template &lt;typename Element, typename List&gt;
+class list_array_tt {
+    private:
+    union {
+        List* list;
+        uintptr_t arrayAndFlag;
+    };
+}
+</code></pre>
 <p>简单来说是一个存放<code>entsize_list_tt</code>的数组。也提供了iterator遍历器。也定义在<code>objc-runtime-new.h</code></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实这篇文章就是👇两篇参考文章的一个合体。总结来说：objc_class结构体中的bits成员变量存放着类的属性、方法、协议等信息。这一些信息，有的是在编译期间就确定的；另外一些则是在运行runtime的<code>realizeClass</code>的方法时添加上去的。</p>
 <p>那么当runtime将类初始化之后，所有的类所需的信息都存放在了<strong>class_rw_t</strong>结构体中</p>
@@ -660,7 +777,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

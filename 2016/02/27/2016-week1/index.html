@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -297,14 +297,19 @@
 <h2 id="状态栏（UIStatusBar-的显示"><a href="#状态栏（UIStatusBar-的显示" class="headerlink" title="状态栏（UIStatusBar)的显示"></a>状态栏（<code>UIStatusBar</code>)的显示</h2><p>之前有一篇博客讲到UIStatusBar的设置(<a href="http://vanney9.com/2016/01/05/iOS-navbar-statusbar-setting/" target="_blank" rel="external">iOS导航栏和状态栏设置</a>),这里的是另一种方法–全局设置UIStatusBar。</p>
 <ol>
 <li>在.plist文件中，将<code>UIViewControllerBasedStatusBarAppearance</code>设置为NO</li>
-<li>要全局设置UIStatusBar的话<pre><code>[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent]; // 将状态了设置为亮色（白色）
-[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault]; // 将状态栏还原为默认（黑色）
+<li>要全局设置UIStatusBar的话<pre><code> [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent]; // 将状态了设置为亮色（白色）
+ [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault]; // 将状态栏还原为默认（黑色）
 </code></pre></li>
 </ol>
 <h2 id="导航栏（UINavigationBar）的设置"><a href="#导航栏（UINavigationBar）的设置" class="headerlink" title="导航栏（UINavigationBar）的设置"></a>导航栏（<code>UINavigationBar</code>）的设置</h2><p>同样，在<a href="http://vanney9.com/2016/01/05/iOS-navbar-statusbar-setting/" target="_blank" rel="external">iOS导航栏和状态栏设置</a>这篇里讲过UINavigationBar的设置，这里说的是全局设置UINavigationBar的方法。<br>方法其实很简单啦，就是通过<code>[UINavigationBar appearance]</code>获得设置UINavigationBar的全局代理，一般在 <strong>AppDelegate.m</strong> 文件里面设置。代码如下👇</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">UINavigationBar *navBarAppearance = [UINavigationBar appearance];</div><div class="line">[navBarAppearance setBarTintColor:[UIColor colorWithHexString:@&quot;0x28303b&quot;]];</div><div class="line">[navBarAppearance setTintColor:[UIColor whiteColor]];</div><div class="line">NSDictionary *textAttributes = @&#123; NSFontAttributeName : [UIFont boldSystemFontOfSize:kNavTitleFontSize],</div><div class="line">                              NSForegroundColorAttributeName : [UIColor whiteColor] &#125;;</div><div class="line">[navBarAppearance setTitleTextAttributes:textAttributes];</div></pre></td></tr></table></figure>
-<h2 id="判断iPhone机型"><a href="#判断iPhone机型" class="headerlink" title="判断iPhone机型"></a>判断iPhone机型</h2><p>判断iPhone机型的代码，会经常用到，就放在.pch文件里面吧。代码如下👇</p>
-<pre><code>#define kDevice_Is_iPhone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) : NO)
+<pre><code>        UINavigationBar *navBarAppearance = [UINavigationBar appearance];
+        [navBarAppearance setBarTintColor:[UIColor colorWithHexString:@&quot;0x28303b&quot;]];
+        [navBarAppearance setTintColor:[UIColor whiteColor]];
+        NSDictionary *textAttributes = @{ NSFontAttributeName : [UIFont boldSystemFontOfSize:kNavTitleFontSize],
+                                      NSForegroundColorAttributeName : [UIColor whiteColor] };
+        [navBarAppearance setTitleTextAttributes:textAttributes];
+</code></pre><h2 id="判断iPhone机型"><a href="#判断iPhone机型" class="headerlink" title="判断iPhone机型"></a>判断iPhone机型</h2><p>判断iPhone机型的代码，会经常用到，就放在.pch文件里面吧。代码如下👇</p>
+<pre><code>    #define kDevice_Is_iPhone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) : NO)
 </code></pre><p>另外，各种机型对应的CGSize:</p>
 <ol>
 <li>iPhone4(s): CGSizeMake(640, 960)</li>
@@ -323,8 +328,25 @@
 <h2 id="圆角Button"><a href="#圆角Button" class="headerlink" title="圆角Button"></a>圆角Button</h2><p>设置圆角Button与设置圆角相同，关键就是设置:</p>
 <ol>
 <li><code>button.layer.masksToBounds = YES;</code></li>
-<li><code>button.layer.cornerRadius = cornerRadius;</code><br>具体代码如下👇<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">self.loginButton = [UIButton buttonWithType:UIButtonTypeCustom];</div><div class="line">self.loginButton.backgroundColor = [UIColor whiteColor];</div><div class="line">[self.loginButton setTitle:@&quot;登录&quot; forState:UIControlStateNormal];</div><div class="line">[self.loginButton setTitleColor:darkColor forState:UIControlStateNormal];</div><div class="line">self.loginButton.titleLabel.font = [UIFont boldSystemFontOfSize:20];</div><div class="line"></div><div class="line">[self.loginButton addTarget:self action:@selector(loginButtonClick) forControlEvents:UIControlEventTouchUpInside];</div><div class="line"></div><div class="line">[self.view addSubview:self.loginButton];</div><div class="line">[self.loginButton mas_makeConstraints:^(MASConstraintMaker *make) &#123;</div><div class="line">    // auto-layout code here...</div><div class="line">&#125;];</div><div class="line"></div><div class="line">self.loginButton.layer.masksToBounds = YES;</div><div class="line">self.loginButton.layer.cornerRadius = buttonHeight / 2;</div><div class="line">self.loginButton.layer.borderColor = darkColor.CGColor;</div><div class="line">self.loginButton.layer.borderWidth = 1.0f;</div></pre></td></tr></table></figure>
-</li>
+<li><p><code>button.layer.cornerRadius = cornerRadius;</code><br>具体代码如下👇</p>
+<pre><code>     self.loginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+     self.loginButton.backgroundColor = [UIColor whiteColor];
+     [self.loginButton setTitle:@&quot;登录&quot; forState:UIControlStateNormal];
+     [self.loginButton setTitleColor:darkColor forState:UIControlStateNormal];
+     self.loginButton.titleLabel.font = [UIFont boldSystemFontOfSize:20];
+
+     [self.loginButton addTarget:self action:@selector(loginButtonClick) forControlEvents:UIControlEventTouchUpInside];
+
+     [self.view addSubview:self.loginButton];
+     [self.loginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+         // auto-layout code here...
+     }];
+
+     self.loginButton.layer.masksToBounds = YES;
+     self.loginButton.layer.cornerRadius = buttonHeight / 2;
+     self.loginButton.layer.borderColor = darkColor.CGColor;
+     self.loginButton.layer.borderWidth = 1.0f;
+</code></pre></li>
 </ol>
 <h2 id="ViewController的两种跳转"><a href="#ViewController的两种跳转" class="headerlink" title="ViewController的两种跳转"></a>ViewController的两种跳转</h2><p>在ViewController之间跳转，有一下2种方法：</p>
 <ol>
@@ -338,20 +360,36 @@
 <h2 id="UIActionSheet使用"><a href="#UIActionSheet使用" class="headerlink" title="UIActionSheet使用"></a><code>UIActionSheet</code>使用</h2><p>先看看实现效果👇<br><img src="/lionheart/1602/uiactionsheet.png" alt="UIActionSheet demo"></p>
 <p>具体实现:</p>
 <ol>
-<li><p>初始化</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">_actionSheet = [[UIActionSheet alloc] initWithTitle:nil</div><div class="line">                                           delegate:self</div><div class="line">                                  cancelButtonTitle:@&quot;Cancel&quot;</div><div class="line">                             destructiveButtonTitle:nil</div><div class="line">                                  otherButtonTitles:@&quot;Clear Cache&quot;, nil];</div></pre></td></tr></table></figure>
-</li>
-<li><p>实现<code>UIActionSheetDelegate</code>的点击时间委托</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex &#123;</div><div class="line">    switch (buttonIndex) &#123;</div><div class="line">        case 0:</div><div class="line">            // do something here</div><div class="line">            break;</div><div class="line">        case 1:</div><div class="line">            // do something here</div><div class="line">            break;</div><div class="line">        default:</div><div class="line">            break;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<li>初始化<pre><code>     _actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                delegate:self
+                                       cancelButtonTitle:@&quot;Cancel&quot;
+                                  destructiveButtonTitle:nil
+                                       otherButtonTitles:@&quot;Clear Cache&quot;, nil];
+</code></pre></li>
+<li>实现<code>UIActionSheetDelegate</code>的点击时间委托<pre><code>     - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+         switch (buttonIndex) {
+             case 0:
+                 // do something here
+                 break;
+             case 1:
+                 // do something here
+                 break;
+             default:
+                 break;
+         }
+     }
+</code></pre></li>
 </ol>
 <h2 id="SDWebImage-cache相关"><a href="#SDWebImage-cache相关" class="headerlink" title="SDWebImage cache相关"></a>SDWebImage cache相关</h2><ol>
-<li><p>清除缓存</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">SDWebImageManager *imageManager = [SDWebImageManager sharedManager];</div><div class="line">[imageManager.imageCache clearDiskOnCompletion:^&#123;</div><div class="line">    NSLog(@&quot;vanney code log... cache cleared&quot;);</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
-</li>
-<li><p>显示缓存信息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">SDWebImageManager *imageManager = [SDWebImageManager sharedManager];</div><div class="line">[imageManager.imageCache getSize]; // 缓存的大小 除2次1024 得到MB</div><div class="line">[imageManager.imageCache getDiskCount]; // 缓存图片的数量</div></pre></td></tr></table></figure>
-</li>
+<li>清除缓存<pre><code>     SDWebImageManager *imageManager = [SDWebImageManager sharedManager];
+     [imageManager.imageCache clearDiskOnCompletion:^{
+         NSLog(@&quot;vanney code log... cache cleared&quot;);
+     }];
+</code></pre></li>
+<li>显示缓存信息<pre><code>     SDWebImageManager *imageManager = [SDWebImageManager sharedManager];
+     [imageManager.imageCache getSize]; // 缓存的大小 除2次1024 得到MB
+     [imageManager.imageCache getDiskCount]; // 缓存图片的数量
+</code></pre></li>
 </ol>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="http://www.jianshu.com/p/b18de01e0cc8" target="_blank" rel="external">SDWebImage源码学习-One</a>  </li>
@@ -654,7 +692,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

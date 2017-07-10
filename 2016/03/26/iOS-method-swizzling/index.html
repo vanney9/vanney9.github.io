@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -290,11 +290,59 @@
 </ol>
 <h2 id="具体代码实现"><a href="#具体代码实现" class="headerlink" title="具体代码实现"></a>具体代码实现</h2><ol>
 <li><p>Swizzle category</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">@implementation UIViewController (Swizzle)</div><div class="line"></div><div class="line">+ (void)load &#123;</div><div class="line">    swizzleAllViewController();</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)customViewDidAppear:(BOOL)animated &#123;</div><div class="line">    // do something here</div><div class="line">    [self customViewDidAppear:animated]; // 其实是调用的viewDidAppear:</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)customviewWillAppear:(BOOL)animated &#123;</div><div class="line">    // do something here</div><div class="line">    [self customviewWillAppear:animated]; // 其实是调用的viewWillAppear:</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div><div class="line"></div><div class="line">// 函数指针对调</div><div class="line">void swizzleAllViewController() &#123;</div><div class="line">    Swizzle([UIViewController class], @selector(viewDidAppear:), @selector(customViewDidAppear:));</div><div class="line">    //Swizzle([UIViewController class], @selector(viewWillDisappear:), @selector(customViewWillDisappear:));</div><div class="line">    Swizzle([UIViewController class], @selector(viewWillAppear:), @selector(customviewWillAppear:));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<pre><code>     @implementation UIViewController (Swizzle)
+
+     + (void)load {
+         swizzleAllViewController();
+     }
+
+     - (void)customViewDidAppear:(BOOL)animated {
+         // do something here
+         [self customViewDidAppear:animated]; // 其实是调用的viewDidAppear:
+     }
+
+     - (void)customviewWillAppear:(BOOL)animated {
+         // do something here
+         [self customviewWillAppear:animated]; // 其实是调用的viewWillAppear:
+     }
+
+     @end
+
+     // 函数指针对调
+     void swizzleAllViewController() {
+         Swizzle([UIViewController class], @selector(viewDidAppear:), @selector(customViewDidAppear:));
+         //Swizzle([UIViewController class], @selector(viewWillDisappear:), @selector(customViewWillDisappear:));
+         Swizzle([UIViewController class], @selector(viewWillAppear:), @selector(customviewWillAppear:));
+     }
+</code></pre></li>
 <li><p>函数指针对调的实现</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">void Swizzle(Class c, SEL origSEL, SEL newSEL) &#123;</div><div class="line">    Method origMethod = class_getInstanceMethod(c, origSEL);</div><div class="line">    Method newMethod = nil;</div><div class="line">    if (!origMethod) &#123;</div><div class="line">        origMethod = class_getClassMethod(c, origSEL);</div><div class="line">        if (!origMethod) &#123;</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line">        newMethod = class_getClassMethod(c, newSEL);</div><div class="line">        if (!newMethod) &#123;</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line">    &#125; else &#123;</div><div class="line">        newMethod = class_getInstanceMethod(c, newSEL);</div><div class="line">        if (!newMethod) &#123;</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (class_addMethod(c, origSEL, method_getImplementation(newMethod), method_getTypeEncoding(newMethod))) &#123;</div><div class="line">        NSLog(@&quot;vanney code log... errorhappened&quot;);</div><div class="line">        class_replaceMethod(c, newSEL, method_getImplementation(origMethod), method_getTypeEncoding(origMethod));</div><div class="line">    &#125; else &#123;</div><div class="line">        method_exchangeImplementations(origMethod, newMethod);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<pre><code>     void Swizzle(Class c, SEL origSEL, SEL newSEL) {
+         Method origMethod = class_getInstanceMethod(c, origSEL);
+         Method newMethod = nil;
+         if (!origMethod) {
+             origMethod = class_getClassMethod(c, origSEL);
+             if (!origMethod) {
+                 return;
+             }
+             newMethod = class_getClassMethod(c, newSEL);
+             if (!newMethod) {
+                 return;
+             }
+         } else {
+             newMethod = class_getInstanceMethod(c, newSEL);
+             if (!newMethod) {
+                 return;
+             }
+         }
+
+         if (class_addMethod(c, origSEL, method_getImplementation(newMethod), method_getTypeEncoding(newMethod))) {
+             NSLog(@&quot;vanney code log... errorhappened&quot;);
+             class_replaceMethod(c, newSEL, method_getImplementation(origMethod), method_getTypeEncoding(origMethod));
+         } else {
+             method_exchangeImplementations(origMethod, newMethod);
+         }
+     }
+</code></pre></li>
 </ol>
 <h2 id="P-S"><a href="#P-S" class="headerlink" title="P.S"></a>P.S</h2><p>以上代码都参考自<a href="https://github.com/Coding/Coding-iOS" target="_blank" rel="external">Coding-iOS</a></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
@@ -599,7 +647,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

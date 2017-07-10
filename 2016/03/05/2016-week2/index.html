@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -314,35 +314,82 @@
 <h2 id="自定义UITableViewCell流程"><a href="#自定义UITableViewCell流程" class="headerlink" title="自定义UITableViewCell流程"></a>自定义<code>UITableViewCell</code>流程</h2><p>参考这里</p>
 <h2 id="NSUserDefaults基础"><a href="#NSUserDefaults基础" class="headerlink" title="NSUserDefaults基础"></a><code>NSUserDefaults</code>基础</h2><p>NSUserDefaults适合存储轻量级的本地数据，非常适合用来存储登录界面的数据（用户名，密码等等）。用法也很简单👇</p>
 <ol>
-<li><p>存储数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];        // 获取 defaults</div><div class="line">[defaults setObject:loginData forKey:@&quot;loginData&quot;];                      // 存放登录数据</div><div class="line">[defaults synchronize];                                                  // 同步到磁盘，避免数据丢失</div></pre></td></tr></table></figure>
-</li>
-<li><p>读取数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];        // 获取 defaults</div><div class="line">NSDictionary *loginData = [defaults objectForKey:@&quot;loginData&quot;];          // 获取登录数据</div></pre></td></tr></table></figure>
-</li>
+<li>存储数据<pre><code>     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];        // 获取 defaults
+     [defaults setObject:loginData forKey:@&quot;loginData&quot;];                      // 存放登录数据
+     [defaults synchronize];                                                  // 同步到磁盘，避免数据丢失
+</code></pre></li>
+<li>读取数据<pre><code>     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];        // 获取 defaults
+     NSDictionary *loginData = [defaults objectForKey:@&quot;loginData&quot;];          // 获取登录数据
+</code></pre></li>
 </ol>
-<h2 id="dispatch-once-和-static-变量"><a href="#dispatch-once-和-static-变量" class="headerlink" title="dispatch_once 和 static 变量"></a><code>dispatch_once</code> 和 <code>static</code> 变量</h2><p><code>dispatch_once</code>函数只会被执行一次，经常用来创建单例实例，先来看看<code>dispatch_once</code>函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">void dispatch_once(dispatch_once_t *predicate, dispatch_block_t block);</div></pre></td></tr></table></figure></p>
-<p>第二个参数是只会被执行一次的代码块，第一个参数用来判断代码块是否被执行。该函数与<code>static</code>变量一同使用，看看具体代码👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">+ (instancetype)sharedManager &#123;</div><div class="line">    static Coding_NetAPIManager *manager = nil;</div><div class="line">    static dispatch_once_t pred;</div><div class="line">    dispatch_once(&amp;pred, ^&#123;</div><div class="line">        manager = [[Coding_NetAPIManager alloc] init];</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    return manager;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>上面的<code>static</code>变量属于类成员，如果没有在.h文件中声明该static变量，那么他就是私有的类成员。类成员不能通过实例对象或是实例方法(-)去访问，只能通过类实例或是类方法(+)访问。</p>
+<h2 id="dispatch-once-和-static-变量"><a href="#dispatch-once-和-static-变量" class="headerlink" title="dispatch_once 和 static 变量"></a><code>dispatch_once</code> 和 <code>static</code> 变量</h2><p><code>dispatch_once</code>函数只会被执行一次，经常用来创建单例实例，先来看看<code>dispatch_once</code>函数</p>
+<pre><code>        void dispatch_once(dispatch_once_t *predicate, dispatch_block_t block);
+</code></pre><p>第二个参数是只会被执行一次的代码块，第一个参数用来判断代码块是否被执行。该函数与<code>static</code>变量一同使用，看看具体代码👇</p>
+<pre><code>        + (instancetype)sharedManager {
+            static Coding_NetAPIManager *manager = nil;
+            static dispatch_once_t pred;
+            dispatch_once(&amp;pred, ^{
+                manager = [[Coding_NetAPIManager alloc] init];
+            });
+
+            return manager;
+        }
+</code></pre><p>上面的<code>static</code>变量属于类成员，如果没有在.h文件中声明该static变量，那么他就是私有的类成员。类成员不能通过实例对象或是实例方法(-)去访问，只能通过类实例或是类方法(+)访问。</p>
 <h2 id="创建category文件"><a href="#创建category文件" class="headerlink" title="创建category文件"></a>创建category文件</h2><p>这个很简单啦，xcode -&gt; New File -&gt; Objective-C File -&gt; 填写所需信息 -&gt; Finish<br>例如，创建一个<code>UIButton+Common</code>的category,应该👇<br><img src="/lionheart/1603/category.png" alt="category"></p>
-<h2 id="SHA1加密"><a href="#SHA1加密" class="headerlink" title="SHA1加密"></a><code>SHA1</code>加密</h2><p>加密方法如下👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (NSString *)sha1Str &#123;</div><div class="line">    const char *cstr = [self cStringUsingEncoding:NSUTF8StringEncoding];</div><div class="line">    NSData *data = [NSData dataWithBytes:cstr length:self.length];</div><div class="line"></div><div class="line">    uint8_t digest[CC_SHA1_DIGEST_LENGTH];</div><div class="line"></div><div class="line">    CC_SHA1(data.bytes, (CC_LONG)data.length, digest);</div><div class="line"></div><div class="line">    NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];</div><div class="line"></div><div class="line">    for (int i = 0; i &lt; CC_SHA1_DIGEST_LENGTH; i++) &#123;</div><div class="line">        [output appendFormat:@&quot;%02x&quot;, digest[i]];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return output;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><strong>注意</strong> 该方法写在了NSString的category里面</p>
-<h2 id="2种enum类型"><a href="#2种enum类型" class="headerlink" title="2种enum类型"></a>2种<code>enum</code>类型</h2><p>指定enum有两种方式:<br>1.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">typedef enum &#123;</div><div class="line">    Get = 0,</div><div class="line">    Post,</div><div class="line">    Put,</div><div class="line">    Delete</div><div class="line">&#125; NetworkMethod;</div></pre></td></tr></table></figure></p>
-<p>2.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">typedef NS_ENUM(NSInteger, IllegalContentType) &#123;</div><div class="line">    IllegalContentTypeTweet = 0,</div><div class="line">    IllegalContentTypeTopic,</div><div class="line">    IllegalContentTypeProject,</div><div class="line">    IllegalContentTypeWebsite</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
-<h2 id="Coding调用API流程"><a href="#Coding调用API流程" class="headerlink" title="Coding调用API流程"></a>Coding调用API流程</h2><p>参考这里</p>
+<h2 id="SHA1加密"><a href="#SHA1加密" class="headerlink" title="SHA1加密"></a><code>SHA1</code>加密</h2><p>加密方法如下👇</p>
+<pre><code>        - (NSString *)sha1Str {
+            const char *cstr = [self cStringUsingEncoding:NSUTF8StringEncoding];
+            NSData *data = [NSData dataWithBytes:cstr length:self.length];
+
+            uint8_t digest[CC_SHA1_DIGEST_LENGTH];
+
+            CC_SHA1(data.bytes, (CC_LONG)data.length, digest);
+
+            NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
+
+            for (int i = 0; i &lt; CC_SHA1_DIGEST_LENGTH; i++) {
+                [output appendFormat:@&quot;%02x&quot;, digest[i]];
+            }
+
+            return output;
+        }
+</code></pre><p><strong>注意</strong> 该方法写在了NSString的category里面</p>
+<h2 id="2种enum类型"><a href="#2种enum类型" class="headerlink" title="2种enum类型"></a>2种<code>enum</code>类型</h2><p>指定enum有两种方式:<br>1.</p>
+<pre><code>        typedef enum {
+            Get = 0,
+            Post,
+            Put,
+            Delete
+        } NetworkMethod;
+</code></pre><p>2.</p>
+<pre><code>        typedef NS_ENUM(NSInteger, IllegalContentType) {
+            IllegalContentTypeTweet = 0,
+            IllegalContentTypeTopic,
+            IllegalContentTypeProject,
+            IllegalContentTypeWebsite
+        };
+</code></pre><h2 id="Coding调用API流程"><a href="#Coding调用API流程" class="headerlink" title="Coding调用API流程"></a>Coding调用API流程</h2><p>参考这里</p>
 <h2 id="MBProgressHUD基础"><a href="#MBProgressHUD基础" class="headerlink" title="MBProgressHUD基础"></a><code>MBProgressHUD</code>基础</h2><p><a href="https://github.com/jdg/MBProgressHUD" target="_blank" rel="external"><code>MBProgressHUD</code></a>是一个用来显示提示信息的第三方库，效果图如下👇<br><img src="/lionheart/1603/mbprogresshud.gif" alt="MBProgressHUD demo"></p>
-<p>事例代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">- (void)viewDidLoad &#123;</div><div class="line">    [super viewDidLoad];</div><div class="line">    // Do any additional setup after loading the view, typically from a nib.</div><div class="line">    MBProgressHUD  *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];</div><div class="line">    hud.mode = MBProgressHUDModeText;</div><div class="line">    hud.detailsLabelFont = [UIFont boldSystemFontOfSize:15];</div><div class="line">    hud.detailsLabelText = @&quot;tip from vanney9.com&quot;;</div><div class="line">    hud.margin = 10;</div><div class="line">    hud.removeFromSuperViewOnHide = YES;</div><div class="line">    [hud hide:YES afterDelay:2.0f];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="keyWindow"><a href="#keyWindow" class="headerlink" title="keyWindow"></a><code>keyWindow</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[UIApplication sharedApplication].keyWindow</div></pre></td></tr></table></figure>
-<p>APP主界面</p>
+<p>事例代码：</p>
+<pre><code>        - (void)viewDidLoad {
+            [super viewDidLoad];
+            // Do any additional setup after loading the view, typically from a nib.
+            MBProgressHUD  *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            hud.mode = MBProgressHUDModeText;
+            hud.detailsLabelFont = [UIFont boldSystemFontOfSize:15];
+            hud.detailsLabelText = @&quot;tip from vanney9.com&quot;;
+            hud.margin = 10;
+            hud.removeFromSuperViewOnHide = YES;
+            [hud hide:YES afterDelay:2.0f];
+        }
+</code></pre><h2 id="keyWindow"><a href="#keyWindow" class="headerlink" title="keyWindow"></a><code>keyWindow</code></h2><pre><code>        [UIApplication sharedApplication].keyWindow
+</code></pre><p>APP主界面</p>
 <h2 id="文件操作有关"><a href="#文件操作有关" class="headerlink" title="文件操作有关"></a>文件操作有关</h2><p>3个与文件操作相关的方法</p>
 <ol>
-<li><p>[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];<br>该方法返回该APP的Documents目录，在真机上显示的结果如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/var/mobile/Containers/Data/Application/7DB19AAA-B9E7-40D8-AAFA-C5BA2FA91CF0/Documents</div></pre></td></tr></table></figure>
-<p>在模拟机上显示的结果如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Users/vanney/Library/Developer/CoreSimulator/Devices/FF2B6585-B815-4762-AC40-268D51742C85/data/Containers/Data/Application/82FEAB7E-9245-4BA8-88ED-A559034BA5F0/Documents</div></pre></td></tr></table></figure>
-</li>
-<li><p>[NSMutableDictionary dictionaryWithContentsOfFile:@”file name”];<br>该方法读取<code>@&quot;file name&quot;</code>这个文件中的内容（注意：该文件应该存放键值对，一般XML文件），并返回由该键值对组成的NSMutableDictionary</p>
-</li>
+<li>[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];<br>该方法返回该APP的Documents目录，在真机上显示的结果如下:<pre><code>     /var/mobile/Containers/Data/Application/7DB19AAA-B9E7-40D8-AAFA-C5BA2FA91CF0/Documents
+</code></pre>在模拟机上显示的结果如下:<pre><code>     /Users/vanney/Library/Developer/CoreSimulator/Devices/FF2B6585-B815-4762-AC40-268D51742C85/data/Containers/Data/Application/82FEAB7E-9245-4BA8-88ED-A559034BA5F0/Documents
+</code></pre></li>
+<li>[NSMutableDictionary dictionaryWithContentsOfFile:@”file name”];<br>该方法读取<code>@&quot;file name&quot;</code>这个文件中的内容（注意：该文件应该存放键值对，一般XML文件），并返回由该键值对组成的NSMutableDictionary</li>
 <li>[loginDataList writeToFile:@”file name” atomically:YES];<br>该方法中的loginDataList是一个NSMutableDictionary,这个方法将键值对写入<code>@&quot;file name&quot;</code>这个文件中</li>
 </ol>
 <h2 id="账户输入提示框"><a href="#账户输入提示框" class="headerlink" title="账户输入提示框"></a>账户输入提示框</h2><p>效果如下图👇<br><img src="/lionheart/1603/easeinput.png" alt="easeinput demo"><br>实现该效果的步骤如下：</p>
@@ -351,40 +398,91 @@
 <li>将上一步创建的UITableView添加到输入账号，密码的UITableView中，并将提示框UITableView的位置定在账号的cell下面。</li>
 <li>至于两个UITableView的交互：当账号的cell中的UITextField内容发生变化时，调用提示框UITableView的一个block，传入当前UITextField的文本，对提示的内容进行实时的变换。</li>
 </ol>
-<h2 id="enumerateObjectsUsingBlock"><a href="#enumerateObjectsUsingBlock" class="headerlink" title="enumerateObjectsUsingBlock:"></a><code>enumerateObjectsUsingBlock:</code></h2><p><code>enumerateObjectsUsingBlock:</code>方法和<code>for-in</code>类似，具体代码如下👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">NSDictionary *dict = @&#123;@&quot;a&quot;: @&quot;1&quot;, @&quot;b&quot;: @&quot;2&quot;&#125;;</div><div class="line">[dict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) &#123;</div><div class="line">    NSLog(@&quot;key: %@, value: %@&quot;, key, obj);</div><div class="line">&#125;];</div></pre></td></tr></table></figure></p>
-<p>推荐使用<code>for-in</code>方法，快。</p>
+<h2 id="enumerateObjectsUsingBlock"><a href="#enumerateObjectsUsingBlock" class="headerlink" title="enumerateObjectsUsingBlock:"></a><code>enumerateObjectsUsingBlock:</code></h2><p><code>enumerateObjectsUsingBlock:</code>方法和<code>for-in</code>类似，具体代码如下👇</p>
+<pre><code>        NSDictionary *dict = @{@&quot;a&quot;: @&quot;1&quot;, @&quot;b&quot;: @&quot;2&quot;};
+        [dict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            NSLog(@&quot;key: %@, value: %@&quot;, key, obj);
+        }];
+</code></pre><p>推荐使用<code>for-in</code>方法，快。</p>
 <h2 id="2种UITableViewCell重用方式"><a href="#2种UITableViewCell重用方式" class="headerlink" title="2种UITableViewCell重用方式"></a>2种<code>UITableViewCell</code>重用方式</h2><p><code>UITableViewCell</code>有两种dequeueReuse方法：</p>
 <ol>
-<li><p><code>- (id)dequeueReusableCellWithIdentifier:(NSString *)identifier;</code><br>该方法是不用事先注册Cell，但是它可能返回nil；所以当返回nil时，需要重新init。示例代码如下👇</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">static NSString *CellIdentifier = @&quot;Cell&quot;;</div><div class="line">UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];</div><div class="line">if (cell == nil) &#123;</div><div class="line">    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p><code>- (id)dequeueReusableCellWithIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath;</code><br>该方法在iOS6中取代了第一种方法，它可以保证一定会返回UITableViewCell，但是在初始化UITableView时，需要进行UITableViewCell的注册，如下👇</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[_tableView registerClass:[CustomCell class] forCellReuseIdentifier:@&quot;Cell&quot;];</div></pre></td></tr></table></figure>
-<p>于是在重用UITableViewCell，不需要判断是否为nil，代码如下👇</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">CustomCell *cell = [tableView dequeueReusableCellWithIdentifier:@&quot;Cell&quot; forIndexPath:indexPath];</div></pre></td></tr></table></figure>
-</li>
+<li><code>- (id)dequeueReusableCellWithIdentifier:(NSString *)identifier;</code><br>该方法是不用事先注册Cell，但是它可能返回nil；所以当返回nil时，需要重新init。示例代码如下👇<pre><code>     static NSString *CellIdentifier = @&quot;Cell&quot;;
+     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+     if (cell == nil) {
+         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+     }
+</code></pre></li>
+<li><code>- (id)dequeueReusableCellWithIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath;</code><br>该方法在iOS6中取代了第一种方法，它可以保证一定会返回UITableViewCell，但是在初始化UITableView时，需要进行UITableViewCell的注册，如下👇<pre><code>     [_tableView registerClass:[CustomCell class] forCellReuseIdentifier:@&quot;Cell&quot;];
+</code></pre>于是在重用UITableViewCell，不需要判断是否为nil，代码如下👇<pre><code>     CustomCell *cell = [tableView dequeueReusableCellWithIdentifier:@&quot;Cell&quot; forIndexPath:indexPath];
+</code></pre></li>
 </ol>
-<h2 id="NSRange基础"><a href="#NSRange基础" class="headerlink" title="NSRange基础"></a><code>NSRange</code>基础</h2><p>NSRange是一个结构体，其定义如下👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">typedef struct _NSRange &#123;</div><div class="line">    NSUInteger location;</div><div class="line">    NSUInteger length;</div><div class="line">&#125; NSRange;</div></pre></td></tr></table></figure></p>
-<p>其中<code>location</code>表示起始位置，<code>length</code>表示长度。</p>
-<h2 id="CAShapeLayer基础"><a href="#CAShapeLayer基础" class="headerlink" title="CAShapeLayer基础"></a><code>CAShapeLayer</code>基础</h2><p><code>CAShapeLayer</code>继承自<code>CALayer</code>，它表示一个形状，有一个<code>path</code>属性用来描述该形状，然后可以对这个形状进行描边，填充等操作。示例代码如下👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">CAShapeLayer *layer = [CAShapeLayer layer];</div><div class="line">// 创建path, 给layer添加path, 释放path</div><div class="line">CGMutablePathRef pathRef = CGPathCreateMutable();</div><div class="line">CGRect bounds = CGRectInset(cell.bounds, 0, 0);</div><div class="line">CGPathAddRect(pathRef, nil, bounds);</div><div class="line">layer.path = pathRef;</div><div class="line">CFRelease(pathRef);</div><div class="line">// 对layer进行填充操作</div><div class="line">layer.fillColor = [UIColor colorWithWhite:1.0 alpha:0.8].CGColor;</div><div class="line">// 添加layer</div><div class="line">UIView *bgView = [[UIView alloc] initWithFrame:bounds];</div><div class="line">[bgView.layer addSublayer:layer];</div></pre></td></tr></table></figure></p>
-<h2 id="显示-隐藏导航栏"><a href="#显示-隐藏导航栏" class="headerlink" title="显示/隐藏导航栏"></a>显示/隐藏导航栏</h2><p>使用下列方法实现导航栏的显示或者隐藏<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (void)viewWillAppear:(BOOL)animated &#123;</div><div class="line">    [super viewWillAppear:animated];</div><div class="line">    // 隐藏导航栏，若Hidden设为NO，则显示导航栏</div><div class="line">    [self.navigationController setNavigationBarHidden:YES animated:YES];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="ViewController之间切换卡顿"><a href="#ViewController之间切换卡顿" class="headerlink" title="ViewController之间切换卡顿"></a>ViewController之间切换卡顿</h2><p>可能的原因：没有设置ViewController的backgroundColor＝。＝</p>
-<h2 id="SDWebImageOptions"><a href="#SDWebImageOptions" class="headerlink" title="SDWebImageOptions"></a><code>SDWebImageOptions</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">typedef NS_OPTIONS(NSUInteger, SDWebImageOptions) &#123;</div><div class="line">    SDWebImageRetryFailed = 1 &lt;&lt; 0,//下载失败了会再次尝试下载</div><div class="line">    WebImageLowPriority = 1 &lt;&lt; 1,//当UIScrollView等正在滚动时，延迟下载图片（放置scrollView滚动卡）</div><div class="line">    SDWebImageCacheMemoryOnly = 1 &lt;&lt; 2,//只缓存到内存中</div><div class="line">    SDWebImageProgressiveDownload = 1 &lt;&lt; 3,// 图片会边下边显示</div><div class="line">    SDWebImageRefreshCached = 1 &lt;&lt; 4,//将硬盘缓存交给系统自带的NSURLCache去处理</div><div class="line">    SDWebImageContinueInBackground = 1 &lt;&lt; 5,//后台下载</div><div class="line">    SDWebImageHandleCookies = 1 &lt;&lt; 6,// 通过设置NSMutableURLRequest.HTTPShouldHandleCookies = YES来处理存储在NSHTTPCookieStore中的cookie</div><div class="line">    SDWebImageAllowInvalidSSLCertificates = 1 &lt;&lt; 7,// 允许不受信任的SSL证书。主要用于测试目的。</div><div class="line">    SDWebImageHighPriority = 1 &lt;&lt; 8,</div><div class="line">    SDWebImageDelayPlaceholder = 1 &lt;&lt; 9,</div><div class="line">    SDWebImageTransformAnimatedImage = 1 &lt;&lt; 10,</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<h2 id="在category中新增property"><a href="#在category中新增property" class="headerlink" title="在category中新增property"></a>在<code>category</code>中新增<code>property</code></h2><p>正常情况下，在category中是不能新增property的，要按如下步骤进行＝。＝</p>
+<h2 id="NSRange基础"><a href="#NSRange基础" class="headerlink" title="NSRange基础"></a><code>NSRange</code>基础</h2><p>NSRange是一个结构体，其定义如下👇</p>
+<pre><code>        typedef struct _NSRange {
+            NSUInteger location;
+            NSUInteger length;
+        } NSRange;
+</code></pre><p>其中<code>location</code>表示起始位置，<code>length</code>表示长度。</p>
+<h2 id="CAShapeLayer基础"><a href="#CAShapeLayer基础" class="headerlink" title="CAShapeLayer基础"></a><code>CAShapeLayer</code>基础</h2><p><code>CAShapeLayer</code>继承自<code>CALayer</code>，它表示一个形状，有一个<code>path</code>属性用来描述该形状，然后可以对这个形状进行描边，填充等操作。示例代码如下👇</p>
+<pre><code>        CAShapeLayer *layer = [CAShapeLayer layer];
+        // 创建path, 给layer添加path, 释放path
+        CGMutablePathRef pathRef = CGPathCreateMutable();
+        CGRect bounds = CGRectInset(cell.bounds, 0, 0);
+        CGPathAddRect(pathRef, nil, bounds);
+        layer.path = pathRef;
+        CFRelease(pathRef);
+        // 对layer进行填充操作
+        layer.fillColor = [UIColor colorWithWhite:1.0 alpha:0.8].CGColor;
+        // 添加layer
+        UIView *bgView = [[UIView alloc] initWithFrame:bounds];
+        [bgView.layer addSublayer:layer];
+</code></pre><h2 id="显示-隐藏导航栏"><a href="#显示-隐藏导航栏" class="headerlink" title="显示/隐藏导航栏"></a>显示/隐藏导航栏</h2><p>使用下列方法实现导航栏的显示或者隐藏</p>
+<pre><code>        - (void)viewWillAppear:(BOOL)animated {
+            [super viewWillAppear:animated];
+            // 隐藏导航栏，若Hidden设为NO，则显示导航栏
+            [self.navigationController setNavigationBarHidden:YES animated:YES];
+        }
+</code></pre><h2 id="ViewController之间切换卡顿"><a href="#ViewController之间切换卡顿" class="headerlink" title="ViewController之间切换卡顿"></a>ViewController之间切换卡顿</h2><p>可能的原因：没有设置ViewController的backgroundColor＝。＝</p>
+<h2 id="SDWebImageOptions"><a href="#SDWebImageOptions" class="headerlink" title="SDWebImageOptions"></a><code>SDWebImageOptions</code></h2><pre><code>        typedef NS_OPTIONS(NSUInteger, SDWebImageOptions) {
+            SDWebImageRetryFailed = 1 &lt;&lt; 0,//下载失败了会再次尝试下载
+            WebImageLowPriority = 1 &lt;&lt; 1,//当UIScrollView等正在滚动时，延迟下载图片（放置scrollView滚动卡）
+            SDWebImageCacheMemoryOnly = 1 &lt;&lt; 2,//只缓存到内存中
+            SDWebImageProgressiveDownload = 1 &lt;&lt; 3,// 图片会边下边显示
+            SDWebImageRefreshCached = 1 &lt;&lt; 4,//将硬盘缓存交给系统自带的NSURLCache去处理
+            SDWebImageContinueInBackground = 1 &lt;&lt; 5,//后台下载
+            SDWebImageHandleCookies = 1 &lt;&lt; 6,// 通过设置NSMutableURLRequest.HTTPShouldHandleCookies = YES来处理存储在NSHTTPCookieStore中的cookie
+            SDWebImageAllowInvalidSSLCertificates = 1 &lt;&lt; 7,// 允许不受信任的SSL证书。主要用于测试目的。
+            SDWebImageHighPriority = 1 &lt;&lt; 8,
+            SDWebImageDelayPlaceholder = 1 &lt;&lt; 9,
+            SDWebImageTransformAnimatedImage = 1 &lt;&lt; 10,
+        };
+</code></pre><h2 id="在category中新增property"><a href="#在category中新增property" class="headerlink" title="在category中新增property"></a>在<code>category</code>中新增<code>property</code></h2><p>正常情况下，在category中是不能新增property的，要按如下步骤进行＝。＝</p>
 <ol>
-<li><p>导入头文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#import &lt;objc/runtime.h&gt;</div></pre></td></tr></table></figure>
-</li>
-<li><p>新增@property</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@property (nonatomic, strong) UIActivityIndicatorView *buttonIndicatorView;</div></pre></td></tr></table></figure>
-</li>
+<li>导入头文件<pre><code>     #import &lt;objc/runtime.h&gt;
+</code></pre></li>
+<li>新增@property<pre><code>     @property (nonatomic, strong) UIActivityIndicatorView *buttonIndicatorView;
+</code></pre></li>
 <li><p>自定义<code>setter</code>和<code>getter</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">static char EAButtonIndicatorViewKey;</div><div class="line"></div><div class="line">- (void)setButtonIndicatorView:(UIActivityIndicatorView *)buttonIndicatorView &#123;</div><div class="line">    objc_setAssociatedObject(self, &amp;EAButtonIndicatorViewKey, buttonIndicatorView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);  </div><div class="line">&#125;</div><div class="line"></div><div class="line">- (UIActivityIndicatorView *)buttonIndicatorView &#123;</div><div class="line">    return objc_getAssociatedObject(self, &amp;EAButtonIndicatorViewKey);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<pre><code>     static char EAButtonIndicatorViewKey;
+
+     - (void)setButtonIndicatorView:(UIActivityIndicatorView *)buttonIndicatorView {
+         objc_setAssociatedObject(self, &amp;EAButtonIndicatorViewKey, buttonIndicatorView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);  
+     }
+
+     - (UIActivityIndicatorView *)buttonIndicatorView {
+         return objc_getAssociatedObject(self, &amp;EAButtonIndicatorViewKey);
+     }
+</code></pre></li>
 </ol>
 <h2 id="用户名存储整个流程"><a href="#用户名存储整个流程" class="headerlink" title="用户名存储整个流程"></a>用户名存储整个流程</h2><p>参考这里</p>
-<h2 id="UIAlertController基础"><a href="#UIAlertController基础" class="headerlink" title="UIAlertController基础"></a><code>UIAlertController</code>基础</h2><p>从iOS8开始，<code>UIAlertController</code>开始替代<code>UIAlertAction</code>,先来看看UIAlertController的效果图👇<br><img src="/lionheart/1603/alertcontroller.png" alt="UIAlertController demo"><br>实现代码👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@&quot;提示&quot; message:@&quot;欢迎注册 Coding，请尽快去邮箱查收邮件并激活账号。如若在收件箱中未看到激活邮件，请留意一下垃圾邮件箱(T_T)。&quot; preferredStyle:UIAlertControllerStyleAlert];</div><div class="line">UIAlertAction *ok = [UIAlertAction actionWithTitle:@&quot;知道了&quot; style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) &#123;</div><div class="line">    [alertController dismissViewControllerAnimated:YES completion:nil];</div><div class="line">&#125;];</div><div class="line"></div><div class="line">[alertController addAction:ok];</div><div class="line">[self presentViewController:alertController animated:YES completion:nil];</div></pre></td></tr></table></figure></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<h2 id="UIAlertController基础"><a href="#UIAlertController基础" class="headerlink" title="UIAlertController基础"></a><code>UIAlertController</code>基础</h2><p>从iOS8开始，<code>UIAlertController</code>开始替代<code>UIAlertAction</code>,先来看看UIAlertController的效果图👇<br><img src="/lionheart/1603/alertcontroller.png" alt="UIAlertController demo"><br>实现代码👇</p>
+<pre><code>        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@&quot;提示&quot; message:@&quot;欢迎注册 Coding，请尽快去邮箱查收邮件并激活账号。如若在收件箱中未看到激活邮件，请留意一下垃圾邮件箱(T_T)。&quot; preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *ok = [UIAlertAction actionWithTitle:@&quot;知道了&quot; style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [alertController dismissViewControllerAnimated:YES completion:nil];
+        }];
+
+        [alertController addAction:ok];
+        [self presentViewController:alertController animated:YES completion:nil];
+</code></pre><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="http://blog.csdn.net/ryantang03/article/details/8622415" target="_blank" rel="external">iOS学习笔记42—利用dispatch_once创建单例</a></li>
 <li><a href="http://tutuge.me/2015/03/21/effective-objective-c-5-enum/" target="_blank" rel="external">Enum-枚举的正确使用-Effective-Objective-C-读书笔记-Item-5</a></li>
 <li><a href="http://blog.sunnyxx.com/2014/04/30/ios_iterator/" target="_blank" rel="external">ios中集合遍历方法的比较和技巧</a></li>
@@ -690,7 +788,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

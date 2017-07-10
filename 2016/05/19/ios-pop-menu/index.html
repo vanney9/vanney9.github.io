@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -291,8 +291,24 @@
 </li>
 </ol>
 <h2 id="按钮位置"><a href="#按钮位置" class="headerlink" title="按钮位置"></a>按钮位置</h2><p>先来看看按钮视图的最终位置👇<br><img src="/lionheart/1605/finalPosition.png" alt="finalPosition"><br>给每个视图定大小很简单：先定死高度为110，再根据每行放置几个按钮定义按钮的宽度(例如本文每行3个按钮，那就屏幕宽度除以3)；最后定义按钮在PopMenu视图中的位置，也就是它的左上角相对于主视图的坐标，这个稍加计算就可得出。<br>而每个按钮其实开始的位置是在屏幕上方的，那么每个按钮的起始位置也就是最终位置向上平移一个相同的量，直至移出屏幕上方为止。</p>
-<h2 id="下落动画"><a href="#下落动画" class="headerlink" title="下落动画"></a>下落动画</h2><p>仔细瞧瞧，每个按钮的下落动画是一样的，只是开始时间不同而已。所以这些按钮动画的设置只需用开始时间进行区分即可。这里的动画使用了<a href="https://github.com/facebook/pop" target="_blank" rel="external">POPAnimation</a>，它是Facebook的一个著名的开源库。<br>来看看动画的源代码👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (void)startAnimationFromPosition:(CGRect)from toPosition:(CGRect)to atView:(UIView *)view beginTime:(CFTimeInterval)beginTime &#123;</div><div class="line">    POPSpringAnimation *springAnimation = [POPSpringAnimation animation]; // 新建一个弹簧动画</div><div class="line">    springAnimation.property = [POPAnimatableProperty propertyWithName:kPOPViewFrame]; // 这个动画作用于View的Frame</div><div class="line">    springAnimation.removedOnCompletion = YES; // 动画执行结束后删除该动画</div><div class="line">    springAnimation.beginTime = beginTime + CACurrentMediaTime(); // 定义动画开始时间， 现在时间加上一个动画执行延迟</div><div class="line">    springAnimation.springBounciness = 6; // 定义弹簧动画弹动程度</div><div class="line">    springAnimation.springSpeed = 2; // 定义动画的速度</div><div class="line"></div><div class="line">    springAnimation.fromValue = [NSValue valueWithCGRect:from]; // 定义动画开始位置</div><div class="line">    springAnimation.toValue = [NSValue valueWithCGRect:to]; // 定义动画结束位置</div><div class="line"></div><div class="line">    [view pop_addAnimation:springAnimation forKey:@&quot;vanney9&quot;]; // 给视图添加该动画，这个视图就是上面的按钮视图</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 按钮调用动画</div><div class="line">[self startAnimationFromPosition:from toPosition:to atView:button beginTime:0.1 * index];</div></pre></td></tr></table></figure></p>
-<p>POPAnimation的使用很简单，首先定义动画要做什么，什么时候开始执行，动画的起始和结束位置等等。。。动画定义完成之后，将该动画附加到一个视图上面，这里就是将弹簧动画赋予按钮视图；然后每个按钮视图的动画的执行时间都是按一定间隔隔开的。这样就完成了上图所展示的效果。</p>
+<h2 id="下落动画"><a href="#下落动画" class="headerlink" title="下落动画"></a>下落动画</h2><p>仔细瞧瞧，每个按钮的下落动画是一样的，只是开始时间不同而已。所以这些按钮动画的设置只需用开始时间进行区分即可。这里的动画使用了<a href="https://github.com/facebook/pop" target="_blank" rel="external">POPAnimation</a>，它是Facebook的一个著名的开源库。<br>来看看动画的源代码👇</p>
+<pre><code>        - (void)startAnimationFromPosition:(CGRect)from toPosition:(CGRect)to atView:(UIView *)view beginTime:(CFTimeInterval)beginTime {
+            POPSpringAnimation *springAnimation = [POPSpringAnimation animation]; // 新建一个弹簧动画
+            springAnimation.property = [POPAnimatableProperty propertyWithName:kPOPViewFrame]; // 这个动画作用于View的Frame
+            springAnimation.removedOnCompletion = YES; // 动画执行结束后删除该动画
+            springAnimation.beginTime = beginTime + CACurrentMediaTime(); // 定义动画开始时间， 现在时间加上一个动画执行延迟
+            springAnimation.springBounciness = 6; // 定义弹簧动画弹动程度
+            springAnimation.springSpeed = 2; // 定义动画的速度
+
+            springAnimation.fromValue = [NSValue valueWithCGRect:from]; // 定义动画开始位置
+            springAnimation.toValue = [NSValue valueWithCGRect:to]; // 定义动画结束位置
+
+            [view pop_addAnimation:springAnimation forKey:@&quot;vanney9&quot;]; // 给视图添加该动画，这个视图就是上面的按钮视图
+        }
+
+        // 按钮调用动画
+        [self startAnimationFromPosition:from toPosition:to atView:button beginTime:0.1 * index];
+</code></pre><p>POPAnimation的使用很简单，首先定义动画要做什么，什么时候开始执行，动画的起始和结束位置等等。。。动画定义完成之后，将该动画附加到一个视图上面，这里就是将弹簧动画赋予按钮视图；然后每个按钮视图的动画的执行时间都是按一定间隔隔开的。这样就完成了上图所展示的效果。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://github.com/xhzengAIB/PopMenu" target="_blank" rel="external">PopMenu</a></li>
 <li><a href="https://github.com/facebook/pop" target="_blank" rel="external">Facebook POP开源库</a></li>
@@ -594,7 +610,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

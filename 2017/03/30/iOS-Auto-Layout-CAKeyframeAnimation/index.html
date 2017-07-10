@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -307,13 +307,29 @@
 <li><strong>在计算出每个layer的frame属性时，才开始准备Animation的参数。所以不存在基于Auto Layout的动画；指定动画属性时，还是指定与view的frame相关的属性</strong></li>
 </ol>
 <h2 id="普通的基于-Auto-Layout-的动画"><a href="#普通的基于-Auto-Layout-的动画" class="headerlink" title="普通的基于 Auto Layout 的动画"></a>普通的基于 Auto Layout 的动画</h2><p><a href="http://stackoverflow.com/questions/12622424/how-do-i-animate-constraint-changes" target="_blank" rel="external">How do I animate constraint changes?</a> 这个stackoverflow的问题探讨了如何通过改变约束来使视图动画</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (void)moveBannerOffScreen &#123;</div><div class="line">  	[self.view layoutIfNeeded]; // 0</div><div class="line">    _addBannerDistanceFromBottomConstraint.constant = -32;  // 1</div><div class="line">  	// [sel.view layoutIfNeeded]; // 注释3</div><div class="line">    [UIView animateWithDuration:5</div><div class="line">        animations:^&#123;</div><div class="line">            [self.view layoutIfNeeded]; // 2</div><div class="line">        &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">- (void)moveBannerOffScreen {
+      [self.view layoutIfNeeded]; // 0
+    _addBannerDistanceFromBottomConstraint.constant = -32;  // 1
+      // [sel.view layoutIfNeeded]; // 注释3
+    [UIView animateWithDuration:5
+        animations:^{
+            [self.view layoutIfNeeded]; // 2
+        }];
+}
+</code></pre>
 <p>注释0：<strong>先强行计算出每个view的动画开始前的frame</strong></p>
 <p>注释1：先更改约束条件，也就是指定动画结束之后，UIView该显示的位置。<strong>但是此时并没有计算出view的最终的frame</strong></p>
 <p>注释2：<strong>先记录动画初始位置</strong>；然后在动画中执行<strong>layoutIfNeeded</strong>，强行执行Layout步骤，计算出每个view的结束位置的frame，也就是动画的终止的frame</p>
 <p>注释3：如果在这里执行<code>layoutIfNeeded</code>的话，就会强行计算出每个view的最终的frame，那么动画会将该frame记为初始位置。那么<strong>初始位置和结束位置相同，直接跳到最终的位置</strong></p>
 <p>可以这么理解：执行完这一个函数后，开始下一帧的绘制；这个时候真实的view已经绘制在最终该显示的位置了，但是被屏幕最上方的Animation的view给遮挡了；这个Animation View从上一帧的状态开始，动画到最终的位置（有待商榷）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// 相对比的UIView animate</div><div class="line">&#123;</div><div class="line">  	view.center = pointA; // 此时已经改变了view的frame，**计算动画的初始位置**</div><div class="line">  	[UIView animateWithDuration:0.5 animations:^&#123;</div><div class="line">      	view.center = pointB; // 计算view的最终frame， **计算动画的结束位置**</div><div class="line">  	&#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">// 相对比的UIView animate
+{
+      view.center = pointA; // 此时已经改变了view的frame，**计算动画的初始位置**
+      [UIView animateWithDuration:0.5 animations:^{
+          view.center = pointB; // 计算view的最终frame， **计算动画的结束位置**
+      }];
+}
+</code></pre>
 <h2 id="在Auto-Layout-视图中获取bound"><a href="#在Auto-Layout-视图中获取bound" class="headerlink" title="在Auto Layout 视图中获取bound"></a>在Auto Layout 视图中获取bound</h2><p>说说方法：</p>
 <ol>
 <li>设要获取frame的视图为a，新建一个a的子视图b，使用Auto Layout将b的四边与a对齐</li>
@@ -327,15 +343,45 @@
 <li><p>图中的曲线使用UIBezier来画，那么就需要确定的坐标点，也就是需要知道曲线所在的视图的View。那么在<code>-drawRect:</code> 中画UIBezierPath，刚好可以知道view的bound</p>
 </li>
 <li><p>已经得到path之后，使用CAKeyframeAnimation来动画</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">// 先设定2个CAKeyframeAnimation</div><div class="line">CAKeyframeAnimation *animation1 = [CAKeyframeAnimation animation];</div><div class="line">animation1.keyPath = @&quot;position&quot;;</div><div class="line">animation1.path = animation1Path.CGPath;</div><div class="line">animation1.duration = 0.5f;</div><div class="line">animation1.removedOnCompletion = NO;</div><div class="line"></div><div class="line">CAKeyframeAnimation *animation2 = [CAKeyframeAnimation animation];</div><div class="line">animation2.keyPath = @&quot;position&quot;;</div><div class="line">animation2.path = animation2Path.CGPath;</div><div class="line">animation2.duration = 0.5f;</div><div class="line">animation2.removedOnCompletion = NO;</div><div class="line"></div><div class="line">// 更新两个circle的约束</div><div class="line">[self.circle1 updateConstraint]；</div><div class="line">[self.circle2 updateConstraint]；</div><div class="line">  </div><div class="line">// 执行动画</div><div class="line">[CATransaction begin];</div><div class="line">[self.circle1.layer addAnimation:consultationKeyAnimation forKey:@&quot;circle1&quot;];</div><div class="line">[self.circle2.layer addAnimation:followupKeyAnimation forKey:@&quot;circle2&quot;];</div><div class="line">[CATransaction commit];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">// 先设定2个CAKeyframeAnimation
+CAKeyframeAnimation *animation1 = [CAKeyframeAnimation animation];
+animation1.keyPath = @&quot;position&quot;;
+animation1.path = animation1Path.CGPath;
+animation1.duration = 0.5f;
+animation1.removedOnCompletion = NO;
+
+CAKeyframeAnimation *animation2 = [CAKeyframeAnimation animation];
+animation2.keyPath = @&quot;position&quot;;
+animation2.path = animation2Path.CGPath;
+animation2.duration = 0.5f;
+animation2.removedOnCompletion = NO;
+
+// 更新两个circle的约束
+[self.circle1 updateConstraint]；
+[self.circle2 updateConstraint]；
+
+// 执行动画
+[CATransaction begin];
+[self.circle1.layer addAnimation:consultationKeyAnimation forKey:@&quot;circle1&quot;];
+[self.circle2.layer addAnimation:followupKeyAnimation forKey:@&quot;circle2&quot;];
+[CATransaction commit];
+</code></pre>
 <p>关于CATransaction：在第一次动画没执行完的时候，立刻开始同一个transaction，会强制让第一个transaction的动画立刻结束到终点（也就是去掉Animation View的遮挡），再立刻开始第二个transaction的动画</p>
 <h2 id="Auto-Layout-百分比布局"><a href="#Auto-Layout-百分比布局" class="headerlink" title="Auto Layout 百分比布局"></a>Auto Layout 百分比布局</h2><p>这里无主题无关。</p>
 <p><a href="http://liumh.com/2015/09/27/ios-autolayout-multiplier/" target="_blank" rel="external">iOS AutoLayout 百分比布局</a> 这边文章谈到了Auto Layout百分比布局的问题，讲的很好。说一个里面的例子：子视图b的leading要与父视图a的leading之间隔20%的宽度</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">b.leading = a.trailing * 0.2</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">b.leading = a.trailing * 0.2
+</code></pre>
 <p>使用Masonry</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[b mas_makeConstraints:^(MASConstraintMaker *make) &#123;</div><div class="line">	make.leading.equalTo(a.mas_trailing).multipliedBy(0.2);</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">[b mas_makeConstraints:^(MASConstraintMaker *make) {
+    make.leading.equalTo(a.mas_trailing).multipliedBy(0.2);
+}];
+</code></pre>
 <p>可以这么理解：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">a.leading = 0;</div><div class="line">a.trailing = a.width;</div><div class="line">a.trailing * 0.2 = a.width * 0.2;</div><div class="line">b.leading - a.leading = 0.2 * a.width - 0 = 0.2 * a.width</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">a.leading = 0;
+a.trailing = a.width;
+a.trailing * 0.2 = a.width * 0.2;
+b.leading - a.leading = 0.2 * a.width - 0 = 0.2 * a.width
+</code></pre>
 </li>
 </ol>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
@@ -640,7 +686,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

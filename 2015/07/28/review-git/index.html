@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -285,33 +285,36 @@
             <div class="entry teal-link-context">
                 <p>　　今天，在<a href="www.coding.net">coding.net</a>上面，自己见了一个项目来熟悉git的基本操作。并没有用到github，主要使用的是coding.net来托管代码。<br>　　最主要的参考资料是阮一峰大神的一篇博客：<a href="http://www.ruanyifeng.com/blog/2014/06/git_remote.html" target="_blank" rel="external">Git远程操作详解</a><br>　　下面对今天的一系列操作做个记录，以便以后使用。<br><a id="more"></a></p>
 <h4 id="在coding-net上面新建项目"><a href="#在coding-net上面新建项目" class="headerlink" title="在coding.net上面新建项目"></a>在coding.net上面新建项目</h4><ol>
-<li>在coding.net上面添加ssh公钥<pre><code>$ cd ~/.ssh
-$ ssh-keygen
+<li>在coding.net上面添加ssh公钥<pre><code> $ cd ~/.ssh
+ $ ssh-keygen
 </code></pre>将生成的id_rsa.pub复制，添加到coding.net，参考<a href="http://segmentfault.com/a/1190000002737818" target="_blank" rel="external"> 将公钥部署到远程Git仓库（coding.net）</a></li>
 <li>新建项目</li>
 </ol>
-<h4 id="本地拷贝远程仓库"><a href="#本地拷贝远程仓库" class="headerlink" title="本地拷贝远程仓库"></a>本地拷贝远程仓库</h4><pre><code>$ git clone https://git.coding.net/xxx/xxx.git
+<h4 id="本地拷贝远程仓库"><a href="#本地拷贝远程仓库" class="headerlink" title="本地拷贝远程仓库"></a>本地拷贝远程仓库</h4><pre><code>    $ git clone https://git.coding.net/xxx/xxx.git
 </code></pre><h4 id="本地添加代码，并提交到coding"><a href="#本地添加代码，并提交到coding" class="headerlink" title="本地添加代码，并提交到coding"></a>本地添加代码，并提交到coding</h4><ol>
-<li>在本地新建一个文档，(example:README.md)，由于远程仓库是空的，所以进行第一次提交时，需要执行：<pre><code>$ git add README.md
-$ git commit -m &apos;first commit&apos;
-$ git push origin master #git push &lt;远程主机名&gt; &lt;本地分支&gt;:&lt;远程分支&gt;
+<li>在本地新建一个文档，(example:README.md)，由于远程仓库是空的，所以进行第一次提交时，需要执行：<pre><code> $ git add README.md
+ $ git commit -m &#39;first commit&#39;
+ $ git push origin master #git push &lt;远程主机名&gt; &lt;本地分支&gt;:&lt;远程分支&gt;
 </code></pre>这样就完成了第一次提交，也在本地和远端都建立了一个master分支</li>
-<li>将本地和远程的相同分支建立追踪：<pre><code>$ git branch --set-upstream-to=origin/master master
-</code></pre>这样以后只需要执行：<pre><code>$ git pull OR git push
-</code></pre>而不用执行如下繁琐命令：<pre><code>$ git pull &lt;远程主机&gt; &lt;远程分支&gt;:&lt;本地分支&gt; OR git push &lt;远程主机&gt; &lt;本地分支&gt;:&lt;远程分支&gt;
+<li>将本地和远程的相同分支建立追踪：<pre><code> $ git branch --set-upstream-to=origin/master master
+</code></pre>这样以后只需要执行：<pre><code> $ git pull OR git push
+</code></pre>而不用执行如下繁琐命令：<pre><code> $ git pull &lt;远程主机&gt; &lt;远程分支&gt;:&lt;本地分支&gt; OR git push &lt;远程主机&gt; &lt;本地分支&gt;:&lt;远程分支&gt;
 </code></pre>注意： 上述繁琐语句中的冒号后面的内容一般可以省略，因为远程分支和本地分支一般名字相同</li>
-<li>每次pull或是push是都需要输入username和密码，可以在.git文件夹下面修改config文件。<pre><code>url = https://[your username]:[your password]@git.coding.net/xxx/xxx.git
+<li>每次pull或是push是都需要输入username和密码，可以在.git文件夹下面修改config文件。<pre><code> url = https://[your username]:[your password]@git.coding.net/xxx/xxx.git
 </code></pre></li>
 </ol>
 <h4 id="新建分支"><a href="#新建分支" class="headerlink" title="新建分支"></a>新建分支</h4><ul>
-<li>在coding.net上面新建一个dev分支，与当前的master一致，在本地通过如下代码将其拷贝下来：<pre><code>$ git branch dev  //新建本地dev分支
-$ git checkout dev //切换到本地dev分支
-$ git pull origin dev //拷贝远程dev分支到本地dev分支
-$ git branch --set-upstream-to=origin/dev dev //建立dev分支追踪
+<li>在coding.net上面新建一个dev分支，与当前的master一致，在本地通过如下代码将其拷贝下来：<pre><code> $ git branch dev  //新建本地dev分支
+ $ git checkout dev //切换到本地dev分支
+ $ git pull origin dev //拷贝远程dev分支到本地dev分支
+ $ git branch --set-upstream-to=origin/dev dev //建立dev分支追踪
 </code></pre>通过这种方式实现本地dev分支和远端dev分支的同步；并且，由于建了追踪的原因，之后在dev分支下面的pull和push操作也只需要git pull和git push就行。</li>
 </ul>
-<h4 id="本地新建分支，追踪远端分支"><a href="#本地新建分支，追踪远端分支" class="headerlink" title="本地新建分支，追踪远端分支"></a>本地新建分支，追踪远端分支</h4><p>还有一种情况就是：远端现在与master和dev两个分支，而本地只有master分支；如何在本地创建dev分支，并让他追踪远端dev分支呢？👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git fetch				// 检查远端分支更新</div><div class="line">git branch --track dev origin/dev	// 本地创建dev分支并追踪远端origin/dev分支</div><div class="line">git checkout dev				// 切换到dev分支</div></pre></td></tr></table></figure></p>
-<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><ul>
+<h4 id="本地新建分支，追踪远端分支"><a href="#本地新建分支，追踪远端分支" class="headerlink" title="本地新建分支，追踪远端分支"></a>本地新建分支，追踪远端分支</h4><p>还有一种情况就是：远端现在与master和dev两个分支，而本地只有master分支；如何在本地创建dev分支，并让他追踪远端dev分支呢？👇</p>
+<pre><code>                git fetch                // 检查远端分支更新
+                git branch --track dev origin/dev    // 本地创建dev分支并追踪远端origin/dev分支
+                git checkout dev                // 切换到dev分支
+</code></pre><h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><ul>
 <li><a href="http://www.ruanyifeng.com/blog/2014/06/git_remote.html" target="_blank" rel="external">Git远程操作详解</a></li>
 <li><a href="http://stackoverflow.com/questions/11262703/track-a-new-remote-branch-created-on-github" target="_blank" rel="external">Track a new remote branch created on GitHub</a></li>
 </ul>
@@ -612,7 +615,7 @@ $ git branch --set-upstream-to=origin/dev dev //建立dev分支追踪
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

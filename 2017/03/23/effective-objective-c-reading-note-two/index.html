@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -291,7 +291,22 @@
 <li><p>注意一点，声明delegate的时候，要声明成weak类型的。避免循环引用。</p>
 </li>
 <li><p>通常将：委托对象是否可以响应协议中的某个方法 这一信息缓存起来。之后就不需要一直查询该对象是否响应该方法了。缓存可以使用<strong>位段</strong>来实现。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">@interface Example() &#123;</div><div class="line">  	struct &#123;</div><div class="line">      	unsigned int didReceiveData : 1;</div><div class="line">      	unsigned int didFailWithError : 1;</div><div class="line">  	&#125; _delegateFlags;</div><div class="line">&#125;</div><div class="line">@end</div><div class="line"></div><div class="line">@implementation Example</div><div class="line">- (void)setDelegate:(id&lt;ExampleDelegate&gt;)delegate &#123;</div><div class="line">  	_delegate = delegate;</div><div class="line">  	_delegateFlags.didReceiveData = [delegate respondsToSelector:@selector(didReceiveData:)];</div><div class="line">  	_delegateFlags.didFailWithError = [delegate respondsToSelector:@selector(didFailWithError:)];</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">@interface Example() {
+      struct {
+          unsigned int didReceiveData : 1;
+          unsigned int didFailWithError : 1;
+      } _delegateFlags;
+}
+@end
+
+@implementation Example
+- (void)setDelegate:(id&lt;ExampleDelegate&gt;)delegate {
+      _delegate = delegate;
+      _delegateFlags.didReceiveData = [delegate respondsToSelector:@selector(didReceiveData:)];
+      _delegateFlags.didFailWithError = [delegate respondsToSelector:@selector(didFailWithError:)];
+}
+@end
+</code></pre>
 <p>在调用delegate时，就不需要判断delegate是否响应某方法了，只需要看_delegateFlags里面的字段就可以了</p>
 </li>
 </ol>
@@ -312,7 +327,10 @@
 <li><p>将分类中的方法加入既有类的方法列表是在runtime加载分类的时候。这就有一个问题了，如果分类中的方法名和既有类原始方法同名，那么会覆盖原始方法的实现</p>
 </li>
 <li><p>基于上述问题，就要加前缀</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@interface NSString (ABC_HTTP)</div><div class="line">- (NSString *)abc_method;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">@interface NSString (ABC_HTTP)
+- (NSString *)abc_method;
+@end
+</code></pre>
 </li>
 </ol>
 <h3 id="勿在分类中声明属性"><a href="#勿在分类中声明属性" class="headerlink" title="勿在分类中声明属性"></a>勿在分类中声明属性</h3><ol>
@@ -323,19 +341,38 @@
 <li><p>这种分类与普通的分类不同。其实我们一直在使用这个分类。。。</p>
 </li>
 <li><p>这个分类是唯一能正常的声明实例变量的分类，他必须写在实现文件中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">@interface EOCPerson() &#123;</div><div class="line">  	NSString *_instanceVariable; // 实例变量</div><div class="line">&#125;</div><div class="line">@property (nonatomic, strong) NSString *pro; // 属性</div><div class="line">- (void)p_someMethod; // 声明私有方法</div><div class="line">@end</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">@interface EOCPerson() {
+      NSString *_instanceVariable; // 实例变量
+}
+@property (nonatomic, strong) NSString *pro; // 属性
+- (void)p_someMethod; // 声明私有方法
+@end
+</code></pre>
 </li>
 <li><p>虽然不要求声明私有方法，但是最好这样做</p>
 </li>
 <li><p>如果只是私有的遵循某协议的话，也需放在该分类中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@interface EOCPerson () &lt;EOCSecretDelegate&gt;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">@interface EOCPerson () &lt;EOCSecretDelegate&gt;
+@end
+</code></pre>
 </li>
 </ol>
 <h3 id="通过协议提供匿名对象"><a href="#通过协议提供匿名对象" class="headerlink" title="通过协议提供匿名对象"></a>通过协议提供匿名对象</h3><ol>
 <li><p><code>id&lt;EOCPersonDelegate&gt; delegate;</code> 这个delegate就是匿名对象，不需要关心对象是什么类型，只要他遵循该协议就可以了</p>
 </li>
 <li><p>使用这个还可以返回多个基类不是相同的类，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">@protocal EOCDBConnection</div><div class="line">- (void)connect;</div><div class="line">- (void)disconnect;</div><div class="line">- (BOOL)isConnect;</div><div class="line">- (NSArray *)performQuery:(NSString *)query;</div><div class="line">@end</div><div class="line"></div><div class="line">@interface EOCManager : NSObject</div><div class="line">+ (id)sharedInstance;</div><div class="line">- (id&lt;EOCDBConnection&gt;)connectionWithIdentifier:(NSString *)identifier;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">@protocal EOCDBConnection
+- (void)connect;
+- (void)disconnect;
+- (BOOL)isConnect;
+- (NSArray *)performQuery:(NSString *)query;
+@end
+
+@interface EOCManager : NSObject
++ (id)sharedInstance;
+- (id&lt;EOCDBConnection&gt;)connectionWithIdentifier:(NSString *)identifier;
+@end
+</code></pre>
 <p>上面这个例子用来实现数据库的连接，不管是连接何种类型的数据库（Mysql，SQLite，PostreSQL）等等，都可以使用<code>connectionWithIdentifier:</code>方法。</p>
 <p>这个方法底层的实现：根据不同的identifier，选择性的返回与连接 Mysql或是SQLite或是PostreSQL 相关的对象，可能返回的对象叫做 MySQLManager, SQLiteManager, PostreSQLManager。 这些对象因为可能是来自3种第三方库的，所以不会有相同的基类，但是只要他们实现了delegate的方法，都可以这样返回。</p>
 <p>这样做：既保证了接口的简介，又隐藏了底层的实现</p>
@@ -638,7 +675,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");

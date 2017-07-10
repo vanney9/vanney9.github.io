@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
     
-        <link rel="stylesheet" href="/css/lib/prettify-tomorrow-night-eighties.css" type="text/css">
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
     
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
@@ -293,22 +293,89 @@
 <h3 id="OpenGL-ES-渲染"><a href="#OpenGL-ES-渲染" class="headerlink" title="OpenGL ES 渲染"></a>OpenGL ES 渲染</h3><p>关于在iOS上使用OpenGL ES渲染，可以借助iOS的GLKit框架。他大大简化了OpenGL ES的使用难度。而渲染的主要步骤分成以下几步：</p>
 <h4 id="使用GLKit初始化"><a href="#使用GLKit初始化" class="headerlink" title="使用GLKit初始化"></a>使用GLKit初始化</h4><p>创建GLKViewController和GLKView，OpenGL ES渲染的结果将会显示在GLKView的layer上面。而将GLKViewController设置成GLKView的delegate，他会控制整个的渲染流程，比如每秒渲染多少次，何时开始渲染等等</p>
 <h4 id="设置GLKView的context属性"><a href="#设置GLKView的context属性" class="headerlink" title="设置GLKView的context属性"></a>设置GLKView的context属性</h4><p>OpenGL ES渲染的时候需要一个上下文，也就是GLKView的context，对于他的设置如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">view.context = [[EAGLContext alloc]initWithAPI:kEAGLRenderingAPIOpenGLES3];</div><div class="line">[EAGLContext setCurrentContext:view.context];</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">view.context = [[EAGLContext alloc]initWithAPI:kEAGLRenderingAPIOpenGLES3];
+[EAGLContext setCurrentContext:view.context];
+</code></pre>
 <p>这里创建context是使用OpenGL ES的基石，就相当于你使用GLFW和GLEW对整个环境进行初始化，定义viewport之类的</p>
 <h4 id="设置OpenGL-ES"><a href="#设置OpenGL-ES" class="headerlink" title="设置OpenGL ES"></a>设置OpenGL ES</h4><p>设置OpenGL ES的代码和OpenGL的基本相似。</p>
 <ol>
 <li><p>创建shader程序：也就是对你写的glsl文件进行编译链接，最终持有一个Shader programe。代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line">// load glsl file</div><div class="line">NSString *vertexFile = [[NSBundle mainBundle] pathForResource:vertexPath ofType:@&quot;glsl&quot;];</div><div class="line">NSString *fragmentFile = [[NSBundle mainBundle] pathForResource:fragmentPath ofType:@&quot;glsl&quot;];</div><div class="line"></div><div class="line">NSError *error;</div><div class="line"></div><div class="line">NSString *vertexString = [NSString stringWithContentsOfFile:vertexFile encoding:NSUTF8StringEncoding error:&amp;error];</div><div class="line">if (!vertexString) &#123;</div><div class="line">  NSLog(@&quot;vanney code log : error loading vertex shader : %@&quot;, error.localizedDescription);</div><div class="line">  exit(1);</div><div class="line">&#125;</div><div class="line"></div><div class="line">NSString *fragmentString = [NSString stringWithContentsOfFile:fragmentFile encoding:NSUTF8StringEncoding error:&amp;error];</div><div class="line">if (!fragmentString) &#123;</div><div class="line">  NSLog(@&quot;vanney code log : error loading fragment shader : %@&quot;, error.localizedDescription);</div><div class="line">  exit(1);</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">// compiler</div><div class="line">GLuint vertexShader, fragmentShader;</div><div class="line">GLint compilerSuccess, linkSuccess;</div><div class="line">GLchar messages[512];</div><div class="line"></div><div class="line">vertexShader = glCreateShader(GL_VERTEX_SHADER);</div><div class="line">const GLchar *vertexStringUTF8 = [vertexString UTF8String];</div><div class="line">glShaderSource(vertexShader, 1, &amp;vertexStringUTF8, NULL);</div><div class="line">glCompileShader(vertexShader);</div><div class="line">glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &amp;compilerSuccess);</div><div class="line">if (compilerSuccess == GL_FALSE) &#123;</div><div class="line">  glGetShaderInfoLog(vertexShader, sizeof(messages), NULL, messages);</div><div class="line">  NSLog(@&quot;vanney code log : compile vertex shader error : %@&quot;, [NSString stringWithUTF8String:messages]);</div><div class="line">  exit(1);</div><div class="line">&#125;</div><div class="line"></div><div class="line">fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);</div><div class="line">const GLchar *fragmentStringUTF8 = [fragmentString UTF8String];</div><div class="line">glShaderSource(fragmentShader, 1, &amp;fragmentStringUTF8, NULL);</div><div class="line">glCompileShader(fragmentShader);</div><div class="line">glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &amp;compilerSuccess);</div><div class="line">if (compilerSuccess == GL_FALSE) &#123;</div><div class="line">  glGetShaderInfoLog(fragmentShader, sizeof(messages), NULL, messages);</div><div class="line">  NSLog(@&quot;vanney code log : compile fragment shader error : %@&quot;, [NSString stringWithUTF8String:messages]);</div><div class="line">  exit(1);</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">// link</div><div class="line">self.program = glCreateProgram();</div><div class="line">glAttachShader(self.program, vertexShader);</div><div class="line">glAttachShader(self.program, fragmentShader);</div><div class="line">glLinkProgram(self.program);</div><div class="line">glGetProgramiv(self.program, GL_LINK_STATUS, &amp;linkSuccess);</div><div class="line">if (linkSuccess == GL_FALSE) &#123;</div><div class="line">  glGetProgramInfoLog(self.program, sizeof(messages), NULL, messages);</div><div class="line">  NSLog(@&quot;vanney code log : link shader error : %@&quot;, [NSString stringWithUTF8String:messages]);</div><div class="line">  exit(1);</div><div class="line">&#125;</div><div class="line"></div><div class="line">glDeleteShader(vertexShader);</div><div class="line">glDeleteShader(fragmentShader);</div></pre></td></tr></table></figure>
-<p>​</p>
+<p>````objective-c<br>// load glsl file<br>NSString <em>vertexFile = [[NSBundle mainBundle] pathForResource:vertexPath ofType:@”glsl”];<br>NSString </em>fragmentFile = [[NSBundle mainBundle] pathForResource:fragmentPath ofType:@”glsl”];</p>
+<p>NSError *error;</p>
+<p>NSString *vertexString = [NSString stringWithContentsOfFile:vertexFile encoding:NSUTF8StringEncoding error:&amp;error];<br>if (!vertexString) {<br>  NSLog(@”vanney code log : error loading vertex shader : %@”, error.localizedDescription);<br>  exit(1);<br>}</p>
+<p>NSString *fragmentString = [NSString stringWithContentsOfFile:fragmentFile encoding:NSUTF8StringEncoding error:&amp;error];<br>if (!fragmentString) {<br>  NSLog(@”vanney code log : error loading fragment shader : %@”, error.localizedDescription);<br>  exit(1);<br>}</p>
 </li>
-<li><p>设置各种和顶点相关的缓冲，在缓冲中写入顶点数据，以及定义好GPU如何对这些顶点数据进行读取等等，代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">// initialize vertex data</div><div class="line">glGenVertexArrays(1, &amp;VAO);</div><div class="line">glGenBuffers(1, &amp;VBO);</div><div class="line">//glGenBuffers(1, &amp;VEO);</div><div class="line"></div><div class="line">glBindVertexArray(VAO);</div><div class="line">glBindBuffer(GL_ARRAY_BUFFER, VBO);</div><div class="line">glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);</div><div class="line">//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.VEO);</div><div class="line">//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);</div><div class="line">glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *) 0);</div><div class="line">glEnableVertexAttribArray(GLKVertexAttribPosition);</div><div class="line">glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *) (3 * sizeof(GLfloat)));</div><div class="line">glEnableVertexAttribArray(GLKVertexAttribTexCoord0);</div><div class="line">glBindVertexArray(0);</div></pre></td></tr></table></figure>
-</li>
+</ol>
+<p>   // compiler<br>   GLuint vertexShader, fragmentShader;<br>   GLint compilerSuccess, linkSuccess;<br>   GLchar messages[512];</p>
+<p>   vertexShader = glCreateShader(GL_VERTEX_SHADER);<br>   const GLchar *vertexStringUTF8 = [vertexString UTF8String];<br>   glShaderSource(vertexShader, 1, &amp;vertexStringUTF8, NULL);<br>   glCompileShader(vertexShader);<br>   glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &amp;compilerSuccess);<br>   if (compilerSuccess == GL_FALSE) {<br>     glGetShaderInfoLog(vertexShader, sizeof(messages), NULL, messages);<br>     NSLog(@”vanney code log : compile vertex shader error : %@”, [NSString stringWithUTF8String:messages]);<br>     exit(1);<br>   }</p>
+<p>   fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);<br>   const GLchar *fragmentStringUTF8 = [fragmentString UTF8String];<br>   glShaderSource(fragmentShader, 1, &amp;fragmentStringUTF8, NULL);<br>   glCompileShader(fragmentShader);<br>   glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &amp;compilerSuccess);<br>   if (compilerSuccess == GL_FALSE) {<br>     glGetShaderInfoLog(fragmentShader, sizeof(messages), NULL, messages);<br>     NSLog(@”vanney code log : compile fragment shader error : %@”, [NSString stringWithUTF8String:messages]);<br>     exit(1);<br>   }</p>
+<p>   // link<br>   self.program = glCreateProgram();<br>   glAttachShader(self.program, vertexShader);<br>   glAttachShader(self.program, fragmentShader);<br>   glLinkProgram(self.program);<br>   glGetProgramiv(self.program, GL_LINK_STATUS, &amp;linkSuccess);<br>   if (linkSuccess == GL_FALSE) {<br>     glGetProgramInfoLog(self.program, sizeof(messages), NULL, messages);<br>     NSLog(@”vanney code log : link shader error : %@”, [NSString stringWithUTF8String:messages]);<br>     exit(1);<br>   }</p>
+<p>   glDeleteShader(vertexShader);<br>   glDeleteShader(fragmentShader);</p>
+<pre><code>
+   ​
+
+2. 设置各种和顶点相关的缓冲，在缓冲中写入顶点数据，以及定义好GPU如何对这些顶点数据进行读取等等，代码如下：
+
+   ````objective-c
+   // initialize vertex data
+   glGenVertexArrays(1, &amp;VAO);
+   glGenBuffers(1, &amp;VBO);
+   //glGenBuffers(1, &amp;VEO);
+
+   glBindVertexArray(VAO);
+   glBindBuffer(GL_ARRAY_BUFFER, VBO);
+   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.VEO);
+   //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+   glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *) 0);
+   glEnableVertexAttribArray(GLKVertexAttribPosition);
+   glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *) (3 * sizeof(GLfloat)));
+   glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+   glBindVertexArray(0);
+</code></pre><ol>
 <li><p>设置各种纹理缓冲，注意这里要使用 <code>GLKit的GLKTextureLoader</code> 和 <code>GLKTextureInfo</code> ，代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">NSError *error;</div><div class="line">NSString *containerPath = [[NSBundle mainBundle] pathForResource:@&quot;container&quot; ofType:@&quot;jpg&quot;];</div><div class="line">self.containerTexture = [GLKTextureLoader textureWithContentsOfFile:containerPath options:nil error:&amp;error];</div><div class="line">glActiveTexture(GL_TEXTURE0);</div><div class="line">glBindTexture(self.containerTexture.target, self.containerTexture.name);</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">NSError *error;
+NSString *containerPath = [[NSBundle mainBundle] pathForResource:@&quot;container&quot; ofType:@&quot;jpg&quot;];
+self.containerTexture = [GLKTextureLoader textureWithContentsOfFile:containerPath options:nil error:&amp;error];
+glActiveTexture(GL_TEXTURE0);
+glBindTexture(self.containerTexture.target, self.containerTexture.name);
+</code></pre>
 </li>
 <li><p>开始渲染，只需实现GLKView的delegate <code>(void)glkView:(GLKView *)view drawInRect:(CGRect)rect;</code> 就可：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect &#123;</div><div class="line">    glEnable(GL_DEPTH_TEST);</div><div class="line">    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);</div><div class="line">    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);</div><div class="line">    //glClear(GL_COLOR_BUFFER_BIT);</div><div class="line"></div><div class="line">    [self.shader use];</div><div class="line"></div><div class="line">    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(M_PI_4, self.view.bounds.size.width / self.view.bounds.size.height, 0.1f, 100.0f);</div><div class="line">    glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;projection&quot;), 1, GL_FALSE, projectionMatrix.m);</div><div class="line">    GLKMatrix4 viewMatrix = GLKMatrix4MakeLookAt(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);</div><div class="line">    glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;view&quot;), 1, GL_FALSE, viewMatrix.m);</div><div class="line"></div><div class="line">    // bind texture</div><div class="line">    glActiveTexture(GL_TEXTURE0);</div><div class="line">    glBindTexture(self.containerTexture.target, self.containerTexture.name);</div><div class="line">    glUniform1i(glGetUniformLocation(self.shader.program, &quot;ourTexture1&quot;), 0);</div><div class="line">    glActiveTexture(GL_TEXTURE1);</div><div class="line">    glBindTexture(self.faceTexture.target, self.faceTexture.name);</div><div class="line">    glUniform1i(glGetUniformLocation(self.shader.program, &quot;ourTexture2&quot;), 1);</div><div class="line"></div><div class="line">    glBindVertexArray(VAO);</div><div class="line">    GLKMatrix4 transModel = [self.transformation getModelViewMatrix];</div><div class="line">    for (int i = 0; i &lt; 10; ++i) &#123;</div><div class="line">    //GLKMatrix4 modelMatrix = GLKMatrix4TranslateWithVector3(GLKMatrix4Identity, cubePositions[i]);</div><div class="line">    GLKMatrix4 modelMatrix = GLKMatrix4TranslateWithVector3(transModel, cubePositions[i]);</div><div class="line">    GLfloat radian = (GLfloat) (20.0f * i / 180 * M_PI);</div><div class="line">    modelMatrix = GLKMatrix4RotateWithVector3(modelMatrix, radian, GLKVector3Make(1.0f, 0.3f, 0.5f));</div><div class="line">    glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;model&quot;), 1, GL_FALSE, modelMatrix.m);</div><div class="line">    glDrawArrays(GL_TRIANGLES, 0, 36);</div><div class="line">    &#125;</div><div class="line">    glBindVertexArray(0);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code class="objective-c">- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT);
+
+    [self.shader use];
+
+    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(M_PI_4, self.view.bounds.size.width / self.view.bounds.size.height, 0.1f, 100.0f);
+    glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;projection&quot;), 1, GL_FALSE, projectionMatrix.m);
+    GLKMatrix4 viewMatrix = GLKMatrix4MakeLookAt(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;view&quot;), 1, GL_FALSE, viewMatrix.m);
+
+    // bind texture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(self.containerTexture.target, self.containerTexture.name);
+    glUniform1i(glGetUniformLocation(self.shader.program, &quot;ourTexture1&quot;), 0);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(self.faceTexture.target, self.faceTexture.name);
+    glUniform1i(glGetUniformLocation(self.shader.program, &quot;ourTexture2&quot;), 1);
+
+    glBindVertexArray(VAO);
+    GLKMatrix4 transModel = [self.transformation getModelViewMatrix];
+    for (int i = 0; i &lt; 10; ++i) {
+    //GLKMatrix4 modelMatrix = GLKMatrix4TranslateWithVector3(GLKMatrix4Identity, cubePositions[i]);
+    GLKMatrix4 modelMatrix = GLKMatrix4TranslateWithVector3(transModel, cubePositions[i]);
+    GLfloat radian = (GLfloat) (20.0f * i / 180 * M_PI);
+    modelMatrix = GLKMatrix4RotateWithVector3(modelMatrix, radian, GLKVector3Make(1.0f, 0.3f, 0.5f));
+    glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;model&quot;), 1, GL_FALSE, modelMatrix.m);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+    glBindVertexArray(0);
+}
+</code></pre>
 </li>
 </ol>
 <h3 id="添加手势"><a href="#添加手势" class="headerlink" title="添加手势"></a>添加手势</h3><p>参看这篇教程 <a href="https://www.raywenderlich.com/50398/opengl-es-transformations-gestures" target="_blank" rel="external">OpenGL ES Transformations with Gestures</a></p>
@@ -617,7 +684,7 @@
 </script>
 
 
-<script src="/js/prettify.js"></script>
+<script src="/js/google/prettify.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("pre").addClass("prettyprint");
