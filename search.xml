@@ -3,6 +3,20 @@
   
     
     <entry>
+      <title><![CDATA[inside C++ object model reading note]]></title>
+      <url>/2017/07/10/inside-C-object-model-reading-note/</url>
+      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2>]]></content>
+      
+        
+        <tags>
+            
+            <tag> C++ </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[JSPatch源码分析]]></title>
       <url>/2017/07/07/JSPatch-source-analyze/</url>
       <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/bang590/JSPatch" target="_blank" rel="external">JSPatch</a>是一个可以动态更新iOS APP的开源库。通过JSPatch，可以使用JS书写原生代码，动态更新APP，替换项目原生代码修复Bug。</p>
@@ -561,6 +575,8 @@ defineClass(&#39;JPTableViewController : UITableViewController &lt;UIAlertViewDe
         <tags>
             
             <tag> iOS </tag>
+            
+            <tag> JavaScript </tag>
             
         </tags>
         
@@ -7387,44 +7403,15 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
   
     
     <entry>
-      <title><![CDATA[tags]]></title>
-      <url>/tags/index.html</url>
-      <content type="html"></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[categories]]></title>
       <url>/categories/index.html</url>
       <content type="html"></content>
     </entry>
     
     <entry>
-      <title><![CDATA[iD3]]></title>
-      <url>/about/id3.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p>iOS端的一个数据可视化的库，模拟<a href="https://d3js.org/" target="_blank" rel="external">D3</a>的实现。</p>
-<p>D3是使用JavaScript编写的一个<strong>数据可视化</strong>的开源库。它是一个数据驱动的，而且非常模块化的JavaScript库。</p>
-<p>我将它使用Objective-C重写，在iOS端实现了D3的 <strong>部分基本模块</strong> 以及 <strong>4大图形模块</strong>：</p>
-<ol>
-<li>D3 - Force</li>
-<li>D3 - Hierarchy</li>
-<li>D3 - Chord</li>
-<li>D3 - Shape</li>
-</ol>
-<p>具体实现效果可以看下面的Demo</p>
-<h2 id="相关技术"><a href="#相关技术" class="headerlink" title="相关技术"></a>相关技术</h2><p>这个库的基本思路就是：将数据处理成D3可以识别的格式 -&gt; 使用D3处理数据，生成可以绘制的数据 -&gt; 使用OpenGL或Core Animation将数据绘制在屏幕上。</p>
-<p>涉及的相关技术：</p>
-<ol>
-<li>处理输入的 JSON，CSV等格式的数据</li>
-<li>D3对数据进行计算</li>
-<li>OpenGL ES 以及 CALayer 来模拟 Web端的 canvas 以及 SVG</li>
-<li>通过手势来操作生成的各种图形</li>
-</ol>
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><h3 id="D3-Force"><a href="#D3-Force" class="headerlink" title="D3 - Force"></a>D3 - Force</h3><p>PS : </p>
-<ol>
-<li>JS</li>
-<li>原始数据和demo</li>
-</ol>
-]]></content>
+      <title><![CDATA[tags]]></title>
+      <url>/tags/index.html</url>
+      <content type="html"></content>
     </entry>
     
     <entry>

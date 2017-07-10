@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-07-10T08:44:25.000Z</updated>
+  <updated>2017-07-10T08:59:38.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,11 +16,29 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>inside C++ object model reading note</title>
+    <link href="http://yoursite.com/2017/07/10/inside-C-object-model-reading-note/"/>
+    <id>http://yoursite.com/2017/07/10/inside-C-object-model-reading-note/</id>
+    <published>2017-07-10T08:58:43.000Z</published>
+    <updated>2017-07-10T08:59:38.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;
+    
+    </summary>
+    
+    
+      <category term="C++" scheme="http://yoursite.com/tags/C/"/>
+    
+  </entry>
+  
+  <entry>
     <title>JSPatch源码分析</title>
     <link href="http://yoursite.com/2017/07/07/JSPatch-source-analyze/"/>
     <id>http://yoursite.com/2017/07/07/JSPatch-source-analyze/</id>
     <published>2017-07-07T01:26:28.000Z</published>
-    <updated>2017-07-10T08:44:25.000Z</updated>
+    <updated>2017-07-10T08:49:43.000Z</updated>
     
     <summary type="html">
     
@@ -39,6 +57,8 @@
     
     
       <category term="iOS" scheme="http://yoursite.com/tags/iOS/"/>
+    
+      <category term="JavaScript" scheme="http://yoursite.com/tags/JavaScript/"/>
     
   </entry>
   
@@ -437,24 +457,6 @@
     
     
       <category term="iOS, OpenGL" scheme="http://yoursite.com/tags/iOS-OpenGL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>记一次aws-ec2杀毒经历</title>
-    <link href="http://yoursite.com/2016/10/29/aws-minered-virus/"/>
-    <id>http://yoursite.com/2016/10/29/aws-minered-virus/</id>
-    <published>2016-10-29T07:07:48.000Z</published>
-    <updated>2016-10-29T09:10:00.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;前几天aws的ec2服务器被攻击了，被莫名人士植入了一个minerd的恶意程序，下面简单记录一下对这个恶意程序的处理过程&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="杂七杂八" scheme="http://yoursite.com/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/"/>
     
   </entry>
   
