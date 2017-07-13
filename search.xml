@@ -3,9 +3,128 @@
   
     
     <entry>
+      <title><![CDATA[ARC下关于autorelease的一些疑问]]></title>
+      <url>/2017/07/13/question-about-autorelease/</url>
+      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>今天在看<a href="http://blog.sunnyxx.com/2014/10/15/behind-autorelease/" target="_blank" rel="external">黑幕背后的Autorelease</a>这篇博客的时候，发现了一些问题。主要问题在于：</p>
+<pre><code class="objective-c">// ARC 情况下
+@autoreleasepool {
+  id __strong array = [NSMutableArray array];
+  NSLog(@&quot;array count is %lu&quot;, _objc_rootRetainCount(array));
+  _objc_autoreleasePoolPrint();
+}
+</code></pre>
+<p><strong>这里的array对象的retainCount到底是1还是2？</strong></p>
+<p>按照查找的博客，以及之前看的《Objective-C高级编程 iOS与OS X多线程和内存管理》这本书的结论：这里的retainCount应该是1，因为这个对象没有注册到autoreleasepool中。但是实际运行下来却并非如此。</p>
+<a id="more"></a>
+<h2 id="Autorelease"><a href="#Autorelease" class="headerlink" title="Autorelease"></a>Autorelease</h2><h3 id="AutoreleasePool-自动释放池"><a href="#AutoreleasePool-自动释放池" class="headerlink" title="AutoreleasePool 自动释放池"></a>AutoreleasePool 自动释放池</h3><p>Autorelease就是延迟release的调用时间，将需要延迟release的对象加入autoreleasepool。当pool倾倒时，就开始调用pool中的对象的release方法。每一个线程对应一个自动释放池。</p>
+<p>在ARC中，使用<code>@autoreleasepool{}</code>来表示一个自动释放池。将OC代码通过clang的<code>-rewrite-objc</code>，可以生成C++代码。可以看到自动释放池是一个<code>__AtAutoreleasePool</code>C++对象。然后这个对象只是对<code>AutoreleasePoolPage</code>对象的封装，可以在<code>NSObject.mm</code>文件中找到它的详细定义。</p>
+<p>下面这两篇博客对自动释放池有详细的解释：</p>
+<ol>
+<li><a href="http://blog.sunnyxx.com/2014/10/15/behind-autorelease/" target="_blank" rel="external">黑幕背后的Autorelease</a></li>
+<li><a href="http://www.jianshu.com/p/ca7835b41699" target="_blank" rel="external">OC源码 —— autoreleasepool</a></li>
+</ol>
+<h3 id="Autorelease返回值的快速释放机制"><a href="#Autorelease返回值的快速释放机制" class="headerlink" title="Autorelease返回值的快速释放机制"></a>Autorelease返回值的快速释放机制</h3><pre><code class="objective-c">// ARC下
+id array = [NSMutableArray array];
+
++ (NSMutableArray *)array {
+  return [[NSMutableArray alloc] init];
+}
+</code></pre>
+<p>因为<code>array</code>类方法是不持有对象的，那么正常情况下调用该方法时，该方法会将返回对象先注册到自动释放池；但是由于ARC下面存在这么一个机制，可以不将对象注册到自动释放池，直接给array持有。</p>
+<p>这个机制主要由这两个函数构成：</p>
+<ol>
+<li><code>objc_autoreleaseReturnValue(id);</code></li>
+<li><code>objc_retainAutoreleasedReturnValue(id);</code></li>
+</ol>
+<p>不过通过我的测试，发现这个说法有点说不通啊。来看看实际的情况</p>
+<h2 id="实地测试"><a href="#实地测试" class="headerlink" title="实地测试"></a>实地测试</h2><p><strong>测试的时候需要两个关键的函数：</strong></p>
+<ol>
+<li><code>uintptr_t _objc_rootRetainCount(id obj);</code> : 返回对象的retainCount</li>
+<li><code>void _objc_autoreleasePoolPrint();</code> ：打印此时的自动释放池的内容</li>
+</ol>
+<h3 id="MacOS-Command-Line-Tools"><a href="#MacOS-Command-Line-Tools" class="headerlink" title="MacOS Command Line Tools"></a>MacOS Command Line Tools</h3><p>新建一个MacOS Command Line Tools的项目，总共只有下面这些代码：</p>
+<pre><code class="objective-c">#import &lt;Foundation/Foundation.h&gt;
+
+extern uintptr_t _objc_rootRetainCount(id obj);
+extern void _objc_autoreleasePoolPrint();
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        id array = [NSMutableArray array];
+        NSLog(@&quot;array count is %lu&quot;, _objc_rootRetainCount(array));
+        _objc_autoreleasePoolPrint();
+    }
+
+    return 0;
+}
+</code></pre>
+<p>来看看输出结果：</p>
+<pre><code>2017-07-13 20:21:52.419722 autoreleaseMac[87916:6040616] array count is 2
+objc[87916]: ##############
+objc[87916]: AUTORELEASE POOLS for thread 0x10012c3c0
+objc[87916]: 2 releases pending.
+objc[87916]: [0x102001000]  ................  PAGE  (hot) (cold)
+objc[87916]: [0x102001038]  ################  POOL 0x102001038
+objc[87916]: [0x102001040]       0x1004032b0  __NSArrayM
+objc[87916]: ##############
+Program ended with exit code: 0
+</code></pre><p>可以发现：使用<code>array</code>类函数生成的对象不仅被array给强引用，还被注入到了自动释放池；所以他的retainCount为2。<strong>这就说明了在Mac下面，貌似这个Autorelease返回值的快速释放机制不起作用</strong></p>
+<h3 id="iOS-APP"><a href="#iOS-APP" class="headerlink" title="iOS APP"></a>iOS APP</h3><p>新建一个iOS的项目，来看看iOS的<code>viewDidLoad</code>方法：</p>
+<pre><code class="objective-c">- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    // id __weak ref = nil;   先暂时注释掉这一行
+
+    id array = [NSMutableArray array];
+      NSLog(@&quot;%p&quot;, array);
+    NSLog(@&quot;array count is %lu&quot;, _objc_rootRetainCount(array));
+    _objc_autoreleasePoolPrint();
+}
+</code></pre>
+<p>来看看打印结果：</p>
+<pre><code class="objective-c">2017-07-13 20:31:29.637 autorelease[89067:6068334] array count is 1
+objc[89067]: ##############
+objc[89067]: AUTORELEASE POOLS for thread 0x112c2b3c0
+objc[89067]: 888 releases pending.
+...
+// 并没有发现array对象加入了自动释放池
+</code></pre>
+<p>在iOS下面这个array对象的retainCount位1，也没有加入到自动释放池。<strong>这么看貌似这个快速释放机制起作用了</strong></p>
+<p>先别急：让我们取消注释，声明一个__weak变量，再来看看运行结果：</p>
+<pre><code class="objective-c">2017-07-13 20:35:39.510 autorelease[89587:6080048] 0x6080000468a0  // 对象地址
+2017-07-13 20:35:39.510 autorelease[89587:6080048] array count is 2
+objc[89587]: ##############
+objc[89587]: AUTORELEASE POOLS for thread 0x1110ce3c0
+objc[89587]: 889 releases pending.
+...
+objc[89587]: [0x7ff4b281ec20]    0x7ff4b4005f80  ViewController
+objc[89587]: [0x7ff4b281ec28]    0x7ff4b4005f80  ViewController
+objc[89587]: [0x7ff4b281ec30]    0x6080000468a0  __NSArrayM   // 加入到自动释放池中的对象地址，和上面的相同
+objc[89587]: ##############
+</code></pre>
+<p>可以看到retainCount变成了2，而且也确实是将array对象加入到了自动释放池中。<strong>这时候这个快速释放机制貌似又失效了。。</strong></p>
+<p><strong>这里的一个完全无关的__weak变量的声明，似乎是这个快速释放机制的开关；有点玄学=。=</strong></p>
+<h2 id="后续操作"><a href="#后续操作" class="headerlink" title="后续操作"></a>后续操作</h2><p>可以通过clang的<code>-S</code>选项，来看看这些文件生成的汇编代码，或许可以从中看出些端倪。但是我不懂汇编=.=</p>
+<p>我将该问题放在了<a href="https://stackoverflow.com/questions/45075336/ios-arc-objc-rootretaincount" target="_blank" rel="external">Stack Overflow</a>上面了。如果哪位大神碰巧看到了这篇文章，并且还耐心的看到了这里，碰巧还知道答案的话，可以到StackOverflow上面帮我解解惑</p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> iOS </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[inside C++ object model reading note]]></title>
       <url>/2017/07/10/inside-C-object-model-reading-note/</url>
-      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2>]]></content>
+      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ol>
+<li>default constructor 有标记吗</li>
+<li>virtual class 和 virtual function 有区别吗  virtual base class 虚拟继承？</li>
+</ol>
+]]></content>
       
         
         <tags>

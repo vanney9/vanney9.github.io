@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-07-10T08:59:38.000Z</updated>
+  <updated>2017-07-13T12:44:46.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,15 +16,44 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>ARC下关于autorelease的一些疑问</title>
+    <link href="http://yoursite.com/2017/07/13/question-about-autorelease/"/>
+    <id>http://yoursite.com/2017/07/13/question-about-autorelease/</id>
+    <published>2017-07-13T09:14:14.000Z</published>
+    <updated>2017-07-13T12:44:46.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;今天在看&lt;a href=&quot;http://blog.sunnyxx.com/2014/10/15/behind-autorelease/&quot;&gt;黑幕背后的Autorelease&lt;/a&gt;这篇博客的时候，发现了一些问题。主要问题在于：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;objective-c&quot;&gt;// ARC 情况下
+@autoreleasepool {
+  id __strong array = [NSMutableArray array];
+  NSLog(@&amp;quot;array count is %lu&amp;quot;, _objc_rootRetainCount(array));
+  _objc_autoreleasePoolPrint();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;这里的array对象的retainCount到底是1还是2？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;按照查找的博客，以及之前看的《Objective-C高级编程 iOS与OS X多线程和内存管理》这本书的结论：这里的retainCount应该是1，因为这个对象没有注册到autoreleasepool中。但是实际运行下来却并非如此。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="iOS" scheme="http://yoursite.com/tags/iOS/"/>
+    
+  </entry>
+  
+  <entry>
     <title>inside C++ object model reading note</title>
     <link href="http://yoursite.com/2017/07/10/inside-C-object-model-reading-note/"/>
     <id>http://yoursite.com/2017/07/10/inside-C-object-model-reading-note/</id>
     <published>2017-07-10T08:58:43.000Z</published>
-    <updated>2017-07-10T08:59:38.000Z</updated>
+    <updated>2017-07-11T14:01:11.000Z</updated>
     
     <summary type="html">
     
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;default constructor 有标记吗&lt;/li&gt;
+&lt;li&gt;virtual class 和 virtual functi
     
     </summary>
     
@@ -438,25 +467,6 @@
       <category term="iOS" scheme="http://yoursite.com/tags/iOS/"/>
     
       <category term="读书笔记" scheme="http://yoursite.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>OpenGL ES 入门</title>
-    <link href="http://yoursite.com/2016/10/29/opengl-es-start-up/"/>
-    <id>http://yoursite.com/2016/10/29/opengl-es-start-up/</id>
-    <published>2016-10-29T11:41:29.000Z</published>
-    <updated>2016-10-29T12:47:04.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近在学习OpenGL ES，跟着教程做了一个Demo，在模拟器下的运行效果如下：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/lionheart/1610/openglesstartup.gif&quot; alt=&quot;demo&quot;&gt;&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="iOS, OpenGL" scheme="http://yoursite.com/tags/iOS-OpenGL/"/>
     
   </entry>
   
