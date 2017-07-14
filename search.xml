@@ -105,8 +105,23 @@ objc[89587]: ##############
 </code></pre>
 <p>可以看到retainCount变成了2，而且也确实是将array对象加入到了自动释放池中。<strong>这时候这个快速释放机制貌似又失效了。。</strong></p>
 <p><strong>这里的一个完全无关的__weak变量的声明，似乎是这个快速释放机制的开关；有点玄学=。=</strong></p>
-<h2 id="后续操作"><a href="#后续操作" class="headerlink" title="后续操作"></a>后续操作</h2><p>可以通过clang的<code>-S</code>选项，来看看这些文件生成的汇编代码，或许可以从中看出些端倪。但是我不懂汇编=.=</p>
-<p>我将该问题放在了<a href="https://stackoverflow.com/questions/45075336/ios-arc-objc-rootretaincount" target="_blank" rel="external">Stack Overflow</a>上面了。如果哪位大神碰巧看到了这篇文章，并且还耐心的看到了这里，碰巧还知道答案的话，可以到StackOverflow上面帮我解解惑</p>
+<h2 id="后续操作"><a href="#后续操作" class="headerlink" title="后续操作"></a>后续操作</h2><h3 id="clang-S"><a href="#clang-S" class="headerlink" title="clang -S"></a>clang -S</h3><p>可以通过clang的<code>-S</code>选项，来看看这些文件生成的汇编代码，或许可以从中看出些端倪。但是我不懂汇编=.=</p>
+<h3 id="LinkMap"><a href="#LinkMap" class="headerlink" title="LinkMap"></a>LinkMap</h3><p>开启Xcode的Write Link Map File选项，查看可执行文件的构成。</p>
+<p>当没有定义__weak变量时：</p>
+<p><img src="/lionheart/1707/without.png" alt="without"></p>
+<p>当有定义__weak变量时：</p>
+<p><img src="/lionheart/1707/with.png" alt="with"></p>
+<p>可以看到在定义了__weak变量时，多了两个函数的调用：</p>
+<ol>
+<li>__Unwind_Resume</li>
+<li>_objc_destroyWeak</li>
+</ol>
+<p>所以感觉问题就在这两个函数之中</p>
+<h3 id="Stack-Overflow"><a href="#Stack-Overflow" class="headerlink" title="Stack Overflow"></a>Stack Overflow</h3><p>我将该问题放在了<a href="https://stackoverflow.com/questions/45075336/ios-arc-objc-rootretaincount" target="_blank" rel="external">Stack Overflow</a>上面了。如果哪位大神碰巧看到了这篇文章，并且还耐心的看到了这里，碰巧还知道答案的话，可以到StackOverflow上面帮我解解惑</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://blog.cnbang.net/tech/2296/" target="_blank" rel="external">iOS APP可执行文件的组成</a></li>
+<li><a href="https://reverseengineering.stackexchange.com/questions/8163/in-a-mach-o-executable-how-can-i-find-which-function-a-stub-targets" target="_blank" rel="external">In a Mach-O executable, how can I find which function a stub targets?</a></li>
+</ul>
 ]]></content>
       
         
@@ -7529,17 +7544,17 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
-      <title><![CDATA[tags]]></title>
-      <url>/tags/index.html</url>
-      <content type="html"></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[关于]]></title>
       <url>/about/index.html</url>
       <content type="html"><![CDATA[<p>大家好，我是XXX。欢迎来到我的个人技术博客。</p>
 <p>这里用markdown写下你的简介，就跟平时写md一样就可以了。</p>
 ]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[tags]]></title>
+      <url>/tags/index.html</url>
+      <content type="html"></content>
     </entry>
     
   

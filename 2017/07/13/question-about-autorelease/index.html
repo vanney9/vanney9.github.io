@@ -157,24 +157,8 @@ Stack Overflow">
         
 
             <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/杂七杂八/">
-                    杂七杂八 <span class="right">5 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-0" collapse-level="0">
                 <a class="no-padding" href="/categories/iOS/">
                     iOS <span class="right">18 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-1" collapse-level="1">
-                <a class="no-padding" href="/categories/iOS/心得/">
-                    心得 <span class="right">1 篇</span></a>
                 </a>
             </li>
 
@@ -191,6 +175,22 @@ Stack Overflow">
             <li class="collapse-level-2" collapse-level="2">
                 <a class="no-padding" href="/categories/iOS/源码分析/因缺斯听/">
                     因缺斯听 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-1" collapse-level="1">
+                <a class="no-padding" href="/categories/iOS/心得/">
+                    心得 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/杂七杂八/">
+                    杂七杂八 <span class="right">5 篇</span></a>
                 </a>
             </li>
 
@@ -284,7 +284,7 @@ Stack Overflow">
 
 
             <div class="toc teal-link-context hide-on-med-and-down">
-    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#前言"><span class="section table-of-contents-text">前言</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#Autorelease"><span class="section table-of-contents-text">Autorelease</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#AutoreleasePool-自动释放池"><span class="section table-of-contents-text">AutoreleasePool 自动释放池</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#Autorelease返回值的快速释放机制"><span class="section table-of-contents-text">Autorelease返回值的快速释放机制</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#实地测试"><span class="section table-of-contents-text">实地测试</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#MacOS-Command-Line-Tools"><span class="section table-of-contents-text">MacOS Command Line Tools</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#iOS-APP"><span class="section table-of-contents-text">iOS APP</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#后续操作"><span class="section table-of-contents-text">后续操作</span></a></li></ol>
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#前言"><span class="section table-of-contents-text">前言</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#Autorelease"><span class="section table-of-contents-text">Autorelease</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#AutoreleasePool-自动释放池"><span class="section table-of-contents-text">AutoreleasePool 自动释放池</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#Autorelease返回值的快速释放机制"><span class="section table-of-contents-text">Autorelease返回值的快速释放机制</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#实地测试"><span class="section table-of-contents-text">实地测试</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#MacOS-Command-Line-Tools"><span class="section table-of-contents-text">MacOS Command Line Tools</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#iOS-APP"><span class="section table-of-contents-text">iOS APP</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#后续操作"><span class="section table-of-contents-text">后续操作</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#clang-S"><span class="section table-of-contents-text">clang -S</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#LinkMap"><span class="section table-of-contents-text">LinkMap</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#Stack-Overflow"><span class="section table-of-contents-text">Stack Overflow</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#参考"><span class="section table-of-contents-text">参考</span></a></li></ol>
 </div>
 
 
@@ -389,8 +389,23 @@ objc[89587]: ##############
 </code></pre>
 <p>可以看到retainCount变成了2，而且也确实是将array对象加入到了自动释放池中。<strong>这时候这个快速释放机制貌似又失效了。。</strong></p>
 <p><strong>这里的一个完全无关的__weak变量的声明，似乎是这个快速释放机制的开关；有点玄学=。=</strong></p>
-<h2 id="后续操作"><a href="#后续操作" class="headerlink" title="后续操作"></a>后续操作</h2><p>可以通过clang的<code>-S</code>选项，来看看这些文件生成的汇编代码，或许可以从中看出些端倪。但是我不懂汇编=.=</p>
-<p>我将该问题放在了<a href="https://stackoverflow.com/questions/45075336/ios-arc-objc-rootretaincount" target="_blank" rel="external">Stack Overflow</a>上面了。如果哪位大神碰巧看到了这篇文章，并且还耐心的看到了这里，碰巧还知道答案的话，可以到StackOverflow上面帮我解解惑</p>
+<h2 id="后续操作"><a href="#后续操作" class="headerlink" title="后续操作"></a>后续操作</h2><h3 id="clang-S"><a href="#clang-S" class="headerlink" title="clang -S"></a>clang -S</h3><p>可以通过clang的<code>-S</code>选项，来看看这些文件生成的汇编代码，或许可以从中看出些端倪。但是我不懂汇编=.=</p>
+<h3 id="LinkMap"><a href="#LinkMap" class="headerlink" title="LinkMap"></a>LinkMap</h3><p>开启Xcode的Write Link Map File选项，查看可执行文件的构成。</p>
+<p>当没有定义__weak变量时：</p>
+<p><img src="/lionheart/1707/without.png" alt="without"></p>
+<p>当有定义__weak变量时：</p>
+<p><img src="/lionheart/1707/with.png" alt="with"></p>
+<p>可以看到在定义了__weak变量时，多了两个函数的调用：</p>
+<ol>
+<li>__Unwind_Resume</li>
+<li>_objc_destroyWeak</li>
+</ol>
+<p>所以感觉问题就在这两个函数之中</p>
+<h3 id="Stack-Overflow"><a href="#Stack-Overflow" class="headerlink" title="Stack Overflow"></a>Stack Overflow</h3><p>我将该问题放在了<a href="https://stackoverflow.com/questions/45075336/ios-arc-objc-rootretaincount" target="_blank" rel="external">Stack Overflow</a>上面了。如果哪位大神碰巧看到了这篇文章，并且还耐心的看到了这里，碰巧还知道答案的话，可以到StackOverflow上面帮我解解惑</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://blog.cnbang.net/tech/2296/" target="_blank" rel="external">iOS APP可执行文件的组成</a></li>
+<li><a href="https://reverseengineering.stackexchange.com/questions/8163/in-a-mach-o-executable-how-can-i-find-which-function-a-stub-targets" target="_blank" rel="external">In a Mach-O executable, how can I find which function a stub targets?</a></li>
+</ul>
 
                 
 
