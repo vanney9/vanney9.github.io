@@ -19,7 +19,8 @@
 }
 
 这里的array对象的retainCount到底是1还是2？
-按照查找的博客，以及之前看的《Objective-C高级编程 iOS与OS X多线程和内存管理》这本书的结论：这里的retainCount应该是1，因为这个对象没有注册到autoreleasepool中。但是实际运行下来却并非如此。">
+按照查找的博客，以及之前看的《Objective-C高级编程 iOS与OS X多线程和内存管理》这本书的结论：这里的retainCount应该是1，因为这个对象没有注册到autoreleasepool中。但是实际运行下来却并非如此。
+Stack Overflow">
     
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -172,6 +173,14 @@
         
 
             <li class="collapse-level-1" collapse-level="1">
+                <a class="no-padding" href="/categories/iOS/心得/">
+                    心得 <span class="right">1 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-1" collapse-level="1">
                 <a class="no-padding" href="/categories/iOS/源码分析/">
                     源码分析 <span class="right">3 篇</span></a>
                 </a>
@@ -182,14 +191,6 @@
             <li class="collapse-level-2" collapse-level="2">
                 <a class="no-padding" href="/categories/iOS/源码分析/因缺斯听/">
                     因缺斯听 <span class="right">1 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-1" collapse-level="1">
-                <a class="no-padding" href="/categories/iOS/心得/">
-                    心得 <span class="right">1 篇</span></a>
                 </a>
             </li>
 
@@ -298,6 +299,7 @@
 </code></pre>
 <p><strong>这里的array对象的retainCount到底是1还是2？</strong></p>
 <p>按照查找的博客，以及之前看的《Objective-C高级编程 iOS与OS X多线程和内存管理》这本书的结论：这里的retainCount应该是1，因为这个对象没有注册到autoreleasepool中。但是实际运行下来却并非如此。</p>
+<p><a href="https://stackoverflow.com/questions/45075336/ios-arc-objc-rootretaincount" target="_blank" rel="external">Stack Overflow</a></p>
 <a id="more"></a>
 <h2 id="Autorelease"><a href="#Autorelease" class="headerlink" title="Autorelease"></a>Autorelease</h2><h3 id="AutoreleasePool-自动释放池"><a href="#AutoreleasePool-自动释放池" class="headerlink" title="AutoreleasePool 自动释放池"></a>AutoreleasePool 自动释放池</h3><p>Autorelease就是延迟release的调用时间，将需要延迟release的对象加入autoreleasepool。当pool倾倒时，就开始调用pool中的对象的release方法。每一个线程对应一个自动释放池。</p>
 <p>在ARC中，使用<code>@autoreleasepool{}</code>来表示一个自动释放池。将OC代码通过clang的<code>-rewrite-objc</code>，可以生成C++代码。可以看到自动释放池是一个<code>__AtAutoreleasePool</code>C++对象。然后这个对象只是对<code>AutoreleasePoolPage</code>对象的封装，可以在<code>NSObject.mm</code>文件中找到它的详细定义。</p>
