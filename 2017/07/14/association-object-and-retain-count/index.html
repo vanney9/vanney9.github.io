@@ -7,13 +7,16 @@
 
     
 
-    <title>归档：2017 | Vanney</title>
+    <title>OC关联对象及其内存管理 | Vanney</title>
     <meta name="author" content="Vanney">
+    
+    <meta name="description" content="前言OC的关联对象经常被用来存储Category中的属性对应的实例变量，当然它还有其他的用途。
+这篇文章将讨论关联对象是如何实现的，以及关联对象的内存管理问题。">
     
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    
+    <meta property="og:title" content="OC关联对象及其内存管理"/>
     <meta property="og:site_name" content="Vanney"/>
 
     
@@ -231,160 +234,268 @@
 
     <main>
         <div class="container main-container">
-    
-
-<nav class="page-nav hide-on-small-only">
+    <nav class="page-nav hide-on-small-only">
     <div class="nav-wrapper teal lighten-2">
-        <span class="breadcrumb">当前位置（归档）</span>
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+
         
 
         
     </div>
 </nav>
 
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>OC关联对象及其内存管理</h1>
+    
 
 
-    <ul class="collapsible mt-0" data-collapsible="accordion">
+            </div>
+            <time class="teal-link-context" datetime="2017-07-14T08:29:19.000Z"><a href="/2017/07/14/association-object-and-retain-count/">2017-07-14</a></time>
+
+            <span id="busuanzi_container_page_pv" class="read-times-container">
+    <!--<i class="fa fa-eye"></i>-->
+    <span id="busuanzi_value_page_pv"></span>
+</span>
+
+            
+    <div class="tags-row">
         
+            <a href="/tags/iOS/" class="chip teal darken-1">iOS</a>
         
-            <li>
-                <div class="collapsible-header active">
-                    <i class="fa fa-archive"></i>2017
-                </div>
-                <div class="collapsible-body">
-                    <div class="collection">
-                        
-                            <a href="/2017/07/14/association-object-and-retain-count/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-07-14T08:29:19.000Z">2017-07-14</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                OC关联对象及其内存管理
-                            </a>
-                        
-                            <a href="/2017/07/13/question-about-autorelease/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-07-13T09:14:14.000Z">2017-07-13</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                ARC下关于autorelease的一些疑问
-                            </a>
-                        
-                            <a href="/2017/07/10/inside-C-object-model-reading-note/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-07-10T08:58:43.000Z">2017-07-10</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                inside C++ object model reading note
-                            </a>
-                        
-                            <a href="/2017/07/07/JSPatch-source-analyze/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-07-07T01:26:28.000Z">2017-07-07</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                JSPatch源码分析
-                            </a>
-                        
-                            <a href="/2017/06/27/iOS-ARC-Block-GCD-Runloop/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-06-27T11:51:42.000Z">2017-06-27</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                关于ARC，Block以及GCD，runloop
-                            </a>
-                        
-                            <a href="/2017/06/10/objective-c-runtime-other/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-06-10T09:21:25.000Z">2017-06-10</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Objective-C runtime - 如果还有其他的话
-                            </a>
-                        
-                            <a href="/2017/06/10/objective-c-runtime-example/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-06-10T06:31:59.000Z">2017-06-10</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Objective-C runtime - 应用和示例
-                            </a>
-                        
-                            <a href="/2017/06/09/objective-c-runtime-api/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-06-09T02:03:44.000Z">2017-06-09</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Objective-C runtime - API
-                            </a>
-                        
-                            <a href="/2017/06/08/objective-c-runtime-message/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-06-08T06:46:01.000Z">2017-06-08</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Objective-C runtime - 消息
-                            </a>
-                        
-                            <a href="/2017/06/07/objective-c-runtime-category/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-06-07T06:34:21.000Z">2017-06-07</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Objective-C runtime - 分类与关联对象
-                            </a>
-                        
-                            <a href="/2017/06/05/objective-c-runtime-property-method/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-06-05T08:03:20.000Z">2017-06-05</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Objective-C runtime - 属性与方法
-                            </a>
-                        
-                            <a href="/2017/06/03/objective-c-runtime-class-object/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-06-03T07:00:32.000Z">2017-06-03</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Objective-C runtime - 类和对象
-                            </a>
-                        
-                            <a href="/2017/06/03/objective-c-runtime-summarize/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-06-03T02:14:50.000Z">2017-06-03</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Objective-C runtime - 系列开始
-                            </a>
-                        
-                            <a href="/2017/04/13/effective-objective-c-reading-note-six/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-04-13T12:59:20.000Z">2017-04-13</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Effective Objective-C - 对象、消息、运行期
-                            </a>
-                        
-                            <a href="/2017/04/11/effective-objective-c-reading-note-five/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-04-11T12:42:29.000Z">2017-04-11</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Effective Objective-C - 系统框架
-                            </a>
-                        
-                            <a href="/2017/04/04/effective-objective-c-reading-note-four/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-04-04T07:43:55.000Z">2017-04-04</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Effective Objective-C - 块与大中枢派发
-                            </a>
-                        
-                            <a href="/2017/03/30/iOS-Auto-Layout-CAKeyframeAnimation/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-03-30T09:19:20.000Z">2017-03-30</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Auto Layout 与 CAKeyframeAnimation
-                            </a>
-                        
-                            <a href="/2017/03/25/effective-objective-c-reading-note-three/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-03-25T08:07:33.000Z">2017-03-25</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Effective Objective-C - 内存管理
-                            </a>
-                        
-                            <a href="/2017/03/24/something-about-iOS-drawing/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-03-24T09:14:51.000Z">2017-03-24</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                关于iOS Drawing
-                            </a>
-                        
-                            <a href="/2017/03/23/effective-objective-c-reading-note-two/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-03-23T11:47:30.000Z">2017-03-23</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Effective Objective-C - 协议与分类
-                            </a>
-                        
-                            <a href="/2017/03/21/effective-objective-c-reading-note-one/" class="collection-item grey-text text-darken-1">
-                                <time datetime="2017-03-21T11:26:16.000Z">2017-03-21</time>
-                                <span>&nbsp;&nbsp;&nbsp;</span>
-                                Effective Objective-C - 接口与API设计
-                            </a>
-                        
-                    </div>
-                </div>
-            </li>
-        
-    </ul>
+    </div>
+
+
+            <div class="toc teal-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#前言"><span class="section table-of-contents-text">前言</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#Demo"><span class="section table-of-contents-text">Demo</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#关联对象的实现"><span class="section table-of-contents-text">关联对象的实现</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#objc-setAssociatedObject"><span class="section table-of-contents-text">objc_setAssociatedObject</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#objc-getAssociatedObject"><span class="section table-of-contents-text">objc_getAssociatedObject</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#关联对象的内存管理"><span class="section table-of-contents-text">关联对象的内存管理</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#requireValue"><span class="section table-of-contents-text">requireValue</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#各种常量"><span class="section table-of-contents-text">各种常量</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#ReleaseValue"><span class="section table-of-contents-text">ReleaseValue</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#参考"><span class="section table-of-contents-text">参考</span></a></li></ol>
+</div>
+
+
+            <div class="entry teal-link-context">
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OC的关联对象经常被用来存储Category中的属性对应的实例变量，当然它还有其他的用途。</p>
+<p>这篇文章将讨论关联对象是如何实现的，以及关联对象的内存管理问题。</p>
+<a id="more"></a>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p>先用一段代码来引入要讲的东西：</p>
+<pre><code class="objective-c">#import &quot;HCBase.h&quot;
+
+@interface HCBase (vanney)
+
+@property (nonatomic, assign) int cui;
+@property (nonatomic, strong) NSString *van;
+
+@end
+
+/* -----------------  这里是分割线  -------------- */
+
+#import &quot;HCBase+vanney.h&quot;
+
+@implementation HCBase (vanney)
+
+- (void)setCui:(int)cui {
+    objc_setAssociatedObject(self, &quot;cui&quot;, @(cui), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (int)cui {
+    return [objc_getAssociatedObject(self, &quot;cui&quot;) intValue];
+}
+
+- (void)setVan:(NSString *)van {
+    objc_setAssociatedObject(self, &quot;van&quot;, van, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (NSString *)van {
+    return objc_getAssociatedObject(self, &quot;van&quot;);
+}
+
+@end
+</code></pre>
+<p>可以看到：</p>
+<ol>
+<li>在头文件中，我们定义了两个属性 <strong>cui</strong> 和 <strong>van</strong></li>
+<li>在.m文件中，我们使用了关联对象来存储这两个实例变量</li>
+<li>使用关联对象时，我们还指定了它的内存管理的方式 <strong>OBJC_ASSOCIATION_RETAIN_NONATOMIC</strong> 和 <strong>OBJC_ASSOCIATION_COPY_NONATOMIC</strong></li>
+</ol>
+<h2 id="关联对象的实现"><a href="#关联对象的实现" class="headerlink" title="关联对象的实现"></a>关联对象的实现</h2><p>关联对象的实现是开源的，在runtime的<code>objc-references.m</code>源文件中。在OC中，使用一个全局的表来存储所有的关联对象，如下图所示：</p>
+<p><img src="/lionheart/1706/association.png" alt="association"></p>
+<p>关于这张图的解释可以参考我的这篇文章<a href="http://vanney9.com/2017/06/07/objective-c-runtime-category/" target="_blank" rel="external">Objective-C runtime - 分类与关联对象</a></p>
+<p>上面的Demo使用了下面两个函数来存取关联对象，我们来看看他们的源码</p>
+<ol>
+<li><strong>objc_setAssociatedObject</strong></li>
+<li><strong>objc_getAssociatedObject</strong></li>
+</ol>
+<h3 id="objc-setAssociatedObject"><a href="#objc-setAssociatedObject" class="headerlink" title="objc_setAssociatedObject"></a>objc_setAssociatedObject</h3><p>这个方法用来设置关联对象：</p>
+<pre><code class="objective-c">void _object_set_associative_reference(id object, void *key, id value, uintptr_t policy) {
+    // 关联对象使用 ObjcAssociation 这个c++对象来存储。
+      // 设置新对象，那么有可能有老的对象会被废弃。那么新建一个ObjcAssociation对象，之后用来存储老的对象
+    ObjcAssociation old_association(0, nil);
+
+      // acquireValue函数： 设置新的对象的retainCount，也就是对他进行手动内存管理
+    id new_value = value ? acquireValue(value, policy) : nil;
+    {
+        AssociationsManager manager;
+        AssociationsHashMap &amp;associations(manager.associations());
+        disguised_ptr_t disguised_object = DISGUISE(object);
+
+          // 如果确实是要设置新关联对象的时候
+        if (new_value) {
+            // break any existing association.
+            AssociationsHashMap::iterator i = associations.find(disguised_object);
+
+              // 这个对象之前设置过关联对象，也就是说该对象的关联对象数量大于1
+            if (i != associations.end()) {
+                // secondary table exists
+                ObjectAssociationMap *refs = i-&gt;second;
+                ObjectAssociationMap::iterator j = refs-&gt;find(key);
+
+                  // 寻找全局的关联对象表，如果存在老对象的话
+                if (j != refs-&gt;end()) {
+                      // 存储老对象到之前新建的ObjcAssociation对象中
+                    old_association = j-&gt;second;
+                      // 设置新的关联对象
+                    j-&gt;second = ObjcAssociation(policy, new_value);
+                }
+                  // 不存在老对象，直接设置新关联对象
+                  else {
+                    (*refs)[key] = ObjcAssociation(policy, new_value);
+                }
+            }
+
+              // 这个对象之前没有设置过任何的关联对象
+              else {
+                // create the new association (first time).
+                ObjectAssociationMap *refs = new ObjectAssociationMap;
+                associations[disguised_object] = refs;
+                (*refs)[key] = ObjcAssociation(policy, new_value);
+
+                  // 将对象的isa的has_assoc字段设置成true
+                object-&gt;setHasAssociatedObjects();
+            }
+        } 
+          // 要将关联对象设成 nil，也就是取消该关联对象。先存老对象，再在全局表中删除该关联对象
+          else {
+            // setting the association to nil breaks the association.
+            AssociationsHashMap::iterator i = associations.find(disguised_object);
+            if (i !=  associations.end()) {
+                ObjectAssociationMap *refs = i-&gt;second;
+                ObjectAssociationMap::iterator j = refs-&gt;find(key);
+                if (j != refs-&gt;end()) {
+                    old_association = j-&gt;second;
+                    refs-&gt;erase(j);
+                }
+            }
+        }
+    }
+
+
+    // 释放老对象，retainCount相关，内存管理相关
+    if (old_association.hasValue()) ReleaseValue()(old_association);
+}
+</code></pre>
+<p> 可以看到设置新的关联对象其实很简单：</p>
+<ol>
+<li>现在全局关联对象表中寻找这个key</li>
+<li>先存原来关联对象</li>
+<li>再设置新的关联对象</li>
+<li>释放原有的关联对象</li>
+</ol>
+<h3 id="objc-getAssociatedObject"><a href="#objc-getAssociatedObject" class="headerlink" title="objc_getAssociatedObject"></a>objc_getAssociatedObject</h3><p>获取关联对象就更简单了，直接到表中去找对应的key的对象就好了。</p>
+<h2 id="关联对象的内存管理"><a href="#关联对象的内存管理" class="headerlink" title="关联对象的内存管理"></a>关联对象的内存管理</h2><p>在上面讲到的源代码中，涉及到管理对象内存管理的有两个函数</p>
+<ol>
+<li><strong>acquireValue</strong></li>
+<li><strong>ReleaseValue</strong></li>
+</ol>
+<h3 id="requireValue"><a href="#requireValue" class="headerlink" title="requireValue"></a>requireValue</h3><pre><code class="objective-c">static id acquireValue(id value, uintptr_t policy) {
+    switch (policy &amp; 0xFF) {
+    case OBJC_ASSOCIATION_SETTER_RETAIN:
+        return ((id(*)(id, SEL))objc_msgSend)(value, SEL_retain);
+    case OBJC_ASSOCIATION_SETTER_COPY:
+        return ((id(*)(id, SEL))objc_msgSend)(value, SEL_copy);
+    }
+    return value;
+}
+</code></pre>
+<p>可以看到，设置关联对象的内存管理方式和你手动传进来的policy有关。</p>
+<p>将policy和0XFF相与：</p>
+<ol>
+<li>结果是<strong>OBJC_ASSOCIATION_SETTER_RETAIN</strong>的话，就调用对象的retain函数，也就是将retainCount加一</li>
+<li>结果是<strong>OBJC_ASSOCIATION_SETTER_COPY</strong>的话，就调用对象的copy函数，也就是将拷贝对象，并给新对象的retainCount赋1</li>
+</ol>
+<p><strong>PS</strong> :</p>
+<ol>
+<li>没有找到具体的SEL_copy的实现。</li>
+<li>至于retain的实现，其实就是将对象的isa的extra_rc字段加1 具体可以参考这篇博客<a href="http://www.jianshu.com/p/18c3e88dfbf1" target="_blank" rel="external">OC源码 —— retain和release</a></li>
+</ol>
+<h3 id="各种常量"><a href="#各种常量" class="headerlink" title="各种常量"></a>各种常量</h3><p>在我们自己调用存取关联对象的时候使用了<code>objc_AssociationPolicy</code>常量：</p>
+<pre><code class="objective-c">typedef OBJC_ENUM(uintptr_t, objc_AssociationPolicy) {
+    OBJC_ASSOCIATION_ASSIGN = 0,           /**&lt; Specifies a weak reference to the associated object. */
+    OBJC_ASSOCIATION_RETAIN_NONATOMIC = 1, /**&lt; Specifies a strong reference to the associated object. 
+                                            *   The association is not made atomically. */
+    OBJC_ASSOCIATION_COPY_NONATOMIC = 3,   /**&lt; Specifies that the associated object is copied. 
+                                            *   The association is not made atomically. */
+    OBJC_ASSOCIATION_RETAIN = 01401,       /**&lt; Specifies a strong reference to the associated object.
+                                            *   The association is made atomically. */
+    OBJC_ASSOCIATION_COPY = 01403          /**&lt; Specifies that the associated object is copied.
+                                            *   The association is made atomically. */
+};
+</code></pre>
+<p>根据名字很容易想到所对应的内存管理语义。</p>
+<p>在<code>objc-references.mm</code>中使用的是另外的常量：</p>
+<pre><code class="objective-c">enum { 
+    OBJC_ASSOCIATION_SETTER_ASSIGN      = 0,
+    OBJC_ASSOCIATION_SETTER_RETAIN      = 1,
+    OBJC_ASSOCIATION_SETTER_COPY        = 3,            // NOTE:  both bits are set, so we can simply test 1 bit in releaseValue below.
+    OBJC_ASSOCIATION_GETTER_READ        = (0 &lt;&lt; 8), 
+    OBJC_ASSOCIATION_GETTER_RETAIN      = (1 &lt;&lt; 8), 
+    OBJC_ASSOCIATION_GETTER_AUTORELEASE = (2 &lt;&lt; 8)
+};
+</code></pre>
+<p>可以看到这两个enum中，前三个是相对应的，他们有相同的值</p>
+<h3 id="ReleaseValue"><a href="#ReleaseValue" class="headerlink" title="ReleaseValue"></a>ReleaseValue</h3><pre><code class="objective-c">static void releaseValue(id value, uintptr_t policy) {
+    if (policy &amp; OBJC_ASSOCIATION_SETTER_RETAIN) {
+        ((id(*)(id, SEL))objc_msgSend)(value, SEL_release);
+    }
+}
+
+struct ReleaseValue {
+    void operator() (ObjcAssociation &amp;association) {
+        releaseValue(association.value(), association.policy());
+    }
+};
+</code></pre>
+<p>再来看看如何释放对象。可以看到，他是将关联对象的<code>policy</code>和<code>OBJC_ASSOCIATION_SETTER_RETAIN</code>相与，简单计算就会发现：<strong>当policy为retain和copy时，这个if判断都是正确的，也就会对相应关联对象执行release操作。和我们预想的是一致的。</strong></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://vanney9.com/2017/06/07/objective-c-runtime-category/" target="_blank" rel="external">Objective-C runtime - 分类与关联对象</a></li>
+<li><a href="http://www.jianshu.com/p/de95ff8230bd" target="_blank" rel="external">Runtime源码 —— Associated Object</a></li>
+<li><a href="http://www.jianshu.com/p/18c3e88dfbf1" target="_blank" rel="external">OC源码 —— retain和release</a></li>
+</ul>
+
+                
+
+
+<p class="teal-link-context">
+    <a href="/2017/07/13/question-about-autorelease/" rel="next" title="ARC下关于autorelease的一些疑问">
+    下一篇：ARC下关于autorelease的一些疑问
+  </a>
+</p>
+
+
+            </div>
+			
+        </div>
+    </div>
+</article>
+
+
+
+
 
 
 </div>
