@@ -203,12 +203,12 @@ struct ReleaseValue {
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-        </tags>
         
     </entry>
     
@@ -334,30 +334,12 @@ objc[89587]: ##############
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[inside C++ object model reading note]]></title>
-      <url>/2017/07/10/inside-C-object-model-reading-note/</url>
-      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ol>
-<li>default constructor 有标记吗</li>
-<li>virtual class 和 virtual function 有区别吗  virtual base class 虚拟继承？</li>
-</ol>
-]]></content>
-      
-        
-        <tags>
-            
-            <tag> C++ </tag>
-            
-        </tags>
         
     </entry>
     
@@ -916,14 +898,12 @@ defineClass(&#39;JPTableViewController : UITableViewController &lt;UIAlertViewDe
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> JavaScript </tag>
-            
-        </tags>
         
     </entry>
     
@@ -1244,12 +1224,12 @@ int main() {
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-        </tags>
         
     </entry>
     
@@ -1271,14 +1251,12 @@ int main() {
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> runtime </tag>
-            
-        </tags>
         
     </entry>
     
@@ -1576,14 +1554,12 @@ printf(&quot;new HCSon method name is %s, and type encoding is %s\n&quot;, metho
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> runtime </tag>
-            
-        </tags>
         
     </entry>
     
@@ -1611,14 +1587,12 @@ printf(&quot;new HCSon method name is %s, and type encoding is %s\n&quot;, metho
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> runtime </tag>
-            
-        </tags>
         
     </entry>
     
@@ -1715,14 +1689,12 @@ void autoDictionarySetter(id self, SEL _cmd, id value);
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> runtime </tag>
-            
-        </tags>
         
     </entry>
     
@@ -1811,14 +1783,12 @@ void autoDictionarySetter(id self, SEL _cmd, id value);
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> runtime </tag>
-            
-        </tags>
         
     </entry>
     
@@ -2026,14 +1996,12 @@ class list_array_tt {
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> runtime </tag>
-            
-        </tags>
         
     </entry>
     
@@ -2141,14 +2109,12 @@ objc_object::ISA()
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> runtime </tag>
-            
-        </tags>
         
     </entry>
     
@@ -2193,14 +2159,12 @@ objc_object::ISA()
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> runtime </tag>
-            
-        </tags>
         
     </entry>
     
@@ -2280,14 +2244,12 @@ objc_object::ISA()
 </ol>
 <h3 id="在既有类中使用关联对象存放自定义数据"><a href="#在既有类中使用关联对象存放自定义数据" class="headerlink" title="在既有类中使用关联对象存放自定义数据"></a>在既有类中使用关联对象存放自定义数据</h3>]]></content>
       
+        <categories>
+            
+            <category> 读书笔记 </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> 读书笔记 </tag>
-            
-        </tags>
         
     </entry>
     
@@ -2355,14 +2317,12 @@ CFArrayRef aCFArray = (__bridge CFArrayRef)array;
 </ol>
 <h3 id="别忘了NSTimer会保留其目标对象"><a href="#别忘了NSTimer会保留其目标对象" class="headerlink" title="别忘了NSTimer会保留其目标对象"></a>别忘了NSTimer会保留其目标对象</h3>]]></content>
       
+        <categories>
+            
+            <category> 读书笔记 </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> 读书笔记 </tag>
-            
-        </tags>
         
     </entry>
     
@@ -2541,14 +2501,12 @@ if (/* some condition*/) {
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> 读书笔记 </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> 读书笔记 </tag>
-            
-        </tags>
         
     </entry>
     
@@ -2663,16 +2621,12 @@ b.leading - a.leading = 0.2 * a.width - 0 = 0.2 * a.width
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> Auto Layout </tag>
-            
-            <tag> CAAnimation </tag>
-            
-        </tags>
         
     </entry>
     
@@ -2751,14 +2705,12 @@ NSString *str = [self stringValue];
 </ol>
 ]]></content>
       
+        <categories>
+            
+            <category> 读书笔记 </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> 读书笔记 </tag>
-            
-        </tags>
         
     </entry>
     
@@ -2823,12 +2775,12 @@ NSString *str = [self stringValue];
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-        </tags>
         
     </entry>
     
@@ -2932,14 +2884,12 @@ NSString *str = [self stringValue];
 </ol>
 ]]></content>
       
+        <categories>
+            
+            <category> 读书笔记 </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> 读书笔记 </tag>
-            
-        </tags>
         
     </entry>
     
@@ -3049,14 +2999,12 @@ NSString *str = [self stringValue];
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> 读书笔记 </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-            <tag> 读书笔记 </tag>
-            
-        </tags>
         
     </entry>
     
@@ -3084,10 +3032,24 @@ NSString *str = [self stringValue];
 <h4 id="设置OpenGL-ES"><a href="#设置OpenGL-ES" class="headerlink" title="设置OpenGL ES"></a>设置OpenGL ES</h4><p>设置OpenGL ES的代码和OpenGL的基本相似。</p>
 <ol>
 <li><p>创建shader程序：也就是对你写的glsl文件进行编译链接，最终持有一个Shader programe。代码如下：</p>
-<p>````objective-c<br>// load glsl file<br>NSString <em>vertexFile = [[NSBundle mainBundle] pathForResource:vertexPath ofType:@”glsl”];<br>NSString </em>fragmentFile = [[NSBundle mainBundle] pathForResource:fragmentPath ofType:@”glsl”];</p>
-<p>NSError *error;</p>
-<p>NSString *vertexString = [NSString stringWithContentsOfFile:vertexFile encoding:NSUTF8StringEncoding error:&amp;error];<br>if (!vertexString) {<br>  NSLog(@”vanney code log : error loading vertex shader : %@”, error.localizedDescription);<br>  exit(1);<br>}</p>
-<p>NSString *fragmentString = [NSString stringWithContentsOfFile:fragmentFile encoding:NSUTF8StringEncoding error:&amp;error];<br>if (!fragmentString) {<br>  NSLog(@”vanney code log : error loading fragment shader : %@”, error.localizedDescription);<br>  exit(1);<br>}</p>
+<pre><code class="objective-c">// load glsl file
+NSString *vertexFile = [[NSBundle mainBundle] pathForResource:vertexPath ofType:@&quot;glsl&quot;];
+NSString *fragmentFile = [[NSBundle mainBundle] pathForResource:fragmentPath ofType:@&quot;glsl&quot;];
+
+NSError *error;
+
+NSString *vertexString = [NSString stringWithContentsOfFile:vertexFile encoding:NSUTF8StringEncoding error:&amp;error];
+if (!vertexString) {
+  NSLog(@&quot;vanney code log : error loading vertex shader : %@&quot;, error.localizedDescription);
+  exit(1);
+}
+
+NSString *fragmentString = [NSString stringWithContentsOfFile:fragmentFile encoding:NSUTF8StringEncoding error:&amp;error];
+if (!fragmentString) {
+  NSLog(@&quot;vanney code log : error loading fragment shader : %@&quot;, error.localizedDescription);
+  exit(1);
+}
+</code></pre>
 </li>
 </ol>
 <p>   // compiler<br>   GLuint vertexShader, fragmentShader;<br>   GLint compilerSuccess, linkSuccess;<br>   GLchar messages[512];</p>
@@ -3173,12 +3135,12 @@ glBindTexture(self.containerTexture.target, self.containerTexture.name);
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS, OpenGL </tag>
-            
-        </tags>
         
     </entry>
     
@@ -3241,270 +3203,19 @@ glBindTexture(self.containerTexture.target, self.containerTexture.name);
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> server </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> 杂七杂八 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[C++大学教程读书笔记 - 与C++相关]]></title>
-      <url>/2016/10/17/c-how-to-progarm-reading-note/</url>
-      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>C++大学教程的读书笔记，(C++ how to program)</p>
-<a id="more"></a>
-<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="类的深入剖析"><a href="#类的深入剖析" class="headerlink" title="类的深入剖析"></a>类的深入剖析</h3><ol>
-<li><p>构建头文件时注意使用：</p>
-<pre><code class="c">#ifndef CLASS_H
-#define CLASS_H
-/* definition here */
-#endif
-</code></pre>
-<p>这样可以防止重复引用</p>
-</li>
-<li><p>类中的数据成员，若没有初始化，会被默认初始化成0</p>
-</li>
-<li><p>看看以下代码：</p>
-<pre><code class="c">Time sunset; // 创建一个Time类 sunset
-Time arrayOfTimes[5]; // 创建一个指向Time类的数组
-Time &amp;dinnerTime = sunset; // dinnerTime是sunset的引用，其实就是sunset，一个Time类的实例
-Time *timePtr = &amp;dinnerTime; // timePtr是一个指向Time的指针，他指向的是sunset这一个实例
-</code></pre>
-</li>
-<li><p>关于类或者一个类实例的大小，也就是<code>sizeof(Class);</code> 他其实只包含类的数据成员，并不包含类的函数成员。类的函数成员在内存中只有一份，存放在独立于所有类对象的地方，它被所有的类对象共享，但是不算进<code>sizeof</code>的大小</p>
-</li>
-<li><p>析构函数在对象撤销时，自动调用；他不会释放对象所占的内存，只是进行一些扫尾工作。不能重载，不可以指定返回类型，void也不行，不接受参数</p>
-</li>
-<li><p>static的局部对象的构造函数只调用一次，而他们的相应的析构函数发生在main函数结束时，或者调用exit()时。调用abort函数结束程序时，static的析构函数不会被调用</p>
-</li>
-<li><p>引用和指针的区别：引用就是对象本身，指针是指向对象本身。都可以操作原始对象</p>
-</li>
-<li><p>使用const可以将对象指定为不可修改，<code>const Time noon(12, 0, 0);</code> 记得要及时初始化，不然之后不能修改了</p>
-</li>
-<li><p>对于const对象，只能调用对象的const成员函数，不能调用不是const的成员函数。const函数里面不能修改 对象的数据成员。将函数指定为const，需要在声明和定义2个地方都指定const，如下：</p>
-<pre><code class="c">int getHour() const;
-int getHour() const {
-      // ....
-}
-</code></pre>
-</li>
-<li><p>const函数不能调用同一对象上的非const成员函数</p>
-</li>
-<li><p>对于包含const数据成员的对象初始化，必须使用成员初始化器</p>
-</li>
-</ol>
-<pre><code class="c++">   Class Increment {
-     public:
-     Increment(int c= 0, int i = 1);
-     private:
-     int count;
-     const int increment;
-   }
-
-   Increment::Increment(int c, int i) : count(c), increment(i) {
-     // empty
-   }
-
-   int main {
-     Increment value(10, 5);
-   }
-</code></pre>
-<p>   注意，对于const成员变量一定要使用成员初始化，非const成员变量，也可以使用</p>
-<ol>
-<li><p>每个类都有一个默认的复制构造函数</p>
-</li>
-<li><p>friend函数和friend类：类的friend函数在类的作用域之外定义，但是可以访问类的所有成员的权限</p>
-</li>
-</ol>
-<h3 id="运算符重载"><a href="#运算符重载" class="headerlink" title="运算符重载"></a>运算符重载</h3><ol>
-<li><p>编写 <code>非static成员</code> 函数或者 <code>全局函数</code> 就可以实现运算符的重载。不能是static成员函数，因为运算符必须作用在对象上，而不是类</p>
-</li>
-<li><p>运算符重载不改变元数，优先级和结合律</p>
-</li>
-<li><p>运算符重载函数的参数要求至少有一个是自己定义的类对象，不能全是基本类型</p>
-</li>
-<li><p>注意 <code>() [] -&gt;</code> 必须作为类的成员函数进行重载</p>
-</li>
-<li><p>来看看重载 <code>&lt;&lt;</code> 和 <code>&gt;&gt;</code> 的示例代码：</p>
-<pre><code class="c++">// PhoneNumber.h
-#include &lt;iostream&gt;
-#include &lt;string&gt;
-using namespace std;
-
-Class PhoneNumber {
-      friend ostream &amp;operator&lt;&lt;(ostream &amp;, const PhoneNumnber &amp;);
-      friend istream &amp;operator&gt;&gt;(istream &amp;, PhoneNumber &amp;);
-private:
-      string areaCode;
-      string exchange;
-      string line;
-}
-
-// PhoneNumber.cpp
-include &lt;iomanip&gt;
-include &quot;PhoneNumber.h&quot;
-
-using namespace std;
-
-ostream &amp;operator&lt;&lt;(ostream &amp;output, const PhoneNumber &amp;number) {
-  output &lt;&lt; &quot;(&quot; &lt;&lt; number.areaCode &lt;&lt; &quot;) &quot; &lt;&lt; number.exchange &lt;&lt; &quot;-&quot; &lt;&lt; number.line;
-  return output;
-}
-
-input &amp;operator&lt;&lt;(istream &amp;input, PhoneNumber &amp;number) {
-  input.ignore();
-  input &gt;&gt; setw(3) &gt;&gt; number.areaCode;
-  input.ignore(2);
-  input &gt;&gt; setw(3) &gt;&gt; number.exchange;
-  input &gt;&gt; ignore();
-  input &gt;&gt; setw(4) &gt;&gt; number.line;
-  return input;
-}
-</code></pre>
-</li>
-<li><p>C++通过 <code>new</code> 和 <code>delete</code> 可以在运行时动态的分配和释放内存，这种内存是在 <strong>自由存储区</strong> ，也称之为 <strong>堆(heap)</strong> 。例如 ： <code>TIme *timePtr = new Time;</code> 他会分配一个Time对象大小的内存空间，调用Time类的构造函数，并将该内存空间的首地址给timePtr指针；要释放这个内存空间，调用 <code>delete timePtr;</code> 即可，他会先调用Time的析构函数，再释放内存</p>
-</li>
-<li><p>还可以使用 <code>new</code> 和 <code>delete</code> 来动态的分配和释放数组内存。</p>
-<pre><code class="c++">int *array = new int[10];
-delete [] array;
-
-// 体现动态分配
-int i = 10;
-int *dynamicArray = new int[i];
-delete [] dynamicArray;
-</code></pre>
-</li>
-</ol>
-<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><ol>
-<li>继承方式有3种，<code>public</code> <code>protected</code> 和 <code>private</code> .这里的继承方式和数据成员的不是一个意思</li>
-<li>继承之后，基类的private数据成员也是被继承下来的，但是派生类不能直接访问</li>
-<li>友元函数不会被继承</li>
-<li>尽量避免在基类中使用protected成员，而应该使用private成员</li>
-<li>派生类不会继承基类的构造函数、析构函数和重载的赋值运算符</li>
-<li>先创建的对象后被析构</li>
-</ol>
-<h3 id="多态性"><a href="#多态性" class="headerlink" title="多态性"></a>多态性</h3><ol>
-<li><p>多态性的两个底层技术：virtual函数和动态绑定</p>
-</li>
-<li><p>如果没有运用virtual函数的话，将派生类的地址赋给基类指针，调用同名函数，执行的还是基类中的函数，而不是派生类中重写的函数。因为调用函数取决于调用函数的句柄（指针）的类型，而不是句柄指向的对象的类型。这样的话，并不能实现多态。</p>
-</li>
-<li><p>但是使用virtual函数的话，调用哪个函数，就取决与句柄指向的对象。也就是在基类中使用virtual定义同名函数，在派生类中重写该函数</p>
-</li>
-<li><p>一旦一个函数被声明为virtual函数，那么在继承层次中，所有下面的这个函数也都是virtual函数</p>
-</li>
-<li><p>通过以下两种形式，可以动态的执行函数。这些函数是在运行时绑定上去的</p>
-<ol>
-<li>通过指向派生类的基类指针调用virtual函数： <code>shapePtr-&gt;draw();</code></li>
-<li>通过指向派生类的基类引用调用virtual函数： <code>shapeRef.draw();</code></li>
-</ol>
-</li>
-<li><p>通过按名引用特定对象和使用点成员运算符调用virtual函数，是静态绑定，也就是在编译时就绑定了，不存在多态。 <code>squareObject.draw();</code></p>
-</li>
-<li><p>将类中的一个或多个函数声明为纯玩virtual函数，可以使一个类成为抽象类。纯虚函数不需要提供函数的实现</p>
-<pre><code class="c++">virtual void draw() = 0; // pure virtual function
-</code></pre>
-</li>
-<li><p>实例化一个抽象类会导致编译错误</p>
-</li>
-</ol>
-<h3 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h3><ol>
-<li><p>函数模板的定义由关键字 <code>template</code> 开头，后面的尖括号里面的是模板类型的形参列表。每个表示类型的模板形参前面必须加上关键字 <code>class</code> 或 <code>typename</code></p>
-<pre><code class="c++">template &lt;typename T&gt;
-// or
-template &lt;class ElementType&gt;
-// or
-template &lt;typename Type1, typename Type2&gt;
-</code></pre>
-</li>
-<li><p>来看一个例子</p>
-<pre><code class="c++">#include &lt;iostream&gt;
-using namespace std;
-
-// function template
-template &lt;typename T&gt;
-void printArray(const T * const array, int count) {
-      for (int i = 0; i &lt; count; ++i) {
-          cout &lt;&lt; array[i] &lt;&lt; &quot; &quot;;
-      }
-      cout &lt;&lt; endl;
-}
-
-int main() {
-      const int aCount = 5;
-      const int bCount = 7;
-      const int cCount = 6;
-
-      int a[aCount] = {1, 2, 3, 4, 5};
-      double b[bCount] = {1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7};
-      char c[cCount] = &quot;HELLO&quot;;
-
-      printArray(a, aCount);
-      printArray(b, bCount);
-      printArray(c, cCount);
-
-      return 0;
-}
-</code></pre>
-</li>
-<li><p>模板的形参名自能在模板头部的参数列表中声明一次，但是可以在函数头和函数体中重复使用</p>
-</li>
-<li><p>看一个类模板的例子</p>
-<pre><code class="c++">template &lt;typename T&gt;
-class Stack {
-public:
-      Stack(int = 10);
-      ~Stack() {
-          delete [] stackPtr;
-      }
-
-      bool push(const T &amp;) {
-          //...
-      }
-      bool pop(T &amp;) {
-          //...
-      }
-      bool isEmpty();
-private:
-      int size, top;
-      T *stackPtr;
-}
-
-templete &lt;typename T&gt;
-Stack&lt;T&gt;::Stack(int s) {
-   //...
-}
-
-template &lt;typename T&gt;
-void Stack&lt;T&gt;::isEmpty() {
-   //...
-}
-</code></pre>
-</li>
-<li><p>使用类模板的时候： <code>Stack&lt;double&gt; doubleStack(5);</code></p>
-</li>
-</ol>
-<h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><ol>
-<li>可以通过 <code>throw;</code> 语句重新抛出异常</li>
-<li><code>int someFUnction(double value) throw(ExceptionA, ExceptionB, ExceptionC) {};</code>  指定了该函数可以抛出的异常的种类</li>
-<li>​</li>
-</ol>
-]]></content>
-      
-        
-        <tags>
-            
-            <tag> C </tag>
-            
-        </tags>
         
     </entry>
     
     <entry>
-      <title><![CDATA[C和指针读书笔记（一）]]></title>
+      <title><![CDATA[C和指针读书笔记]]></title>
       <url>/2016/09/14/Pointers-on-c-reading-note-one/</url>
-      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>C和指针读书笔记，第一篇。会按章节排序</p>
+      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>《C和指针》读书笔记，会按章节排序</p>
 <a id="more"></a>
 <h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="快速上手"><a href="#快速上手" class="headerlink" title="快速上手"></a>快速上手</h3><ol>
 <li>函数参数若指定为 <strong>const</strong> ,表示函数不会修改这个参数。</li>
@@ -3803,9 +3514,7 @@ struct B {
 <pre><code class="c">   void func(register struct const *structP);
 </code></pre>
 <p>   传递指向结构体的指针可以提高效率，因为指针的size为8，一般来说是比结构体小很多的。另外添加const修饰，可以防止结构体被修改；另外增加register修饰，将这个指针存放在寄存器上面，可以提高指针访问成员（-&gt;）操作的效率。PS，如果想对结构体进行修改的话，去掉const修饰</p>
-<ol>
-<li>联合的所有成员引用的是 <strong>内存中的相同位置</strong> ，当你想在 <strong>不同时刻</strong> 将 <strong>不同的东西</strong> 存放在 <strong>相同的位置</strong> 时，就可以使用联合</li>
-</ol>
+<p>1.222222222222222e+32. 联合的所有成员引用的是 <strong>内存中的相同位置</strong> ，当你想在 <strong>不同时刻</strong> 将 <strong>不同的东西</strong> 存放在 <strong>相同的位置</strong> 时，就可以使用联合</p>
 <pre><code class="c">   union {
          float f;
          int i;
@@ -3982,12 +3691,12 @@ ans = pf(25);
 <li><p>字符I/O</p>
 </li>
 <li><p>从流中读取字符</p>
-<pre><code class="c">   int fgetc(FILE *stream);
-   int getc(FILE *stream);
-   int getchar(void);
+<pre><code class="c">      int fgetc(FILE *stream);
+      int getc(FILE *stream);
+      int getchar(void);
 </code></pre>
-<p>   getchar从标准输入流中读取，所以不需要指定流。注意：读取字符，但是返回的还是int型；没有更多字符的话返回EOF</p>
-<ol>
+<pre><code>  getchar从标准输入流中读取，所以不需要指定流。注意：读取字符，但是返回的还是int型；没有更多字符的话返回EOF
+</code></pre><ol>
 <li><p>向流中写入字符</p>
 <pre><code class="c">int fputc(int character, FILE *stream);
 int putc(int character, FILE *stream);
@@ -4000,11 +3709,11 @@ int putchar(int character);
 <li><p>未格式化的行I/O：简单读取或写入字符串</p>
 </li>
 <li><p>从流中读取行</p>
-<pre><code class="c">   char *fgets(char *buffer, int buffer_size, FILE *stream);
-   char *gets(char *buffer);
+<pre><code class="c">      char *fgets(char *buffer, int buffer_size, FILE *stream);
+      char *gets(char *buffer);
 </code></pre>
-<p>   最好不适用gets。 <strong>这里的buffer就是之前所说的缓冲区，原来这个缓冲区使我们自己建的，还指明了大小</strong> 。fgets可以这样理解：从流中读取最多 buffer_size - 1 个字符到存储到缓冲区，若到了行尾就不读了，返回的是指向缓冲区首地址的指针。这里的 <strong>从流中读取</strong> 可以理解成 <strong>从文件中读取</strong> ；读取完成后，<strong>存放到程序自己制定的buffer缓冲区中</strong> </p>
-<ol>
+<pre><code>  最好不适用gets。 **这里的buffer就是之前所说的缓冲区，原来这个缓冲区使我们自己建的，还指明了大小** 。fgets可以这样理解：从流中读取最多 buffer_size - 1 个字符到存储到缓冲区，若到了行尾就不读了，返回的是指向缓冲区首地址的指针。这里的 **从流中读取** 可以理解成 **从文件中读取** ；读取完成后，**存放到程序自己制定的buffer缓冲区中** 
+</code></pre><ol>
 <li><p>向流中写入行</p>
 <pre><code class="c">int fputs(char const *buffer, FILE *stream);
 int puts(char const *buffer);
@@ -4061,54 +3770,12 @@ int puts(char const *buffer);
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> 读书笔记 </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> C </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Objective-C编程之道 读书笔记]]></title>
-      <url>/2016/09/07/pro-objective-c-design-patterns-for-iOS/</url>
-      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Objective-C编程之道 读书笔记</p>
-<a id="more"></a>
-<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><p>笔记按照章节名来排序</p>
-<h3 id="你好，设计模式"><a href="#你好，设计模式" class="headerlink" title="你好，设计模式"></a>你好，设计模式</h3><ol>
-<li>MVC是复合的设计模式，包括：组合，命令，中介者，策略和观察者.</li>
-<li>针对接口编程，而不是针对实现编程。这里的接口在OC里面可以理解成协议。实现了协议的类一定会实现协议里面的方法，也就是具有了某些接口（协议里面的方法）。</li>
-</ol>
-<h3 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h3><ol>
-<li>想法概念化</li>
-<li>界面外观的设计：界面外观驱动</li>
-<li>代码架构设计</li>
-</ol>
-<h3 id="原型-Prototype"><a href="#原型-Prototype" class="headerlink" title="原型(Prototype)"></a>原型(Prototype)</h3><ol>
-<li>应用于“复制”操作的模式称为 <strong>原型模式</strong> ，就是把某些对象变成印章，创建新对象的时候，就像印章那样盖下去就完成了。这里的 <strong>复制</strong> 指的是：用同一种模具生产一系列产品，但是注意，这些产品在颜色尺寸等细节上还是可以不一样的。</li>
-<li>其实就是类有一个<code>clone</code>方法，对象调用这个方法，可以生成一个相同的对象。</li>
-<li>这里涉及到浅复制和深复制的问题。</li>
-<li>NSObject有一个协议NSCopying，NSCopying协议里面的一个接口是<code>(id)copyWithZone:(NSZone *)zone;</code>，NSObject的<code>copy</code>方法默认就是调用<code>[self copyWithZone:nil];</code>。所以NSObject的子类要实现复制必须实现该接口。</li>
-<li>当创建一个对象很麻烦时，与此同时这个对象已经存在一个实例了，这时候就可以调用对象的copy方法来复刻一个对象，注意对象要实现copyWithZone方法。</li>
-</ol>
-<h3 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h3><ol>
-<li>工厂方法模式：定义创建对象的接口，让子类决定实例化哪一个类。它使得类的实例化延迟到其子类。</li>
-<li>与直接创建新的具体对象相比，使用工厂方法创建对象可算作一种 <strong>最佳做法</strong> 。</li>
-<li>工厂类有<code>factoryMethod</code>这一抽象方法。具体的工厂类继承这一方法，会生成具体的产品（具体对象）。而客户端所要做的就是指定一个具体工厂，然后去调用这个factoryMethod，就会产生所需的产品。不管要什么产品，调用的都是同一个factoryMethod来生产该产品。</li>
-</ol>
-<h3 id="抽象工厂"><a href="#抽象工厂" class="headerlink" title="抽象工厂"></a>抽象工厂</h3><ol>
-<li>抽象工厂：提供一个创建一系列相关或相互依赖对象的接口，而无需指定他们具体的类</li>
-<li>​</li>
-</ol>
-]]></content>
-      
-        
-        <tags>
-            
-            <tag> iOS </tag>
-            
-        </tags>
         
     </entry>
     
@@ -4378,7 +4045,7 @@ dispatch_sync(queue, block); // 死锁
       
         <categories>
             
-            <category> iOS </category>
+            <category> 读书笔记 </category>
             
         </categories>
         
@@ -4664,7 +4331,7 @@ struct __Block_byref_obj_0 {
       
         <categories>
             
-            <category> iOS </category>
+            <category> 读书笔记 </category>
             
         </categories>
         
@@ -5041,7 +4708,7 @@ objc_autoreleasePoolPop(pool); // 废除NSAutoreleasePool，释放对象
       
         <categories>
             
-            <category> iOS </category>
+            <category> 读书笔记 </category>
             
         </categories>
         
@@ -5135,7 +4802,7 @@ objc_autoreleasePoolPop(pool); // 废除NSAutoreleasePool，释放对象
       
         <categories>
             
-            <category> iOS </category>
+            <category> 读书笔记 </category>
             
         </categories>
         
@@ -5657,7 +5324,7 @@ anim.beginTime = 0.5;
       
         <categories>
             
-            <category> iOS </category>
+            <category> 读书笔记 </category>
             
         </categories>
         
@@ -5716,14 +5383,14 @@ anim.beginTime = 0.5;
 <li><p>有一个CALayerDelegate的协议，当CALayer需要对它的content进行填充时，会去请求该协议的方法。</p>
 </li>
 <li><p>CALayer先会请求下列方法：</p>
-<pre><code class="objective-c">- (void)displayLayer:(CALayer *)layer;
+<pre><code class="objective-c">  - (void)displayLayer:(CALayer *)layer;
 </code></pre>
-<p>在这个方法里面可以直接设置CALayer的contents属性。如果实现了这个方法，那么CALayer不会再去请求其他的方法来填充它的内容。</p>
+<p>  在这个方法里面可以直接设置CALayer的contents属性。如果实现了这个方法，那么CALayer不会再去请求其他的方法来填充它的内容。</p>
 </li>
 <li><p>如果上一步未实现该方法，CALayer会去请求下面的方法：</p>
-<pre><code class="objective-c">- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
+<pre><code class="objective-c">  - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
 </code></pre>
-<p>在请求这个方法之前，<strong>CALayer会创建一个空白的backing image</strong>，和一个匹配该backing image的context。然后调用这个方法进行绘图。</p>
+<p>  在请求这个方法之前，<strong>CALayer会创建一个空白的backing image</strong>，和一个匹配该backing image的context。然后调用这个方法进行绘图。</p>
 </li>
 <li><p>只有在调用了<code>[layer display];</code>方法之后，上面说的这些delegate才会被调用。</p>
 </li>
@@ -5982,7 +5649,7 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
       
         <categories>
             
-            <category> iOS </category>
+            <category> 读书笔记 </category>
             
         </categories>
         
@@ -5990,19 +5657,14 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
-      <title><![CDATA[iOS笔记]]></title>
-      <url>/2016/05/21/ios-note/</url>
-      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>纪录一些细节</p>
-<a id="more"></a>
-<h2 id="List"><a href="#List" class="headerlink" title="List"></a>List</h2><ol>
-<li>userInteractionEnabled</li>
-</ol>
-<h2 id="userInteractionEnabled"><a href="#userInteractionEnabled" class="headerlink" title="userInteractionEnabled"></a>userInteractionEnabled</h2><p>当一个View将userInteractionEnabled设置成NO之后，该视图不会再接受手势等事件，而是会将该事件向上传递给它的父视图进行处理。</p>
+      <title><![CDATA[卧槽]]></title>
+      <url>/2016/06/07/ollie/</url>
+      <content type="html"><![CDATA[<p>昨天晚上，也就是2016-6-6这么个666的日子，我ollie过一立了=。=</p>
 ]]></content>
       
         <categories>
             
-            <category> iOS </category>
+            <category> 杂七杂八 </category>
             
         </categories>
         
@@ -6053,10 +5715,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
         <categories>
             
             <category> iOS </category>
-            
-            <category> 源码分析 </category>
-            
-            <category> 因缺斯听 </category>
             
         </categories>
         
@@ -6338,13 +5996,15 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
           }
 </code></pre><p><strong> 关键函数 </strong></p>
 <ul>
-<li><code>objc_property_t *class_copyPropertyList(Class cls, unsigned int *outCount)</code>:<br>该函数将ProjectTopics类的属性拷贝到一个数组中，并返回该数组。数组中的每个元素是<code>objc_property_t</code>类型</li>
-<li><code>const char *property_getName(objc_property_t property)</code><br>该函数传入一个objc_property_t参数，并返回该属性的属性名</li>
+<li><code>objc_property_t *class_copyPropertyList(Class cls, unsigned int *outCount)</code>:<br>  该函数将ProjectTopics类的属性拷贝到一个数组中，并返回该数组。数组中的每个元素是<code>objc_property_t</code>类型</li>
+<li><code>const char *property_getName(objc_property_t property)</code><br>  该函数传入一个objc_property_t参数，并返回该属性的属性名</li>
 </ul>
 <p><strong> 关键步骤 </strong></p>
 <ul>
-<li>获取ProjectTopics类的所有属性名，将所有属性名添加入一个NSDictionary</li>
+<li>获取ProjectTopics类的所有属性名，将所有属性名添加入一个NSDictionary<ul>
 <li>如果父类不是NSObject，也将父类的所有属性名加入同一个NSDictionary</li>
+</ul>
+</li>
 </ul>
 <p>最终得到的NSDictionary如下👇<br><img src="/lionheart/1605/property.png" alt="property"></p>
 <h4 id="遍历传入的NSDictionary：dict-为ProjectTopics类的各个属性赋值"><a href="#遍历传入的NSDictionary：dict-为ProjectTopics类的各个属性赋值" class="headerlink" title="遍历传入的NSDictionary：dict,为ProjectTopics类的各个属性赋值"></a>遍历传入的NSDictionary：<code>dict</code>,为ProjectTopics类的各个属性赋值</h4><p>先再来看看这个dict👇<br><img src="/lionheart/1605/json.png" alt="JSON"><br>因为传入<code>dict</code>中的每个key其实就是ProjectTopics类中的每个属性名，所以就可以直接赋值了。当然其中也分3中情况，</p>
@@ -6415,8 +6075,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
         <categories>
             
             <category> iOS </category>
-            
-            <category> 源码分析 </category>
             
         </categories>
         
@@ -6765,7 +6423,7 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
       
         <categories>
             
-            <category> 周记 </category>
+            <category> 杂七杂八 </category>
             
         </categories>
         
@@ -6824,9 +6482,7 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
       
         <categories>
             
-            <category> OS X </category>
-            
-            <category> 乱七八糟 </category>
+            <category> 杂七杂八 </category>
             
         </categories>
         
@@ -6871,13 +6527,13 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 </ol>
 <h2 id="ActionSheetStringPicker的重要几个文件-类"><a href="#ActionSheetStringPicker的重要几个文件-类" class="headerlink" title="ActionSheetStringPicker的重要几个文件(类)"></a>ActionSheetStringPicker的重要几个文件(类)</h2><ol>
 <li><p>SWActionSheet.m</p>
-<p> 该文件实现了2个类,<code>SWActionSheet</code>和<code>SWActionSheetVC</code>。这两个类模仿了UIActionSheet的实现。他们创建了新的UIWindow,并将在AbstractActionSheetPicker.m中创建的masterView添加到视图中。</p>
+<p>该文件实现了2个类,<code>SWActionSheet</code>和<code>SWActionSheetVC</code>。这两个类模仿了UIActionSheet的实现。他们创建了新的UIWindow,并将在AbstractActionSheetPicker.m中创建的masterView添加到视图中。</p>
 </li>
 <li><p>AbstractActionSheetPicker.m</p>
-<p> 该文件实现了<code>AbstractActionSheetPicker</code>类,这个类是创建4种不同类型的Picker的基类。在该类中创建了一个<code>masterView</code>,并创建了masterView上部的<code>UIToolBar</code>。</p>
+<p>该文件实现了<code>AbstractActionSheetPicker</code>类,这个类是创建4种不同类型的Picker的基类。在该类中创建了一个<code>masterView</code>,并创建了masterView上部的<code>UIToolBar</code>。</p>
 </li>
 <li><p>ActionSheetStringPicker.m</p>
-<p> 该文件实现了<code>ActionSheetStringPicker</code>类－4种这个库提供的picker之一。这个类最主要的功能就是实现了<code>UIPickerView</code>,以及UIPickerView的一些所需的delegate。这里创建的<code>UIPickerView</code>会被添加到<code>masterView</code>的subview中。还有就是用户定义的doneBlock以及cancelBlock都会存储在这个类中。</p>
+<p>该文件实现了<code>ActionSheetStringPicker</code>类－4种这个库提供的picker之一。这个类最主要的功能就是实现了<code>UIPickerView</code>,以及UIPickerView的一些所需的delegate。这里创建的<code>UIPickerView</code>会被添加到<code>masterView</code>的subview中。还有就是用户定义的doneBlock以及cancelBlock都会存储在这个类中。</p>
 </li>
 </ol>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
@@ -6901,33 +6557,8 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
             
             <category> iOS </category>
             
-            <category> 源码分析 </category>
-            
         </categories>
         
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[自定义UITableViewCell]]></title>
-      <url>/2016/03/08/custom-uitableviewcell/</url>
-      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文介绍自定义<code>UITableViewCell</code>的整个流程，先看看效果图👇<br><img src="/lionheart/1603/customcell.gif" alt="CustomCell"></p>
-<a id="more"></a>
-<p>##</p>
-]]></content>
-      
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[iOS编程小技巧]]></title>
-      <url>/2016/03/05/iOS-coding-skill/</url>
-      <content type="html"><![CDATA[<ol>
-<li>!autoShowError || func showError(){}</li>
-<li>mas_right || mas_trailing</li>
-</ol>
-]]></content>
-      
         
     </entry>
     
@@ -7151,7 +6782,7 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
       
         <categories>
             
-            <category> 周记 </category>
+            <category> 杂七杂八 </category>
             
         </categories>
         
@@ -7210,6 +6841,12 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
+        
         
     </entry>
     
@@ -7337,7 +6974,7 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
       
         <categories>
             
-            <category> 周记 </category>
+            <category> 杂七杂八 </category>
             
         </categories>
         
@@ -7373,8 +7010,10 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 <pre><code> UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@&quot;stefanie&quot;];
 </code></pre></li>
 <li><p>每个UITableViewCell有一个textLabel属性用来设置Cell的标题，该属性是一个UILabel对象</p>
-</li>
+<ol>
 <li>每个UITableViewCell有 accessoryType和 accessoryView属性，用来设计Cell最右边的样式</li>
+</ol>
+</li>
 </ol>
 <p>具体代码如下：</p>
 <p><img src="/lionheart/1601/tableviewcell.png" alt="UITableViewCell"></p>
@@ -7506,53 +7145,8 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
             
             <category> iOS </category>
             
-            <category> 心得 </category>
-            
         </categories>
         
-        
-        <tags>
-            
-            <tag> ShortCut </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[小技巧，套路or天坑...不定时更新]]></title>
-      <url>/2015/08/06/trick/</url>
-      <content type="html"><![CDATA[<h4 id="记录下一些小技巧或是走过的坑…"><a href="#记录下一些小技巧或是走过的坑…" class="headerlink" title="记录下一些小技巧或是走过的坑…"></a>记录下一些小技巧或是走过的坑…</h4><a id="more"></a>
-<ol>
-<li><p>运用apt-cache搜索不知全名的包<br>比如你要apt-get安装一个貌似叫做libmemcache什么的包的时候，可以通过一下命令搜索：</p>
-<pre><code>         sudo apt-cache search libmemcache | grep memcache
-</code></pre><p>于是就会出现下面的结果:</p>
-<p> <img src="/images/lionheart/apt-cache.png" alt="apt-cache"></p>
-<p> 图中的libmemcached-dev或许就会是你要的结果。</p>
-</li>
-<li><p>iOS中，将HTML代码转化成NSAttributedString</p>
-<pre><code>         NSString *htmlString = @&quot;&lt;h1&gt;Header&lt;/h1&gt;&lt;h2&gt;Subheader&lt;/h2&gt;&lt;p&gt;Some &lt;em&gt;text&lt;/em&gt;&lt;/p&gt;&lt;img src=&#39;http://vanney9.com/images/default_avatar.jpg&#39; width=70 height=100 /&gt;&quot;;
-         NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
-         textView.attributedText = attributedString;
-</code></pre><p>运行结果如下：</p>
-<p> <img src="/lionheart/1512/htmltonsattributedstring.png" alt="html string TO NSAttributedString"></p>
-<p> 参考：<a href="http://stackoverflow.com/questions/2454067/display-html-text-in-uitextview" target="_blank" rel="external">Display html text in uitextview</a></p>
-</li>
-</ol>
-]]></content>
-      
-        <categories>
-            
-            <category> 心得 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> detail </tag>
-            
-        </tags>
         
     </entry>
     
@@ -7573,18 +7167,10 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
       
         <categories>
             
-            <category> 杂七杂八 </category>
+            <category> server </category>
             
         </categories>
         
-        
-        <tags>
-            
-            <tag> nginx </tag>
-            
-            <tag> ci </tag>
-            
-        </tags>
         
     </entry>
     
@@ -7593,27 +7179,22 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
       <url>/2015/07/28/review-git/</url>
       <content type="html"><![CDATA[<p>　　今天，在<a href="www.coding.net">coding.net</a>上面，自己见了一个项目来熟悉git的基本操作。并没有用到github，主要使用的是coding.net来托管代码。<br>　　最主要的参考资料是阮一峰大神的一篇博客：<a href="http://www.ruanyifeng.com/blog/2014/06/git_remote.html" target="_blank" rel="external">Git远程操作详解</a><br>　　下面对今天的一系列操作做个记录，以便以后使用。<br><a id="more"></a></p>
 <h4 id="在coding-net上面新建项目"><a href="#在coding-net上面新建项目" class="headerlink" title="在coding.net上面新建项目"></a>在coding.net上面新建项目</h4><ol>
-<li>在coding.net上面添加ssh公钥<pre><code> $ cd ~/.ssh
- $ ssh-keygen
+<li>在coding.net上面添加ssh公钥<br>$ cd ~/.ssh<pre><code> $ ssh-keygen
 </code></pre>将生成的id_rsa.pub复制，添加到coding.net，参考<a href="http://segmentfault.com/a/1190000002737818" target="_blank" rel="external"> 将公钥部署到远程Git仓库（coding.net）</a></li>
 <li>新建项目</li>
 </ol>
 <h4 id="本地拷贝远程仓库"><a href="#本地拷贝远程仓库" class="headerlink" title="本地拷贝远程仓库"></a>本地拷贝远程仓库</h4><pre><code>    $ git clone https://git.coding.net/xxx/xxx.git
 </code></pre><h4 id="本地添加代码，并提交到coding"><a href="#本地添加代码，并提交到coding" class="headerlink" title="本地添加代码，并提交到coding"></a>本地添加代码，并提交到coding</h4><ol>
-<li>在本地新建一个文档，(example:README.md)，由于远程仓库是空的，所以进行第一次提交时，需要执行：<pre><code> $ git add README.md
- $ git commit -m &#39;first commit&#39;
+<li>在本地新建一个文档，(example:README.md)，由于远程仓库是空的，所以进行第一次提交时，需要执行：<br>$ git add README.md<pre><code> $ git commit -m &#39;first commit&#39;
  $ git push origin master #git push &lt;远程主机名&gt; &lt;本地分支&gt;:&lt;远程分支&gt;
 </code></pre>这样就完成了第一次提交，也在本地和远端都建立了一个master分支</li>
-<li>将本地和远程的相同分支建立追踪：<pre><code> $ git branch --set-upstream-to=origin/master master
-</code></pre>这样以后只需要执行：<pre><code> $ git pull OR git push
-</code></pre>而不用执行如下繁琐命令：<pre><code> $ git pull &lt;远程主机&gt; &lt;远程分支&gt;:&lt;本地分支&gt; OR git push &lt;远程主机&gt; &lt;本地分支&gt;:&lt;远程分支&gt;
+<li>将本地和远程的相同分支建立追踪：<br>$ git branch –set-upstream-to=origin/master master<br>这样以后只需要执行：<pre><code>$ git pull OR git push
+</code></pre>而不用执行如下繁琐命令：<pre><code>$ git pull &lt;远程主机&gt; &lt;远程分支&gt;:&lt;本地分支&gt; OR git push &lt;远程主机&gt; &lt;本地分支&gt;:&lt;远程分支&gt;
 </code></pre>注意： 上述繁琐语句中的冒号后面的内容一般可以省略，因为远程分支和本地分支一般名字相同</li>
-<li>每次pull或是push是都需要输入username和密码，可以在.git文件夹下面修改config文件。<pre><code> url = https://[your username]:[your password]@git.coding.net/xxx/xxx.git
-</code></pre></li>
+<li>每次pull或是push是都需要输入username和密码，可以在.git文件夹下面修改config文件。<br>url = <a href="https://[your" target="_blank" rel="external">https://[your</a> username]:[your password]@git.coding.net/xxx/xxx.git</li>
 </ol>
 <h4 id="新建分支"><a href="#新建分支" class="headerlink" title="新建分支"></a>新建分支</h4><ul>
-<li>在coding.net上面新建一个dev分支，与当前的master一致，在本地通过如下代码将其拷贝下来：<pre><code> $ git branch dev  //新建本地dev分支
- $ git checkout dev //切换到本地dev分支
+<li>在coding.net上面新建一个dev分支，与当前的master一致，在本地通过如下代码将其拷贝下来：<br>$ git branch dev  //新建本地dev分支<pre><code> $ git checkout dev //切换到本地dev分支
  $ git pull origin dev //拷贝远程dev分支到本地dev分支
  $ git branch --set-upstream-to=origin/dev dev //建立dev分支追踪
 </code></pre>通过这种方式实现本地dev分支和远端dev分支的同步；并且，由于建了追踪的原因，之后在dev分支下面的pull和push操作也只需要git pull和git push就行。</li>
@@ -7634,12 +7215,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
             
         </categories>
         
-        
-        <tags>
-            
-            <tag> git </tag>
-            
-        </tags>
         
     </entry>
     
@@ -7680,14 +7255,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
         </categories>
         
         
-        <tags>
-            
-            <tag> python </tag>
-            
-            <tag> cs193p </tag>
-            
-        </tags>
-        
     </entry>
     
     <entry>
@@ -7700,9 +7267,9 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 <h2 id="editor"><a href="#editor" class="headerlink" title="editor"></a>editor</h2><p><a href="http://pad.haroopress.com/" target="_blank" rel="external">Haroopad</a>：一款覆盖三大主流桌面系统的编辑器，支持 Windows、Mac OS X 和 Linux。 主题样式丰富，语法标亮支持 54 种编程语言。该工具重点推荐 Ubuntu/Linux 用户使用，从此可以告别 gedit 加 Markdown 插件这种工作方式了。<br>很逗的<strong>logo</strong> : <img src="http://pad.haroopress.com/assets/images/logo-small.png" alt=""></p>
 <h2 id="syntax"><a href="#syntax" class="headerlink" title="syntax"></a>syntax</h2><p><a href="http://wowubuntu.com/markdown/#p" target="_blank" rel="external">Markdown语法详解</a></p>
 <ol>
-<li><strong>如何设置字体<font size="5" color="red"><em>大</em></font><font size="2" color="blue"><em>小</em></font></strong><br> 使用<strong><em>html font</em></strong>…我以为会有简单的方法…(这样的话下面几点也就不介绍了，markdown无法完成的就老老实实用html了)</li>
-<li><strong>图片位置调整</strong><br> 使用<strong>&lt;img&gt;</strong>标签</li>
-<li><strong>特殊字符转义</strong><br> 转义用 <strong>\</strong><br> example : <strong>加粗的两个星号</strong> <strong>**</strong>  (<strong>**\*\***</strong>)</li>
+<li><strong>如何设置字体<font size="5" color="red"><em>大</em></font><font size="2" color="blue"><em>小</em></font></strong><br>使用<strong><em>html font</em></strong>…我以为会有简单的方法…(这样的话下面几点也就不介绍了，markdown无法完成的就老老实实用html了)</li>
+<li><strong>图片位置调整</strong><br>使用<strong>&lt;img&gt;</strong>标签</li>
+<li><strong>特殊字符转义</strong><br>转义用 <strong>\</strong><br>example : <strong>加粗的两个星号</strong> <strong>**</strong>  (<strong>**\*\***</strong>)</li>
 </ol>
 ]]></content>
       
@@ -7712,12 +7279,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
             
         </categories>
         
-        
-        <tags>
-            
-            <tag> markdown </tag>
-            
-        </tags>
         
     </entry>
     
@@ -7736,24 +7297,10 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
         </categories>
         
         
-        <tags>
-            
-            <tag> Hexo </tag>
-            
-        </tags>
-        
     </entry>
     
   
   
-    
-    <entry>
-      <title><![CDATA[关于]]></title>
-      <url>/about/index.html</url>
-      <content type="html"><![CDATA[<p>大家好，我是XXX。欢迎来到我的个人技术博客。</p>
-<p>这里用markdown写下你的简介，就跟平时写md一样就可以了。</p>
-]]></content>
-    </entry>
     
     <entry>
       <title><![CDATA[categories]]></title>
@@ -7765,6 +7312,14 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
       <title><![CDATA[tags]]></title>
       <url>/tags/index.html</url>
       <content type="html"></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[关于]]></title>
+      <url>/about/index.html</url>
+      <content type="html"><![CDATA[<p>大家好，我是XXX。欢迎来到我的个人技术博客。</p>
+<p>这里用markdown写下你的简介，就跟平时写md一样就可以了。</p>
+]]></content>
     </entry>
     
   

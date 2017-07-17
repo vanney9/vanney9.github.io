@@ -64,6 +64,14 @@
                     </li>
                 
                     <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
                         <a class="menu-about " href="/about" >
                             <i class="fa fa-user "></i>
                             
@@ -116,6 +124,14 @@
             </li>
         
             <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
                 <a class="waves-effect menu-about " href="/about" >
                     <i class="fa fa-user "></i>
                     
@@ -139,8 +155,8 @@
             
 
             <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/周记/">
-                    周记 <span class="right">3 篇</span></a>
+                <a class="no-padding" href="/categories/杂七杂八/">
+                    杂七杂八 <span class="right">9 篇</span></a>
                 </a>
             </li>
 
@@ -148,63 +164,23 @@
 
             <li class="collapse-level-0" collapse-level="0">
                 <a class="no-padding" href="/categories/iOS/">
-                    iOS <span class="right">18 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-1" collapse-level="1">
-                <a class="no-padding" href="/categories/iOS/源码分析/">
-                    源码分析 <span class="right">3 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-2" collapse-level="2">
-                <a class="no-padding" href="/categories/iOS/源码分析/因缺斯听/">
-                    因缺斯听 <span class="right">1 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-1" collapse-level="1">
-                <a class="no-padding" href="/categories/iOS/心得/">
-                    心得 <span class="right">1 篇</span></a>
+                    iOS <span class="right">27 篇</span></a>
                 </a>
             </li>
 
         
 
             <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/杂七杂八/">
-                    杂七杂八 <span class="right">5 篇</span></a>
+                <a class="no-padding" href="/categories/读书笔记/">
+                    读书笔记 <span class="right">13 篇</span></a>
                 </a>
             </li>
 
         
 
             <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/OS-X/">
-                    OS-X <span class="right">1 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-1" collapse-level="1">
-                <a class="no-padding" href="/categories/OS-X/乱七八糟/">
-                    乱七八糟 <span class="right">1 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/心得/">
-                    心得 <span class="right">1 篇</span></a>
+                <a class="no-padding" href="/categories/server/">
+                    server <span class="right">2 篇</span></a>
                 </a>
             </li>
 
@@ -240,7 +216,7 @@
             
     
     
-    <a class="breadcrumb" href="/categories/iOS/">iOS</a><a class="breadcrumb" href="/categories/iOS/源码分析/">源码分析</a>
+    <a class="breadcrumb" href="/categories/iOS/">iOS</a>
 
 
         
@@ -312,13 +288,13 @@
 </ol>
 <h2 id="ActionSheetStringPicker的重要几个文件-类"><a href="#ActionSheetStringPicker的重要几个文件-类" class="headerlink" title="ActionSheetStringPicker的重要几个文件(类)"></a>ActionSheetStringPicker的重要几个文件(类)</h2><ol>
 <li><p>SWActionSheet.m</p>
-<p> 该文件实现了2个类,<code>SWActionSheet</code>和<code>SWActionSheetVC</code>。这两个类模仿了UIActionSheet的实现。他们创建了新的UIWindow,并将在AbstractActionSheetPicker.m中创建的masterView添加到视图中。</p>
+<p>该文件实现了2个类,<code>SWActionSheet</code>和<code>SWActionSheetVC</code>。这两个类模仿了UIActionSheet的实现。他们创建了新的UIWindow,并将在AbstractActionSheetPicker.m中创建的masterView添加到视图中。</p>
 </li>
 <li><p>AbstractActionSheetPicker.m</p>
-<p> 该文件实现了<code>AbstractActionSheetPicker</code>类,这个类是创建4种不同类型的Picker的基类。在该类中创建了一个<code>masterView</code>,并创建了masterView上部的<code>UIToolBar</code>。</p>
+<p>该文件实现了<code>AbstractActionSheetPicker</code>类,这个类是创建4种不同类型的Picker的基类。在该类中创建了一个<code>masterView</code>,并创建了masterView上部的<code>UIToolBar</code>。</p>
 </li>
 <li><p>ActionSheetStringPicker.m</p>
-<p> 该文件实现了<code>ActionSheetStringPicker</code>类－4种这个库提供的picker之一。这个类最主要的功能就是实现了<code>UIPickerView</code>,以及UIPickerView的一些所需的delegate。这里创建的<code>UIPickerView</code>会被添加到<code>masterView</code>的subview中。还有就是用户定义的doneBlock以及cancelBlock都会存储在这个类中。</p>
+<p>该文件实现了<code>ActionSheetStringPicker</code>类－4种这个库提供的picker之一。这个类最主要的功能就是实现了<code>UIPickerView</code>,以及UIPickerView的一些所需的delegate。这里创建的<code>UIPickerView</code>会被添加到<code>masterView</code>的subview中。还有就是用户定义的doneBlock以及cancelBlock都会存储在这个类中。</p>
 </li>
 </ol>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
@@ -347,8 +323,8 @@
 
 
 <p class="teal-link-context">
-    <a href="/2016/03/08/custom-uitableviewcell/" rel="next" title="自定义UITableViewCell">
-    下一篇：自定义UITableViewCell
+    <a href="/2016/03/05/2016-week2/" rel="next" title="2016 Week 2">
+    下一篇：2016 Week 2
   </a>
 </p>
 

@@ -7,15 +7,15 @@
 
     
 
-    <title>C和指针读书笔记（一） | Vanney</title>
+    <title>C和指针读书笔记 | Vanney</title>
     <meta name="author" content="Vanney">
     
-    <meta name="description" content="前言C和指针读书笔记，第一篇。会按章节排序">
+    <meta name="description" content="前言《C和指针》读书笔记，会按章节排序">
     
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <meta property="og:title" content="C和指针读书笔记（一）"/>
+    <meta property="og:title" content="C和指针读书笔记"/>
     <meta property="og:site_name" content="Vanney"/>
 
     
@@ -60,6 +60,14 @@
                             <i class="fa fa-archive "></i>
                             
                             归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
                         </a>
                     </li>
                 
@@ -116,6 +124,14 @@
             </li>
         
             <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
                 <a class="waves-effect menu-about " href="/about" >
                     <i class="fa fa-user "></i>
                     
@@ -139,8 +155,8 @@
             
 
             <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/周记/">
-                    周记 <span class="right">3 篇</span></a>
+                <a class="no-padding" href="/categories/杂七杂八/">
+                    杂七杂八 <span class="right">9 篇</span></a>
                 </a>
             </li>
 
@@ -148,63 +164,23 @@
 
             <li class="collapse-level-0" collapse-level="0">
                 <a class="no-padding" href="/categories/iOS/">
-                    iOS <span class="right">18 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-1" collapse-level="1">
-                <a class="no-padding" href="/categories/iOS/源码分析/">
-                    源码分析 <span class="right">3 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-2" collapse-level="2">
-                <a class="no-padding" href="/categories/iOS/源码分析/因缺斯听/">
-                    因缺斯听 <span class="right">1 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-1" collapse-level="1">
-                <a class="no-padding" href="/categories/iOS/心得/">
-                    心得 <span class="right">1 篇</span></a>
+                    iOS <span class="right">27 篇</span></a>
                 </a>
             </li>
 
         
 
             <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/杂七杂八/">
-                    杂七杂八 <span class="right">5 篇</span></a>
+                <a class="no-padding" href="/categories/读书笔记/">
+                    读书笔记 <span class="right">13 篇</span></a>
                 </a>
             </li>
 
         
 
             <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/OS-X/">
-                    OS-X <span class="right">1 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-1" collapse-level="1">
-                <a class="no-padding" href="/categories/OS-X/乱七八糟/">
-                    乱七八糟 <span class="right">1 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/心得/">
-                    心得 <span class="right">1 篇</span></a>
+                <a class="no-padding" href="/categories/server/">
+                    server <span class="right">2 篇</span></a>
                 </a>
             </li>
 
@@ -238,6 +214,10 @@
         <span class="breadcrumb">当前位置（分类目录）</span>
         
             
+    
+    
+    <a class="breadcrumb" href="/categories/读书笔记/">读书笔记</a>
+
 
         
 
@@ -253,7 +233,7 @@
             <div class="article-title">
                 
     
-        <h1>C和指针读书笔记（一）</h1>
+        <h1>C和指针读书笔记</h1>
     
 
 
@@ -266,12 +246,6 @@
 </span>
 
             
-    <div class="tags-row">
-        
-            <a href="/tags/C/" class="chip teal darken-1">C</a>
-        
-    </div>
-
 
             <div class="toc teal-link-context hide-on-med-and-down">
     <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#前言"><span class="section table-of-contents-text">前言</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#笔记"><span class="section table-of-contents-text">笔记</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#快速上手"><span class="section table-of-contents-text">快速上手</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#基本概念"><span class="section table-of-contents-text">基本概念</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#数据"><span class="section table-of-contents-text">数据</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#操作符和表达式"><span class="section table-of-contents-text">操作符和表达式</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#指针"><span class="section table-of-contents-text">指针</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#函数"><span class="section table-of-contents-text">函数</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#数组"><span class="section table-of-contents-text">数组</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#字符串、字符和字节"><span class="section table-of-contents-text">字符串、字符和字节</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#结构和联合"><span class="section table-of-contents-text">结构和联合</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#动态内存分配"><span class="section table-of-contents-text">动态内存分配</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#使用结构和指针"><span class="section table-of-contents-text">使用结构和指针</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#高级指针话题"><span class="section table-of-contents-text">高级指针话题</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#预处理器"><span class="section table-of-contents-text">预处理器</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#输入-输出函数"><span class="section table-of-contents-text">输入/输出函数</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#标准函数库"><span class="section table-of-contents-text">标准函数库</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#经典抽象数据类型"><span class="section table-of-contents-text">经典抽象数据类型</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#运行时环境"><span class="section table-of-contents-text">运行时环境</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#参考"><span class="section table-of-contents-text">参考</span></a></li></ol>
@@ -279,7 +253,7 @@
 
 
             <div class="entry teal-link-context">
-                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>C和指针读书笔记，第一篇。会按章节排序</p>
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>《C和指针》读书笔记，会按章节排序</p>
 <a id="more"></a>
 <h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="快速上手"><a href="#快速上手" class="headerlink" title="快速上手"></a>快速上手</h3><ol>
 <li>函数参数若指定为 <strong>const</strong> ,表示函数不会修改这个参数。</li>
@@ -578,9 +552,7 @@ struct B {
 <pre><code class="c">   void func(register struct const *structP);
 </code></pre>
 <p>   传递指向结构体的指针可以提高效率，因为指针的size为8，一般来说是比结构体小很多的。另外添加const修饰，可以防止结构体被修改；另外增加register修饰，将这个指针存放在寄存器上面，可以提高指针访问成员（-&gt;）操作的效率。PS，如果想对结构体进行修改的话，去掉const修饰</p>
-<ol>
-<li>联合的所有成员引用的是 <strong>内存中的相同位置</strong> ，当你想在 <strong>不同时刻</strong> 将 <strong>不同的东西</strong> 存放在 <strong>相同的位置</strong> 时，就可以使用联合</li>
-</ol>
+<p>1.222222222222222e+32. 联合的所有成员引用的是 <strong>内存中的相同位置</strong> ，当你想在 <strong>不同时刻</strong> 将 <strong>不同的东西</strong> 存放在 <strong>相同的位置</strong> 时，就可以使用联合</p>
 <pre><code class="c">   union {
          float f;
          int i;
@@ -757,12 +729,12 @@ ans = pf(25);
 <li><p>字符I/O</p>
 </li>
 <li><p>从流中读取字符</p>
-<pre><code class="c">   int fgetc(FILE *stream);
-   int getc(FILE *stream);
-   int getchar(void);
+<pre><code class="c">      int fgetc(FILE *stream);
+      int getc(FILE *stream);
+      int getchar(void);
 </code></pre>
-<p>   getchar从标准输入流中读取，所以不需要指定流。注意：读取字符，但是返回的还是int型；没有更多字符的话返回EOF</p>
-<ol>
+<pre><code>  getchar从标准输入流中读取，所以不需要指定流。注意：读取字符，但是返回的还是int型；没有更多字符的话返回EOF
+</code></pre><ol>
 <li><p>向流中写入字符</p>
 <pre><code class="c">int fputc(int character, FILE *stream);
 int putc(int character, FILE *stream);
@@ -775,11 +747,11 @@ int putchar(int character);
 <li><p>未格式化的行I/O：简单读取或写入字符串</p>
 </li>
 <li><p>从流中读取行</p>
-<pre><code class="c">   char *fgets(char *buffer, int buffer_size, FILE *stream);
-   char *gets(char *buffer);
+<pre><code class="c">      char *fgets(char *buffer, int buffer_size, FILE *stream);
+      char *gets(char *buffer);
 </code></pre>
-<p>   最好不适用gets。 <strong>这里的buffer就是之前所说的缓冲区，原来这个缓冲区使我们自己建的，还指明了大小</strong> 。fgets可以这样理解：从流中读取最多 buffer_size - 1 个字符到存储到缓冲区，若到了行尾就不读了，返回的是指向缓冲区首地址的指针。这里的 <strong>从流中读取</strong> 可以理解成 <strong>从文件中读取</strong> ；读取完成后，<strong>存放到程序自己制定的buffer缓冲区中</strong> </p>
-<ol>
+<pre><code>  最好不适用gets。 **这里的buffer就是之前所说的缓冲区，原来这个缓冲区使我们自己建的，还指明了大小** 。fgets可以这样理解：从流中读取最多 buffer_size - 1 个字符到存储到缓冲区，若到了行尾就不读了，返回的是指向缓冲区首地址的指针。这里的 **从流中读取** 可以理解成 **从文件中读取** ；读取完成后，**存放到程序自己制定的buffer缓冲区中** 
+</code></pre><ol>
 <li><p>向流中写入行</p>
 <pre><code class="c">int fputs(char const *buffer, FILE *stream);
 int puts(char const *buffer);
@@ -837,16 +809,16 @@ int puts(char const *buffer);
 
                 
 <p class="teal-link-context">
-    <a href="/2016/10/17/c-how-to-progarm-reading-note/" rel="next" title="C++大学教程读书笔记 - 与C++相关">
-    上一篇：C++大学教程读书笔记 - 与C++相关
+    <a href="/2016/10/29/aws-minered-virus/" rel="next" title="记一次aws-ec2杀毒经历">
+    上一篇：记一次aws-ec2杀毒经历
   </a>
 </p>
 
 
 
 <p class="teal-link-context">
-    <a href="/2016/09/07/pro-objective-c-design-patterns-for-iOS/" rel="next" title="Objective-C编程之道 读书笔记">
-    下一篇：Objective-C编程之道 读书笔记
+    <a href="/2016/08/15/YYKit-source-code-analysis/" rel="next" title="看YYKit的源码">
+    下一篇：看YYKit的源码
   </a>
 </p>
 

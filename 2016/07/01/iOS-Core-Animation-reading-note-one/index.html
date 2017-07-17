@@ -64,6 +64,14 @@
                     </li>
                 
                     <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
                         <a class="menu-about " href="/about" >
                             <i class="fa fa-user "></i>
                             
@@ -116,6 +124,14 @@
             </li>
         
             <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
                 <a class="waves-effect menu-about " href="/about" >
                     <i class="fa fa-user "></i>
                     
@@ -139,8 +155,8 @@
             
 
             <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/周记/">
-                    周记 <span class="right">3 篇</span></a>
+                <a class="no-padding" href="/categories/杂七杂八/">
+                    杂七杂八 <span class="right">9 篇</span></a>
                 </a>
             </li>
 
@@ -148,63 +164,23 @@
 
             <li class="collapse-level-0" collapse-level="0">
                 <a class="no-padding" href="/categories/iOS/">
-                    iOS <span class="right">18 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-1" collapse-level="1">
-                <a class="no-padding" href="/categories/iOS/源码分析/">
-                    源码分析 <span class="right">3 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-2" collapse-level="2">
-                <a class="no-padding" href="/categories/iOS/源码分析/因缺斯听/">
-                    因缺斯听 <span class="right">1 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-1" collapse-level="1">
-                <a class="no-padding" href="/categories/iOS/心得/">
-                    心得 <span class="right">1 篇</span></a>
+                    iOS <span class="right">27 篇</span></a>
                 </a>
             </li>
 
         
 
             <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/杂七杂八/">
-                    杂七杂八 <span class="right">5 篇</span></a>
+                <a class="no-padding" href="/categories/读书笔记/">
+                    读书笔记 <span class="right">13 篇</span></a>
                 </a>
             </li>
 
         
 
             <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/OS-X/">
-                    OS-X <span class="right">1 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-1" collapse-level="1">
-                <a class="no-padding" href="/categories/OS-X/乱七八糟/">
-                    乱七八糟 <span class="right">1 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/心得/">
-                    心得 <span class="right">1 篇</span></a>
+                <a class="no-padding" href="/categories/server/">
+                    server <span class="right">2 篇</span></a>
                 </a>
             </li>
 
@@ -240,7 +216,7 @@
             
     
     
-    <a class="breadcrumb" href="/categories/iOS/">iOS</a>
+    <a class="breadcrumb" href="/categories/读书笔记/">读书笔记</a>
 
 
         
@@ -326,14 +302,14 @@
 <li><p>有一个CALayerDelegate的协议，当CALayer需要对它的content进行填充时，会去请求该协议的方法。</p>
 </li>
 <li><p>CALayer先会请求下列方法：</p>
-<pre><code class="objective-c">- (void)displayLayer:(CALayer *)layer;
+<pre><code class="objective-c">  - (void)displayLayer:(CALayer *)layer;
 </code></pre>
-<p>在这个方法里面可以直接设置CALayer的contents属性。如果实现了这个方法，那么CALayer不会再去请求其他的方法来填充它的内容。</p>
+<p>  在这个方法里面可以直接设置CALayer的contents属性。如果实现了这个方法，那么CALayer不会再去请求其他的方法来填充它的内容。</p>
 </li>
 <li><p>如果上一步未实现该方法，CALayer会去请求下面的方法：</p>
-<pre><code class="objective-c">- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
+<pre><code class="objective-c">  - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
 </code></pre>
-<p>在请求这个方法之前，<strong>CALayer会创建一个空白的backing image</strong>，和一个匹配该backing image的context。然后调用这个方法进行绘图。</p>
+<p>  在请求这个方法之前，<strong>CALayer会创建一个空白的backing image</strong>，和一个匹配该backing image的context。然后调用这个方法进行绘图。</p>
 </li>
 <li><p>只有在调用了<code>[layer display];</code>方法之后，上面说的这些delegate才会被调用。</p>
 </li>
@@ -599,8 +575,8 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 
 
 <p class="teal-link-context">
-    <a href="/2016/05/21/ios-note/" rel="next" title="iOS笔记">
-    下一篇：iOS笔记
+    <a href="/2016/06/07/ollie/" rel="next" title="卧槽">
+    下一篇：卧槽
   </a>
 </p>
 

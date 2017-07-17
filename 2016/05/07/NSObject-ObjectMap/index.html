@@ -68,6 +68,14 @@ MJExtension: A fast, convenient and nonintrusive conversion between JSON and mod
                     </li>
                 
                     <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
                         <a class="menu-about " href="/about" >
                             <i class="fa fa-user "></i>
                             
@@ -120,6 +128,14 @@ MJExtension: A fast, convenient and nonintrusive conversion between JSON and mod
             </li>
         
             <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
                 <a class="waves-effect menu-about " href="/about" >
                     <i class="fa fa-user "></i>
                     
@@ -143,8 +159,8 @@ MJExtension: A fast, convenient and nonintrusive conversion between JSON and mod
             
 
             <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/周记/">
-                    周记 <span class="right">3 篇</span></a>
+                <a class="no-padding" href="/categories/杂七杂八/">
+                    杂七杂八 <span class="right">9 篇</span></a>
                 </a>
             </li>
 
@@ -152,63 +168,23 @@ MJExtension: A fast, convenient and nonintrusive conversion between JSON and mod
 
             <li class="collapse-level-0" collapse-level="0">
                 <a class="no-padding" href="/categories/iOS/">
-                    iOS <span class="right">18 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-1" collapse-level="1">
-                <a class="no-padding" href="/categories/iOS/源码分析/">
-                    源码分析 <span class="right">3 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-2" collapse-level="2">
-                <a class="no-padding" href="/categories/iOS/源码分析/因缺斯听/">
-                    因缺斯听 <span class="right">1 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-1" collapse-level="1">
-                <a class="no-padding" href="/categories/iOS/心得/">
-                    心得 <span class="right">1 篇</span></a>
+                    iOS <span class="right">27 篇</span></a>
                 </a>
             </li>
 
         
 
             <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/杂七杂八/">
-                    杂七杂八 <span class="right">5 篇</span></a>
+                <a class="no-padding" href="/categories/读书笔记/">
+                    读书笔记 <span class="right">13 篇</span></a>
                 </a>
             </li>
 
         
 
             <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/OS-X/">
-                    OS-X <span class="right">1 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-1" collapse-level="1">
-                <a class="no-padding" href="/categories/OS-X/乱七八糟/">
-                    乱七八糟 <span class="right">1 篇</span></a>
-                </a>
-            </li>
-
-        
-
-            <li class="collapse-level-0" collapse-level="0">
-                <a class="no-padding" href="/categories/心得/">
-                    心得 <span class="right">1 篇</span></a>
+                <a class="no-padding" href="/categories/server/">
+                    server <span class="right">2 篇</span></a>
                 </a>
             </li>
 
@@ -244,7 +220,7 @@ MJExtension: A fast, convenient and nonintrusive conversion between JSON and mod
             
     
     
-    <a class="breadcrumb" href="/categories/iOS/">iOS</a><a class="breadcrumb" href="/categories/iOS/源码分析/">源码分析</a>
+    <a class="breadcrumb" href="/categories/iOS/">iOS</a>
 
 
         
@@ -325,13 +301,15 @@ MJExtension: A fast, convenient and nonintrusive conversion between JSON and mod
           }
 </code></pre><p><strong> 关键函数 </strong></p>
 <ul>
-<li><code>objc_property_t *class_copyPropertyList(Class cls, unsigned int *outCount)</code>:<br>该函数将ProjectTopics类的属性拷贝到一个数组中，并返回该数组。数组中的每个元素是<code>objc_property_t</code>类型</li>
-<li><code>const char *property_getName(objc_property_t property)</code><br>该函数传入一个objc_property_t参数，并返回该属性的属性名</li>
+<li><code>objc_property_t *class_copyPropertyList(Class cls, unsigned int *outCount)</code>:<br>  该函数将ProjectTopics类的属性拷贝到一个数组中，并返回该数组。数组中的每个元素是<code>objc_property_t</code>类型</li>
+<li><code>const char *property_getName(objc_property_t property)</code><br>  该函数传入一个objc_property_t参数，并返回该属性的属性名</li>
 </ul>
 <p><strong> 关键步骤 </strong></p>
 <ul>
-<li>获取ProjectTopics类的所有属性名，将所有属性名添加入一个NSDictionary</li>
+<li>获取ProjectTopics类的所有属性名，将所有属性名添加入一个NSDictionary<ul>
 <li>如果父类不是NSObject，也将父类的所有属性名加入同一个NSDictionary</li>
+</ul>
+</li>
 </ul>
 <p>最终得到的NSDictionary如下👇<br><img src="/lionheart/1605/property.png" alt="property"></p>
 <h4 id="遍历传入的NSDictionary：dict-为ProjectTopics类的各个属性赋值"><a href="#遍历传入的NSDictionary：dict-为ProjectTopics类的各个属性赋值" class="headerlink" title="遍历传入的NSDictionary：dict,为ProjectTopics类的各个属性赋值"></a>遍历传入的NSDictionary：<code>dict</code>,为ProjectTopics类的各个属性赋值</h4><p>先再来看看这个dict👇<br><img src="/lionheart/1605/json.png" alt="JSON"><br>因为传入<code>dict</code>中的每个key其实就是ProjectTopics类中的每个属性名，所以就可以直接赋值了。当然其中也分3中情况，</p>
