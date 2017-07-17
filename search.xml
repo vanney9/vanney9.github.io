@@ -7329,11 +7329,9 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
   
     
     <entry>
-      <title><![CDATA[关于]]></title>
-      <url>/about/index.html</url>
-      <content type="html"><![CDATA[<p>大家好，我是XXX。欢迎来到我的个人技术博客。</p>
-<p>这里用markdown写下你的简介，就跟平时写md一样就可以了。</p>
-]]></content>
+      <title><![CDATA[categories]]></title>
+      <url>/categories/index.html</url>
+      <content type="html"></content>
     </entry>
     
     <entry>
@@ -7343,9 +7341,11 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
-      <title><![CDATA[categories]]></title>
-      <url>/categories/index.html</url>
-      <content type="html"></content>
+      <title><![CDATA[关于]]></title>
+      <url>/about/index.html</url>
+      <content type="html"><![CDATA[<p>大家好，我是XXX。欢迎来到我的个人技术博客。</p>
+<p>这里用markdown写下你的简介，就跟平时写md一样就可以了。</p>
+]]></content>
     </entry>
     
   
