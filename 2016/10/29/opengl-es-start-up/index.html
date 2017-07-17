@@ -248,7 +248,7 @@
             
 
             <div class="toc teal-link-context hide-on-med-and-down">
-    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#前言"><span class="section table-of-contents-text">前言</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#OpenGL和OpenGL-ES"><span class="section table-of-contents-text">OpenGL和OpenGL ES</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#Demo实现"><span class="section table-of-contents-text">Demo实现</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#OpenGL-ES-渲染"><span class="section table-of-contents-text">OpenGL ES 渲染</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#使用GLKit初始化"><span class="section table-of-contents-text">使用GLKit初始化</span></a></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#设置GLKView的context属性"><span class="section table-of-contents-text">设置GLKView的context属性</span></a></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#设置OpenGL-ES"><span class="section table-of-contents-text">设置OpenGL ES</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#添加手势"><span class="section table-of-contents-text">添加手势</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#参考"><span class="section table-of-contents-text">参考</span></a></li></ol>
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#前言"><span class="section table-of-contents-text">前言</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#OpenGL和OpenGL-ES"><span class="section table-of-contents-text">OpenGL和OpenGL ES</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#Demo实现"><span class="section table-of-contents-text">Demo实现</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#OpenGL-ES-渲染"><span class="section table-of-contents-text">OpenGL ES 渲染</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#使用GLKit初始化"><span class="section table-of-contents-text">使用GLKit初始化</span></a></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#设置GLKView的context属性"><span class="section table-of-contents-text">设置GLKView的context属性</span></a></li><li class="section table-of-contents-item section table-of-contents-level-4"><a class="section table-of-contents-link" href="#设置OpenGL-ES"><span class="section table-of-contents-text">设置OpenGL ES</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-5"><a class="section table-of-contents-link" href="#创建shader程序"><span class="section table-of-contents-text">创建shader程序</span></a></li><li class="section table-of-contents-item section table-of-contents-level-5"><a class="section table-of-contents-link" href="#设置各种和顶点相关的缓冲"><span class="section table-of-contents-text">设置各种和顶点相关的缓冲</span></a></li><li class="section table-of-contents-item section table-of-contents-level-5"><a class="section table-of-contents-link" href="#设置各种纹理缓冲"><span class="section table-of-contents-text">设置各种纹理缓冲</span></a></li><li class="section table-of-contents-item section table-of-contents-level-5"><a class="section table-of-contents-link" href="#开始渲染"><span class="section table-of-contents-text">开始渲染</span></a></li></ol></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#添加手势"><span class="section table-of-contents-text">添加手势</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#参考"><span class="section table-of-contents-text">参考</span></a></li></ol>
 </div>
 
 
@@ -272,8 +272,7 @@
 </code></pre>
 <p>这里创建context是使用OpenGL ES的基石，就相当于你使用GLFW和GLEW对整个环境进行初始化，定义viewport之类的</p>
 <h4 id="设置OpenGL-ES"><a href="#设置OpenGL-ES" class="headerlink" title="设置OpenGL ES"></a>设置OpenGL ES</h4><p>设置OpenGL ES的代码和OpenGL的基本相似。</p>
-<ol>
-<li><p>创建shader程序：也就是对你写的glsl文件进行编译链接，最终持有一个Shader programe。代码如下：</p>
+<h5 id="创建shader程序"><a href="#创建shader程序" class="headerlink" title="创建shader程序"></a>创建shader程序</h5><p>也就是对你写的glsl文件进行编译链接，最终持有一个Shader programe。代码如下：</p>
 <pre><code class="objective-c">// load glsl file
 NSString *vertexFile = [[NSBundle mainBundle] pathForResource:vertexPath ofType:@&quot;glsl&quot;];
 NSString *fragmentFile = [[NSBundle mainBundle] pathForResource:fragmentPath ofType:@&quot;glsl&quot;];
@@ -291,81 +290,108 @@ if (!fragmentString) {
   NSLog(@&quot;vanney code log : error loading fragment shader : %@&quot;, error.localizedDescription);
   exit(1);
 }
+
+// compiler
+GLuint vertexShader, fragmentShader;
+GLint compilerSuccess, linkSuccess;
+GLchar messages[512];
+
+vertexShader = glCreateShader(GL_VERTEX_SHADER);
+const GLchar *vertexStringUTF8 = [vertexString UTF8String];
+glShaderSource(vertexShader, 1, &amp;vertexStringUTF8, NULL);
+glCompileShader(vertexShader);
+glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &amp;compilerSuccess);
+if (compilerSuccess == GL_FALSE) {
+  glGetShaderInfoLog(vertexShader, sizeof(messages), NULL, messages);
+  NSLog(@&quot;vanney code log : compile vertex shader error : %@&quot;, [NSString     stringWithUTF8String:messages]);
+  exit(1);
+}
+
+fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+const GLchar *fragmentStringUTF8 = [fragmentString UTF8String];
+glShaderSource(fragmentShader, 1, &amp;fragmentStringUTF8, NULL);
+glCompileShader(fragmentShader);
+glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &amp;compilerSuccess);
+if (compilerSuccess == GL_FALSE) {
+  glGetShaderInfoLog(fragmentShader, sizeof(messages), NULL, messages);
+  NSLog(@&quot;vanney code log : compile fragment shader error : %@&quot;, [NSString stringWithUTF8String:messages]);
+  exit(1);
+}
+
+// link
+self.program = glCreateProgram();
+glAttachShader(self.program, vertexShader);
+glAttachShader(self.program, fragmentShader);
+glLinkProgram(self.program);
+glGetProgramiv(self.program, GL_LINK_STATUS, &amp;linkSuccess);
+if (linkSuccess == GL_FALSE) {
+  glGetProgramInfoLog(self.program, sizeof(messages), NULL, messages);
+  NSLog(@&quot;vanney code log : link shader error : %@&quot;, [NSString stringWithUTF8String:messages]);
+  exit(1);
+}
+
+glDeleteShader(vertexShader);
+glDeleteShader(fragmentShader);
 </code></pre>
-</li>
-</ol>
-<p>   // compiler<br>   GLuint vertexShader, fragmentShader;<br>   GLint compilerSuccess, linkSuccess;<br>   GLchar messages[512];</p>
-<p>   vertexShader = glCreateShader(GL_VERTEX_SHADER);<br>   const GLchar *vertexStringUTF8 = [vertexString UTF8String];<br>   glShaderSource(vertexShader, 1, &amp;vertexStringUTF8, NULL);<br>   glCompileShader(vertexShader);<br>   glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &amp;compilerSuccess);<br>   if (compilerSuccess == GL_FALSE) {<br>     glGetShaderInfoLog(vertexShader, sizeof(messages), NULL, messages);<br>     NSLog(@”vanney code log : compile vertex shader error : %@”, [NSString stringWithUTF8String:messages]);<br>     exit(1);<br>   }</p>
-<p>   fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);<br>   const GLchar *fragmentStringUTF8 = [fragmentString UTF8String];<br>   glShaderSource(fragmentShader, 1, &amp;fragmentStringUTF8, NULL);<br>   glCompileShader(fragmentShader);<br>   glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &amp;compilerSuccess);<br>   if (compilerSuccess == GL_FALSE) {<br>     glGetShaderInfoLog(fragmentShader, sizeof(messages), NULL, messages);<br>     NSLog(@”vanney code log : compile fragment shader error : %@”, [NSString stringWithUTF8String:messages]);<br>     exit(1);<br>   }</p>
-<p>   // link<br>   self.program = glCreateProgram();<br>   glAttachShader(self.program, vertexShader);<br>   glAttachShader(self.program, fragmentShader);<br>   glLinkProgram(self.program);<br>   glGetProgramiv(self.program, GL_LINK_STATUS, &amp;linkSuccess);<br>   if (linkSuccess == GL_FALSE) {<br>     glGetProgramInfoLog(self.program, sizeof(messages), NULL, messages);<br>     NSLog(@”vanney code log : link shader error : %@”, [NSString stringWithUTF8String:messages]);<br>     exit(1);<br>   }</p>
-<p>   glDeleteShader(vertexShader);<br>   glDeleteShader(fragmentShader);</p>
-<pre><code>
-   ​
+<h5 id="设置各种和顶点相关的缓冲"><a href="#设置各种和顶点相关的缓冲" class="headerlink" title="设置各种和顶点相关的缓冲"></a>设置各种和顶点相关的缓冲</h5><p>在缓冲中写入顶点数据，以及定义好GPU如何对这些顶点数据进行读取等等，代码如下：</p>
+<pre><code class="objective-c">// initialize vertex data
+glGenVertexArrays(1, &amp;VAO);
+glGenBuffers(1, &amp;VBO);
+//glGenBuffers(1, &amp;VEO);
 
-2. 设置各种和顶点相关的缓冲，在缓冲中写入顶点数据，以及定义好GPU如何对这些顶点数据进行读取等等，代码如下：
-
-   ````objective-c
-   // initialize vertex data
-   glGenVertexArrays(1, &amp;VAO);
-   glGenBuffers(1, &amp;VBO);
-   //glGenBuffers(1, &amp;VEO);
-
-   glBindVertexArray(VAO);
-   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.VEO);
-   //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-   glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *) 0);
-   glEnableVertexAttribArray(GLKVertexAttribPosition);
-   glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *) (3 * sizeof(GLfloat)));
-   glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
-   glBindVertexArray(0);
-</code></pre><ol>
-<li><p>设置各种纹理缓冲，注意这里要使用 <code>GLKit的GLKTextureLoader</code> 和 <code>GLKTextureInfo</code> ，代码如下：</p>
+glBindVertexArray(VAO);
+glBindBuffer(GL_ARRAY_BUFFER, VBO);
+glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.VEO);
+//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *) 0);
+glEnableVertexAttribArray(GLKVertexAttribPosition);
+glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *) (3 * sizeof(GLfloat)));
+glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+glBindVertexArray(0);
+</code></pre>
+<h5 id="设置各种纹理缓冲"><a href="#设置各种纹理缓冲" class="headerlink" title="设置各种纹理缓冲"></a>设置各种纹理缓冲</h5><p>注意这里要使用 <code>GLKit的GLKTextureLoader</code> 和 <code>GLKTextureInfo</code> ，代码如下：</p>
 <pre><code class="objective-c">NSError *error;
 NSString *containerPath = [[NSBundle mainBundle] pathForResource:@&quot;container&quot; ofType:@&quot;jpg&quot;];
 self.containerTexture = [GLKTextureLoader textureWithContentsOfFile:containerPath options:nil error:&amp;error];
 glActiveTexture(GL_TEXTURE0);
 glBindTexture(self.containerTexture.target, self.containerTexture.name);
 </code></pre>
-</li>
-<li><p>开始渲染，只需实现GLKView的delegate <code>(void)glkView:(GLKView *)view drawInRect:(CGRect)rect;</code> 就可：</p>
+<h5 id="开始渲染"><a href="#开始渲染" class="headerlink" title="开始渲染"></a>开始渲染</h5><p>只需实现GLKView的delegate <code>(void)glkView:(GLKView *)view drawInRect:(CGRect)rect;</code> 就可：</p>
 <pre><code class="objective-c">- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
-    glEnable(GL_DEPTH_TEST);
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //glClear(GL_COLOR_BUFFER_BIT);
+  glEnable(GL_DEPTH_TEST);
+  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  //glClear(GL_COLOR_BUFFER_BIT);
 
-    [self.shader use];
+  [self.shader use];
 
-    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(M_PI_4, self.view.bounds.size.width / self.view.bounds.size.height, 0.1f, 100.0f);
-    glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;projection&quot;), 1, GL_FALSE, projectionMatrix.m);
-    GLKMatrix4 viewMatrix = GLKMatrix4MakeLookAt(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-    glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;view&quot;), 1, GL_FALSE, viewMatrix.m);
+  GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(M_PI_4, self.view.bounds.size.width / self.view.bounds.size.height, 0.1f, 100.0f);
+  glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;projection&quot;), 1, GL_FALSE, projectionMatrix.m);
+  GLKMatrix4 viewMatrix = GLKMatrix4MakeLookAt(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+  glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;view&quot;), 1, GL_FALSE, viewMatrix.m);
 
-    // bind texture
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(self.containerTexture.target, self.containerTexture.name);
-    glUniform1i(glGetUniformLocation(self.shader.program, &quot;ourTexture1&quot;), 0);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(self.faceTexture.target, self.faceTexture.name);
-    glUniform1i(glGetUniformLocation(self.shader.program, &quot;ourTexture2&quot;), 1);
+  // bind texture
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(self.containerTexture.target, self.containerTexture.name);
+  glUniform1i(glGetUniformLocation(self.shader.program, &quot;ourTexture1&quot;), 0);
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(self.faceTexture.target, self.faceTexture.name);
+  glUniform1i(glGetUniformLocation(self.shader.program, &quot;ourTexture2&quot;), 1);
 
-    glBindVertexArray(VAO);
-    GLKMatrix4 transModel = [self.transformation getModelViewMatrix];
-    for (int i = 0; i &lt; 10; ++i) {
+  glBindVertexArray(VAO);
+  GLKMatrix4 transModel = [self.transformation getModelViewMatrix];
+  for (int i = 0; i &lt; 10; ++i) {
     //GLKMatrix4 modelMatrix = GLKMatrix4TranslateWithVector3(GLKMatrix4Identity, cubePositions[i]);
     GLKMatrix4 modelMatrix = GLKMatrix4TranslateWithVector3(transModel, cubePositions[i]);
     GLfloat radian = (GLfloat) (20.0f * i / 180 * M_PI);
     modelMatrix = GLKMatrix4RotateWithVector3(modelMatrix, radian, GLKVector3Make(1.0f, 0.3f, 0.5f));
     glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;model&quot;), 1, GL_FALSE, modelMatrix.m);
     glDrawArrays(GL_TRIANGLES, 0, 36);
-    }
-    glBindVertexArray(0);
+  }
+  glBindVertexArray(0);
 }
 </code></pre>
-</li>
-</ol>
 <h3 id="添加手势"><a href="#添加手势" class="headerlink" title="添加手势"></a>添加手势</h3><p>参看这篇教程 <a href="https://www.raywenderlich.com/50398/opengl-es-transformations-gestures" target="_blank" rel="external">OpenGL ES Transformations with Gestures</a></p>
 <p>他的中心思想就是：向整个GLKView添加各种手势，通过手势传递的信息来调整物体的model的matrix，也就是从局部坐标到世界坐标转换的matrix。</p>
 <p>具体的代码可以参考Github上的Transformation类</p>
