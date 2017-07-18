@@ -30,7 +30,7 @@
   8010, 16145, 8090, 8045,
   1013,   990,  940, 6907
 </code></pre><p>使用iD3实现的效果如下：</p>
-<video width="650" height="400" src="http://www.signichat.com/data/dzi/chord.mov" controls></video>
+<video width="650" height="488" src="http://www.signichat.com/data/dzi/chord.mov" controls></video>
 
 <h3 id="D3-Force"><a href="#D3-Force" class="headerlink" title="D3-Force"></a>D3-Force</h3><p><strong>Force(力导图)图中每一个节点都受到力的作用而运动，这种是一种非常绚丽的图表。</strong> iD3使用OpenGL ES来绘制力导图。</p>
 <p>D3官网上面force的demo：<a href="https://bl.ocks.org/mbostock/4062045" target="_blank" rel="external">Force-Directed Graph</a></p>
@@ -68,7 +68,7 @@
 ]
 </code></pre>
 <p>使用iD3实现的效果如下：</p>
-<video width="650" height="400" src="http://www.signichat.com/data/dzi/force.mov" controls></video>
+<video width="650" height="488" src="http://www.signichat.com/data/dzi/force.mov" controls></video>
 
 <h3 id="D3-Hierarchy"><a href="#D3-Hierarchy" class="headerlink" title="D3-Hierarchy"></a>D3-Hierarchy</h3><p><strong>Hierarchy(层级图)用来展示具有层级结构的数据</strong>，有多种展现的形式，比如：</p>
 <ol>
@@ -115,7 +115,7 @@
 ]
 </code></pre>
 <p>使用iD3实现的效果如下：</p>
-<video width="650" height="400" src="http://www.signichat.com/data/dzi/hierarchy.mov" controls></video>
+<video width="650" height="488" src="http://www.signichat.com/data/dzi/hierarchy.mov" controls></video>
 
 <h3 id="D3-Shape"><a href="#D3-Shape" class="headerlink" title="D3-Shape"></a>D3-Shape</h3><p><strong>Shape用来生成基本图形</strong>，可以生成多种基本图形，比如：</p>
 <ol>
@@ -126,7 +126,7 @@
 <li>symbol 自定义图形</li>
 </ol>
 <p>使用iD3实现的效果如下：</p>
-<video width="650" height="400" src="http://www.signichat.com/data/dzi/shape.mov" controls></video>
+<video width="650" height="488" src="http://www.signichat.com/data/dzi/shape.mov" controls></video>
 
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个库算是自己写的第一个大型的库了，很多地方还有待完善。</p>
 <p>主要的数据处理模块借鉴了D3，感受到了D3处理数据的威力，毕竟这是一个在Github上有6万多star的开源项目啊=。=</p>
