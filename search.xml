@@ -7359,7 +7359,7 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     <entry>
       <title><![CDATA[Gene Plus]]></title>
       <url>/about/gene-plus.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Gene Plus</strong> 是一个基于基因检测报告的iPad端的协同平台。它的主要功能有以下两点：</p>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Gene Plus</strong> 是为GenePlus公司开发的一个基于基因检测报告的iPad端的协同平台。它的主要功能有以下两点：</p>
 <ol>
 <li>基因检测报告的显示</li>
 <li>医生，病人和基因分析师 三者之间的协同</li>
@@ -7433,6 +7433,30 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 <li><a href="https://jbrowse.org/" target="_blank" rel="external">JBrowse</a></li>
 <li><a href="https://github.com/GMOD/jbrowse" target="_blank" rel="external">JBrowse源码</a></li>
 <li><a href="https://github.com/samtools/htslib" target="_blank" rel="external">htslib</a></li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[关于]]></title>
+      <url>/about/index.html</url>
+      <content type="html"><![CDATA[<p>大家好，我是黄世杰。欢迎来到我的个人技术博客。</p>
+<p>这个博客主要记录了自己平时一些编程的心得和体会，当然还有读书笔记，偶尔还会有些杂七杂八的生活琐事。</p>
+<p>我本人目前在华中科技大学电信学院读研究生，主要从事iOS开发。下面来说说我的技术学习历程：</p>
+<ul>
+<li>大一至大三：上了C语言的课程，算是入了编程的门；后来自学PHP，JavaScript，倒腾了一段时间的网站开发</li>
+<li>大四：保研到实验室之后就主要从事后端开发。主要工作就是：编写PHP代码，服务器以及数据库的运维</li>
+<li>研一至研二：开始转向iOS开发。之后就基本上全职投入到iOS技术的研究中了。这期间与同学完成了多个有趣的项目，并多次担任iOS端负责人</li>
+<li>未来：再进一步提升自己的iOS开发水平。还想学学JavaScript，Swift，Java等其他语言，毕竟技多不压身，希望能成为一个大前端开发人员。另外还想去接触一下目前的新兴技术：AI，VR，AR等，拓宽自己的知识面。</li>
+</ul>
+<p>来看看目前的武器库：</p>
+<ul>
+<li>熟悉Objective-C编程</li>
+<li>熟悉PHP编程</li>
+<li>了解C/C++</li>
+<li>了解JavaScript， HTML/CSS</li>
+<li>了解OpenGL以及OpenGL ES</li>
+<li>熟悉Linux上Web服务器运维，Mysql运维</li>
 </ul>
 ]]></content>
     </entry>
@@ -7573,25 +7597,20 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
-      <title><![CDATA[关于]]></title>
-      <url>/about/index.html</url>
-      <content type="html"><![CDATA[<p>大家好，我是黄世杰。欢迎来到我的个人技术博客。</p>
-<p>这个博客主要记录了自己平时一些编程的心得和体会，当然还有读书笔记，偶尔还会有些杂七杂八的生活琐事。</p>
-<p>我本人目前在华中科技大学电信学院读研究生，主要从事iOS开发。下面来说说我的技术学习历程：</p>
+      <title><![CDATA[Signichat]]></title>
+      <url>/about/signichat.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Signichat</strong> 是一个提供<strong>图片在线浏览，标记，讨论</strong>的会议系统。</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>进实验室的第一个项目，先是跟在学长后面写一写PHP；后来学长毕业了，我就成了后端的负责人=。=</p>
+<p>主要工作是：</p>
+<ol>
+<li>负责后台PHP接口的编写</li>
+<li>服务器以及数据库运维</li>
+</ol>
+<h2 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h2><p>Web网站 ： <a href="http://www.signichat.com" target="_blank" rel="external">Signichat</a></p>
+<p>APP下载：</p>
 <ul>
-<li>大一至大三：上了C语言的课程，算是入了编程的门；后来自学PHP，JavaScript，倒腾了一段时间的网站开发</li>
-<li>大四：保研到实验室之后就主要从事后端开发。主要工作就是：编写PHP代码，服务器以及数据库的运维</li>
-<li>研一至研二：开始转向iOS开发。之后就基本上全职投入到iOS技术的研究中了。这期间与同学完成了多个有趣的项目，并多次担任iOS端负责人</li>
-<li>未来：再进一步提升自己的iOS开发水平。还想学学JavaScript，Swift，Java等其他语言，毕竟技多不压身，希望能成为一个大前端开发人员。另外还想去接触一下目前的新兴技术：AI，VR，AR等，拓宽自己的知识面。</li>
-</ul>
-<p>来看看目前的武器库：</p>
-<ul>
-<li>熟悉Objective-C编程</li>
-<li>熟悉PHP编程</li>
-<li>了解C/C++</li>
-<li>了解JavaScript， HTML/CSS</li>
-<li>了解OpenGL以及OpenGL ES</li>
-<li>熟悉Linux上Web服务器运维，Mysql运维</li>
+<li><a href="https://itunes.apple.com/cn/app/signichat/id967104628?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载 </a></li>
+<li><a href="http://openbox.mobilem.360.cn/index/d/sid/2777089" target="_blank" rel="external">安卓端下载</a></li>
 </ul>
 ]]></content>
     </entry>
@@ -7611,25 +7630,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 <ul>
 <li><a href="https://itunes.apple.com/cn/app/sciencewall/id1042268145?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载</a></li>
 <li><a href="https://play.google.com/store/apps/details?id=net.sciencewall" target="_blank" rel="external">安卓端下载</a></li>
-</ul>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Signichat]]></title>
-      <url>/about/signichat.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Signichat</strong> 是一个提供<strong>图片在线浏览，标记，讨论</strong>的会议系统。</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>进实验室的第一个项目，先是跟在学长后面写一写PHP；后来学长毕业了，我就成了后端的负责人=。=</p>
-<p>主要工作是：</p>
-<ol>
-<li>负责后台PHP接口的编写</li>
-<li>服务器以及数据库运维</li>
-</ol>
-<h2 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h2><p>Web网站 ： <a href="http://www.signichat.com" target="_blank" rel="external">Signichat</a></p>
-<p>APP下载：</p>
-<ul>
-<li><a href="https://itunes.apple.com/cn/app/signichat/id967104628?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载 </a></li>
-<li><a href="http://openbox.mobilem.360.cn/index/d/sid/2777089" target="_blank" rel="external">安卓端下载</a></li>
 </ul>
 ]]></content>
     </entry>
