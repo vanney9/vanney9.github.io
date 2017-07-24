@@ -7,15 +7,16 @@
 
     
 
-    <title>Objective-C runtime - 属性与方法 | Vanney</title>
+    <title>CALayer的时间坐标系 | Vanney</title>
     <meta name="author" content="Vanney">
     
-    <meta name="description" content="前言系列第二篇：深入分析OC中的属性与方法的本质。通过上一篇Objective-C runtime - 类和对象，我们了解了objc_class中的 isa 成员变量；在这篇文章中，则会详细介绍objc_class的另一成员变量 bits。">
+    <meta name="description" content="前言上周末，又进行了一次实验室内部的iOS分享会。这次是小学弟给我们讲的CAMediaTiming以及Runloop的一些内容。讲的很细，也很深=。=
+其中提到了一点：CALayer的时间坐标系，也就是本文要讲的主要内容">
     
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <meta property="og:title" content="Objective-C runtime - 属性与方法"/>
+    <meta property="og:title" content="CALayer的时间坐标系"/>
     <meta property="og:site_name" content="Vanney"/>
 
     
@@ -233,12 +234,12 @@
             <div class="article-title">
                 
     
-        <h1>Objective-C runtime - 属性与方法</h1>
+        <h1>CALayer的时间坐标系</h1>
     
 
 
             </div>
-            <time class="teal-link-context" datetime="2017-06-05T08:03:20.000Z"><a href="/2017/06/05/objective-c-runtime-property-method/">2017-06-05</a></time>
+            <time class="teal-link-context" datetime="2017-07-24T02:36:58.000Z"><a href="/2017/07/24/calayer-time-coordinate-system/">2017-07-24</a></time>
 
             <span id="busuanzi_container_page_pv" class="read-times-container">
     <!--<i class="fa fa-eye"></i>-->
@@ -248,223 +249,74 @@
             
 
             <div class="toc teal-link-context hide-on-med-and-down">
-    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#前言"><span class="section table-of-contents-text">前言</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#bits"><span class="section table-of-contents-text">bits</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#class-data-bits-t"><span class="section table-of-contents-text">class_data_bits_t</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#class-rw-t-和-class-ro-t"><span class="section table-of-contents-text">class_rw_t 和 class_ro_t</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#属性和实例变量"><span class="section table-of-contents-text">属性和实例变量</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#property-t"><span class="section table-of-contents-text">property_t</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#ivar-t"><span class="section table-of-contents-text">ivar_t</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#类继承关系中的对象的内存空间结构"><span class="section table-of-contents-text">类继承关系中的对象的内存空间结构</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#方法"><span class="section table-of-contents-text">方法</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#method-t"><span class="section table-of-contents-text">method_t</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#底层存储方式"><span class="section table-of-contents-text">底层存储方式</span></a><ol class="section table-of-contents-child"><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#entsize-list-tt"><span class="section table-of-contents-text">entsize_list_tt</span></a></li><li class="section table-of-contents-item section table-of-contents-level-3"><a class="section table-of-contents-link" href="#list-array-tt"><span class="section table-of-contents-text">list_array_tt</span></a></li></ol></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#总结"><span class="section table-of-contents-text">总结</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#fixme"><span class="section table-of-contents-text">fixme</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#参考"><span class="section table-of-contents-text">参考</span></a></li></ol>
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#前言"><span class="section table-of-contents-text">前言</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#时间坐标系"><span class="section table-of-contents-text">时间坐标系</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#CAMediaTiming"><span class="section table-of-contents-text">CAMediaTiming</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#CALayer的时间如何计算"><span class="section table-of-contents-text">CALayer的时间如何计算</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#CALyer时间与动画时间"><span class="section table-of-contents-text">CALyer时间与动画时间</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#还有一些其他的…"><span class="section table-of-contents-text">还有一些其他的…</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#参考"><span class="section table-of-contents-text">参考</span></a></li></ol>
 </div>
 
 
             <div class="entry teal-link-context">
-                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>系列第二篇：深入分析OC中的属性与方法的本质。通过上一篇<a href="http://vanney9.com/2017/06/03/objective-c-runtime-class-object/" target="_blank" rel="external">Objective-C runtime - 类和对象</a>，我们了解了objc_class中的 <strong>isa</strong> 成员变量；在这篇文章中，则会详细介绍objc_class的另一成员变量 <strong>bits</strong>。</p>
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上周末，又进行了一次实验室内部的iOS分享会。这次是小学弟给我们讲的<a href="https://wanston.github.io/2017/07/12/CAMediaTiming%E5%8D%8F%E8%AE%AE/" target="_blank" rel="external">CAMediaTiming</a>以及<a href="https://wanston.github.io/2017/07/19/RunLoop/" target="_blank" rel="external">Runloop</a>的一些内容。讲的很细，也很深=。=</p>
+<p>其中提到了一点：<strong>CALayer的时间坐标系</strong>，也就是本文要讲的主要内容</p>
 <a id="more"></a>
-<h2 id="bits"><a href="#bits" class="headerlink" title="bits"></a>bits</h2><p>先回忆一下objc_class的结构</p>
-<p><img src="/lionheart/1706/bits.png" alt="objc_class"></p>
-<p><code>bits</code> 用来存储类的属性，方法，协议等信息。它是一个<code>class_data_bits_t</code>类型</p>
-<h3 id="class-data-bits-t"><a href="#class-data-bits-t" class="headerlink" title="class_data_bits_t"></a>class_data_bits_t</h3><pre><code class="c++">struct class_data_bits_t {
-    uintptr_t bits;
-    // method here
-}
+<h2 id="时间坐标系"><a href="#时间坐标系" class="headerlink" title="时间坐标系"></a>时间坐标系</h2><p>时间坐标系这个名字听着有点奇怪，类似layer的空间坐标系。它的意思是：每个CALyer都有自己的时间刻度；在同一个全局时间下，每个CALyer自己的时间是可以不一样的。而CAAnimation参照的时间则是他所属的CALyer的时间系。</p>
+<h2 id="CAMediaTiming"><a href="#CAMediaTiming" class="headerlink" title="CAMediaTiming"></a>CAMediaTiming</h2><p><a href="https://developer.apple.com/documentation/quartzcore/camediatiming" target="_blank" rel="external">CAMediaTiming</a>是一个协议，定义了<code>beginTime</code>，<code>timeOffset</code>，<code>speed</code>等属性。<strong>CALayer</strong>以及<strong>CAAnimation</strong>都实现了该协议。</p>
+<p>在<strong>CALayer</strong>中设置<code>CAMediaTiming</code>的相关属性是用来更改CALyer的时间系，也就是改变每一时刻的CALyer的时间。而在<strong>CAAnimation</strong>中设置这些属性，则是为了修改动画的相关时间属性；这些时间属性都是对应相应的layer的时间系的。</p>
+<h2 id="CALayer的时间如何计算"><a href="#CALayer的时间如何计算" class="headerlink" title="CALayer的时间如何计算"></a>CALayer的时间如何计算</h2><blockquote>
+<p>t = (tp - begin) * speed + offset</p>
+</blockquote>
+<p>上面的公式就是计算当前layer的时间。</p>
+<ol>
+<li>tp：父layer当前的时间</li>
+<li>begin：当前layer的beginTime属性</li>
+<li>speed：当前layer的speed属性</li>
+<li>offset：当前layer的timeOffset属性</li>
+</ol>
+<p>那么如何获取root layer的时间呢：</p>
+<pre><code class="objective-c">[[rootLayer convertTime:CACurrentMediaTime() fromLayer:nil]];
 </code></pre>
-<p>这个结构体只有一个64bit的成员变量<code>bits</code>，先来看看这64bit分别存放的什么信息：</p>
-<p><img src="/lionheart/1706/class_bits.png" alt="class_data_bits_t"></p>
-<p><code>is_swift</code> : 第一个bit，判断类是否是Swift类</p>
-<p><code>has_default_rr</code> ：第二个bit，判断当前类或者父类含有默认的<code>retain/release/autorelease/retainCount/_tryRetain/_isDeallocating/retainWeakReference/allowsWeakReference</code> 方法</p>
-<p><code>require_raw_isa</code> ：第三个bit， 判断当前类的实例是否需要raw_isa (不是很懂)</p>
-<p><code>data</code> ：第4-48位，存放一个指向class_rw_t结构体的指针，该结构体包含了该类的属性，方法，协议等信息。至于为何只用44bit来存放地址，可以参考<a href="http://vanney9.com/2017/06/03/objective-c-runtime-class-object/" target="_blank" rel="external">Objective-C runtime - 类和对象</a></p>
-<h3 id="class-rw-t-和-class-ro-t"><a href="#class-rw-t-和-class-ro-t" class="headerlink" title="class_rw_t 和 class_ro_t"></a>class_rw_t 和 class_ro_t</h3><p>先来看看两个结构体的内部成员变量</p>
-<pre><code class="c++">struct class_rw_t {
-    uint32_t flags;
-    uint32_t version;
-
-    const class_ro_t *ro;
-
-    method_array_t methods;
-    property_array_t properties;
-    protocol_array_t protocols;
-
-    Class firstSubclass;
-    Class nextSiblingClass;
-};
-
-struct class_ro_t {
-    uint32_t flags;
-    uint32_t instanceStart;
-    uint32_t instanceSize;
-    uint32_t reserved;
-
-    const uint8_t * ivarLayout;
-
-    const char * name;
-    method_list_t * baseMethodList;
-    protocol_list_t * baseProtocols;
-    const ivar_list_t * ivars;
-
-    const uint8_t * weakIvarLayout;
-    property_list_t *baseProperties;
-};
+<p>看一段代码：</p>
+<pre><code class="objective-c">NSLog(@&quot;global time %f&quot;, CACurrentMediaTime());
+NSLog(@&quot;layer time %f&quot;, [self.fatherLayer convertTime:CACurrentMediaTime() fromLayer:nil]);
 </code></pre>
-<p>可以看出，class_rw_t结构体内有一个指向class_ro_t结构体的指针。</p>
-<p>每个类都对应有一个class_ro_t结构体和一个class_rw_t结构体。在编译期间，class_ro_t结构体就已经确定，objc_class中的bits的data部分存放着该结构体的地址。在runtime运行之后，具体说来是在运行runtime的<code>realizeClass</code> 方法时，会生成class_rw_t结构体，该结构体包含了class_ro_t，并且更新data部分，换成class_rw_t结构体的地址。</p>
-<p>用两张图来说明这个过程：</p>
-<p>类的<code>realizeClass</code>运行之前：</p>
-<p><img src="/lionheart/1706/before_bits.png" alt="before runtime"></p>
-<p>类的<code>realizeClass</code>运行之后：</p>
-<p><img src="/lionheart/1706/after_bits.png" alt="before runtime"></p>
-<p>细看两个结构体的成员变量会发现很多相同的地方，他们都存放着当前类的属性、实例变量、方法、协议等等。区别在于：class_ro_t存放的是编译期间就确定的；而class_rw_t是在runtime时才确定，它会先将class_ro_t的内容拷贝过去，然后再将当前类的分类的这些属性、方法等拷贝到其中。所以可以说class_rw_t是class_ro_t的超集，<strong>当然实际访问类的方法、属性等也都是访问的class_rw_t中的内容</strong></p>
-<h2 id="属性和实例变量"><a href="#属性和实例变量" class="headerlink" title="属性和实例变量"></a>属性和实例变量</h2><p>现在知道了属性(<strong>property</strong>)存放在class_rw_t中，实例变量(<strong>ivar</strong>)存放在class_ro_t中。下面来看看他们的真实面目。</p>
-<p>先看一段代码：</p>
-<pre><code class="objective-c">@interface TestOBJ : NSObject {
-      NSInteger ivarInt;
-}
-@property (nonatomic, assign) NSInteger propertyInt;
+<p>它的输出如下：</p>
+<pre><code>2017-07-24 11:11:44.909 test2[67727:3342255] global time 247346.964195
+2017-07-24 11:11:44.910 test2[67727:3342255] layer time 247356.964486
+</code></pre><p><strong>可以看到在不改变任何layer的属性的情况下：layer的时间和全局时间是一致的；那么根据父子时间坐标系的关系，如果父子layer都是默认设置，那么他们的时间是相同的，都是全局时间</strong></p>
+<h2 id="CALyer时间与动画时间"><a href="#CALyer时间与动画时间" class="headerlink" title="CALyer时间与动画时间"></a>CALyer时间与动画时间</h2><p>一个CAAnimation的<code>duration</code>，<code>startime</code>等属性是基于哪个时刻的CALyer时间呢？是运行完<code>[layer addAnimation:]</code>这一函数的那个时刻吗？</p>
+<p>来看段代码：</p>
+<pre><code class="objective-c">CABasicAnimation *basic = [CABasicAnimation animationWithKeyPath:@&quot;position.x&quot;];
+
+/* 动画的设置 */
+basec.duration = 2.0f;
+
+[self.fatherLayer addAnimation:basic forKey:nil];
+
+// 打印addAnimation时候的时间
+NSLog(@&quot;layer time %f&quot;, [self.fatherLayer convertTime:CACurrentMediaTime() fromLayer:nil]);
+
+// 主线程sleep 4秒钟
+[NSThread sleepForTimeInterval:4.0f];
+
+// 打印sleep之后的时间
+NSLog(@&quot;layer time %f&quot;, [self.fatherLayer convertTime:CACurrentMediaTime() fromLayer:nil]);
 </code></pre>
-<p>这个TestOBJ类有一个实例变量<code>ivarInt</code> 和 一个属性<code>propertyInt</code> 。使用lldb打印出class_ro_t的ivars：</p>
-<p><img src="/lionheart/1706/ivars.png" alt="ivars list"></p>
-<p>再使用lldb打印出class_ro_t的baseProperties:</p>
-<p><img src="/lionheart/1706/properties.png" alt="properties list"></p>
-<p>顺便也把class_ro_t的baseMethodList打印出来吧：</p>
-<p><img src="/lionheart/1706/methods.png" alt="methods list"></p>
-<p>从上面三张lldb的结果可以看出：<strong>TestOBJ类含有2个实例变量，1个属性和2个方法</strong>。但是代码里只有一个实例变量一个属性和0个方法。原因就是声明一个属性的同时，会同时生成一个实例变量和该实例变量的存取方法。</p>
-<p>以<code>propertyInt</code>为例：生成了 <code>_propertyInt</code> 实例变量和 <code>- (NSInteger)propertyInt;</code> 以及 <code>- (void)setPropertyInt:(NSInteger)propertyInt</code> 两个存取方法</p>
-<h3 id="property-t"><a href="#property-t" class="headerlink" title="property_t"></a>property_t</h3><p><em>class_ro_t</em>中<em>的baseProperties</em>是一个存放<em>property_t</em>结构体的list。<strong>property_t</strong>结构体用来存放属性的信息</p>
-<pre><code class="c++">struct property_t {
-    const char *name;
-    const char *attributes;
-};
-</code></pre>
-<p>该结构体保存了属性的名字和type encoding。</p>
-<h3 id="ivar-t"><a href="#ivar-t" class="headerlink" title="ivar_t"></a>ivar_t</h3><p>其实到这里你就会发现<em>property_t</em>结构体中存放的信息没啥用，真正有用的还是存放实例变量的结构体<strong>ivar_t</strong></p>
-<pre><code class="c++">struct ivar_t {
-    int32_t *offset;
-    const char *name;
-    const char *type;
-    // alignment is sometimes -1; use alignment() instead
-    uint32_t alignment_raw;
-    uint32_t size;
-
-    uint32_t alignment() const {
-        if (alignment_raw == ~(uint32_t)0) return 1U &lt;&lt; WORD_SHIFT;
-        return 1 &lt;&lt; alignment_raw;
-    }
-};
-</code></pre>
-<p>以<em>TestOBJ</em>中的 <strong>ivarInt</strong> 实例变量为例来说明，先使用lldb打印该实例变量的详细信息：</p>
-<p><img src="/lionheart/1706/ivar_t.png" alt="ivar_t"></p>
-<p><code>name</code> : <strong>实例变量的名字</strong> -&gt; ivarInt</p>
-<p><code>type</code> : <strong>实例变量的类型，type encoding</strong> -&gt; q 表示int类型 </p>
-<p><code>size</code> : <strong>实例变量的内存大小</strong> -&gt; 8 因为int类型占8个字节</p>
-<p><code>offset</code> : <strong>实例变量距离对象的首地址的偏移量</strong> -&gt; offset是一个指向int的指针，取出offset指向的int，发现偏移量为8</p>
-<p>上图还打印了class_ro_t，里面有2个变量需要注意一下：</p>
-<p><code>instanceStart</code> : <strong>对象开始存放实例变量的地址的偏移量</strong> -&gt; 8 因为对象的前8字节存放的是<code>isa_t</code>结构体</p>
-<p><code>instanceSize</code> : <strong>对象的大小</strong> -&gt; 24 = isa_t + ivarInt + _propertyInt</p>
-<p><strong>所以：获取TestOBJ实例a的ivarInt的过程：取出 对象首地址加ivarInt的偏移量 的内存空间的int</strong></p>
-<p><img src="/lionheart/1706/get_ivar.png" alt="get ivar"></p>
-<h3 id="类继承关系中的对象的内存空间结构"><a href="#类继承关系中的对象的内存空间结构" class="headerlink" title="类继承关系中的对象的内存空间结构"></a>类继承关系中的对象的内存空间结构</h3><p>先看看没有继承关系的类 TestOBJ：</p>
-<p><img src="/lionheart/1706/testObj.png" alt="testObj"></p>
-<p>再看看继承TestOBJ的Son类：</p>
-<pre><code class="objective-c">@interface Son : TestOBJ
-@property (nonatomic, strong) NSString *sonStr
-@end
-</code></pre>
-<p>它的对象既存储了TestOBJ的实例变量，也存放了Son自己的实例变量</p>
-<p><img src="/lionheart/1706/son.png" alt="son"></p>
-<p>使用lldb打印son的class_ro_t:</p>
-<p><img src="/lionheart/1706/super.png" alt="super"></p>
-<p>可以发现Son类的 <code>instanceStart</code> 为24，因为Son的实例的前8字节存放isa，后面16字节存放父类的ivarInt和_propertyInt两个int型实例变量。Son类的 <code>instanceSize</code>为32字节，因为他还有自己的一个指向NSString结构体的指针 <strong>_sonStr</strong> ，这个指针也占8字节。</p>
-<p>另外<strong>_sonStr</strong> 这一个ivar_t的offset是24，也符合分析</p>
-<p>注意Son类的class_ro_t在<code>realizeClass</code>方法完成后就确定下来了</p>
-<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>编译结束之后，类的方法就已经存储在class_ro_t里面的baseMethodList变量中了；当运行完runtime的<code>realizeClass</code>方法之后，会将baseMethodList拷贝到class_rw_t的<code>methods</code>变量中，并将各种分类的方法拷贝到<code>methods</code>中。<strong>这样类的所有方法就都聚集在class_rw_t的methods变量中了。</strong></p>
-<p>使用lldb打印出class_rw_t中的methods:</p>
-<p><img src="/lionheart/1706/realmethods.png" alt="methods"></p>
-<p>可以看到这里的<code>methods</code>和上面打印出来的class_ro_t中的<code>baseMethodList</code>一模一样。这是因为这个类没有分类，只是简单的将baseMethodList的内容拷贝过去。</p>
-<h3 id="method-t"><a href="#method-t" class="headerlink" title="method_t"></a>method_t</h3><p>runtime使用<code>method_t</code>结构体来存放方法：</p>
-<pre><code class="c++">struct method_t {
-    SEL name;
-    const char *types;
-    IMP imp;
-
-    struct SortBySELAddress :
-        public std::binary_function&lt;const method_t&amp;,
-                                    const method_t&amp;, bool&gt;
-    {
-        bool operator() (const method_t&amp; lhs,
-                         const method_t&amp; rhs)
-        { return lhs.name &lt; rhs.name; }
-    };
-};
-</code></pre>
-<p><code>name</code> : 方法名，类型为<code>SEL</code>选择子，可以简单地理解成方法的id，字符串类型</p>
-<p><code>types</code> : 方法的type encoding</p>
-<p><code>imp</code> : 方法的实现，类型为<code>IMP</code>。IMP是函数指针，指向方法的实现，也就是指向实现该方法的代码区</p>
-<h2 id="底层存储方式"><a href="#底层存储方式" class="headerlink" title="底层存储方式"></a>底层存储方式</h2><pre><code class="c++">struct class_rw_t {
-    uint32_t flags;
-    uint32_t version;
-
-    const class_ro_t *ro;
-
-    method_array_t methods;
-    property_array_t properties;
-    protocol_array_t protocols;
-
-    Class firstSubclass;
-    Class nextSiblingClass;
-};
-
-struct class_ro_t {
-    uint32_t flags;
-    uint32_t instanceStart;
-    uint32_t instanceSize;
-    uint32_t reserved;
-
-    const uint8_t * ivarLayout;
-
-    const char * name;
-    method_list_t * baseMethodList;
-    protocol_list_t * baseProtocols;
-    const ivar_list_t * ivars;
-
-    const uint8_t * weakIvarLayout;
-    property_list_t *baseProperties;
-};
-</code></pre>
-<p>class_ro_t里面的<code>method_list_t</code> 和 <code>ivar_list_t</code> 都是 <code>entsize_list_tt</code> 的结构体；class_rw_t里面的 <code>method_array_t</code> 和 <code>property_array_t</code> 都是 <code>list_array_tt</code> 的结构体。来看看这个底层存储方式</p>
-<h3 id="entsize-list-tt"><a href="#entsize-list-tt" class="headerlink" title="entsize_list_tt"></a>entsize_list_tt</h3><pre><code class="c++">template &lt;typename Element, typename List, uint32_t FlagMask&gt;
-struct entsize_list_tt {
-    uint32_t entsizeAndFlags;
-    uint32_t count;
-    Element first;
-      // other code
-}
-</code></pre>
-<p>一个存储Element的序列，可以使用<code>get(index)</code>方法获取特定index的Element；它也提供了iterator遍历器，具体实现细节可以查看代码。<code>objc-runtime-new.h</code></p>
-<h3 id="list-array-tt"><a href="#list-array-tt" class="headerlink" title="list_array_tt"></a>list_array_tt</h3><pre><code class="c++">template &lt;typename Element, typename List&gt;
-class list_array_tt {
-    private:
-    union {
-        List* list;
-        uintptr_t arrayAndFlag;
-    };
-}
-</code></pre>
-<p>简单来说是一个存放<code>entsize_list_tt</code>的数组。也提供了iterator遍历器。也定义在<code>objc-runtime-new.h</code></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实这篇文章就是👇两篇参考文章的一个合体。总结来说：objc_class结构体中的bits成员变量存放着类的属性、方法、协议等信息。这一些信息，有的是在编译期间就确定的；另外一些则是在运行runtime的<code>realizeClass</code>的方法时添加上去的。</p>
-<p>那么当runtime将类初始化之后，所有的类所需的信息都存放在了<strong>class_rw_t</strong>结构体中</p>
-<h2 id="fixme"><a href="#fixme" class="headerlink" title="fixme"></a>fixme</h2><p><strong>在这里做个更正：</strong>在<code>realizeClass</code>方法中，并不是将<code>class_ro_t</code>中的属性、方法的list拷贝到<code>class_rw_t</code>中；而只是通过<code>class_rw_t</code>来操作<code>class_ro_t</code>中的各种list。<code>class_rw_t</code>中的<code>list_array_tt</code> 有指向 <code>class_ro_t</code>中的 <code>entsize_list_tt</code> 的指针。</p>
+<p>来看看输出：</p>
+<pre><code>2017-07-24 11:11:44.910 test2[67727:3342255] layer time 247356.964486
+2017-07-24 11:11:48.911 test2[67727:3342255] layer time 247360.965715
+</code></pre><p>两次打印的时间确实相差4s，而且动画也是正常执行的。<strong>所以可以看到动画的参考时间点并不是addAnimation的那一刻；而应该是主线程runloop进行界面更新，动画真正开始的那一刻。</strong></p>
+<h2 id="还有一些其他的…"><a href="#还有一些其他的…" class="headerlink" title="还有一些其他的…"></a>还有一些其他的…</h2><p>来两张分享会的现场照片</p>
+<p><img src="/lionheart/1707/share1.JPG" alt="share1"></p>
+<p><img src="/lionheart/1707/share2.JPG" alt="share2"></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="http://www.jianshu.com/p/89ac27684693" target="_blank" rel="external">Runtime源码 —— property和ivar</a></li>
-<li><a href="http://draveness.me/method-struct.html" target="_blank" rel="external">深入解析 ObjC 中方法的结构</a></li>
+<li><a href="https://wanston.github.io/2017/07/12/CAMediaTiming%E5%8D%8F%E8%AE%AE/" target="_blank" rel="external">CAMediaTiming</a></li>
+<li><a href="https://stackoverflow.com/questions/20946481/comprehend-pause-and-resume-animation-on-a-layer" target="_blank" rel="external">Comprehend pause and resume animation on a layer</a></li>
 </ul>
 
                 
-<p class="teal-link-context">
-    <a href="/2017/06/07/objective-c-runtime-category/" rel="next" title="Objective-C runtime - 分类与关联对象">
-    上一篇：Objective-C runtime - 分类与关联对象
-  </a>
-</p>
-
 
 
 <p class="teal-link-context">
-    <a href="/2017/06/03/objective-c-runtime-class-object/" rel="next" title="Objective-C runtime - 类和对象">
-    下一篇：Objective-C runtime - 类和对象
+    <a href="/2017/07/14/association-object-and-retain-count/" rel="next" title="OC关联对象及其内存管理">
+    下一篇：OC关联对象及其内存管理
   </a>
 </p>
 

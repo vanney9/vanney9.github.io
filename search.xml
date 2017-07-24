@@ -3,6 +3,76 @@
   
     
     <entry>
+      <title><![CDATA[CALayer的时间坐标系]]></title>
+      <url>/2017/07/24/calayer-time-coordinate-system/</url>
+      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上周末，又进行了一次实验室内部的iOS分享会。这次是小学弟给我们讲的<a href="https://wanston.github.io/2017/07/12/CAMediaTiming%E5%8D%8F%E8%AE%AE/" target="_blank" rel="external">CAMediaTiming</a>以及<a href="https://wanston.github.io/2017/07/19/RunLoop/" target="_blank" rel="external">Runloop</a>的一些内容。讲的很细，也很深=。=</p>
+<p>其中提到了一点：<strong>CALayer的时间坐标系</strong>，也就是本文要讲的主要内容</p>
+<a id="more"></a>
+<h2 id="时间坐标系"><a href="#时间坐标系" class="headerlink" title="时间坐标系"></a>时间坐标系</h2><p>时间坐标系这个名字听着有点奇怪，类似layer的空间坐标系。它的意思是：每个CALyer都有自己的时间刻度；在同一个全局时间下，每个CALyer自己的时间是可以不一样的。而CAAnimation参照的时间则是他所属的CALyer的时间系。</p>
+<h2 id="CAMediaTiming"><a href="#CAMediaTiming" class="headerlink" title="CAMediaTiming"></a>CAMediaTiming</h2><p><a href="https://developer.apple.com/documentation/quartzcore/camediatiming" target="_blank" rel="external">CAMediaTiming</a>是一个协议，定义了<code>beginTime</code>，<code>timeOffset</code>，<code>speed</code>等属性。<strong>CALayer</strong>以及<strong>CAAnimation</strong>都实现了该协议。</p>
+<p>在<strong>CALayer</strong>中设置<code>CAMediaTiming</code>的相关属性是用来更改CALyer的时间系，也就是改变每一时刻的CALyer的时间。而在<strong>CAAnimation</strong>中设置这些属性，则是为了修改动画的相关时间属性；这些时间属性都是对应相应的layer的时间系的。</p>
+<h2 id="CALayer的时间如何计算"><a href="#CALayer的时间如何计算" class="headerlink" title="CALayer的时间如何计算"></a>CALayer的时间如何计算</h2><blockquote>
+<p>t = (tp - begin) * speed + offset</p>
+</blockquote>
+<p>上面的公式就是计算当前layer的时间。</p>
+<ol>
+<li>tp：父layer当前的时间</li>
+<li>begin：当前layer的beginTime属性</li>
+<li>speed：当前layer的speed属性</li>
+<li>offset：当前layer的timeOffset属性</li>
+</ol>
+<p>那么如何获取root layer的时间呢：</p>
+<pre><code class="objective-c">[[rootLayer convertTime:CACurrentMediaTime() fromLayer:nil]];
+</code></pre>
+<p>看一段代码：</p>
+<pre><code class="objective-c">NSLog(@&quot;global time %f&quot;, CACurrentMediaTime());
+NSLog(@&quot;layer time %f&quot;, [self.fatherLayer convertTime:CACurrentMediaTime() fromLayer:nil]);
+</code></pre>
+<p>它的输出如下：</p>
+<pre><code>2017-07-24 11:11:44.909 test2[67727:3342255] global time 247346.964195
+2017-07-24 11:11:44.910 test2[67727:3342255] layer time 247356.964486
+</code></pre><p><strong>可以看到在不改变任何layer的属性的情况下：layer的时间和全局时间是一致的；那么根据父子时间坐标系的关系，如果父子layer都是默认设置，那么他们的时间是相同的，都是全局时间</strong></p>
+<h2 id="CALyer时间与动画时间"><a href="#CALyer时间与动画时间" class="headerlink" title="CALyer时间与动画时间"></a>CALyer时间与动画时间</h2><p>一个CAAnimation的<code>duration</code>，<code>startime</code>等属性是基于哪个时刻的CALyer时间呢？是运行完<code>[layer addAnimation:]</code>这一函数的那个时刻吗？</p>
+<p>来看段代码：</p>
+<pre><code class="objective-c">CABasicAnimation *basic = [CABasicAnimation animationWithKeyPath:@&quot;position.x&quot;];
+
+/* 动画的设置 */
+basec.duration = 2.0f;
+
+[self.fatherLayer addAnimation:basic forKey:nil];
+
+// 打印addAnimation时候的时间
+NSLog(@&quot;layer time %f&quot;, [self.fatherLayer convertTime:CACurrentMediaTime() fromLayer:nil]);
+
+// 主线程sleep 4秒钟
+[NSThread sleepForTimeInterval:4.0f];
+
+// 打印sleep之后的时间
+NSLog(@&quot;layer time %f&quot;, [self.fatherLayer convertTime:CACurrentMediaTime() fromLayer:nil]);
+</code></pre>
+<p>来看看输出：</p>
+<pre><code>2017-07-24 11:11:44.910 test2[67727:3342255] layer time 247356.964486
+2017-07-24 11:11:48.911 test2[67727:3342255] layer time 247360.965715
+</code></pre><p>两次打印的时间确实相差4s，而且动画也是正常执行的。<strong>所以可以看到动画的参考时间点并不是addAnimation的那一刻；而应该是主线程runloop进行界面更新，动画真正开始的那一刻。</strong></p>
+<h2 id="还有一些其他的…"><a href="#还有一些其他的…" class="headerlink" title="还有一些其他的…"></a>还有一些其他的…</h2><p>来两张分享会的现场照片</p>
+<p><img src="/lionheart/1707/share1.JPG" alt="share1"></p>
+<p><img src="/lionheart/1707/share2.JPG" alt="share2"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://wanston.github.io/2017/07/12/CAMediaTiming%E5%8D%8F%E8%AE%AE/" target="_blank" rel="external">CAMediaTiming</a></li>
+<li><a href="https://stackoverflow.com/questions/20946481/comprehend-pause-and-resume-animation-on-a-layer" target="_blank" rel="external">Comprehend pause and resume animation on a layer</a></li>
+</ul>
+]]></content>
+      
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
+        
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[OC关联对象及其内存管理]]></title>
       <url>/2017/07/14/association-object-and-retain-count/</url>
       <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OC的关联对象经常被用来存储Category中的属性对应的实例变量，当然它还有其他的用途。</p>
@@ -7329,31 +7399,9 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
   
     
     <entry>
-      <title><![CDATA[Controls]]></title>
-      <url>/about/controls.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Controls</strong> 是手机App和Web通信的系统。可以通过他。来实现 App控制Web端的图片 这一功能。</p>
-<p>它的主要功能有：</p>
-<ol>
-<li>通过操作Controls，在Web上面显示特定的图片</li>
-<li>通过操作Controls，控制Web端图片的缩放</li>
-<li>通过操作Controls，在Web端的图片上面打标记</li>
-</ol>
-<p>该项目可以算是<a href="/about/sciencewall.html">ScienceWall</a>的一个子项目</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>该项目由我和一名前端同学以及一名Android端同学共同完成，我是这个项目的组长。主要的工作有：</p>
-<ol>
-<li>实现iOS客户端</li>
-<li>实现通信服务器，完成 iOS/Android 与 Web 的通信机制</li>
-</ol>
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：iOS端Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
-<p><strong>PS ：Android端同学毕业啦，就不演示了；效果和iPad类似</strong></p>
-<h3 id="iPad端"><a href="#iPad端" class="headerlink" title="iPad端"></a>iPad端</h3><p>操作iPad上面的图片，所做的操作会自动同步到Web浏览器上面</p>
-<video width="650" height="488" src="http://www.signichat.com/data/dzi/controls.mov" controls></video>
-
-<h3 id="Web端"><a href="#Web端" class="headerlink" title="Web端"></a>Web端</h3><p>Web端录屏的时候直接录制的GIF，貌似有点大=。=</p>
-<p><img src="/lionheart/1707/webPort.gif" alt="Web Port"></p>
-<p><strong>可以看到：当在iPad上写下 “你好” 时，在web端图片的相同位置也会自动写出 “你好”！</strong></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>就感觉这做出来的效果很好玩~~</p>
-]]></content>
+      <title><![CDATA[categories]]></title>
+      <url>/categories/index.html</url>
+      <content type="html"></content>
     </entry>
     
     <entry>
@@ -7389,75 +7437,30 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
-      <title><![CDATA[Genome Browser]]></title>
-      <url>/about/genome-browser.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Genome Browser</strong> 是一个展示基因组数据的可视化iOS APP。该APP的主要功能就是解析庞大的基因组数据，再将所需的部分可视化的展示出来。</p>
-<p>Web端有多个开源的Genome Browser，我们参考了<a href="https://jbrowse.org/" target="_blank" rel="external">JBrowse</a>的实现方式</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>我的主要工作是负责前期的调研，以及后续的iOS开发。</p>
-<h3 id="前期准备工作"><a href="#前期准备工作" class="headerlink" title="前期准备工作"></a>前期准备工作</h3><h4 id="JBrowse源码阅读"><a href="#JBrowse源码阅读" class="headerlink" title="JBrowse源码阅读"></a>JBrowse源码阅读</h4><p>了解JBrowse的大体工作流程，以便我们自己APP的开发。主要是JavaScript的源码，这个过程中还要感谢实验室前端同学的帮助。</p>
-<h4 id="htslib源码修改以及交叉编译"><a href="#htslib源码修改以及交叉编译" class="headerlink" title="htslib源码修改以及交叉编译"></a>htslib源码修改以及交叉编译</h4><p>htslib是一个第三方开源库，主要功能就是<strong>解析存放在远端的庞大的基因组数据</strong>。</p>
-<p>我需要修改部分源代码以适应我们自己的需求；并将其编译成iOS的静态库，以供我们的APP来使用。</p>
-<p>htslib提供了一个Makefile文件，在PC端使用的话，简单的编译三部曲就可以生成PC所需的库。但是我们要将它编译成iOS可用的库，就需要修改Makefile：</p>
+      <title><![CDATA[Controls]]></title>
+      <url>/about/controls.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Controls</strong> 是手机App和Web通信的系统。可以通过他。来实现 App控制Web端的图片 这一功能。</p>
+<p>它的主要功能有：</p>
 <ol>
-<li>修改所用的编译器</li>
-<li>修改依赖的系统库的路径</li>
-<li>该库编译所依赖的第三方库也必须是iOS可用的第三方库</li>
-<li>等等…</li>
+<li>通过操作Controls，在Web上面显示特定的图片</li>
+<li>通过操作Controls，控制Web端图片的缩放</li>
+<li>通过操作Controls，在Web端的图片上面打标记</li>
 </ol>
-<h3 id="后续iOS开发"><a href="#后续iOS开发" class="headerlink" title="后续iOS开发"></a>后续iOS开发</h3><p>主要工作：</p>
+<p>该项目可以算是<a href="/about/sciencewall.html">ScienceWall</a>的一个子项目</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>该项目由我和一名前端同学以及一名Android端同学共同完成，我是这个项目的组长。主要的工作有：</p>
 <ol>
-<li>调用上面编译的<strong>htslib.a</strong>，解析远端的生物数据</li>
-<li>在本地使用<strong>FMDB</strong>缓存解析的数据</li>
-<li>使用<strong>OpenGL ES</strong>绘制解析的数据</li>
+<li>实现iOS客户端</li>
+<li>实现通信服务器，完成 iOS/Android 与 Web 的通信机制</li>
 </ol>
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>JBrowse实现效果</strong></p>
-<p><img src="/lionheart/1707/jbrowse.png" alt="JBrowse"></p>
-<p>可以看到JBrowse可以显示3种基因组数据：</p>
-<ol>
-<li>FASTA ：DNA的碱基序列</li>
-<li>BAM ： DNA测序片段</li>
-<li>VCF ： DNA测序检测出来的基因变异</li>
-</ol>
-<p><strong>我们自己的实现效果</strong></p>
-<p><img src="/lionheart/1707/atcg.gif" alt="fasta"></p>
-<p><img src="/lionheart/1707/bam.gif" alt="bam"></p>
-<p>该项目进行到一半就没有继续了，所以我们只实现了FASTA和BAM数据的基本显示。显示全部使用OpenGL ES来实现。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然这个项目刚起步不久，就没再继续下去了；但是也给后续的项目<a href="/about/gene-plus.html">Gene Plus</a>奠定了一定的基础。硬要说收获，那就是：</p>
-<ol>
-<li>进一步了解了JavaScript以及它的调试</li>
-<li>掌握了在Mac上面交叉编译iOS静态库</li>
-<li>巩固了OpenGL ES绘制的基本知识</li>
-<li>顺带了解了些关于基因组的生物知识=。=</li>
-</ol>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://jbrowse.org/" target="_blank" rel="external">JBrowse</a></li>
-<li><a href="https://github.com/GMOD/jbrowse" target="_blank" rel="external">JBrowse源码</a></li>
-<li><a href="https://github.com/samtools/htslib" target="_blank" rel="external">htslib</a></li>
-</ul>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[关于]]></title>
-      <url>/about/index.html</url>
-      <content type="html"><![CDATA[<p>大家好，我是黄世杰。欢迎来到我的个人技术博客。</p>
-<p>这个博客主要记录了自己平时一些编程的心得和体会，当然还有读书笔记，偶尔还会有些杂七杂八的生活琐事。</p>
-<p>我本人目前在华中科技大学电信学院读研究生，主要从事iOS开发。下面来说说我的技术学习历程：</p>
-<ul>
-<li>大一至大三：上了C语言的课程，算是入了编程的门；后来自学PHP，JavaScript，倒腾了一段时间的网站开发</li>
-<li>大四：保研到实验室之后就主要从事后端开发。主要工作就是：编写PHP代码，服务器以及数据库的运维</li>
-<li>研一至研二：开始转向iOS开发。之后就基本上全职投入到iOS技术的研究中了。这期间与同学完成了多个有趣的项目，并多次担任iOS端负责人</li>
-<li>未来：再进一步提升自己的iOS开发水平。还想学学JavaScript，Swift，Java等其他语言，毕竟技多不压身，希望能成为一个大前端开发人员。另外还想去接触一下目前的新兴技术：AI，VR，AR等，拓宽自己的知识面。</li>
-</ul>
-<p>来看看目前的武器库：</p>
-<ul>
-<li>熟悉Objective-C编程</li>
-<li>熟悉PHP编程</li>
-<li>了解C/C++</li>
-<li>了解JavaScript， HTML/CSS</li>
-<li>了解OpenGL以及OpenGL ES</li>
-<li>熟悉Linux上Web服务器运维，Mysql运维</li>
-</ul>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：iOS端Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
+<p><strong>PS ：Android端同学毕业啦，就不演示了；效果和iPad类似</strong></p>
+<h3 id="iPad端"><a href="#iPad端" class="headerlink" title="iPad端"></a>iPad端</h3><p>操作iPad上面的图片，所做的操作会自动同步到Web浏览器上面</p>
+<video width="650" height="488" src="http://www.signichat.com/data/dzi/controls.mov" controls></video>
+
+<h3 id="Web端"><a href="#Web端" class="headerlink" title="Web端"></a>Web端</h3><p>Web端录屏的时候直接录制的GIF，貌似有点大=。=</p>
+<p><img src="/lionheart/1707/webPort.gif" alt="Web Port"></p>
+<p><strong>可以看到：当在iPad上写下 “你好” 时，在web端图片的相同位置也会自动写出 “你好”！</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>就感觉这做出来的效果很好玩~~</p>
 ]]></content>
     </entry>
     
@@ -7597,20 +7600,50 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
-      <title><![CDATA[Signichat]]></title>
-      <url>/about/signichat.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Signichat</strong> 是一个提供<strong>图片在线浏览，标记，讨论</strong>的会议系统。</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>进实验室的第一个项目，先是跟在学长后面写一写PHP；后来学长毕业了，我就成了后端的负责人=。=</p>
-<p>主要工作是：</p>
+      <title><![CDATA[Genome Browser]]></title>
+      <url>/about/genome-browser.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Genome Browser</strong> 是一个展示基因组数据的可视化iOS APP。该APP的主要功能就是解析庞大的基因组数据，再将所需的部分可视化的展示出来。</p>
+<p>Web端有多个开源的Genome Browser，我们参考了<a href="https://jbrowse.org/" target="_blank" rel="external">JBrowse</a>的实现方式</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>我的主要工作是负责前期的调研，以及后续的iOS开发。</p>
+<h3 id="前期准备工作"><a href="#前期准备工作" class="headerlink" title="前期准备工作"></a>前期准备工作</h3><h4 id="JBrowse源码阅读"><a href="#JBrowse源码阅读" class="headerlink" title="JBrowse源码阅读"></a>JBrowse源码阅读</h4><p>了解JBrowse的大体工作流程，以便我们自己APP的开发。主要是JavaScript的源码，这个过程中还要感谢实验室前端同学的帮助。</p>
+<h4 id="htslib源码修改以及交叉编译"><a href="#htslib源码修改以及交叉编译" class="headerlink" title="htslib源码修改以及交叉编译"></a>htslib源码修改以及交叉编译</h4><p>htslib是一个第三方开源库，主要功能就是<strong>解析存放在远端的庞大的基因组数据</strong>。</p>
+<p>我需要修改部分源代码以适应我们自己的需求；并将其编译成iOS的静态库，以供我们的APP来使用。</p>
+<p>htslib提供了一个Makefile文件，在PC端使用的话，简单的编译三部曲就可以生成PC所需的库。但是我们要将它编译成iOS可用的库，就需要修改Makefile：</p>
 <ol>
-<li>负责后台PHP接口的编写</li>
-<li>服务器以及数据库运维</li>
+<li>修改所用的编译器</li>
+<li>修改依赖的系统库的路径</li>
+<li>该库编译所依赖的第三方库也必须是iOS可用的第三方库</li>
+<li>等等…</li>
 </ol>
-<h2 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h2><p>Web网站 ： <a href="http://www.signichat.com" target="_blank" rel="external">Signichat</a></p>
-<p>APP下载：</p>
-<ul>
-<li><a href="https://itunes.apple.com/cn/app/signichat/id967104628?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载 </a></li>
-<li><a href="http://openbox.mobilem.360.cn/index/d/sid/2777089" target="_blank" rel="external">安卓端下载</a></li>
+<h3 id="后续iOS开发"><a href="#后续iOS开发" class="headerlink" title="后续iOS开发"></a>后续iOS开发</h3><p>主要工作：</p>
+<ol>
+<li>调用上面编译的<strong>htslib.a</strong>，解析远端的生物数据</li>
+<li>在本地使用<strong>FMDB</strong>缓存解析的数据</li>
+<li>使用<strong>OpenGL ES</strong>绘制解析的数据</li>
+</ol>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>JBrowse实现效果</strong></p>
+<p><img src="/lionheart/1707/jbrowse.png" alt="JBrowse"></p>
+<p>可以看到JBrowse可以显示3种基因组数据：</p>
+<ol>
+<li>FASTA ：DNA的碱基序列</li>
+<li>BAM ： DNA测序片段</li>
+<li>VCF ： DNA测序检测出来的基因变异</li>
+</ol>
+<p><strong>我们自己的实现效果</strong></p>
+<p><img src="/lionheart/1707/atcg.gif" alt="fasta"></p>
+<p><img src="/lionheart/1707/bam.gif" alt="bam"></p>
+<p>该项目进行到一半就没有继续了，所以我们只实现了FASTA和BAM数据的基本显示。显示全部使用OpenGL ES来实现。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然这个项目刚起步不久，就没再继续下去了；但是也给后续的项目<a href="/about/gene-plus.html">Gene Plus</a>奠定了一定的基础。硬要说收获，那就是：</p>
+<ol>
+<li>进一步了解了JavaScript以及它的调试</li>
+<li>掌握了在Mac上面交叉编译iOS静态库</li>
+<li>巩固了OpenGL ES绘制的基本知识</li>
+<li>顺带了解了些关于基因组的生物知识=。=</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://jbrowse.org/" target="_blank" rel="external">JBrowse</a></li>
+<li><a href="https://github.com/GMOD/jbrowse" target="_blank" rel="external">JBrowse源码</a></li>
+<li><a href="https://github.com/samtools/htslib" target="_blank" rel="external">htslib</a></li>
 </ul>
 ]]></content>
     </entry>
@@ -7635,9 +7668,46 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
-      <title><![CDATA[categories]]></title>
-      <url>/categories/index.html</url>
-      <content type="html"></content>
+      <title><![CDATA[Signichat]]></title>
+      <url>/about/signichat.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Signichat</strong> 是一个提供<strong>图片在线浏览，标记，讨论</strong>的会议系统。</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>进实验室的第一个项目，先是跟在学长后面写一写PHP；后来学长毕业了，我就成了后端的负责人=。=</p>
+<p>主要工作是：</p>
+<ol>
+<li>负责后台PHP接口的编写</li>
+<li>服务器以及数据库运维</li>
+</ol>
+<h2 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h2><p>Web网站 ： <a href="http://www.signichat.com" target="_blank" rel="external">Signichat</a></p>
+<p>APP下载：</p>
+<ul>
+<li><a href="https://itunes.apple.com/cn/app/signichat/id967104628?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载 </a></li>
+<li><a href="http://openbox.mobilem.360.cn/index/d/sid/2777089" target="_blank" rel="external">安卓端下载</a></li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[关于]]></title>
+      <url>/about/index.html</url>
+      <content type="html"><![CDATA[<p>大家好，我是黄世杰。欢迎来到我的个人技术博客。</p>
+<p>这个博客主要记录了自己平时一些编程的心得和体会，当然还有读书笔记，偶尔还会有些杂七杂八的生活琐事。</p>
+<p>我本人目前在华中科技大学电信学院读研究生，主要从事iOS开发。下面来说说我的技术学习历程：</p>
+<ul>
+<li>大一至大三：上了C语言的课程，算是入了编程的门；后来自学PHP，JavaScript，倒腾了一段时间的网站开发</li>
+<li>大四：保研到实验室之后就主要从事后端开发。主要工作就是：编写PHP代码，服务器以及数据库的运维</li>
+<li>研一至研二：开始转向iOS开发。之后就基本上全职投入到iOS技术的研究中了。这期间与同学完成了多个有趣的项目，并多次担任iOS端负责人</li>
+<li>未来：再进一步提升自己的iOS开发水平。还想学学JavaScript，Swift，Java等其他语言，毕竟技多不压身，希望能成为一个大前端开发人员。另外还想去接触一下目前的新兴技术：AI，VR，AR等，拓宽自己的知识面。</li>
+</ul>
+<p>来看看目前的武器库：</p>
+<ul>
+<li>熟悉Objective-C编程</li>
+<li>熟悉PHP编程</li>
+<li>了解C/C++</li>
+<li>了解JavaScript， HTML/CSS</li>
+<li>了解OpenGL以及OpenGL ES</li>
+<li>熟悉Linux上Web服务器运维，Mysql运维</li>
+</ul>
+]]></content>
     </entry>
     
     <entry>
