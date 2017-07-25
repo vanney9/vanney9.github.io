@@ -7399,6 +7399,66 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
   
     
     <entry>
+      <title><![CDATA[Controls]]></title>
+      <url>/about/controls.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Controls</strong> 是手机App和Web通信的系统。可以通过他。来实现 App控制Web端的图片 这一功能。</p>
+<p>它的主要功能有：</p>
+<ol>
+<li>通过操作Controls，在Web上面显示特定的图片</li>
+<li>通过操作Controls，控制Web端图片的缩放</li>
+<li>通过操作Controls，在Web端的图片上面打标记</li>
+</ol>
+<p>该项目可以算是<a href="/about/sciencewall.html">ScienceWall</a>的一个子项目</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>该项目由我和一名前端同学以及一名Android端同学共同完成，我是这个项目的组长。主要的工作有：</p>
+<ol>
+<li>实现iOS客户端</li>
+<li>实现通信服务器，完成 iOS/Android 与 Web 的通信机制</li>
+</ol>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：iOS端Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
+<p><strong>PS ：Android端同学毕业啦，就不演示了；效果和iPad类似</strong></p>
+<h3 id="iPad端"><a href="#iPad端" class="headerlink" title="iPad端"></a>iPad端</h3><p>操作iPad上面的图片，所做的操作会自动同步到Web浏览器上面</p>
+<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/controls1" controls></video>
+
+<h3 id="Web端"><a href="#Web端" class="headerlink" title="Web端"></a>Web端</h3><p>Web端录屏的时候直接录制的GIF，貌似有点大=。=</p>
+<p><img src="/lionheart/1707/webPort.gif" alt="Web Port"></p>
+<p><strong>可以看到：当在iPad上写下 “你好” 时，在web端图片的相同位置也会自动写出 “你好”！</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>就感觉这做出来的效果很好玩~~</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Gene Plus]]></title>
+      <url>/about/gene-plus.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Gene Plus</strong> 是为GenePlus公司开发的一个基于基因检测报告的iPad端的协同平台。它的主要功能有以下两点：</p>
+<ol>
+<li>基因检测报告的显示</li>
+<li>医生，病人和基因分析师 三者之间的协同</li>
+</ol>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>这个项目由4个人开发完成，我是这个项目的组长。我的主要工作有：</p>
+<ol>
+<li>整个项目的任务安排与调度</li>
+<li>与其他成员一同完成iOS端的开发</li>
+<li>后台API编写，数据库维护等等</li>
+</ol>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
+<h3 id="主要界面展示"><a href="#主要界面展示" class="headerlink" title="主要界面展示"></a>主要界面展示</h3><p><img src="/lionheart/1707/gp7.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp1.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp2.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp3.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp4.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp5.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp6.png" alt="gp"></p>
+<h3 id="视频Demo"><a href="#视频Demo" class="headerlink" title="视频Demo"></a>视频Demo</h3><h4 id="主体界面部分"><a href="#主体界面部分" class="headerlink" title="主体界面部分"></a>主体界面部分</h4><video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/gpmain1" controls></video>
+
+<h4 id="报告显示部分"><a href="#报告显示部分" class="headerlink" title="报告显示部分"></a>报告显示部分</h4><video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/gpdataviz1" controls></video>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>之前<a href="/about/genome-browser.html">Genome Browser</a>草草收场，就是为了开发这个APP；不过之前的生物知识的积累还是对这个项目有很大的帮助的，不算白干=。=</p>
+<p>这个项目的亮点就在于：基因检测报告的数据可视化显示上面。它将枯燥的报告，以生动的形式展现了出来，显得简单易懂。</p>
+<p><strong>整个APP的实现过程中，对于iOS的显示以及绘制等问题有了更深刻的理解！</strong></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[Genome Browser]]></title>
       <url>/about/genome-browser.html</url>
       <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Genome Browser</strong> 是一个展示基因组数据的可视化iOS APP。该APP的主要功能就是解析庞大的基因组数据，再将所需的部分可视化的展示出来。</p>
@@ -7444,38 +7504,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 <li><a href="https://github.com/GMOD/jbrowse" target="_blank" rel="external">JBrowse源码</a></li>
 <li><a href="https://github.com/samtools/htslib" target="_blank" rel="external">htslib</a></li>
 </ul>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Gene Plus]]></title>
-      <url>/about/gene-plus.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Gene Plus</strong> 是为GenePlus公司开发的一个基于基因检测报告的iPad端的协同平台。它的主要功能有以下两点：</p>
-<ol>
-<li>基因检测报告的显示</li>
-<li>医生，病人和基因分析师 三者之间的协同</li>
-</ol>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>这个项目由4个人开发完成，我是这个项目的组长。我的主要工作有：</p>
-<ol>
-<li>整个项目的任务安排与调度</li>
-<li>与其他成员一同完成iOS端的开发</li>
-<li>后台API编写，数据库维护等等</li>
-</ol>
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
-<h3 id="主要界面展示"><a href="#主要界面展示" class="headerlink" title="主要界面展示"></a>主要界面展示</h3><p><img src="/lionheart/1707/gp7.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp1.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp2.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp3.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp4.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp5.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp6.png" alt="gp"></p>
-<h3 id="视频Demo"><a href="#视频Demo" class="headerlink" title="视频Demo"></a>视频Demo</h3><h4 id="主体界面部分"><a href="#主体界面部分" class="headerlink" title="主体界面部分"></a>主体界面部分</h4><video width="650" height="488" src="http://www.signichat.com/data/dzi/gpmain.mov" controls></video>
-
-<h4 id="报告显示部分"><a href="#报告显示部分" class="headerlink" title="报告显示部分"></a>报告显示部分</h4><video width="650" height="488" src="http://www.signichat.com/data/dzi/gpdataviz.mov" controls></video>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>之前<a href="/about/genome-browser.html">Genome Browser</a>草草收场，就是为了开发这个APP；不过之前的生物知识的积累还是对这个项目有很大的帮助的，不算白干=。=</p>
-<p>这个项目的亮点就在于：基因检测报告的数据可视化显示上面。它将枯燥的报告，以生动的形式展现了出来，显得简单易懂。</p>
-<p><strong>整个APP的实现过程中，对于iOS的显示以及绘制等问题有了更深刻的理解！</strong></p>
 ]]></content>
     </entry>
     
@@ -7592,7 +7620,7 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 ]
 </code></pre>
 <p>使用iD3实现的效果如下：</p>
-<video width="650" height="488" src="http://www.signichat.com/data/dzi/hierarchy.mov" controls></video>
+<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/hierarchy1" controls></video>
 
 <h3 id="D3-Shape"><a href="#D3-Shape" class="headerlink" title="D3-Shape"></a>D3-Shape</h3><p><strong>Shape用来生成基本图形</strong>，可以生成多种基本图形，比如：</p>
 <ol>
@@ -7603,13 +7631,51 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 <li>symbol 自定义图形</li>
 </ol>
 <p>使用iD3实现的效果如下：</p>
-<video width="650" height="488" src="http://www.signichat.com/data/dzi/shape.mov" controls></video>
+<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/shape1" controls></video>
 
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个库算是自己写的第一个大型的库了，很多地方还有待完善。</p>
 <p>主要的数据处理模块借鉴了D3，感受到了D3处理数据的威力，毕竟这是一个在Github上有6万多star的开源项目啊=。=</p>
 <p>由于D3使用SVG来显示数据，所以在iOS上面就得自己实现一套数据的显示模块；这里主要运用了OpenGL，Core Animation以及Core Graphics，并将它们封装成一个模块用来集中显示数据。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://d3js.org/" target="_blank" rel="external">D3 Data-Driven Documents</a></li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Signichat]]></title>
+      <url>/about/signichat.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Signichat</strong> 是一个提供<strong>图片在线浏览，标记，讨论</strong>的会议系统。</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>进实验室的第一个项目，先是跟在学长后面写一写PHP；后来学长毕业了，我就成了后端的负责人=。=</p>
+<p>主要工作是：</p>
+<ol>
+<li>负责后台PHP接口的编写</li>
+<li>服务器以及数据库运维</li>
+</ol>
+<h2 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h2><p>Web网站 ： <a href="http://www.signichat.com" target="_blank" rel="external">Signichat</a></p>
+<p>APP下载：</p>
+<ul>
+<li><a href="https://itunes.apple.com/cn/app/signichat/id967104628?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载 </a></li>
+<li><a href="http://openbox.mobilem.360.cn/index/d/sid/2777089" target="_blank" rel="external">安卓端下载</a></li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[ScienceWall]]></title>
+      <url>/about/sciencewall.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>ScienceWall</strong> 是为科研人员打造的一个<strong>在线浏览大图，标记，讨论</strong>的平台。</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>转iOS开发之后，参与的第一个项目</p>
+<p>主要工作是：</p>
+<ol>
+<li>与其他成员一同编写iOS端APP</li>
+<li>后台负责人：负责PHP接口编写，服务器以及数据库运维</li>
+</ol>
+<h2 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h2><p>Web网站：<a href="http://www.sciencewall.net" target="_blank" rel="external">ScienceWall</a></p>
+<p>APP下载：</p>
+<ul>
+<li><a href="https://itunes.apple.com/cn/app/sciencewall/id1042268145?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载</a></li>
+<li><a href="https://play.google.com/store/apps/details?id=net.sciencewall" target="_blank" rel="external">安卓端下载</a></li>
 </ul>
 ]]></content>
     </entry>
@@ -7634,72 +7700,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 <li>了解JavaScript， HTML/CSS</li>
 <li>了解OpenGL以及OpenGL ES</li>
 <li>熟悉Linux上Web服务器运维，Mysql运维</li>
-</ul>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Controls]]></title>
-      <url>/about/controls.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Controls</strong> 是手机App和Web通信的系统。可以通过他。来实现 App控制Web端的图片 这一功能。</p>
-<p>它的主要功能有：</p>
-<ol>
-<li>通过操作Controls，在Web上面显示特定的图片</li>
-<li>通过操作Controls，控制Web端图片的缩放</li>
-<li>通过操作Controls，在Web端的图片上面打标记</li>
-</ol>
-<p>该项目可以算是<a href="/about/sciencewall.html">ScienceWall</a>的一个子项目</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>该项目由我和一名前端同学以及一名Android端同学共同完成，我是这个项目的组长。主要的工作有：</p>
-<ol>
-<li>实现iOS客户端</li>
-<li>实现通信服务器，完成 iOS/Android 与 Web 的通信机制</li>
-</ol>
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：iOS端Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
-<p><strong>PS ：Android端同学毕业啦，就不演示了；效果和iPad类似</strong></p>
-<h3 id="iPad端"><a href="#iPad端" class="headerlink" title="iPad端"></a>iPad端</h3><p>操作iPad上面的图片，所做的操作会自动同步到Web浏览器上面</p>
-<video width="650" height="488" src="http://www.signichat.com/data/dzi/controls.mov" controls></video>
-
-<h3 id="Web端"><a href="#Web端" class="headerlink" title="Web端"></a>Web端</h3><p>Web端录屏的时候直接录制的GIF，貌似有点大=。=</p>
-<p><img src="/lionheart/1707/webPort.gif" alt="Web Port"></p>
-<p><strong>可以看到：当在iPad上写下 “你好” 时，在web端图片的相同位置也会自动写出 “你好”！</strong></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>就感觉这做出来的效果很好玩~~</p>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[ScienceWall]]></title>
-      <url>/about/sciencewall.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>ScienceWall</strong> 是为科研人员打造的一个<strong>在线浏览大图，标记，讨论</strong>的平台。</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>转iOS开发之后，参与的第一个项目</p>
-<p>主要工作是：</p>
-<ol>
-<li>与其他成员一同编写iOS端APP</li>
-<li>后台负责人：负责PHP接口编写，服务器以及数据库运维</li>
-</ol>
-<h2 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h2><p>Web网站：<a href="http://www.sciencewall.net" target="_blank" rel="external">ScienceWall</a></p>
-<p>APP下载：</p>
-<ul>
-<li><a href="https://itunes.apple.com/cn/app/sciencewall/id1042268145?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载</a></li>
-<li><a href="https://play.google.com/store/apps/details?id=net.sciencewall" target="_blank" rel="external">安卓端下载</a></li>
-</ul>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Signichat]]></title>
-      <url>/about/signichat.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Signichat</strong> 是一个提供<strong>图片在线浏览，标记，讨论</strong>的会议系统。</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>进实验室的第一个项目，先是跟在学长后面写一写PHP；后来学长毕业了，我就成了后端的负责人=。=</p>
-<p>主要工作是：</p>
-<ol>
-<li>负责后台PHP接口的编写</li>
-<li>服务器以及数据库运维</li>
-</ol>
-<h2 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h2><p>Web网站 ： <a href="http://www.signichat.com" target="_blank" rel="external">Signichat</a></p>
-<p>APP下载：</p>
-<ul>
-<li><a href="https://itunes.apple.com/cn/app/signichat/id967104628?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载 </a></li>
-<li><a href="http://openbox.mobilem.360.cn/index/d/sid/2777089" target="_blank" rel="external">安卓端下载</a></li>
 </ul>
 ]]></content>
     </entry>
