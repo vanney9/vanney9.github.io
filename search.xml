@@ -7427,35 +7427,9 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
-      <title><![CDATA[Gene Plus]]></title>
-      <url>/about/gene-plus.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Gene Plus</strong> 是为GenePlus公司开发的一个基于基因检测报告的iPad端的协同平台。它的主要功能有以下两点：</p>
-<ol>
-<li>基因检测报告的显示</li>
-<li>医生，病人和基因分析师 三者之间的协同</li>
-</ol>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>这个项目由4个人开发完成，我是这个项目的组长。我的主要工作有：</p>
-<ol>
-<li>整个项目的任务安排与调度</li>
-<li>与其他成员一同完成iOS端的开发</li>
-<li>后台API编写，数据库维护等等</li>
-</ol>
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
-<h3 id="主要界面展示"><a href="#主要界面展示" class="headerlink" title="主要界面展示"></a>主要界面展示</h3><p><img src="/lionheart/1707/gp7.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp1.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp2.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp3.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp4.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp5.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp6.png" alt="gp"></p>
-<h3 id="视频Demo"><a href="#视频Demo" class="headerlink" title="视频Demo"></a>视频Demo</h3><h4 id="主体界面部分"><a href="#主体界面部分" class="headerlink" title="主体界面部分"></a>主体界面部分</h4><video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/gpmain1" controls></video>
-
-<h4 id="报告显示部分"><a href="#报告显示部分" class="headerlink" title="报告显示部分"></a>报告显示部分</h4><video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/gpdataviz1" controls></video>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>之前<a href="/about/genome-browser.html">Genome Browser</a>草草收场，就是为了开发这个APP；不过之前的生物知识的积累还是对这个项目有很大的帮助的，不算白干=。=</p>
-<p>这个项目的亮点就在于：基因检测报告的数据可视化显示上面。它将枯燥的报告，以生动的形式展现了出来，显得简单易懂。</p>
-<p><strong>整个APP的实现过程中，对于iOS的显示以及绘制等问题有了更深刻的理解！</strong></p>
-]]></content>
+      <title><![CDATA[categories]]></title>
+      <url>/categories/index.html</url>
+      <content type="html"></content>
     </entry>
     
     <entry>
@@ -7643,25 +7617,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
-      <title><![CDATA[Signichat]]></title>
-      <url>/about/signichat.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Signichat</strong> 是一个提供<strong>图片在线浏览，标记，讨论</strong>的会议系统。</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>进实验室的第一个项目，先是跟在学长后面写一写PHP；后来学长毕业了，我就成了后端的负责人=。=</p>
-<p>主要工作是：</p>
-<ol>
-<li>负责后台PHP接口的编写</li>
-<li>服务器以及数据库运维</li>
-</ol>
-<h2 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h2><p>Web网站 ： <a href="http://www.signichat.com" target="_blank" rel="external">Signichat</a></p>
-<p>APP下载：</p>
-<ul>
-<li><a href="https://itunes.apple.com/cn/app/signichat/id967104628?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载 </a></li>
-<li><a href="http://openbox.mobilem.360.cn/index/d/sid/2777089" target="_blank" rel="external">安卓端下载</a></li>
-</ul>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[ScienceWall]]></title>
       <url>/about/sciencewall.html</url>
       <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>ScienceWall</strong> 是为科研人员打造的一个<strong>在线浏览大图，标记，讨论</strong>的平台。</p>
@@ -7705,9 +7660,54 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
-      <title><![CDATA[categories]]></title>
-      <url>/categories/index.html</url>
-      <content type="html"></content>
+      <title><![CDATA[Signichat]]></title>
+      <url>/about/signichat.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Signichat</strong> 是一个提供<strong>图片在线浏览，标记，讨论</strong>的会议系统。</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>进实验室的第一个项目，先是跟在学长后面写一写PHP；后来学长毕业了，我就成了后端的负责人=。=</p>
+<p>主要工作是：</p>
+<ol>
+<li>负责后台PHP接口的编写</li>
+<li>服务器以及数据库运维</li>
+</ol>
+<h2 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h2><p>Web网站 ： <a href="http://www.signichat.com" target="_blank" rel="external">Signichat</a></p>
+<p>APP下载：</p>
+<ul>
+<li><a href="https://itunes.apple.com/cn/app/signichat/id967104628?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载 </a></li>
+<li><a href="http://openbox.mobilem.360.cn/index/d/sid/2777089" target="_blank" rel="external">安卓端下载</a></li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Gene Plus]]></title>
+      <url>/about/gene-plus.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Gene Plus</strong> 是为GenePlus公司开发的一个基于基因检测报告的iPad端的协同平台。它的主要功能有以下两点：</p>
+<ol>
+<li>基因检测报告的显示</li>
+<li>医生，病人和基因分析师 三者之间的协同</li>
+</ol>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>这个项目由4个人开发完成，我是这个项目的组长。我的主要工作有：</p>
+<ol>
+<li>整个项目的任务安排与调度</li>
+<li>与其他成员一同完成iOS端的开发</li>
+<li>后台API编写，数据库维护等等</li>
+</ol>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
+<h3 id="主要界面展示"><a href="#主要界面展示" class="headerlink" title="主要界面展示"></a>主要界面展示</h3><p><img src="/lionheart/1707/gp7.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp1.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp2.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp3.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp4.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp5.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp6.png" alt="gp"></p>
+<h3 id="视频Demo"><a href="#视频Demo" class="headerlink" title="视频Demo"></a>视频Demo</h3><h4 id="主体界面部分"><a href="#主体界面部分" class="headerlink" title="主体界面部分"></a>主体界面部分</h4><video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/gpmain1" controls></video>
+
+<h4 id="报告显示部分"><a href="#报告显示部分" class="headerlink" title="报告显示部分"></a>报告显示部分</h4><video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/gpdataviz1" controls></video>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>之前<a href="/about/genome-browser.html">Genome Browser</a>草草收场，就是为了开发这个APP；不过之前的生物知识的积累还是对这个项目有很大的帮助的，不算白干=。=</p>
+<p>这个项目的亮点就在于：基因检测报告的数据可视化显示上面。它将枯燥的报告，以生动的形式展现了出来，显得简单易懂。</p>
+<p><strong>整个APP的实现过程中，对于iOS的显示以及绘制等问题有了更深刻的理解！</strong></p>
+]]></content>
     </entry>
     
     <entry>
