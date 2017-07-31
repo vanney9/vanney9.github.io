@@ -312,7 +312,7 @@ struct objc_class : objc_object {
 <h4 id="has-assoc"><a href="#has-assoc" class="headerlink" title="has_assoc"></a>has_assoc</h4><p>表示该对象是否有关联对象</p>
 <h4 id="has-cxx-dtor"><a href="#has-cxx-dtor" class="headerlink" title="has_cxx_dtor"></a>has_cxx_dtor</h4><p>表示是否有析构函数</p>
 <h4 id="shiftcls"><a href="#shiftcls" class="headerlink" title="shiftcls"></a>shiftcls</h4><p>表示对象所属的类或者类所属的元类(meta class)的地址，也就是指向一个objc_class的指针，不过该指针只有44位。</p>
-<p>64位系统的指针占用64bit的内存，但是使用整个指针大小来存储地址有点浪费。在mac的64位系统上面，使用47位作为指针，其他的17位用于其他目的（iPhone上面只使用33位）。又由于所有对象按照字节（8bit）对齐，所以指针都是能被8整除的，也就是后3bit均为0；所以类指针的实际有效位数为 <code>47 - 3 = 44</code> 位。这也是shiftcls只有44位的原因</p>
+<p>64位系统的指针占用64bit的内存，但是使用整个指针大小来存储地址有点浪费。在mac的64位系统上面，使用47位作为指针，其他的17位用于其他目的（iPhone上面只使用33位）。又由于所有对象按照8字节对齐，所以指针都是能被8整除的，也就是后3bit均为0；所以类指针的实际有效位数为 <code>47 - 3 = 44</code> 位。这也是shiftcls只有44位的原因</p>
 <h4 id="isa初始化"><a href="#isa初始化" class="headerlink" title="isa初始化"></a>isa初始化</h4><p>在创建新的objc_object的时候，会使用objc_object的成员函数<code>initIsa</code>来初始化isa变量</p>
 <pre><code class="c++">inline void 
 objc_object::initInstanceIsa(Class cls, bool hasCxxDtor)

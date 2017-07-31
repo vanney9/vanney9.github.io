@@ -350,7 +350,7 @@ struct class_ro_t {
 <p><img src="/lionheart/1706/ivar_t.png" alt="ivar_t"></p>
 <p><code>name</code> : <strong>实例变量的名字</strong> -&gt; ivarInt</p>
 <p><code>type</code> : <strong>实例变量的类型，type encoding</strong> -&gt; q 表示int类型 </p>
-<p><code>size</code> : <strong>实例变量的内存大小</strong> -&gt; 8 因为int类型占8个字节</p>
+<p><code>size</code> : <strong>实例变量的内存大小</strong> -&gt; 8 因为NSInteger类型占8个字节</p>
 <p><code>offset</code> : <strong>实例变量距离对象的首地址的偏移量</strong> -&gt; offset是一个指向int的指针，取出offset指向的int，发现偏移量为8</p>
 <p>上图还打印了class_ro_t，里面有2个变量需要注意一下：</p>
 <p><code>instanceStart</code> : <strong>对象开始存放实例变量的地址的偏移量</strong> -&gt; 8 因为对象的前8字节存放的是<code>isa_t</code>结构体</p>
@@ -368,7 +368,7 @@ struct class_ro_t {
 <p><img src="/lionheart/1706/son.png" alt="son"></p>
 <p>使用lldb打印son的class_ro_t:</p>
 <p><img src="/lionheart/1706/super.png" alt="super"></p>
-<p>可以发现Son类的 <code>instanceStart</code> 为24，因为Son的实例的前8字节存放isa，后面16字节存放父类的ivarInt和_propertyInt两个int型实例变量。Son类的 <code>instanceSize</code>为32字节，因为他还有自己的一个指向NSString结构体的指针 <strong>_sonStr</strong> ，这个指针也占8字节。</p>
+<p>可以发现Son类的 <code>instanceStart</code> 为24，因为Son的实例的前8字节存放isa，后面16字节存放父类的ivarInt和_propertyInt两个NSInteger型实例变量。Son类的 <code>instanceSize</code>为32字节，因为他还有自己的一个指向NSString结构体的指针 <strong>_sonStr</strong> ，这个指针也占8字节。</p>
 <p>另外<strong>_sonStr</strong> 这一个ivar_t的offset是24，也符合分析</p>
 <p>注意Son类的class_ro_t在<code>realizeClass</code>方法完成后就确定下来了</p>
 <h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>编译结束之后，类的方法就已经存储在class_ro_t里面的baseMethodList变量中了；当运行完runtime的<code>realizeClass</code>方法之后，会将baseMethodList拷贝到class_rw_t的<code>methods</code>变量中，并将各种分类的方法拷贝到<code>methods</code>中。<strong>这样类的所有方法就都聚集在class_rw_t的methods变量中了。</strong></p>

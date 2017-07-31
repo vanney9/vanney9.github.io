@@ -1962,7 +1962,7 @@ struct class_ro_t {
 <p><img src="/lionheart/1706/ivar_t.png" alt="ivar_t"></p>
 <p><code>name</code> : <strong>实例变量的名字</strong> -&gt; ivarInt</p>
 <p><code>type</code> : <strong>实例变量的类型，type encoding</strong> -&gt; q 表示int类型 </p>
-<p><code>size</code> : <strong>实例变量的内存大小</strong> -&gt; 8 因为int类型占8个字节</p>
+<p><code>size</code> : <strong>实例变量的内存大小</strong> -&gt; 8 因为NSInteger类型占8个字节</p>
 <p><code>offset</code> : <strong>实例变量距离对象的首地址的偏移量</strong> -&gt; offset是一个指向int的指针，取出offset指向的int，发现偏移量为8</p>
 <p>上图还打印了class_ro_t，里面有2个变量需要注意一下：</p>
 <p><code>instanceStart</code> : <strong>对象开始存放实例变量的地址的偏移量</strong> -&gt; 8 因为对象的前8字节存放的是<code>isa_t</code>结构体</p>
@@ -1980,7 +1980,7 @@ struct class_ro_t {
 <p><img src="/lionheart/1706/son.png" alt="son"></p>
 <p>使用lldb打印son的class_ro_t:</p>
 <p><img src="/lionheart/1706/super.png" alt="super"></p>
-<p>可以发现Son类的 <code>instanceStart</code> 为24，因为Son的实例的前8字节存放isa，后面16字节存放父类的ivarInt和_propertyInt两个int型实例变量。Son类的 <code>instanceSize</code>为32字节，因为他还有自己的一个指向NSString结构体的指针 <strong>_sonStr</strong> ，这个指针也占8字节。</p>
+<p>可以发现Son类的 <code>instanceStart</code> 为24，因为Son的实例的前8字节存放isa，后面16字节存放父类的ivarInt和_propertyInt两个NSInteger型实例变量。Son类的 <code>instanceSize</code>为32字节，因为他还有自己的一个指向NSString结构体的指针 <strong>_sonStr</strong> ，这个指针也占8字节。</p>
 <p>另外<strong>_sonStr</strong> 这一个ivar_t的offset是24，也符合分析</p>
 <p>注意Son类的class_ro_t在<code>realizeClass</code>方法完成后就确定下来了</p>
 <h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>编译结束之后，类的方法就已经存储在class_ro_t里面的baseMethodList变量中了；当运行完runtime的<code>realizeClass</code>方法之后，会将baseMethodList拷贝到class_rw_t的<code>methods</code>变量中，并将各种分类的方法拷贝到<code>methods</code>中。<strong>这样类的所有方法就都聚集在class_rw_t的methods变量中了。</strong></p>
@@ -2137,7 +2137,7 @@ struct objc_class : objc_object {
 <h4 id="has-assoc"><a href="#has-assoc" class="headerlink" title="has_assoc"></a>has_assoc</h4><p>表示该对象是否有关联对象</p>
 <h4 id="has-cxx-dtor"><a href="#has-cxx-dtor" class="headerlink" title="has_cxx_dtor"></a>has_cxx_dtor</h4><p>表示是否有析构函数</p>
 <h4 id="shiftcls"><a href="#shiftcls" class="headerlink" title="shiftcls"></a>shiftcls</h4><p>表示对象所属的类或者类所属的元类(meta class)的地址，也就是指向一个objc_class的指针，不过该指针只有44位。</p>
-<p>64位系统的指针占用64bit的内存，但是使用整个指针大小来存储地址有点浪费。在mac的64位系统上面，使用47位作为指针，其他的17位用于其他目的（iPhone上面只使用33位）。又由于所有对象按照字节（8bit）对齐，所以指针都是能被8整除的，也就是后3bit均为0；所以类指针的实际有效位数为 <code>47 - 3 = 44</code> 位。这也是shiftcls只有44位的原因</p>
+<p>64位系统的指针占用64bit的内存，但是使用整个指针大小来存储地址有点浪费。在mac的64位系统上面，使用47位作为指针，其他的17位用于其他目的（iPhone上面只使用33位）。又由于所有对象按照8字节对齐，所以指针都是能被8整除的，也就是后3bit均为0；所以类指针的实际有效位数为 <code>47 - 3 = 44</code> 位。这也是shiftcls只有44位的原因</p>
 <h4 id="isa初始化"><a href="#isa初始化" class="headerlink" title="isa初始化"></a>isa初始化</h4><p>在创建新的objc_object的时候，会使用objc_object的成员函数<code>initIsa</code>来初始化isa变量</p>
 <pre><code class="c++">inline void 
 objc_object::initInstanceIsa(Class cls, bool hasCxxDtor)
@@ -7511,55 +7511,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
-      <title><![CDATA[关于]]></title>
-      <url>/about/index.html</url>
-      <content type="html"><![CDATA[<p>大家好，我是黄世杰。欢迎来到我的个人技术博客。</p>
-<p>这个博客主要记录了自己平时一些编程的心得和体会，当然还有读书笔记，偶尔还会有些杂七杂八的生活琐事。</p>
-<p>我本人目前在华中科技大学电信学院读研究生，主要从事iOS开发。下面来说说我的技术学习历程：</p>
-<ul>
-<li>大一至大三：上了C语言的课程，算是入了编程的门；后来自学PHP，JavaScript，倒腾了一段时间的网站开发</li>
-<li>大四：保研到实验室之后就主要从事后端开发。主要工作就是：编写PHP代码，服务器以及数据库的运维</li>
-<li>研一至研二：开始转向iOS开发。之后就基本上全职投入到iOS技术的研究中了。这期间与同学完成了多个有趣的项目，并多次担任iOS端负责人</li>
-<li>未来：再进一步提升自己的iOS开发水平。还想学学JavaScript，Swift，Java等其他语言，毕竟技多不压身，希望能成为一个大前端开发人员。另外还想去接触一下目前的新兴技术：AI，VR，AR等，拓宽自己的知识面。</li>
-</ul>
-<p>来看看目前的武器库：</p>
-<ul>
-<li>熟悉Objective-C编程</li>
-<li>熟悉PHP编程</li>
-<li>了解C/C++</li>
-<li>了解JavaScript， HTML/CSS</li>
-<li>了解OpenGL以及OpenGL ES</li>
-<li>熟悉Linux上Web服务器运维，MySQL运维</li>
-</ul>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[categories]]></title>
-      <url>/categories/index.html</url>
-      <content type="html"></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[ScienceWall]]></title>
-      <url>/about/sciencewall.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>ScienceWall</strong> 是为科研人员打造的一个<strong>在线浏览大图，标记，讨论</strong>的平台。</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>转iOS开发之后，参与的第一个项目</p>
-<p>主要工作是：</p>
-<ol>
-<li>与其他成员一同编写iOS端APP</li>
-<li>后台负责人：负责PHP接口编写，服务器以及数据库运维</li>
-</ol>
-<h2 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h2><p>Web网站：<a href="http://www.sciencewall.net" target="_blank" rel="external">ScienceWall</a></p>
-<p>APP下载：</p>
-<ul>
-<li><a href="https://itunes.apple.com/cn/app/sciencewall/id1042268145?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载</a></li>
-<li><a href="https://play.google.com/store/apps/details?id=net.sciencewall" target="_blank" rel="external">安卓端下载</a></li>
-</ul>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[iD3]]></title>
       <url>/about/iD3.html</url>
       <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>iD3</strong> 是一个iOS上面的数据可视化框架。它的实现参考了著名的JavaScript开源库：<a href="https://d3js.org/" target="_blank" rel="external">D3</a></p>
@@ -7695,6 +7646,55 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
+      <title><![CDATA[关于]]></title>
+      <url>/about/index.html</url>
+      <content type="html"><![CDATA[<p>大家好，我是黄世杰。欢迎来到我的个人技术博客。</p>
+<p>这个博客主要记录了自己平时一些编程的心得和体会，当然还有读书笔记，偶尔还会有些杂七杂八的生活琐事。</p>
+<p>我本人目前在华中科技大学电信学院读研究生，主要从事iOS开发。下面来说说我的技术学习历程：</p>
+<ul>
+<li>大一至大三：上了C语言的课程，算是入了编程的门；后来自学PHP，JavaScript，倒腾了一段时间的网站开发</li>
+<li>大四：保研到实验室之后就主要从事后端开发。主要工作就是：编写PHP代码，服务器以及数据库的运维</li>
+<li>研一至研二：开始转向iOS开发。之后就基本上全职投入到iOS技术的研究中了。这期间与同学完成了多个有趣的项目，并多次担任iOS端负责人</li>
+<li>未来：再进一步提升自己的iOS开发水平。还想学学JavaScript，Swift，Java等其他语言，毕竟技多不压身，希望能成为一个大前端开发人员。另外还想去接触一下目前的新兴技术：AI，VR，AR等，拓宽自己的知识面。</li>
+</ul>
+<p>来看看目前的武器库：</p>
+<ul>
+<li>熟悉Objective-C编程</li>
+<li>熟悉PHP编程</li>
+<li>了解C/C++</li>
+<li>了解JavaScript， HTML/CSS</li>
+<li>了解OpenGL以及OpenGL ES</li>
+<li>熟悉Linux上Web服务器运维，MySQL运维</li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[ScienceWall]]></title>
+      <url>/about/sciencewall.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>ScienceWall</strong> 是为科研人员打造的一个<strong>在线浏览大图，标记，讨论</strong>的平台。</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>转iOS开发之后，参与的第一个项目</p>
+<p>主要工作是：</p>
+<ol>
+<li>与其他成员一同编写iOS端APP</li>
+<li>后台负责人：负责PHP接口编写，服务器以及数据库运维</li>
+</ol>
+<h2 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h2><p>Web网站：<a href="http://www.sciencewall.net" target="_blank" rel="external">ScienceWall</a></p>
+<p>APP下载：</p>
+<ul>
+<li><a href="https://itunes.apple.com/cn/app/sciencewall/id1042268145?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载</a></li>
+<li><a href="https://play.google.com/store/apps/details?id=net.sciencewall" target="_blank" rel="external">安卓端下载</a></li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[tags]]></title>
+      <url>/tags/index.html</url>
+      <content type="html"></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[Signichat]]></title>
       <url>/about/signichat.html</url>
       <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Signichat</strong> 是一个提供<strong>图片在线浏览，标记，讨论</strong>的会议系统。</p>
@@ -7716,8 +7716,8 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
-      <title><![CDATA[tags]]></title>
-      <url>/tags/index.html</url>
+      <title><![CDATA[categories]]></title>
+      <url>/categories/index.html</url>
       <content type="html"></content>
     </entry>
     
