@@ -7442,6 +7442,55 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
+      <title><![CDATA[Genome Browser]]></title>
+      <url>/about/genome-browser.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Genome Browser</strong> 是一个展示基因组数据的可视化iOS APP。该APP的主要功能就是解析庞大的基因组数据，再将所需的部分可视化的展示出来。</p>
+<p>Web端有多个开源的Genome Browser，我们参考了<a href="https://jbrowse.org/" target="_blank" rel="external">JBrowse</a>的实现方式</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>我的主要工作是负责前期的调研，以及后续的iOS开发。</p>
+<h3 id="前期准备工作"><a href="#前期准备工作" class="headerlink" title="前期准备工作"></a>前期准备工作</h3><h4 id="JBrowse源码阅读"><a href="#JBrowse源码阅读" class="headerlink" title="JBrowse源码阅读"></a>JBrowse源码阅读</h4><p>了解JBrowse的大体工作流程，以便我们自己APP的开发。主要是JavaScript的源码，这个过程中还要感谢实验室前端同学的帮助。</p>
+<h4 id="htslib源码修改以及交叉编译"><a href="#htslib源码修改以及交叉编译" class="headerlink" title="htslib源码修改以及交叉编译"></a>htslib源码修改以及交叉编译</h4><p>htslib是一个第三方开源库，主要功能就是<strong>解析存放在远端的庞大的基因组数据</strong>。</p>
+<p>我需要修改部分源代码以适应我们自己的需求；并将其编译成iOS的静态库，以供我们的APP来使用。</p>
+<p>htslib提供了一个Makefile文件，在PC端使用的话，简单的编译三部曲就可以生成PC所需的库。但是我们要将它编译成iOS可用的库，就需要修改Makefile：</p>
+<ol>
+<li>修改所用的编译器</li>
+<li>修改依赖的系统库的路径</li>
+<li>该库编译所依赖的第三方库也必须是iOS可用的第三方库</li>
+<li>等等…</li>
+</ol>
+<h3 id="后续iOS开发"><a href="#后续iOS开发" class="headerlink" title="后续iOS开发"></a>后续iOS开发</h3><p>主要工作：</p>
+<ol>
+<li>调用上面编译的<strong>htslib.a</strong>，解析远端的生物数据</li>
+<li>在本地使用<strong>FMDB</strong>缓存解析的数据</li>
+<li>使用<strong>OpenGL ES</strong>绘制解析的数据</li>
+</ol>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>JBrowse实现效果</strong></p>
+<p><img src="/lionheart/1707/jbrowse.png" alt="JBrowse"></p>
+<p>可以看到JBrowse可以显示3种基因组数据：</p>
+<ol>
+<li>FASTA ：DNA的碱基序列</li>
+<li>BAM ： DNA测序片段</li>
+<li>VCF ： DNA测序检测出来的基因变异</li>
+</ol>
+<p><strong>我们自己的实现效果</strong></p>
+<p><img src="/lionheart/1707/atcg.gif" alt="fasta"></p>
+<p><img src="/lionheart/1707/bam.gif" alt="bam"></p>
+<p>该项目进行到一半就没有继续了，所以我们只实现了FASTA和BAM数据的基本显示。显示全部使用OpenGL ES来实现。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然这个项目刚起步不久，就没再继续下去了；但是也给后续的项目<a href="/about/gene-plus.html">Gene Plus</a>奠定了一定的基础。硬要说收获，那就是：</p>
+<ol>
+<li>进一步了解了JavaScript以及它的调试</li>
+<li>掌握了在Mac上面交叉编译iOS静态库</li>
+<li>巩固了OpenGL ES绘制的基本知识</li>
+<li>顺带了解了些关于基因组的生物知识=。=</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://jbrowse.org/" target="_blank" rel="external">JBrowse</a></li>
+<li><a href="https://github.com/GMOD/jbrowse" target="_blank" rel="external">JBrowse源码</a></li>
+<li><a href="https://github.com/samtools/htslib" target="_blank" rel="external">htslib</a></li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[iD3]]></title>
       <url>/about/iD3.html</url>
       <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>iD3</strong> 是一个iOS上面的数据可视化框架。它的实现参考了著名的JavaScript开源库：<a href="https://d3js.org/" target="_blank" rel="external">D3</a></p>
@@ -7572,55 +7621,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 <p>由于D3使用SVG来显示数据，所以在iOS上面就得自己实现一套数据的显示模块；这里主要运用了OpenGL，Core Animation以及Core Graphics，并将它们封装成一个模块用来集中显示数据。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://d3js.org/" target="_blank" rel="external">D3 Data-Driven Documents</a></li>
-</ul>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Genome Browser]]></title>
-      <url>/about/genome-browser.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Genome Browser</strong> 是一个展示基因组数据的可视化iOS APP。该APP的主要功能就是解析庞大的基因组数据，再将所需的部分可视化的展示出来。</p>
-<p>Web端有多个开源的Genome Browser，我们参考了<a href="https://jbrowse.org/" target="_blank" rel="external">JBrowse</a>的实现方式</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>我的主要工作是负责前期的调研，以及后续的iOS开发。</p>
-<h3 id="前期准备工作"><a href="#前期准备工作" class="headerlink" title="前期准备工作"></a>前期准备工作</h3><h4 id="JBrowse源码阅读"><a href="#JBrowse源码阅读" class="headerlink" title="JBrowse源码阅读"></a>JBrowse源码阅读</h4><p>了解JBrowse的大体工作流程，以便我们自己APP的开发。主要是JavaScript的源码，这个过程中还要感谢实验室前端同学的帮助。</p>
-<h4 id="htslib源码修改以及交叉编译"><a href="#htslib源码修改以及交叉编译" class="headerlink" title="htslib源码修改以及交叉编译"></a>htslib源码修改以及交叉编译</h4><p>htslib是一个第三方开源库，主要功能就是<strong>解析存放在远端的庞大的基因组数据</strong>。</p>
-<p>我需要修改部分源代码以适应我们自己的需求；并将其编译成iOS的静态库，以供我们的APP来使用。</p>
-<p>htslib提供了一个Makefile文件，在PC端使用的话，简单的编译三部曲就可以生成PC所需的库。但是我们要将它编译成iOS可用的库，就需要修改Makefile：</p>
-<ol>
-<li>修改所用的编译器</li>
-<li>修改依赖的系统库的路径</li>
-<li>该库编译所依赖的第三方库也必须是iOS可用的第三方库</li>
-<li>等等…</li>
-</ol>
-<h3 id="后续iOS开发"><a href="#后续iOS开发" class="headerlink" title="后续iOS开发"></a>后续iOS开发</h3><p>主要工作：</p>
-<ol>
-<li>调用上面编译的<strong>htslib.a</strong>，解析远端的生物数据</li>
-<li>在本地使用<strong>FMDB</strong>缓存解析的数据</li>
-<li>使用<strong>OpenGL ES</strong>绘制解析的数据</li>
-</ol>
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>JBrowse实现效果</strong></p>
-<p><img src="/lionheart/1707/jbrowse.png" alt="JBrowse"></p>
-<p>可以看到JBrowse可以显示3种基因组数据：</p>
-<ol>
-<li>FASTA ：DNA的碱基序列</li>
-<li>BAM ： DNA测序片段</li>
-<li>VCF ： DNA测序检测出来的基因变异</li>
-</ol>
-<p><strong>我们自己的实现效果</strong></p>
-<p><img src="/lionheart/1707/atcg.gif" alt="fasta"></p>
-<p><img src="/lionheart/1707/bam.gif" alt="bam"></p>
-<p>该项目进行到一半就没有继续了，所以我们只实现了FASTA和BAM数据的基本显示。显示全部使用OpenGL ES来实现。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然这个项目刚起步不久，就没再继续下去了；但是也给后续的项目<a href="/about/gene-plus.html">Gene Plus</a>奠定了一定的基础。硬要说收获，那就是：</p>
-<ol>
-<li>进一步了解了JavaScript以及它的调试</li>
-<li>掌握了在Mac上面交叉编译iOS静态库</li>
-<li>巩固了OpenGL ES绘制的基本知识</li>
-<li>顺带了解了些关于基因组的生物知识=。=</li>
-</ol>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://jbrowse.org/" target="_blank" rel="external">JBrowse</a></li>
-<li><a href="https://github.com/GMOD/jbrowse" target="_blank" rel="external">JBrowse源码</a></li>
-<li><a href="https://github.com/samtools/htslib" target="_blank" rel="external">htslib</a></li>
 </ul>
 ]]></content>
     </entry>
