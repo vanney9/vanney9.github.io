@@ -276,7 +276,7 @@ struct objc_class : objc_object {
       // method here
 }
 </code></pre>
-<p><strong>objc_struct</strong> 定义在 <code>objc-private.h</code> 里面，该结构体只包含一个叫做 isa 的isa_t类型的变量</p>
+<p><strong>objc_object</strong> 定义在 <code>objc-private.h</code> 里面，该结构体只包含一个叫做 isa 的isa_t类型的变量</p>
 <p><strong>objc_class</strong> 定义在 <code>objc-runtime-new.h</code> 里面，它继承自objc_object，所以除了isa成员变量之外，它还有：</p>
 <ol>
 <li>指向另一个objc_class结构体的指针 <strong>super_class</strong>；这一个objc_class包含了父类的信息</li>
