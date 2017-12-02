@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-07-24T03:31:49.000Z</updated>
+  <updated>2017-12-02T08:41:23.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,38 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ARRubik</title>
+    <link href="http://yoursite.com/2017/12/02/ARRubik/"/>
+    <id>http://yoursite.com/2017/12/02/ARRubik/</id>
+    <published>2017-12-02T08:41:23.000Z</published>
+    <updated>2017-12-02T08:41:23.000Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>一次秋招</title>
+    <link href="http://yoursite.com/2017/12/02/job-summary/"/>
+    <id>http://yoursite.com/2017/12/02/job-summary/</id>
+    <published>2017-12-02T08:17:58.000Z</published>
+    <updated>2017-12-02T12:53:17.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;如题，记录一下辛苦的秋招&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="杂七杂八" scheme="http://yoursite.com/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/"/>
+    
+  </entry>
   
   <entry>
     <title>CALayer的时间坐标系</title>
@@ -383,52 +415,6 @@
     <summary type="html">
     
       &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Effective Objective C&lt;/strong&gt; 读书笔记 - 内存管理&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="读书笔记" scheme="http://yoursite.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>关于iOS Drawing</title>
-    <link href="http://yoursite.com/2017/03/24/something-about-iOS-drawing/"/>
-    <id>http://yoursite.com/2017/03/24/something-about-iOS-drawing/</id>
-    <published>2017-03-24T09:14:51.000Z</published>
-    <updated>2017-07-17T08:43:08.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;学了一段时间的OpenGL，这次又重新看了一遍 &lt;strong&gt;iOS Core Animation&lt;/strong&gt; 这本书，查看了许多资料。对这个iOS的drawing稍有顿悟=。=&lt;/p&gt;
-&lt;p&gt;这篇文章里面，我会针对下面几个方面说说我自己的见解：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Core Animation，Core Graphic 和 OpenGL ES&lt;/li&gt;
-&lt;li&gt;Rendering以及Animation的步骤&lt;/li&gt;
-&lt;li&gt;iOS Drawing中的CPU，GPU&lt;/li&gt;
-&lt;li&gt;drawRect方法的弊端&lt;/li&gt;
-&lt;li&gt;影响GPU与CPU绘制的因素&lt;/li&gt;
-&lt;/ol&gt;
-    
-    </summary>
-    
-      <category term="iOS" scheme="http://yoursite.com/categories/iOS/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Effective Objective-C - 协议与分类</title>
-    <link href="http://yoursite.com/2017/03/23/effective-objective-c-reading-note-two/"/>
-    <id>http://yoursite.com/2017/03/23/effective-objective-c-reading-note-two/</id>
-    <published>2017-03-23T11:47:30.000Z</published>
-    <updated>2017-07-17T08:19:23.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Effective Objective-C&lt;/strong&gt; 读书笔记 - 协议与分类&lt;/p&gt;
-&lt;p&gt;协议（&lt;strong&gt;protocol&lt;/strong&gt;）与Java的接口（&lt;strong&gt;interface&lt;/strong&gt;）类似，由于OC不支持&lt;strong&gt;多重继承&lt;/strong&gt;。通过协议，可以实现类似多重继承的效果。若指定某个类实现了某个协议，那么就表示，该类实现了协议中规定了一些方法。&lt;/p&gt;
-&lt;p&gt;分类（&lt;strong&gt;category&lt;/strong&gt;）是OC的重要的一个语言特性。利用分类机制，无须继承子类即可为当前类添加方法。这也是由于动态runtime系统，才得以实现。&lt;/p&gt;
     
     </summary>
     

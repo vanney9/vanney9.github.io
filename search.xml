@@ -3,6 +3,62 @@
   
     
     <entry>
+      <title><![CDATA[ARRubik]]></title>
+      <url>/2017/12/02/ARRubik/</url>
+      <content type="html"></content>
+      
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[一次秋招]]></title>
+      <url>/2017/12/02/job-summary/</url>
+      <content type="html"><![CDATA[<p>如题，记录一下辛苦的秋招</p>
+<a id="more"></a>
+<p>秋招结束有一段时间了。感谢今年良好的整体环境，我也拿了大大小小几个offer，最后选择了腾讯的iOS开发岗位。</p>
+<p>从七月中旬开始正式准备算起，到10月初确定下来，一共有2个半月时间吧。</p>
+<ol>
+<li>7月中旬看书，刷题</li>
+<li>7月底内推开始，一来就是阿里和腾讯，直接一波两连跪，心情跌倒谷底=。=</li>
+<li>开始找不足，发现iOS方面知识还算应付的过来；缺的是计算机基础知识，赶紧补一补本科的数据结构，计算机网络和操作系统</li>
+<li>8月夹杂着各种内推面试，总算熟悉了各家的面试套路。问来问去都差不多那些东西</li>
+<li>9.3号，今日头条内推视频面试，一下午面了三面。跟杰哥去吃饭的时候接到了hr的电话，说已经通过了。假装平静的跟hr小姐姐聊完之后，就开始激动的和杰哥噼里啪啦的讲起来了。信心大增。</li>
+<li>之后就只面了些大厂，问的问题都大同小异。说说其中腾讯的面试吧，腾讯二面，就持续了20分钟，全程就像聊天。气氛轻松的让我以为我已经挂了。。。</li>
+<li>9月底陆续收到了几份offer，十一之后收到了腾讯的offer。</li>
+</ol>
+<p>另外，回顾这两个多月的秋招，大部分公司面试体验都是很好的。其中今日头条给我的感觉是最好的：三面技术面问的问题很全面，很深入；当天就出结果，没有拖拖拉拉的；最后在得知我选择腾讯之后，主管也分两次跟我打了将近2小时的电话，非常感动。</p>
+<p>小学弟说让我写一篇面经，感觉我有点跑题…那下面就言归正传，正正经经写一篇<strong>iOS秋招面经</strong></p>
+<p>……</p>
+<h4 id="准备阶段"><a href="#准备阶段" class="headerlink" title="准备阶段"></a>准备阶段</h4><p>程序员面试必看书籍：</p>
+<ol>
+<li>剑指Offer</li>
+<li>计算机网络，操作系统，数据结构 — 找找本科的书看看就行</li>
+</ol>
+<p>iOS程序员附加书籍：</p>
+<ol>
+<li>Effective Objective-C</li>
+<li>iOS与OS X多线程和内存管理</li>
+<li><a href="https://github.com/ChenYilong/iOSInterviewQuestions/blob/master/01%E3%80%8A%E6%8B%9B%E8%81%98%E4%B8%80%E4%B8%AA%E9%9D%A0%E8%B0%B1%E7%9A%84iOS%E3%80%8B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88/%E3%80%8A%E6%8B%9B%E8%81%98%E4%B8%80%E4%B8%AA%E9%9D%A0%E8%B0%B1%E7%9A%84iOS%E3%80%8B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88%EF%BC%88%E4%B8%8A%EF%BC%89.md" target="_blank" rel="external">招聘一个靠谱的iOS</a></li>
+</ol>
+<h4 id="面试阶段"><a href="#面试阶段" class="headerlink" title="面试阶段"></a>面试阶段</h4><p>前面准备再多，都不如来场真真切切的面试。一场面试下来，能发现很多自身不足的地方。每场面试下来，<strong>做好总结</strong>，这是最重要的，毕竟能问的问题也就那么多=。=</p>
+<p>……</p>
+<p>秋招结束有段时间了，有些细节已经想不起来了，那总结就到这里了。总结完了不得来个展望：面对未来，不安与期待</p>
+<p>最后的最后，立个flag：年前成一个kickflip？</p>
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><ul>
+<li><a href="https://github.com/ChenYilong/iOSInterviewQuestions/blob/master/01%E3%80%8A%E6%8B%9B%E8%81%98%E4%B8%80%E4%B8%AA%E9%9D%A0%E8%B0%B1%E7%9A%84iOS%E3%80%8B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88/%E3%80%8A%E6%8B%9B%E8%81%98%E4%B8%80%E4%B8%AA%E9%9D%A0%E8%B0%B1%E7%9A%84iOS%E3%80%8B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88%EF%BC%88%E4%B8%8A%EF%BC%89.md" target="_blank" rel="external">招聘一个靠谱的iOS</a></li>
+</ul>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 杂七杂八 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[CALayer的时间坐标系]]></title>
       <url>/2017/07/24/calayer-time-coordinate-system/</url>
       <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上周末，又进行了一次实验室内部的iOS分享会。这次是小学弟给我们讲的<a href="https://wanston.github.io/2017/07/12/CAMediaTiming%E5%8D%8F%E8%AE%AE/" target="_blank" rel="external">CAMediaTiming</a>以及<a href="https://wanston.github.io/2017/07/19/RunLoop/" target="_blank" rel="external">Runloop</a>的一些内容。讲的很细，也很深=。=</p>
@@ -7413,6 +7469,61 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
+      <title><![CDATA[Controls]]></title>
+      <url>/about/controls.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Controls</strong> 是手机App和Web通信的系统。可以通过他。来实现 App控制Web端的图片 这一功能。</p>
+<p>它的主要功能有：</p>
+<ol>
+<li>通过操作Controls，在Web上面显示特定的图片</li>
+<li>通过操作Controls，控制Web端图片的缩放</li>
+<li>通过操作Controls，在Web端的图片上面打标记</li>
+</ol>
+<p>该项目可以算是<a href="/about/sciencewall.html">ScienceWall</a>的一个子项目</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>该项目由我和一名前端同学以及一名Android端同学共同完成，我是这个项目的组长。主要的工作有：</p>
+<ol>
+<li>使用Node.js搭建移动端和Web之间的后端通信服务器</li>
+<li>搭建iOS客户端，使用SocketIO第三方库实现与Node.js服务器的通信</li>
+</ol>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：iOS端Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
+<p><strong>PS ：Android端同学毕业啦，就不演示了；效果和iPad类似</strong></p>
+<p>先来看看iPad和Web同时录制的效果：</p>
+<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/demo" controls></video>
+
+<h3 id="iPad端"><a href="#iPad端" class="headerlink" title="iPad端"></a>iPad端</h3><p>操作iPad上面的图片，所做的操作会自动同步到Web浏览器上面</p>
+<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/controls1" controls></video>
+
+<h3 id="Web端"><a href="#Web端" class="headerlink" title="Web端"></a>Web端</h3><p>Web端录屏的时候直接录制的GIF，貌似有点大=。=</p>
+<p><img src="/lionheart/1707/webPort.gif" alt="Web Port"></p>
+<p><strong>可以看到：当在iPad上写下 “你好” 时，在web端图片的相同位置也会自动写出 “你好”！</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>就感觉这做出来的效果很好玩~~</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[关于]]></title>
+      <url>/about/index.html</url>
+      <content type="html"><![CDATA[<p>大家好，我是黄世杰。欢迎来到我的个人技术博客。</p>
+<p>这个博客主要记录了自己平时一些编程的心得和体会，当然还有读书笔记，偶尔还会有些杂七杂八的生活琐事。</p>
+<p>我本人目前在华中科技大学电信学院读研究生，主要从事iOS开发。下面来说说我的技术学习历程：</p>
+<ul>
+<li>大一至大三：上了C语言的课程，算是入了编程的门；后来自学PHP，JavaScript，倒腾了一段时间的网站开发</li>
+<li>大四：保研到实验室之后就主要从事后端开发。主要工作就是：编写PHP代码，服务器以及数据库的运维</li>
+<li>研一至研二：开始转向iOS开发。之后就基本上全职投入到iOS技术的研究中了。这期间与同学完成了多个有趣的项目，并多次担任iOS端负责人</li>
+<li>未来：再进一步提升自己的iOS开发水平。还想学学JavaScript，Swift，Java等其他语言，毕竟技多不压身，希望能成为一个大前端开发人员。另外还想去接触一下目前的新兴技术：AI，VR，AR等，拓宽自己的知识面。</li>
+</ul>
+<p>来看看目前的武器库：</p>
+<ul>
+<li>熟悉Objective-C编程</li>
+<li>熟悉PHP编程</li>
+<li>了解C/C++</li>
+<li>了解JavaScript， HTML/CSS</li>
+<li>了解OpenGL以及OpenGL ES</li>
+<li>熟悉Linux上Web服务器运维，MySQL运维</li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[iD3]]></title>
       <url>/about/iD3.html</url>
       <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>iD3</strong> 是一个iOS上面的数据可视化框架。它的实现参考了著名的JavaScript开源库：<a href="https://d3js.org/" target="_blank" rel="external">D3</a></p>
@@ -7576,61 +7687,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>之前<a href="/about/genome-browser.html">Genome Browser</a>草草收场，就是为了开发这个APP；不过之前的生物知识的积累还是对这个项目有很大的帮助的，不算白干=。=</p>
 <p>这个项目的亮点就在于：基因检测报告的数据可视化显示上面。它将枯燥的报告，以生动的形式展现了出来，显得简单易懂。</p>
 <p><strong>整个APP的实现过程中，对于iOS的显示以及绘制等问题有了更深刻的理解！</strong></p>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[关于]]></title>
-      <url>/about/index.html</url>
-      <content type="html"><![CDATA[<p>大家好，我是黄世杰。欢迎来到我的个人技术博客。</p>
-<p>这个博客主要记录了自己平时一些编程的心得和体会，当然还有读书笔记，偶尔还会有些杂七杂八的生活琐事。</p>
-<p>我本人目前在华中科技大学电信学院读研究生，主要从事iOS开发。下面来说说我的技术学习历程：</p>
-<ul>
-<li>大一至大三：上了C语言的课程，算是入了编程的门；后来自学PHP，JavaScript，倒腾了一段时间的网站开发</li>
-<li>大四：保研到实验室之后就主要从事后端开发。主要工作就是：编写PHP代码，服务器以及数据库的运维</li>
-<li>研一至研二：开始转向iOS开发。之后就基本上全职投入到iOS技术的研究中了。这期间与同学完成了多个有趣的项目，并多次担任iOS端负责人</li>
-<li>未来：再进一步提升自己的iOS开发水平。还想学学JavaScript，Swift，Java等其他语言，毕竟技多不压身，希望能成为一个大前端开发人员。另外还想去接触一下目前的新兴技术：AI，VR，AR等，拓宽自己的知识面。</li>
-</ul>
-<p>来看看目前的武器库：</p>
-<ul>
-<li>熟悉Objective-C编程</li>
-<li>熟悉PHP编程</li>
-<li>了解C/C++</li>
-<li>了解JavaScript， HTML/CSS</li>
-<li>了解OpenGL以及OpenGL ES</li>
-<li>熟悉Linux上Web服务器运维，MySQL运维</li>
-</ul>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Controls]]></title>
-      <url>/about/controls.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Controls</strong> 是手机App和Web通信的系统。可以通过他。来实现 App控制Web端的图片 这一功能。</p>
-<p>它的主要功能有：</p>
-<ol>
-<li>通过操作Controls，在Web上面显示特定的图片</li>
-<li>通过操作Controls，控制Web端图片的缩放</li>
-<li>通过操作Controls，在Web端的图片上面打标记</li>
-</ol>
-<p>该项目可以算是<a href="/about/sciencewall.html">ScienceWall</a>的一个子项目</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>该项目由我和一名前端同学以及一名Android端同学共同完成，我是这个项目的组长。主要的工作有：</p>
-<ol>
-<li>使用Node.js搭建移动端和Web之间的后端通信服务器</li>
-<li>搭建iOS客户端，使用SocketIO第三方库实现与Node.js服务器的通信</li>
-</ol>
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：iOS端Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
-<p><strong>PS ：Android端同学毕业啦，就不演示了；效果和iPad类似</strong></p>
-<p>先来看看iPad和Web同时录制的效果：</p>
-<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/demo" controls></video>
-
-<h3 id="iPad端"><a href="#iPad端" class="headerlink" title="iPad端"></a>iPad端</h3><p>操作iPad上面的图片，所做的操作会自动同步到Web浏览器上面</p>
-<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/controls1" controls></video>
-
-<h3 id="Web端"><a href="#Web端" class="headerlink" title="Web端"></a>Web端</h3><p>Web端录屏的时候直接录制的GIF，貌似有点大=。=</p>
-<p><img src="/lionheart/1707/webPort.gif" alt="Web Port"></p>
-<p><strong>可以看到：当在iPad上写下 “你好” 时，在web端图片的相同位置也会自动写出 “你好”！</strong></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>就感觉这做出来的效果很好玩~~</p>
 ]]></content>
     </entry>
     
