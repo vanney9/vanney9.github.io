@@ -3,10 +3,24 @@
   
     
     <entry>
-      <title><![CDATA[ARRubik]]></title>
+      <title><![CDATA[ARKit下的魔方]]></title>
       <url>/2017/12/02/ARRubik/</url>
-      <content type="html"></content>
+      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>如题，先看看效果👇</p>
+<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/rubikDemoForWeb" controls></video>
+
+<a id="more"></a>
+<p>代码在我的<a href="https://github.com/vanney9/ARRubik" target="_blank" rel="external">Github</a>，运行起来，在手势检测上还有些不够精准。有兴趣的可以一起讨论</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://github.com/olucurious/Awesome-ARKit" target="_blank" rel="external">Awesome ARKit</a></li>
+</ul>
+]]></content>
       
+        
+        <tags>
+            
+            <tag> iOS </tag>
+            
+        </tags>
         
     </entry>
     
@@ -7469,61 +7483,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
-      <title><![CDATA[Controls]]></title>
-      <url>/about/controls.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Controls</strong> 是手机App和Web通信的系统。可以通过他。来实现 App控制Web端的图片 这一功能。</p>
-<p>它的主要功能有：</p>
-<ol>
-<li>通过操作Controls，在Web上面显示特定的图片</li>
-<li>通过操作Controls，控制Web端图片的缩放</li>
-<li>通过操作Controls，在Web端的图片上面打标记</li>
-</ol>
-<p>该项目可以算是<a href="/about/sciencewall.html">ScienceWall</a>的一个子项目</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>该项目由我和一名前端同学以及一名Android端同学共同完成，我是这个项目的组长。主要的工作有：</p>
-<ol>
-<li>使用Node.js搭建移动端和Web之间的后端通信服务器</li>
-<li>搭建iOS客户端，使用SocketIO第三方库实现与Node.js服务器的通信</li>
-</ol>
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：iOS端Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
-<p><strong>PS ：Android端同学毕业啦，就不演示了；效果和iPad类似</strong></p>
-<p>先来看看iPad和Web同时录制的效果：</p>
-<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/demo" controls></video>
-
-<h3 id="iPad端"><a href="#iPad端" class="headerlink" title="iPad端"></a>iPad端</h3><p>操作iPad上面的图片，所做的操作会自动同步到Web浏览器上面</p>
-<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/controls1" controls></video>
-
-<h3 id="Web端"><a href="#Web端" class="headerlink" title="Web端"></a>Web端</h3><p>Web端录屏的时候直接录制的GIF，貌似有点大=。=</p>
-<p><img src="/lionheart/1707/webPort.gif" alt="Web Port"></p>
-<p><strong>可以看到：当在iPad上写下 “你好” 时，在web端图片的相同位置也会自动写出 “你好”！</strong></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>就感觉这做出来的效果很好玩~~</p>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[关于]]></title>
-      <url>/about/index.html</url>
-      <content type="html"><![CDATA[<p>大家好，我是黄世杰。欢迎来到我的个人技术博客。</p>
-<p>这个博客主要记录了自己平时一些编程的心得和体会，当然还有读书笔记，偶尔还会有些杂七杂八的生活琐事。</p>
-<p>我本人目前在华中科技大学电信学院读研究生，主要从事iOS开发。下面来说说我的技术学习历程：</p>
-<ul>
-<li>大一至大三：上了C语言的课程，算是入了编程的门；后来自学PHP，JavaScript，倒腾了一段时间的网站开发</li>
-<li>大四：保研到实验室之后就主要从事后端开发。主要工作就是：编写PHP代码，服务器以及数据库的运维</li>
-<li>研一至研二：开始转向iOS开发。之后就基本上全职投入到iOS技术的研究中了。这期间与同学完成了多个有趣的项目，并多次担任iOS端负责人</li>
-<li>未来：再进一步提升自己的iOS开发水平。还想学学JavaScript，Swift，Java等其他语言，毕竟技多不压身，希望能成为一个大前端开发人员。另外还想去接触一下目前的新兴技术：AI，VR，AR等，拓宽自己的知识面。</li>
-</ul>
-<p>来看看目前的武器库：</p>
-<ul>
-<li>熟悉Objective-C编程</li>
-<li>熟悉PHP编程</li>
-<li>了解C/C++</li>
-<li>了解JavaScript， HTML/CSS</li>
-<li>了解OpenGL以及OpenGL ES</li>
-<li>熟悉Linux上Web服务器运维，MySQL运维</li>
-</ul>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[iD3]]></title>
       <url>/about/iD3.html</url>
       <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>iD3</strong> 是一个iOS上面的数据可视化框架。它的实现参考了著名的JavaScript开源库：<a href="https://d3js.org/" target="_blank" rel="external">D3</a></p>
@@ -7691,6 +7650,82 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
+      <title><![CDATA[关于]]></title>
+      <url>/about/index.html</url>
+      <content type="html"><![CDATA[<p>大家好，我是黄世杰。欢迎来到我的个人技术博客。</p>
+<p>这个博客主要记录了自己平时一些编程的心得和体会，当然还有读书笔记，偶尔还会有些杂七杂八的生活琐事。</p>
+<p>我本人目前在华中科技大学电信学院读研究生，主要从事iOS开发。下面来说说我的技术学习历程：</p>
+<ul>
+<li>大一至大三：上了C语言的课程，算是入了编程的门；后来自学PHP，JavaScript，倒腾了一段时间的网站开发</li>
+<li>大四：保研到实验室之后就主要从事后端开发。主要工作就是：编写PHP代码，服务器以及数据库的运维</li>
+<li>研一至研二：开始转向iOS开发。之后就基本上全职投入到iOS技术的研究中了。这期间与同学完成了多个有趣的项目，并多次担任iOS端负责人</li>
+<li>未来：再进一步提升自己的iOS开发水平。还想学学JavaScript，Swift，Java等其他语言，毕竟技多不压身，希望能成为一个大前端开发人员。另外还想去接触一下目前的新兴技术：AI，VR，AR等，拓宽自己的知识面。</li>
+</ul>
+<p>来看看目前的武器库：</p>
+<ul>
+<li>熟悉Objective-C编程</li>
+<li>熟悉PHP编程</li>
+<li>了解C/C++</li>
+<li>了解JavaScript， HTML/CSS</li>
+<li>了解OpenGL以及OpenGL ES</li>
+<li>熟悉Linux上Web服务器运维，MySQL运维</li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Controls]]></title>
+      <url>/about/controls.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Controls</strong> 是手机App和Web通信的系统。可以通过他。来实现 App控制Web端的图片 这一功能。</p>
+<p>它的主要功能有：</p>
+<ol>
+<li>通过操作Controls，在Web上面显示特定的图片</li>
+<li>通过操作Controls，控制Web端图片的缩放</li>
+<li>通过操作Controls，在Web端的图片上面打标记</li>
+</ol>
+<p>该项目可以算是<a href="/about/sciencewall.html">ScienceWall</a>的一个子项目</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>该项目由我和一名前端同学以及一名Android端同学共同完成，我是这个项目的组长。主要的工作有：</p>
+<ol>
+<li>使用Node.js搭建移动端和Web之间的后端通信服务器</li>
+<li>搭建iOS客户端，使用SocketIO第三方库实现与Node.js服务器的通信</li>
+</ol>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：iOS端Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
+<p><strong>PS ：Android端同学毕业啦，就不演示了；效果和iPad类似</strong></p>
+<p>先来看看iPad和Web同时录制的效果：</p>
+<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/demo" controls></video>
+
+<h3 id="iPad端"><a href="#iPad端" class="headerlink" title="iPad端"></a>iPad端</h3><p>操作iPad上面的图片，所做的操作会自动同步到Web浏览器上面</p>
+<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/controls1" controls></video>
+
+<h3 id="Web端"><a href="#Web端" class="headerlink" title="Web端"></a>Web端</h3><p>Web端录屏的时候直接录制的GIF，貌似有点大=。=</p>
+<p><img src="/lionheart/1707/webPort.gif" alt="Web Port"></p>
+<p><strong>可以看到：当在iPad上写下 “你好” 时，在web端图片的相同位置也会自动写出 “你好”！</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>就感觉这做出来的效果很好玩~~</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Signichat]]></title>
+      <url>/about/signichat.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Signichat</strong> 是一个提供<strong>图片在线浏览，标记，讨论</strong>的会议系统。</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>进实验室的第一个项目，先是跟在学长后面写一写PHP；后来学长毕业了，我就成了后端的负责人=。=</p>
+<p>主要工作是：</p>
+<ol>
+<li>编写PHP代码，给前端和移动端提供接口</li>
+<li>Nginx服务器，MySQL数据库运维</li>
+<li>使用PHP实现图片处理的整个流程：大图上传EC2 -&gt; 图片切割 -&gt; 图片存储到S3</li>
+<li>搭建Node.js服务器，使用WebRTC实时视频聊天</li>
+</ol>
+<h2 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h2><p>Web网站 ： <a href="http://www.signichat.com" target="_blank" rel="external">Signichat</a></p>
+<p>APP下载：</p>
+<ul>
+<li><a href="https://itunes.apple.com/cn/app/signichat/id967104628?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载 </a></li>
+<li><a href="http://openbox.mobilem.360.cn/index/d/sid/2777089" target="_blank" rel="external">安卓端下载</a></li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[Genome Browser]]></title>
       <url>/about/genome-browser.html</url>
       <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Genome Browser</strong> 是一个展示基因组数据的可视化iOS APP。该APP的主要功能就是解析庞大的基因组数据，再将所需的部分可视化的展示出来。</p>
@@ -7735,27 +7770,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 <li><a href="https://jbrowse.org/" target="_blank" rel="external">JBrowse</a></li>
 <li><a href="https://github.com/GMOD/jbrowse" target="_blank" rel="external">JBrowse源码</a></li>
 <li><a href="https://github.com/samtools/htslib" target="_blank" rel="external">htslib</a></li>
-</ul>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Signichat]]></title>
-      <url>/about/signichat.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Signichat</strong> 是一个提供<strong>图片在线浏览，标记，讨论</strong>的会议系统。</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>进实验室的第一个项目，先是跟在学长后面写一写PHP；后来学长毕业了，我就成了后端的负责人=。=</p>
-<p>主要工作是：</p>
-<ol>
-<li>编写PHP代码，给前端和移动端提供接口</li>
-<li>Nginx服务器，MySQL数据库运维</li>
-<li>使用PHP实现图片处理的整个流程：大图上传EC2 -&gt; 图片切割 -&gt; 图片存储到S3</li>
-<li>搭建Node.js服务器，使用WebRTC实时视频聊天</li>
-</ol>
-<h2 id="相关地址"><a href="#相关地址" class="headerlink" title="相关地址"></a>相关地址</h2><p>Web网站 ： <a href="http://www.signichat.com" target="_blank" rel="external">Signichat</a></p>
-<p>APP下载：</p>
-<ul>
-<li><a href="https://itunes.apple.com/cn/app/signichat/id967104628?l=en&amp;mt=8" target="_blank" rel="external">iOS端下载 </a></li>
-<li><a href="http://openbox.mobilem.360.cn/index/d/sid/2777089" target="_blank" rel="external">安卓端下载</a></li>
 </ul>
 ]]></content>
     </entry>
