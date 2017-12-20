@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-12-02T13:13:12.000Z</updated>
+  <updated>2017-12-20T06:48:30.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,10 +17,10 @@
   
   <entry>
     <title>ARKit下的魔方</title>
-    <link href="http://yoursite.com/2017/12/02/ARRubik/"/>
-    <id>http://yoursite.com/2017/12/02/ARRubik/</id>
+    <link href="http://yoursite.com/2017/12/02/ar-rubik/"/>
+    <id>http://yoursite.com/2017/12/02/ar-rubik/</id>
     <published>2017-12-02T08:41:23.000Z</published>
-    <updated>2017-12-02T13:13:12.000Z</updated>
+    <updated>2017-12-20T06:48:30.000Z</updated>
     
     <summary type="html">
     
