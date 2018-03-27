@@ -7780,6 +7780,142 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
+      <title><![CDATA[Controls]]></title>
+      <url>/about/controls.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Controls</strong> 是手机App和Web通信的系统。可以通过他。来实现 App控制Web端的图片 这一功能。</p>
+<p>它的主要功能有：</p>
+<ol>
+<li>通过操作Controls，在Web上面显示特定的图片</li>
+<li>通过操作Controls，控制Web端图片的缩放</li>
+<li>通过操作Controls，在Web端的图片上面打标记</li>
+</ol>
+<p>该项目可以算是<a href="/about/sciencewall.html">ScienceWall</a>的一个子项目</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>该项目由我和一名前端同学以及一名Android端同学共同完成，我是这个项目的组长。主要的工作有：</p>
+<ol>
+<li>使用Node.js搭建移动端和Web之间的后端通信服务器</li>
+<li>搭建iOS客户端，使用SocketIO第三方库实现与Node.js服务器的通信</li>
+</ol>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：iOS端Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
+<p><strong>PS ：Android端同学毕业啦，就不演示了；效果和iPad类似</strong></p>
+<p>先来看看iPad和Web同时录制的效果：</p>
+<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/demo" controls></video>
+
+<h3 id="iPad端"><a href="#iPad端" class="headerlink" title="iPad端"></a>iPad端</h3><p>操作iPad上面的图片，所做的操作会自动同步到Web浏览器上面</p>
+<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/controls1" controls></video>
+
+<h3 id="Web端"><a href="#Web端" class="headerlink" title="Web端"></a>Web端</h3><p>Web端录屏的时候直接录制的GIF，貌似有点大=。=</p>
+<p><img src="/lionheart/1707/webPort.gif" alt="Web Port"></p>
+<p><strong>可以看到：当在iPad上写下 “你好” 时，在web端图片的相同位置也会自动写出 “你好”！</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>就感觉这做出来的效果很好玩~~</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Gene Plus]]></title>
+      <url>/about/gene-plus.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Gene Plus</strong> 是为GenePlus公司开发的一个基于基因检测报告的iPad端的协同平台。它的主要功能有以下两点：</p>
+<ol>
+<li>基因检测报告的显示</li>
+<li>医生，病人和基因分析师 三者之间的协同</li>
+</ol>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>这个项目由4个人开发完成，我是这个项目的组长。我的主要工作有：</p>
+<ol>
+<li>部署Git与其他组员协同开发，搭建APP的整体框架</li>
+<li>使用Core Animation等绘制病人基因检测报告上面的数据，并使这些数据可以交互</li>
+<li>在iOS上搭建医生，病人，基因分析师三者的协同平台</li>
+</ol>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
+<h3 id="主要界面展示"><a href="#主要界面展示" class="headerlink" title="主要界面展示"></a>主要界面展示</h3><p><img src="/lionheart/1707/gp7.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp1.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp2.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp3.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp4.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp5.png" alt="gp"></p>
+<p><img src="/lionheart/1707/gp6.png" alt="gp"></p>
+<h3 id="视频Demo"><a href="#视频Demo" class="headerlink" title="视频Demo"></a>视频Demo</h3><h4 id="主体界面部分"><a href="#主体界面部分" class="headerlink" title="主体界面部分"></a>主体界面部分</h4><video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/gpmain1" controls></video>
+
+<h4 id="报告显示部分"><a href="#报告显示部分" class="headerlink" title="报告显示部分"></a>报告显示部分</h4><video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/gpdataviz1" controls></video>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>之前<a href="/about/genome-browser.html">Genome Browser</a>草草收场，就是为了开发这个APP；不过之前的生物知识的积累还是对这个项目有很大的帮助的，不算白干=。=</p>
+<p>这个项目的亮点就在于：基因检测报告的数据可视化显示上面。它将枯燥的报告，以生动的形式展现了出来，显得简单易懂。</p>
+<p><strong>整个APP的实现过程中，对于iOS的显示以及绘制等问题有了更深刻的理解！</strong></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[关于]]></title>
+      <url>/about/index.html</url>
+      <content type="html"><![CDATA[<p>大家好，我是黄世杰。欢迎来到我的个人技术博客。</p>
+<p>这个博客主要记录了自己平时一些编程的心得和体会，当然还有读书笔记，偶尔还会有些杂七杂八的生活琐事。</p>
+<p>我本人目前在华中科技大学电信学院读研究生，主要从事iOS开发。下面来说说我的技术学习历程：</p>
+<ul>
+<li>大一至大三：上了C语言的课程，算是入了编程的门；后来自学PHP，JavaScript，倒腾了一段时间的网站开发</li>
+<li>大四：保研到实验室之后就主要从事后端开发。主要工作就是：编写PHP代码，服务器以及数据库的运维</li>
+<li>研一至研二：开始转向iOS开发。之后就基本上全职投入到iOS技术的研究中了。这期间与同学完成了多个有趣的项目，并多次担任iOS端负责人</li>
+<li>未来：再进一步提升自己的iOS开发水平。还想学学JavaScript，Swift，Java等其他语言，毕竟技多不压身，希望能成为一个大前端开发人员。另外还想去接触一下目前的新兴技术：AI，VR，AR等，拓宽自己的知识面。</li>
+</ul>
+<p>来看看目前的武器库：</p>
+<ul>
+<li>熟悉Objective-C编程</li>
+<li>熟悉PHP编程</li>
+<li>了解C/C++</li>
+<li>了解JavaScript， HTML/CSS</li>
+<li>了解OpenGL以及OpenGL ES</li>
+<li>熟悉Linux上Web服务器运维，MySQL运维</li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Genome Browser]]></title>
+      <url>/about/genome-browser.html</url>
+      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Genome Browser</strong> 是一个展示基因组数据的可视化iOS APP。该APP的主要功能就是解析庞大的基因组数据，再将所需的部分可视化的展示出来。</p>
+<p>Web端有多个开源的Genome Browser，我们参考了<a href="https://jbrowse.org/" target="_blank" rel="external">JBrowse</a>的实现方式</p>
+<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>我的主要工作是负责前期的调研，以及后续的iOS开发。</p>
+<h3 id="前期准备工作"><a href="#前期准备工作" class="headerlink" title="前期准备工作"></a>前期准备工作</h3><h4 id="JBrowse源码阅读"><a href="#JBrowse源码阅读" class="headerlink" title="JBrowse源码阅读"></a>JBrowse源码阅读</h4><p>了解JBrowse的大体工作流程，以便我们自己APP的开发。主要是JavaScript的源码，这个过程中还要感谢实验室前端同学的帮助。</p>
+<h4 id="htslib源码修改以及交叉编译"><a href="#htslib源码修改以及交叉编译" class="headerlink" title="htslib源码修改以及交叉编译"></a>htslib源码修改以及交叉编译</h4><p>htslib是一个第三方开源库，主要功能就是<strong>解析存放在远端的庞大的基因组数据</strong>。</p>
+<p>我需要修改部分源代码以适应我们自己的需求；并将其编译成iOS的静态库，以供我们的APP来使用。</p>
+<p>htslib提供了一个Makefile文件，在PC端使用的话，简单的编译三部曲就可以生成PC所需的库。但是我们要将它编译成iOS可用的库，就需要修改Makefile：</p>
+<ol>
+<li>修改所用的编译器</li>
+<li>修改依赖的系统库的路径</li>
+<li>该库编译所依赖的第三方库也必须是iOS可用的第三方库</li>
+<li>等等…</li>
+</ol>
+<h3 id="后续iOS开发"><a href="#后续iOS开发" class="headerlink" title="后续iOS开发"></a>后续iOS开发</h3><p>主要工作：</p>
+<ol>
+<li>调用上面编译的<strong>htslib.a</strong>，解析远端的生物数据</li>
+<li>在本地使用<strong>FMDB</strong>缓存解析的数据</li>
+<li>使用<strong>OpenGL ES</strong>绘制解析的数据</li>
+</ol>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>JBrowse实现效果</strong></p>
+<p><img src="/lionheart/1707/jbrowse.png" alt="JBrowse"></p>
+<p>可以看到JBrowse可以显示3种基因组数据：</p>
+<ol>
+<li>FASTA ：DNA的碱基序列</li>
+<li>BAM ： DNA测序片段</li>
+<li>VCF ： DNA测序检测出来的基因变异</li>
+</ol>
+<p><strong>我们自己的实现效果</strong></p>
+<p><img src="/lionheart/1707/atcg.gif" alt="fasta"></p>
+<p><img src="/lionheart/1707/bam.gif" alt="bam"></p>
+<p>该项目进行到一半就没有继续了，所以我们只实现了FASTA和BAM数据的基本显示。显示全部使用OpenGL ES来实现。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然这个项目刚起步不久，就没再继续下去了；但是也给后续的项目<a href="/about/gene-plus.html">Gene Plus</a>奠定了一定的基础。硬要说收获，那就是：</p>
+<ol>
+<li>进一步了解了JavaScript以及它的调试</li>
+<li>掌握了在Mac上面交叉编译iOS静态库</li>
+<li>巩固了OpenGL ES绘制的基本知识</li>
+<li>顺带了解了些关于基因组的生物知识=。=</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://jbrowse.org/" target="_blank" rel="external">JBrowse</a></li>
+<li><a href="https://github.com/GMOD/jbrowse" target="_blank" rel="external">JBrowse源码</a></li>
+<li><a href="https://github.com/samtools/htslib" target="_blank" rel="external">htslib</a></li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[iD3]]></title>
       <url>/about/iD3.html</url>
       <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>iD3</strong> 是一个iOS上面的数据可视化框架。它的实现参考了著名的JavaScript开源库：<a href="https://d3js.org/" target="_blank" rel="external">D3</a></p>
@@ -7911,142 +8047,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://d3js.org/" target="_blank" rel="external">D3 Data-Driven Documents</a></li>
 </ul>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[关于]]></title>
-      <url>/about/index.html</url>
-      <content type="html"><![CDATA[<p>大家好，我是黄世杰。欢迎来到我的个人技术博客。</p>
-<p>这个博客主要记录了自己平时一些编程的心得和体会，当然还有读书笔记，偶尔还会有些杂七杂八的生活琐事。</p>
-<p>我本人目前在华中科技大学电信学院读研究生，主要从事iOS开发。下面来说说我的技术学习历程：</p>
-<ul>
-<li>大一至大三：上了C语言的课程，算是入了编程的门；后来自学PHP，JavaScript，倒腾了一段时间的网站开发</li>
-<li>大四：保研到实验室之后就主要从事后端开发。主要工作就是：编写PHP代码，服务器以及数据库的运维</li>
-<li>研一至研二：开始转向iOS开发。之后就基本上全职投入到iOS技术的研究中了。这期间与同学完成了多个有趣的项目，并多次担任iOS端负责人</li>
-<li>未来：再进一步提升自己的iOS开发水平。还想学学JavaScript，Swift，Java等其他语言，毕竟技多不压身，希望能成为一个大前端开发人员。另外还想去接触一下目前的新兴技术：AI，VR，AR等，拓宽自己的知识面。</li>
-</ul>
-<p>来看看目前的武器库：</p>
-<ul>
-<li>熟悉Objective-C编程</li>
-<li>熟悉PHP编程</li>
-<li>了解C/C++</li>
-<li>了解JavaScript， HTML/CSS</li>
-<li>了解OpenGL以及OpenGL ES</li>
-<li>熟悉Linux上Web服务器运维，MySQL运维</li>
-</ul>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Controls]]></title>
-      <url>/about/controls.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Controls</strong> 是手机App和Web通信的系统。可以通过他。来实现 App控制Web端的图片 这一功能。</p>
-<p>它的主要功能有：</p>
-<ol>
-<li>通过操作Controls，在Web上面显示特定的图片</li>
-<li>通过操作Controls，控制Web端图片的缩放</li>
-<li>通过操作Controls，在Web端的图片上面打标记</li>
-</ol>
-<p>该项目可以算是<a href="/about/sciencewall.html">ScienceWall</a>的一个子项目</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>该项目由我和一名前端同学以及一名Android端同学共同完成，我是这个项目的组长。主要的工作有：</p>
-<ol>
-<li>使用Node.js搭建移动端和Web之间的后端通信服务器</li>
-<li>搭建iOS客户端，使用SocketIO第三方库实现与Node.js服务器的通信</li>
-</ol>
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：iOS端Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
-<p><strong>PS ：Android端同学毕业啦，就不演示了；效果和iPad类似</strong></p>
-<p>先来看看iPad和Web同时录制的效果：</p>
-<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/demo" controls></video>
-
-<h3 id="iPad端"><a href="#iPad端" class="headerlink" title="iPad端"></a>iPad端</h3><p>操作iPad上面的图片，所做的操作会自动同步到Web浏览器上面</p>
-<video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/controls1" controls></video>
-
-<h3 id="Web端"><a href="#Web端" class="headerlink" title="Web端"></a>Web端</h3><p>Web端录屏的时候直接录制的GIF，貌似有点大=。=</p>
-<p><img src="/lionheart/1707/webPort.gif" alt="Web Port"></p>
-<p><strong>可以看到：当在iPad上写下 “你好” 时，在web端图片的相同位置也会自动写出 “你好”！</strong></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>就感觉这做出来的效果很好玩~~</p>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Genome Browser]]></title>
-      <url>/about/genome-browser.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Genome Browser</strong> 是一个展示基因组数据的可视化iOS APP。该APP的主要功能就是解析庞大的基因组数据，再将所需的部分可视化的展示出来。</p>
-<p>Web端有多个开源的Genome Browser，我们参考了<a href="https://jbrowse.org/" target="_blank" rel="external">JBrowse</a>的实现方式</p>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>我的主要工作是负责前期的调研，以及后续的iOS开发。</p>
-<h3 id="前期准备工作"><a href="#前期准备工作" class="headerlink" title="前期准备工作"></a>前期准备工作</h3><h4 id="JBrowse源码阅读"><a href="#JBrowse源码阅读" class="headerlink" title="JBrowse源码阅读"></a>JBrowse源码阅读</h4><p>了解JBrowse的大体工作流程，以便我们自己APP的开发。主要是JavaScript的源码，这个过程中还要感谢实验室前端同学的帮助。</p>
-<h4 id="htslib源码修改以及交叉编译"><a href="#htslib源码修改以及交叉编译" class="headerlink" title="htslib源码修改以及交叉编译"></a>htslib源码修改以及交叉编译</h4><p>htslib是一个第三方开源库，主要功能就是<strong>解析存放在远端的庞大的基因组数据</strong>。</p>
-<p>我需要修改部分源代码以适应我们自己的需求；并将其编译成iOS的静态库，以供我们的APP来使用。</p>
-<p>htslib提供了一个Makefile文件，在PC端使用的话，简单的编译三部曲就可以生成PC所需的库。但是我们要将它编译成iOS可用的库，就需要修改Makefile：</p>
-<ol>
-<li>修改所用的编译器</li>
-<li>修改依赖的系统库的路径</li>
-<li>该库编译所依赖的第三方库也必须是iOS可用的第三方库</li>
-<li>等等…</li>
-</ol>
-<h3 id="后续iOS开发"><a href="#后续iOS开发" class="headerlink" title="后续iOS开发"></a>后续iOS开发</h3><p>主要工作：</p>
-<ol>
-<li>调用上面编译的<strong>htslib.a</strong>，解析远端的生物数据</li>
-<li>在本地使用<strong>FMDB</strong>缓存解析的数据</li>
-<li>使用<strong>OpenGL ES</strong>绘制解析的数据</li>
-</ol>
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>JBrowse实现效果</strong></p>
-<p><img src="/lionheart/1707/jbrowse.png" alt="JBrowse"></p>
-<p>可以看到JBrowse可以显示3种基因组数据：</p>
-<ol>
-<li>FASTA ：DNA的碱基序列</li>
-<li>BAM ： DNA测序片段</li>
-<li>VCF ： DNA测序检测出来的基因变异</li>
-</ol>
-<p><strong>我们自己的实现效果</strong></p>
-<p><img src="/lionheart/1707/atcg.gif" alt="fasta"></p>
-<p><img src="/lionheart/1707/bam.gif" alt="bam"></p>
-<p>该项目进行到一半就没有继续了，所以我们只实现了FASTA和BAM数据的基本显示。显示全部使用OpenGL ES来实现。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然这个项目刚起步不久，就没再继续下去了；但是也给后续的项目<a href="/about/gene-plus.html">Gene Plus</a>奠定了一定的基础。硬要说收获，那就是：</p>
-<ol>
-<li>进一步了解了JavaScript以及它的调试</li>
-<li>掌握了在Mac上面交叉编译iOS静态库</li>
-<li>巩固了OpenGL ES绘制的基本知识</li>
-<li>顺带了解了些关于基因组的生物知识=。=</li>
-</ol>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://jbrowse.org/" target="_blank" rel="external">JBrowse</a></li>
-<li><a href="https://github.com/GMOD/jbrowse" target="_blank" rel="external">JBrowse源码</a></li>
-<li><a href="https://github.com/samtools/htslib" target="_blank" rel="external">htslib</a></li>
-</ul>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Gene Plus]]></title>
-      <url>/about/gene-plus.html</url>
-      <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Gene Plus</strong> 是为GenePlus公司开发的一个基于基因检测报告的iPad端的协同平台。它的主要功能有以下两点：</p>
-<ol>
-<li>基因检测报告的显示</li>
-<li>医生，病人和基因分析师 三者之间的协同</li>
-</ol>
-<h2 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h2><p>这个项目由4个人开发完成，我是这个项目的组长。我的主要工作有：</p>
-<ol>
-<li>部署Git与其他组员协同开发，搭建APP的整体框架</li>
-<li>使用Core Animation等绘制病人基因检测报告上面的数据，并使这些数据可以交互</li>
-<li>在iOS上搭建医生，病人，基因分析师三者的协同平台</li>
-</ol>
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><strong>注：Demo运行在iPad mini4真机上面； 另外Demo视频加载过程中可能有些卡顿，视频加载完之后再播放，效果更佳！</strong></p>
-<h3 id="主要界面展示"><a href="#主要界面展示" class="headerlink" title="主要界面展示"></a>主要界面展示</h3><p><img src="/lionheart/1707/gp7.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp1.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp2.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp3.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp4.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp5.png" alt="gp"></p>
-<p><img src="/lionheart/1707/gp6.png" alt="gp"></p>
-<h3 id="视频Demo"><a href="#视频Demo" class="headerlink" title="视频Demo"></a>视频Demo</h3><h4 id="主体界面部分"><a href="#主体界面部分" class="headerlink" title="主体界面部分"></a>主体界面部分</h4><video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/gpmain1" controls></video>
-
-<h4 id="报告显示部分"><a href="#报告显示部分" class="headerlink" title="报告显示部分"></a>报告显示部分</h4><video width="650" height="488" src="http://ota80mtsn.bkt.clouddn.com/gpdataviz1" controls></video>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>之前<a href="/about/genome-browser.html">Genome Browser</a>草草收场，就是为了开发这个APP；不过之前的生物知识的积累还是对这个项目有很大的帮助的，不算白干=。=</p>
-<p>这个项目的亮点就在于：基因检测报告的数据可视化显示上面。它将枯燥的报告，以生动的形式展现了出来，显得简单易懂。</p>
-<p><strong>整个APP的实现过程中，对于iOS的显示以及绘制等问题有了更深刻的理解！</strong></p>
 ]]></content>
     </entry>
     
