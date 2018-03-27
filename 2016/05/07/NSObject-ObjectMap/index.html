@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="zh-Hans">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -7,37 +8,42 @@
 
     
 
-    <title>NSObject+ObjectMap 源码分析 | Vanney</title>
-    <meta name="author" content="Vanney">
-    
-    <meta name="description" content="前言iOS应用从API获得的数据有很重要的一部分是以JSON格式返回的，通过AFNetworking，这种JSON格式会被转换成NSDictionary或者NSArray，从而被APP所接收。这时，如果能将这些NSDictionary/NSArray转化成APP中已经封装好的各种Model，将极大的简化APP的开发。有很多第三方库已经实现了这个功能，比较知名的就有MJExtension
+        <title>
+            NSObject+ObjectMap 源码分析 | Vanney
+        </title>
+        
+            <meta name="author" content="Vanney">
+            
+                
+                            <meta name="description" content="前言iOS应用从API获得的数据有很重要的一部分是以JSON格式返回的，通过AFNetworking，这种JSON格式会被转换成NSDictionary或者NSArray，从而被APP所接收。这时，如果能将这些NSDictionary/NSArray转化成APP中已经封装好的各种Model，将极大的简化APP的开发。有很多第三方库已经实现了这个功能，比较知名的就有MJExtension
 
 MJExtension: A fast, convenient and nonintrusive conversion between JSON and model. Your model class don’t need to extend another base class. You don’t need to modify any model file.
 
 嗯，这个第三方库很有名，功能强大，使用也方便，但是本文并不介绍它。在这篇文章里面，我将介绍一个小的从JSON到Model进行转换的第三方库，这个库小到没有一个像样的名字，我在github上也只找到了一个模糊的地址：uacaps/NSObject-ObjectMap (注 不能确认是否是本文所介绍的)。另外，我也将本文所介绍的这个第三方库上传到我的github上去了。">
-    
-    
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+                            
+                                    
+                                            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <meta property="og:title" content="NSObject+ObjectMap 源码分析"/>
-    <meta property="og:site_name" content="Vanney"/>
+                                            
+                                                <meta property="og:title" content="NSObject+ObjectMap 源码分析" />
+                                                
+                                                    <meta property="og:site_name" content="Vanney" />
 
-    
-    <meta property="og:image" content="undefined"/>
-    
+                                                    
+                                                            <meta property="og:image" content="undefined" />
+                                                            
 
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="alternate" href="/atom.xml" title="Vanney" type="application/atom+xml">
-    <link rel="stylesheet" href="/css/lib/materialize.min.css">
-    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+                                                                <link rel="icon" type="image/png" href="/favicon.png">
+                                                                <link rel="alternate" href="/atom.xml" title="Vanney" type="application/atom+xml">
+                                                                <link rel="stylesheet" href="/css/lib/materialize.min.css">
+                                                                <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+                                                                <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
-    
-        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
-    
-    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+                                                                
+                                                                    <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
+                                                                    
+                                                                            <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
-
 
 <body>
     <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">

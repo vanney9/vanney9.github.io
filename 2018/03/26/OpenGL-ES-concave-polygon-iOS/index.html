@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="zh-Hans">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -7,10 +8,14 @@
 
     
 
-    <title>iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形 | Vanney</title>
-    <meta name="author" content="Vanney">
-    
-    <meta name="description" content="前言先看看在iPhone上使用Cocos2d-x与OpenGL ES绘制出来的最终效果。
+        <title>
+            iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形 | Vanney
+        </title>
+        
+            <meta name="author" content="Vanney">
+            
+                
+                            <meta name="description" content="前言先看看在iPhone上使用Cocos2d-x与OpenGL ES绘制出来的最终效果。
 
 图中绘制的都是圆环，或者光滑曲线构成的图形。不过本质还是绘制多边形，只要这些多边形的顶点足够多，那么就可以形成光滑的曲线。
 在绘制过程中使用到的相关知识点：
@@ -19,29 +24,30 @@ Cocos2d-x渲染机制
 OpenGL ES绘图基础
 Objectice-C与C++混编
 OpenGL Tessellation将多边形切分成多个三角形">
-    
-    
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+                            
+                                    
+                                            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <meta property="og:title" content="iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形"/>
-    <meta property="og:site_name" content="Vanney"/>
+                                            
+                                                <meta property="og:title" content="iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形" />
+                                                
+                                                    <meta property="og:site_name" content="Vanney" />
 
-    
-    <meta property="og:image" content="undefined"/>
-    
+                                                    
+                                                            <meta property="og:image" content="undefined" />
+                                                            
 
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="alternate" href="/atom.xml" title="Vanney" type="application/atom+xml">
-    <link rel="stylesheet" href="/css/lib/materialize.min.css">
-    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+                                                                <link rel="icon" type="image/png" href="/favicon.png">
+                                                                <link rel="alternate" href="/atom.xml" title="Vanney" type="application/atom+xml">
+                                                                <link rel="stylesheet" href="/css/lib/materialize.min.css">
+                                                                <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+                                                                <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
-    
-        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
-    
-    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+                                                                
+                                                                    <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
+                                                                    
+                                                                            <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
-
 
 <body>
     <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">

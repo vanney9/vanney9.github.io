@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="zh-Hans">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -7,35 +8,40 @@
 
     
 
-    <title>Effective Objective-C - 协议与分类 | Vanney</title>
-    <meta name="author" content="Vanney">
-    
-    <meta name="description" content="前言Effective Objective-C 读书笔记 - 协议与分类
+        <title>
+            Effective Objective-C - 协议与分类 | Vanney
+        </title>
+        
+            <meta name="author" content="Vanney">
+            
+                
+                            <meta name="description" content="前言Effective Objective-C 读书笔记 - 协议与分类
 协议（protocol）与Java的接口（interface）类似，由于OC不支持多重继承。通过协议，可以实现类似多重继承的效果。若指定某个类实现了某个协议，那么就表示，该类实现了协议中规定了一些方法。
 分类（category）是OC的重要的一个语言特性。利用分类机制，无须继承子类即可为当前类添加方法。这也是由于动态runtime系统，才得以实现。">
-    
-    
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+                            
+                                    
+                                            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <meta property="og:title" content="Effective Objective-C - 协议与分类"/>
-    <meta property="og:site_name" content="Vanney"/>
+                                            
+                                                <meta property="og:title" content="Effective Objective-C - 协议与分类" />
+                                                
+                                                    <meta property="og:site_name" content="Vanney" />
 
-    
-    <meta property="og:image" content="undefined"/>
-    
+                                                    
+                                                            <meta property="og:image" content="undefined" />
+                                                            
 
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="alternate" href="/atom.xml" title="Vanney" type="application/atom+xml">
-    <link rel="stylesheet" href="/css/lib/materialize.min.css">
-    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+                                                                <link rel="icon" type="image/png" href="/favicon.png">
+                                                                <link rel="alternate" href="/atom.xml" title="Vanney" type="application/atom+xml">
+                                                                <link rel="stylesheet" href="/css/lib/materialize.min.css">
+                                                                <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+                                                                <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
-    
-        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
-    
-    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+                                                                
+                                                                    <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
+                                                                    
+                                                                            <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
-
 
 <body>
     <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">

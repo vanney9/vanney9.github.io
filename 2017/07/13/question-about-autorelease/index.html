@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="zh-Hans">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -7,10 +8,14 @@
 
     
 
-    <title>ARC下关于autorelease的一些疑问 | Vanney</title>
-    <meta name="author" content="Vanney">
-    
-    <meta name="description" content="前言今天在看黑幕背后的Autorelease这篇博客的时候，发现了一些问题。主要问题在于：
+        <title>
+            ARC下关于autorelease的一些疑问 | Vanney
+        </title>
+        
+            <meta name="author" content="Vanney">
+            
+                
+                            <meta name="description" content="前言今天在看黑幕背后的Autorelease这篇博客的时候，发现了一些问题。主要问题在于：
 // ARC 情况下
 @autoreleasepool {
   id __strong array = [NSMutableArray array];
@@ -21,29 +26,30 @@
 这里的array对象的retainCount到底是1还是2？
 按照查找的博客，以及之前看的《Objective-C高级编程 iOS与OS X多线程和内存管理》这本书的结论：这里的retainCount应该是1，因为这个对象没有注册到autoreleasepool中。但是实际运行下来却并非如此。
 Stack Overflow">
-    
-    
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+                            
+                                    
+                                            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <meta property="og:title" content="ARC下关于autorelease的一些疑问"/>
-    <meta property="og:site_name" content="Vanney"/>
+                                            
+                                                <meta property="og:title" content="ARC下关于autorelease的一些疑问" />
+                                                
+                                                    <meta property="og:site_name" content="Vanney" />
 
-    
-    <meta property="og:image" content="undefined"/>
-    
+                                                    
+                                                            <meta property="og:image" content="undefined" />
+                                                            
 
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="alternate" href="/atom.xml" title="Vanney" type="application/atom+xml">
-    <link rel="stylesheet" href="/css/lib/materialize.min.css">
-    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+                                                                <link rel="icon" type="image/png" href="/favicon.png">
+                                                                <link rel="alternate" href="/atom.xml" title="Vanney" type="application/atom+xml">
+                                                                <link rel="stylesheet" href="/css/lib/materialize.min.css">
+                                                                <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+                                                                <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
-    
-        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
-    
-    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+                                                                
+                                                                    <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
+                                                                    
+                                                                            <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
-
 
 <body>
     <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
