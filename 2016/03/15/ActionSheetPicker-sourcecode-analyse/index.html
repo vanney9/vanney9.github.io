@@ -321,8 +321,21 @@
 
 
 
-
-
+    
+                    <div id="lv-container" data-id="city" data-uid="{{ theme.livere_uid }}"></div>
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+                            if (typeof LivereTower === 'function') {
+                                return;
+                            }
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    
 
 </div>
 
@@ -358,6 +371,20 @@
                     </a>
                 
                 
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+    </script>
+    <div class="site-visitors-container white-text">
+        <span>
+            <i class="fa fa-user"></i>
+            <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+        </span>
+        <span>&nbsp;|&nbsp;</span>
+        <span>
+            <i class="fa fa-eye"></i>
+            <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+        </span>
+    </div>
+
 
             </div>
             
