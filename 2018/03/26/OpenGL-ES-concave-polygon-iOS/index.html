@@ -1,0 +1,842 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+
+    <title>iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形 | Vanney</title>
+    <meta name="author" content="Vanney">
+    
+    <meta name="description" content="前言先看看在iPhone上使用Cocos2d-x与OpenGL ES绘制出来的最终效果。
+
+图中绘制的都是圆环，或者光滑曲线构成的图形。不过本质还是绘制多边形，只要这些多边形的顶点足够多，那么就可以形成光滑的曲线。
+在绘制过程中使用到的相关知识点：
+
+Cocos2d-x渲染机制
+OpenGL ES绘图基础
+Objectice-C与C++混编
+OpenGL Tessellation将多边形切分成多个三角形">
+    
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:title" content="iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形"/>
+    <meta property="og:site_name" content="Vanney"/>
+
+    
+    <meta property="og:image" content="undefined"/>
+    
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" href="/atom.xml" title="Vanney" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/materialize.min.css">
+    <link rel="stylesheet" href="/css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/atelier-dune-dark.css" type="text/css">
+    
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body>
+    <img src="/weixin_favicon.png" style="position: absolute; left: -9999px; opacity: 0; filter: alpha(opacity=0);">
+
+    <nav class="blue-grey">
+    <div class="nav-wrapper">
+        <a href="#" data-activates="main-menu" class="button-collapse">
+            <i class="fa fa-navicon"></i>
+        </a>
+        <div class="">
+            <a href="/" class="brand-logo hide-on-med-and-down">Vanney</a>
+            <ul class="right hide-on-med-and-down">
+                
+                    <li>
+                        <a class="menu-home " href="/" >
+                            <i class="fa fa-home "></i>
+                            
+                            首页
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-archive " href="/archives" >
+                            <i class="fa fa-archive "></i>
+                            
+                            归档
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                            <i class="fa fa-bookmark "></i>
+                            
+                            分类
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class="menu-search modal-trigger " href="#search" >
+                            <i class="fa fa-search "></i>
+                            
+                            搜索
+                        </a>
+                    </li>
+                
+            </ul>
+            <div>
+    <ul class="side-nav teal lighten-2" id="main-menu">
+        
+        <li class="side-user">
+            <div class="row">
+                <div class="col s4 no-padding">
+                    <img class="avatar-image circle responsive-img" src="/lionheart/avatar.jpeg" alt="User Avatar">
+                </div>
+                <div class="info col s8 valign-wrapper no-padding">
+                    <div class="valign">
+                        <p class="name">黄世杰</p>
+                        <p class="desc">iOS开发</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-home " href="/" >
+                    <i class="fa fa-home "></i>
+                    
+                    首页
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-archive " href="/archives" >
+                    <i class="fa fa-archive "></i>
+                    
+                    归档
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-category category-menu" href="javascript:;" data-activates="category-menu" >
+                    <i class="fa fa-bookmark "></i>
+                    
+                    分类
+                </a>
+            </li>
+        
+            <li class="no-padding">
+                <a class="waves-effect menu-search modal-trigger " href="#search" >
+                    <i class="fa fa-search "></i>
+                    
+                    搜索
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="side-nav teal lighten-2" id="category-menu">
+    
+
+            
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/杂七杂八/">
+                    杂七杂八 <span class="right">9 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/iOS/">
+                    iOS <span class="right">30 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/读书笔记/">
+                    读书笔记 <span class="right">13 篇</span></a>
+                </a>
+            </li>
+
+        
+
+            <li class="collapse-level-0" collapse-level="0">
+                <a class="no-padding" href="/categories/server/">
+                    server <span class="right">2 篇</span></a>
+                </a>
+            </li>
+
+        
+
+    </ul>
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<div id="search" class="modal search-modal">
+    <div class="row">
+        <div class="input-field col s12">
+              <input id="search-input" type="text">
+              <label for="search-input">搜索</label>
+        </div>
+
+    </div>
+    <div id="search-result" class="search-result col s12">
+
+    </div>
+</div>
+
+
+    <main>
+        <div class="container main-container">
+    <nav class="page-nav hide-on-small-only">
+    <div class="nav-wrapper teal lighten-2">
+        <span class="breadcrumb">当前位置（分类目录）</span>
+        
+            
+    
+    
+    <a class="breadcrumb" href="/categories/iOS/">iOS</a>
+
+
+        
+
+        
+    </div>
+</nav>
+
+<article>
+    <div class="card">
+        <div class="card-content">
+            
+
+            <div class="article-title">
+                
+    
+        <h1>iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形</h1>
+    
+
+
+            </div>
+            <time class="teal-link-context" datetime="2018-03-26T07:36:06.000Z"><a href="/2018/03/26/OpenGL-ES-concave-polygon-iOS/">2018-03-26</a></time>
+
+            <span id="busuanzi_container_page_pv" class="read-times-container">
+    <!--<i class="fa fa-eye"></i>-->
+    <span id="busuanzi_value_page_pv"></span>
+</span>
+
+            
+
+            <div class="toc teal-link-context hide-on-med-and-down">
+    <ol class="section table-of-contents"><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#前言"><span class="section table-of-contents-text">前言</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#问题的发现"><span class="section table-of-contents-text">问题的发现</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#查看源码"><span class="section table-of-contents-text">查看源码</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#使用Tessellation正确的划分三角形"><span class="section table-of-contents-text">使用Tessellation正确的划分三角形</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#Cocos2d-x底层渲染"><span class="section table-of-contents-text">Cocos2d-x底层渲染</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#PS"><span class="section table-of-contents-text">PS</span></a></li><li class="section table-of-contents-item section table-of-contents-level-2"><a class="section table-of-contents-link" href="#参考"><span class="section table-of-contents-text">参考</span></a></li></ol>
+</div>
+
+
+            <div class="entry teal-link-context">
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>先看看在iPhone上使用Cocos2d-x与OpenGL ES绘制出来的最终效果。</p>
+<p><img src="/lionheart/1803/tess.jpeg" alt="tess"></p>
+<p>图中绘制的都是圆环，或者光滑曲线构成的图形。不过本质还是绘制多边形，只要这些多边形的顶点足够多，那么就可以形成<em>光滑的</em>曲线。</p>
+<p>在绘制过程中使用到的相关知识点：</p>
+<ol>
+<li>Cocos2d-x渲染机制</li>
+<li>OpenGL ES绘图基础</li>
+<li>Objectice-C与C++混编</li>
+<li>OpenGL Tessellation将多边形切分成多个三角形</li>
+</ol>
+<a id="more"></a>
+<h2 id="问题的发现"><a href="#问题的发现" class="headerlink" title="问题的发现"></a>问题的发现</h2><p>在使用Cococs2d-x绘制填充颜色的多边形的时候，最先想到的就是使用<strong>DrawNode</strong> 。DrawNode提供以下接口：</p>
+<pre><code class="c++">// 绘制填充颜色的多边形，参数包括：多边形顶点坐标，定点数，以及需要填充的颜色
+void drawSolidPoly(const Vec2 *poli, unsigned int numberOfPoints, const Color4F &amp;color);
+</code></pre>
+<p>使用该接口绘制一个四分之一圆环的时候，<strong>想达到的效果</strong>如下👇</p>
+<p><img src="/lionheart/1803/tess3.jpeg" alt="tess3"></p>
+<p>但是<strong>实际的效果</strong>却是这样的👇</p>
+<p><img src="/lionheart/1803/tess2.jpeg" alt="tess2"></p>
+<h2 id="查看源码"><a href="#查看源码" class="headerlink" title="查看源码"></a>查看源码</h2><p>查看Cocos2d-x的DrawNode的源码：<strong>CCDrawNode.cpp</strong></p>
+<pre><code class="c++">// drawSolidPoly接口的具体实现
+void DrawNode::drawSolidPoly(const Vec2 *poli, unsigned int numberOfPoints, const Color4F &amp;color)
+{
+    drawPolygon(poli, numberOfPoints, color, 0.0, Color4F(0.0, 0.0, 0.0, 0.0));
+}
+</code></pre>
+<p>问题的关键还是在<strong>drawPolygon</strong>接口，该接口绘制一般的多边形，它的实现原理很简单：<strong>根据顶点，将多边形划分成多个三角形，然后使用OpenGL绘制指令交由GPU绘制</strong></p>
+<p>来看看具体实现：</p>
+<pre><code class="c++">/*------- drawPolygon具体实现 ----------*/
+void DrawNode::drawPolygon(const Vec2 *verts, int count, const Color4F &amp;fillColor, float borderWidth, const Color4F &amp;borderColor)
+{
+    CCASSERT(count &gt;= 0, &quot;invalid count value&quot;);
+
+      // 看是否需要绘制边框，本文分析的是无边框的情况
+    bool outline = (borderColor.a &gt; 0.0f &amp;&amp; borderWidth &gt; 0.0f);
+
+      // 根据顶点数，计算底层需要绘制的三角形的个数：triangle_count
+    auto  triangle_count = outline ? (3*count - 2) : (count - 2);
+      // 根据三角形的个数，算出需要传递给GPU的顶点个数，也就是乘3
+    auto vertex_count = 3*triangle_count;
+    ensureCapacity(vertex_count);
+
+      // 存放顶点数据的buffer
+    V2F_C4B_T2F_Triangle *triangles = (V2F_C4B_T2F_Triangle *)(_buffer + _bufferCount);
+    V2F_C4B_T2F_Triangle *cursor = triangles;
+
+      // 关键代码： 划分三角形的算法
+    for (int i = 0; i &lt; count-2; i++)
+    {
+        V2F_C4B_T2F_Triangle tmp = {
+                {verts[0], Color4B(fillColor), __t(v2fzero)},
+                {verts[i+1], Color4B(fillColor), __t(v2fzero)},
+                {verts[i+2], Color4B(fillColor), __t(v2fzero)},
+        };
+
+        *cursor++ = tmp;
+    }
+
+    if(outline)
+    {
+        /* 此处省略800字，主要是绘制多边形的边框*/
+    }
+
+    _bufferCount += vertex_count;
+    _dirty = true;
+}
+</code></pre>
+<p>具体分析下将多边形划分成三角形的步骤：</p>
+<blockquote>
+<p>假设有5个顶点（1-5），那么可以分成 5 - 2 = 3 个三角形。以1号顶点为基础，这三个三角形分别是</p>
+<p>①②③</p>
+<p>①③④</p>
+<p>①④⑤</p>
+</blockquote>
+<p>那么当这些顶点构成的多边形是凹多边形时就会出现问题（覆盖了不需要绘制的区域），画个图解释一下：</p>
+<p><img src="/lionheart/1803/tess4.jpeg" alt="tess4"></p>
+<p>假设将这个四分之一圆环分成10个顶点的多边形时，还是以刚说的划分三角形的算法，那么小圆弧上的点与①号点构成的三角形，就超出了绘制范围。其中最为明显的就是①⑥⑦这三个点构成的三角形。</p>
+<h2 id="使用Tessellation正确的划分三角形"><a href="#使用Tessellation正确的划分三角形" class="headerlink" title="使用Tessellation正确的划分三角形"></a>使用Tessellation正确的划分三角形</h2><p>经过刚刚的源码分析，可以发现出现渲染错误的原因就是：绘制凹多边形时，划分三角形的方法有问题。谷歌一番，其实OpenGL提供了<a href="http://www.songho.ca/opengl/gl_tessellation.html" target="_blank" rel="external">Tessellation</a>的方法，来正确的划分三角形；但是OpenGL ES暂不支持。不过2008年的时候，有一个第三方库提供了<a href="https://code.google.com/archive/p/iphone-glu/" target="_blank" rel="external">iOS上Tessellation</a>的功能。</p>
+<p>下载该源代码，然后修改Makefile，生成静态库，导入Cocos2d-x中。然后看看如何修改Cocos2d-x源码来实现绘制凹多边形的：</p>
+<pre><code class="c++">/*-------- CCDrawNode.cpp中新增 drawPolygonUseTessllation 方法 ---------*/
+void DrawNode::drawPolygonUseTessllation(const Vec2 *verts, int count, const Color4F &amp;fillColor, float borderWidth, const Color4F &amp;borderColor) {
+    CCASSERT(count &gt;= 0, &quot;invalid count value&quot;);
+
+      // 新建一个tessellation处理模块
+    GLUtesselator *tess = gluNewTess();
+    if (tess) {
+        totolTessVecPointNum = 0;
+        drawNum = 0;
+
+          // 绑定tessellation 回调函数
+        gluTessCallback(tess, GLU_TESS_BEGIN, (void (*)())tessBeginCB);
+        gluTessCallback(tess, GLU_TESS_END, (void (*)())tessEndCB);
+        gluTessCallback(tess, GLU_TESS_ERROR, (void (*)())tessErrorCB);
+        gluTessCallback(tess, GLU_TESS_VERTEX, (void (*)())tessVertexCB);
+
+        gluTessBeginPolygon(tess, 0);
+        gluTessBeginContour(tess);
+        // 向tessellation处理模块中，依次传入多边形顶点坐标
+        GLdouble *quad = new GLdouble[count * 3];
+        for (int i = 0; i &lt; count; i++) {
+            quad[i * 3] = verts[i].x;
+            quad[i * 3 + 1] = verts[i].y;
+            quad[i * 3 + 2] = 0;
+        }
+
+        for (int i = 0; i &lt; count; ++i) {
+            gluTessVertex(tess, quad + i * 3, quad + i * 3);
+        }
+        gluTessEndContour(tess);
+        gluTessEndPolygon(tess);
+
+          // 结束tessellation处理
+        gluDeleteTess(tess);
+
+        delete[] quad;
+    } else {
+        std::cout &lt;&lt; &quot;no tessellation&quot;;
+        exit(1);
+    }
+
+
+    V2F_C4B_T2F *triangles = (V2F_C4B_T2F *)(_buffer + _bufferCount);
+    V2F_C4B_T2F *cursor = triangles;
+
+    // 经过tessellation, 以及将顶点重新排序了，现在将重新排序后的顶点放入顶点buffer，以待GPU渲染
+    for (int i = 0; i &lt; totolTessVecPointNum; i++)
+    {
+        V2F_C4B_T2F tmp = {tessVec2[i], Color4B(fillColor), __t(v2fzero)};
+        *cursor++ = tmp;
+    }
+
+    std::cout &lt;&lt; &quot;draw node is &quot; &lt;&lt; drawNum &lt;&lt; std::endl;
+    _TSCommand.clear();
+    _TSNumber.clear();
+    _TSCommand.resize(drawNum);
+    _TSNumber.resize((drawNum));
+    for (int j = 0; j &lt; drawNum; ++j) {
+        _TSCommand.push_back(tessSort[j][0]);
+        _TSNumber.push_back(tessSort[j][1]);
+    }
+
+    _bufferCount += totolTessVecPointNum;
+    _useTessellation = true;
+    _dirty = true;
+}
+</code></pre>
+<p>Tessellation的主要工作就是：<strong>将多边形的顶点重新排序，然后依次指定这些顶点的绘制方式。有三种绘制方式：GL_TRIANGLES，GL_TRIANGLE_STRIP和GL_TRIANGLE_FAN</strong></p>
+<p>来看看Tessellation的回调函数：回调函数会在这些情况下发生：</p>
+<ol>
+<li>重新指定一种绘制方式时 <strong>GLU_TESS_BEGIN</strong></li>
+<li>以该种绘制方式时，生成一个新的顶点时 <strong>GLU_TESS_VERTEX</strong></li>
+<li>结束该绘制方式时 <strong>GLU_TESS_END</strong></li>
+<li>发生错误时 <strong>GLU_TESS_ERROR</strong></li>
+</ol>
+<pre><code class="c++">float tessVec2[5000][2];
+int tessSort[100][2];
+int totolTessVecPointNum = 0;
+int currentDrawTessPointNum = 0;
+int drawNum = 0;
+GLenum tessType;
+
+const char* getPrimitiveType(GLenum type) {
+    // 省略800字， 获取绘制方式
+}
+
+void tessBeginCB(GLenum which) {
+    currentDrawTessPointNum = 0;
+    switch(which)
+    {
+        case 0x0004:
+            tessType = 1;
+            break;
+        case 0x0005:
+            tessType = 2;
+            break;
+        case 0x0006:
+            tessType = 3;
+            break;
+        default:
+            std::cout &lt;&lt; &quot;error tess type&quot; &lt;&lt; std::endl;
+    }
+    std::cout &lt;&lt; &quot;glBegin(&quot; &lt;&lt; getPrimitiveType(which) &lt;&lt; &quot;);\n&quot;;
+}
+
+void tessEndCB() {
+    tessSort[drawNum][0] = tessType;
+    tessSort[drawNum][1] = currentDrawTessPointNum;
+    drawNum++;
+    std::cout  &lt;&lt; &quot;glEnd();\n&quot;;
+}
+
+void tessVertexCB(const GLvoid *data) {
+    const GLdouble *ptr = (const GLdouble*)data;
+
+    GLfloat pos1 = *ptr;
+    GLfloat pos2 = *(ptr + 1);
+    GLfloat pos3 = *(ptr + 2);
+
+    std::cout &lt;&lt; &quot;pos1 is &quot; &lt;&lt; pos1 &lt;&lt; &quot;, pos2 is &quot; &lt;&lt; pos2 &lt;&lt; &quot;, pos3 is &quot; &lt;&lt; pos3 &lt;&lt; std::endl;
+    tessVec2[totolTessVecPointNum][0] = pos1;
+    tessVec2[totolTessVecPointNum][1] = pos2;
+    totolTessVecPointNum++;
+    currentDrawTessPointNum++;
+}
+
+void tessErrorCB(GLenum errorCode) {
+    const GLubyte *errorStr;
+
+    errorStr = gluErrorString(errorCode);
+    std::cerr &lt;&lt; &quot;[ERROR]: &quot; &lt;&lt; errorStr &lt;&lt; std::endl;
+}
+</code></pre>
+<h2 id="Cocos2d-x底层渲染"><a href="#Cocos2d-x底层渲染" class="headerlink" title="Cocos2d-x底层渲染"></a>Cocos2d-x底层渲染</h2><p>通过Tessellation之后，已经将多边形的顶点重新排序，并重新指定了绘制方式。现在这些绘制方式和顶点已经记录下来了，需要修改<strong>DrawNode</strong>的<strong>draw</strong>方法进行渲染。</p>
+<pre><code class="c++">void DrawNode::draw(Renderer *renderer, const Mat4 &amp;transform, uint32_t flags)
+{
+      // 如果使用Tessellation，那么调用onDrawUseTessellation方法绘制
+    if (_useTessellation) {
+        _customCommand.init(_globalZOrder, transform, flags);
+        _customCommand.func = CC_CALLBACK_0(DrawNode::onDrawUseTessellation, this, transform, flags);
+        renderer-&gt;addCommand(&amp;_customCommand);
+        return;
+    }
+    if(_bufferCount)
+    {
+        _customCommand.init(_globalZOrder, transform, flags);
+        _customCommand.func = CC_CALLBACK_0(DrawNode::onDraw, this, transform, flags);
+        renderer-&gt;addCommand(&amp;_customCommand);
+    }
+
+    // 此处省略800字， cocos2d-x自带了绘制点和线的方法
+}
+
+/*-----------  真正的绘制方法 --------------*/
+// onDrawUseTessellation仿造了DrawNode自带的onDraw方法，并共用底层的shader，以及CPU中的顶点buffer
+void DrawNode::onDrawUseTessellation(const Mat4 &amp;transform, uint32_t flags) {
+    // 基本设置，同onDraw方法
+      getGLProgramState()-&gt;apply(transform);
+    auto glProgram = this-&gt;getGLProgram();
+    glProgram-&gt;setUniformLocationWith1f(glProgram-&gt;getUniformLocation(&quot;u_alpha&quot;), _displayedOpacity / 255.0);
+    GL::blendFunc(_blendFunc.src, _blendFunc.dst);
+
+
+    if (_dirty)
+    {
+          // 绑定顶点数据，顶点数据从CPU的_buffer缓存中，传递给GPU的GL_ARRAY_BUFFER
+        glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(V2F_C4B_T2F)*_bufferCapacity, _buffer, GL_STREAM_DRAW);
+
+        _dirty = false;
+    }
+
+      // 此处省略800字，一些基本的设置
+
+    int curIndex = 0;
+    int drawNumber = _TSCommand.size();
+      // 核心代码： 一个凹多边形可能需要调用多次drawArrays方法，并且绘制的方式不同
+      // 绘制的次数，以及每次的绘制方式，以及每次绘制时绘制哪些顶点 都在Tessellation步骤里面生成好了
+      // _TSCommand数组存储绘制方式，_TSNumber数组存储每次绘制的定点数
+    for (int i = 0; i &lt; drawNumber; ++i) {
+        int curDrawType = _TSCommand[i];
+        int curVexNum = _TSNumber[i];
+        if (curDrawType == 1) {
+            glDrawArrays(GL_TRIANGLES, curIndex, curVexNum);
+        } else if (curDrawType == 2) {
+            glDrawArrays(GL_TRIANGLE_STRIP, curIndex, curVexNum);
+        } else {
+            glDrawArrays(GL_TRIANGLE_FAN, curIndex, curVexNum);
+        }
+        curIndex += curVexNum;
+    }
+
+    // 此处省略800字，一些收尾工作
+}
+</code></pre>
+<p>到此，就实现了在iOS设备上使用Cocos2d-x和OpenGL ES绘制凹多边形。</p>
+<h2 id="PS"><a href="#PS" class="headerlink" title="PS"></a>PS</h2><p>由于是在iOS上使用Cocos2d-x，所以使用过程中会需要Objective-C和C++混编，可以参考这个教程 - <a href="https://awhisper.github.io/2016/05/01/%E6%B7%B7%E7%BC%96ObjectiveC/" target="_blank" rel="external">混编ObjectiveC++</a></p>
+<p>对了，还有一些基本的Cocos2d-x渲染机制，我学习的这系列博客 - <a href="https://github.com/sric0880/coco2d-x-sourcecode-analysis" target="_blank" rel="external">coco2d-x sourcecode analysis</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://www.songho.ca/opengl/gl_tessellation.html" target="_blank" rel="external">OpenGL Tessellation</a></li>
+<li><a href="https://code.google.com/archive/p/iphone-glu/" target="_blank" rel="external">iOS上Tessellation - iPhone GLU</a></li>
+<li><a href="https://awhisper.github.io/2016/05/01/%E6%B7%B7%E7%BC%96ObjectiveC/" target="_blank" rel="external">混编ObjectiveC++</a></li>
+<li><a href="https://github.com/sric0880/coco2d-x-sourcecode-analysis" target="_blank" rel="external">coco2d-x sourcecode analysis</a></li>
+</ul>
+
+                
+
+
+<p class="teal-link-context">
+    <a href="/2017/12/02/ar-rubik/" rel="next" title="ARKit下的魔方">
+    下一篇：ARKit下的魔方
+  </a>
+</p>
+
+
+            </div>
+			
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+</div>
+
+        <div class="fixed-action-btn float-sitemap">
+    <a class="btn-floating btn-large lime">
+      <i class="fa fa-caret-square-o-up"></i>
+    </a>
+    <ul>
+      <li><a class="btn-return-top btn-floating waves-effect lime darken-1" title="回到顶部"><i class="fa fa-arrow-circle-o-up"></i></a></li>
+      <li><a class="btn-floating waves-effect button-collapse lime darken-2"  data-activates="main-menu" title="菜单"><i class="fa fa-navicon"></i></a></li>
+    </ul>
+  </div>
+
+    </main>
+    <footer class="page-footer blue-grey darken-1">
+    
+    <div class="footer-container container">
+        <div class="row">
+            
+            <div class="social-group col m4 s12">
+                <h5 class="white-text">社交</h5>
+                
+                    <a class="social-link" href="http://weibo.com/3911241332" target="_blank">
+                        <i class="fa fa-2x fa-weibo"></i>
+                    </a>
+                
+                    <a class="social-link" href="https://github.com/vanney9" target="_blank">
+                        <i class="fa fa-2x fa-github"></i>
+                    </a>
+                
+                    <a class="social-link" href="/atom.xml" target="_blank">
+                        <i class="fa fa-2x fa-rss"></i>
+                    </a>
+                
+                
+
+            </div>
+            
+
+            
+            <div class="col m8 s12">
+                <h5 class="white-text">友情链接</h5>
+                
+                    <a class="social-link" href="http://raytaylorlin.com/" target="_blank">实验室前端大神，博客主题作者 寿寿</a>
+                
+                    <a class="social-link" href="http://tutuge.me/" target="_blank">实验室iOS大神 土哥</a>
+                
+                    <a class="social-link" href="http://liugui.org/" target="_blank">实验室前端小伙伴 刘贵</a>
+                
+                    <a class="social-link" href="https://rabiiit.github.io/" target="_blank">实验室iOS端小伙伴 校草</a>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <div class="footer-copyright teal-link-context">
+        <div class="container">
+            © 2017 vanney9.com, All rights reserved.
+            <p class="right" style="margin-top: 0;">本博客由 <a href="https://hexo.io">Hexo</a> 强力驱动 | 主题 <a href="https://github.com/raytaylorlin/hexo-theme-raytaylorism">raytaylorism</a></p>
+            <script src="https://s95.cnzz.com/z_stat.php?id=1257182745&web_id=1257182745" language="JavaScript"></script>
+        </div>
+    </div>
+</footer>
+
+
+    <noscript>
+    <div class="noscript">
+        <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+    </div>
+</noscript>
+<div class="noscript">
+    <p class="center-align">当前网速较慢或者你使用的浏览器不支持博客特定功能，请尝试刷新或换用Chrome、Firefox等现代浏览器</p>
+</div>
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+
+<script>
+    (function($) {
+        $(document).ready(function() {
+            // 隐藏禁用javascript（针对微信内置浏览器）的提示
+            $('.noscript').hide();
+
+            // 图片缩放效果
+            var $imgs = $('img').not('.slider-image').not('.avatar-image').not('.carousel-image').not('.card-cover-image').not('.qrcode');
+
+            // 给图片加上点击放大效果（materialbox插件）
+            $imgs.addClass('materialboxed').each(function(i, el) {
+                $(this).attr('data-caption', $(this).attr('alt') || ' ');
+            }).materialbox();
+
+            // 优化表格的显示
+            $('table').each(function() {
+                var $table = $(this);
+                // 除去多行代码的情况
+                if ($table.find('pre').length == 0) {
+                    $table.addClass('responsive-table striped bordered');
+                }
+            });
+
+            // 首页幻灯片
+            $('.slider').slider({indicators: true, full_width: true, interval: 8000});
+
+            $(".button-collapse").sideNav();
+            $(".category-menu").sideNav();
+
+            // 针对gallery post
+            $('.carousel').carousel({full_width: true});
+            $('.carousel-control.prev').click(function() {
+                $('.carousel').carousel('prev');
+            });
+            $('.carousel-control.next').click(function() {
+                $('.carousel').carousel('next');
+            });
+
+            // 文章目录
+            $('article').not('.simple-article').find('h1').add('h2').add('h3').add('h4').add('h5').add('h6').scrollSpy();
+
+            // 目录随屏幕滚动（防止目录过长越过footer）
+            var $toc = $('.toc');
+            var scrollTargetTop = 0;
+            $(window).scroll(function() {
+                var $activeLink = $toc.find('a.active.section');
+                if ($(window).scrollTop() < 100) {
+                    scrollTargetTop = 0;
+                } else {
+                    if ($activeLink[0]) {
+                        scrollTargetTop = $activeLink.offset().top - $toc.offset().top;
+                    }
+                }
+                $toc.css('top', '-' + scrollTargetTop + 'px');
+            });
+
+            // 修正文章目录的left-border颜色
+            var color = $('.table-of-contents-text').css('color');
+            $('.table-of-contents-link').css('border-left-color', color);
+
+            // 针对移动端做的优化：FAB按钮点击一下收回
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('.fixed-action-btn').addClass('click-to-toggle');
+            }
+            // 回到顶部
+            $('.btn-return-top').click(function() {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 500);
+            });
+
+            // 重置读书页面的Tab标签页的颜色
+            $('li.tab a').hover(function() {
+                $(this).toggleClass('text-lighten-4');
+            });
+            $('.indicator').addClass('teal accent-1 lighten-2');
+
+            
+            // 添加new标签
+            $('.menu-about').append('<span class="new badge lime lighten-1"></span>');
+            
+
+            // 搜索功能
+            $('.modal-trigger').leanModal({
+                // 打开搜索框时自动聚焦
+                ready: function() {
+                    if ($('#search').is(":visible")) {
+                        $('#search-input').focus();
+                    }
+                }
+            });
+            var searchXml = "search.xml";
+            if (searchXml.length == 0) {
+             	searchXml = "search.xml";
+            }
+            var searchPath = "/" + searchXml;
+            initSearch(searchPath, 'search-input', 'search-result');
+        });
+
+        // 初始化搜索与匹配函数
+        var initSearch = function(path, search_id, content_id) {
+            'use strict';
+            $.ajax({
+                url: path,
+                dataType: "xml",
+                success: function(xmlResponse) {
+                    // get the contents from search data
+                    var datas = $("entry", xmlResponse).map(function() {
+                        return {
+                            title: $("title", this).text(),
+                            content: $("content", this).text(),
+                            url: $("url", this).text()
+                        };
+                    }).get();
+                    var $input = document.getElementById(search_id);
+                    var $resultContent = document.getElementById(content_id);
+                    $input.addEventListener('input', function() {
+                        var str = '<ul class=\"search-result-list\">';
+                        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                        $resultContent.innerHTML = "";
+                        if (this.value.trim().length <= 0) {
+                            return;
+                        }
+                        // perform local searching
+                        datas.forEach(function(data) {
+                            var isMatch = true;
+                            var content_index = [];
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty titles and contents
+                            if (data_title != '' && data_content != '') {
+                                keywords.forEach(function(keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            }
+                            // show search results
+                            if (isMatch) {
+                                keywords.forEach(function(keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    data_title = data_title.replace(regS, "<span class=\"search-keyword teal lighten-2\">" + keyword + "</span>");
+                                });
+
+                                str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 100 characters
+                                    var start = first_occur - 20;
+                                    var end = first_occur + 80;
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+                                    if (start == 0) {
+                                        end = 100;
+                                    }
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+                                    var match_content = content.substring(start, end);
+                                    // highlight all keywords
+                                    keywords.forEach(function(keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, "<span class=\"search-keyword teal lighten-2\">" + keyword + "</span>");
+                                    });
+
+                                    str += "<p class=\"search-result\">..." + match_content + "...</p>"
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        $resultContent.innerHTML = str;
+                    });
+                }
+            });
+        }
+    })(jQuery);
+</script>
+
+
+<script src="/js/google/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+
+
+
+
+
+
+
+</body>
+</html>

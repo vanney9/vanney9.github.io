@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-12-20T06:48:30.000Z</updated>
+  <updated>2018-03-27T03:44:56.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,11 +16,38 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形</title>
+    <link href="http://yoursite.com/2018/03/26/OpenGL-ES-concave-polygon-iOS/"/>
+    <id>http://yoursite.com/2018/03/26/OpenGL-ES-concave-polygon-iOS/</id>
+    <published>2018-03-26T07:36:06.000Z</published>
+    <updated>2018-03-27T03:44:56.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;先看看在iPhone上使用Cocos2d-x与OpenGL ES绘制出来的最终效果。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/lionheart/1803/tess.jpeg&quot; alt=&quot;tess&quot;&gt;&lt;/p&gt;
+&lt;p&gt;图中绘制的都是圆环，或者光滑曲线构成的图形。不过本质还是绘制多边形，只要这些多边形的顶点足够多，那么就可以形成&lt;em&gt;光滑的&lt;/em&gt;曲线。&lt;/p&gt;
+&lt;p&gt;在绘制过程中使用到的相关知识点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Cocos2d-x渲染机制&lt;/li&gt;
+&lt;li&gt;OpenGL ES绘图基础&lt;/li&gt;
+&lt;li&gt;Objectice-C与C++混编&lt;/li&gt;
+&lt;li&gt;OpenGL Tessellation将多边形切分成多个三角形&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+      <category term="iOS" scheme="http://yoursite.com/categories/iOS/"/>
+    
+    
+  </entry>
+  
+  <entry>
     <title>ARKit下的魔方</title>
     <link href="http://yoursite.com/2017/12/02/ar-rubik/"/>
     <id>http://yoursite.com/2017/12/02/ar-rubik/</id>
     <published>2017-12-02T08:41:23.000Z</published>
-    <updated>2017-12-20T06:48:30.000Z</updated>
+    <updated>2018-03-26T07:49:59.000Z</updated>
     
     <summary type="html">
     
@@ -29,8 +56,8 @@
     
     </summary>
     
+      <category term="iOS" scheme="http://yoursite.com/categories/iOS/"/>
     
-      <category term="iOS" scheme="http://yoursite.com/tags/iOS/"/>
     
   </entry>
   
@@ -406,24 +433,6 @@
     </summary>
     
       <category term="iOS" scheme="http://yoursite.com/categories/iOS/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Effective Objective-C - 内存管理</title>
-    <link href="http://yoursite.com/2017/03/25/effective-objective-c-reading-note-three/"/>
-    <id>http://yoursite.com/2017/03/25/effective-objective-c-reading-note-three/</id>
-    <published>2017-03-25T08:07:33.000Z</published>
-    <updated>2017-07-17T08:19:11.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Effective Objective C&lt;/strong&gt; 读书笔记 - 内存管理&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="读书笔记" scheme="http://yoursite.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
     
   </entry>

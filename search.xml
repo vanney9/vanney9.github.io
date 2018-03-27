@@ -3,6 +3,303 @@
   
     
     <entry>
+      <title><![CDATA[iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形]]></title>
+      <url>/2018/03/26/OpenGL-ES-concave-polygon-iOS/</url>
+      <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>先看看在iPhone上使用Cocos2d-x与OpenGL ES绘制出来的最终效果。</p>
+<p><img src="/lionheart/1803/tess.jpeg" alt="tess"></p>
+<p>图中绘制的都是圆环，或者光滑曲线构成的图形。不过本质还是绘制多边形，只要这些多边形的顶点足够多，那么就可以形成<em>光滑的</em>曲线。</p>
+<p>在绘制过程中使用到的相关知识点：</p>
+<ol>
+<li>Cocos2d-x渲染机制</li>
+<li>OpenGL ES绘图基础</li>
+<li>Objectice-C与C++混编</li>
+<li>OpenGL Tessellation将多边形切分成多个三角形</li>
+</ol>
+<a id="more"></a>
+<h2 id="问题的发现"><a href="#问题的发现" class="headerlink" title="问题的发现"></a>问题的发现</h2><p>在使用Cococs2d-x绘制填充颜色的多边形的时候，最先想到的就是使用<strong>DrawNode</strong> 。DrawNode提供以下接口：</p>
+<pre><code class="c++">// 绘制填充颜色的多边形，参数包括：多边形顶点坐标，定点数，以及需要填充的颜色
+void drawSolidPoly(const Vec2 *poli, unsigned int numberOfPoints, const Color4F &amp;color);
+</code></pre>
+<p>使用该接口绘制一个四分之一圆环的时候，<strong>想达到的效果</strong>如下👇</p>
+<p><img src="/lionheart/1803/tess3.jpeg" alt="tess3"></p>
+<p>但是<strong>实际的效果</strong>却是这样的👇</p>
+<p><img src="/lionheart/1803/tess2.jpeg" alt="tess2"></p>
+<h2 id="查看源码"><a href="#查看源码" class="headerlink" title="查看源码"></a>查看源码</h2><p>查看Cocos2d-x的DrawNode的源码：<strong>CCDrawNode.cpp</strong></p>
+<pre><code class="c++">// drawSolidPoly接口的具体实现
+void DrawNode::drawSolidPoly(const Vec2 *poli, unsigned int numberOfPoints, const Color4F &amp;color)
+{
+    drawPolygon(poli, numberOfPoints, color, 0.0, Color4F(0.0, 0.0, 0.0, 0.0));
+}
+</code></pre>
+<p>问题的关键还是在<strong>drawPolygon</strong>接口，该接口绘制一般的多边形，它的实现原理很简单：<strong>根据顶点，将多边形划分成多个三角形，然后使用OpenGL绘制指令交由GPU绘制</strong></p>
+<p>来看看具体实现：</p>
+<pre><code class="c++">/*------- drawPolygon具体实现 ----------*/
+void DrawNode::drawPolygon(const Vec2 *verts, int count, const Color4F &amp;fillColor, float borderWidth, const Color4F &amp;borderColor)
+{
+    CCASSERT(count &gt;= 0, &quot;invalid count value&quot;);
+
+      // 看是否需要绘制边框，本文分析的是无边框的情况
+    bool outline = (borderColor.a &gt; 0.0f &amp;&amp; borderWidth &gt; 0.0f);
+
+      // 根据顶点数，计算底层需要绘制的三角形的个数：triangle_count
+    auto  triangle_count = outline ? (3*count - 2) : (count - 2);
+      // 根据三角形的个数，算出需要传递给GPU的顶点个数，也就是乘3
+    auto vertex_count = 3*triangle_count;
+    ensureCapacity(vertex_count);
+
+      // 存放顶点数据的buffer
+    V2F_C4B_T2F_Triangle *triangles = (V2F_C4B_T2F_Triangle *)(_buffer + _bufferCount);
+    V2F_C4B_T2F_Triangle *cursor = triangles;
+
+      // 关键代码： 划分三角形的算法
+    for (int i = 0; i &lt; count-2; i++)
+    {
+        V2F_C4B_T2F_Triangle tmp = {
+                {verts[0], Color4B(fillColor), __t(v2fzero)},
+                {verts[i+1], Color4B(fillColor), __t(v2fzero)},
+                {verts[i+2], Color4B(fillColor), __t(v2fzero)},
+        };
+
+        *cursor++ = tmp;
+    }
+
+    if(outline)
+    {
+        /* 此处省略800字，主要是绘制多边形的边框*/
+    }
+
+    _bufferCount += vertex_count;
+    _dirty = true;
+}
+</code></pre>
+<p>具体分析下将多边形划分成三角形的步骤：</p>
+<blockquote>
+<p>假设有5个顶点（1-5），那么可以分成 5 - 2 = 3 个三角形。以1号顶点为基础，这三个三角形分别是</p>
+<p>①②③</p>
+<p>①③④</p>
+<p>①④⑤</p>
+</blockquote>
+<p>那么当这些顶点构成的多边形是凹多边形时就会出现问题（覆盖了不需要绘制的区域），画个图解释一下：</p>
+<p><img src="/lionheart/1803/tess4.jpeg" alt="tess4"></p>
+<p>假设将这个四分之一圆环分成10个顶点的多边形时，还是以刚说的划分三角形的算法，那么小圆弧上的点与①号点构成的三角形，就超出了绘制范围。其中最为明显的就是①⑥⑦这三个点构成的三角形。</p>
+<h2 id="使用Tessellation正确的划分三角形"><a href="#使用Tessellation正确的划分三角形" class="headerlink" title="使用Tessellation正确的划分三角形"></a>使用Tessellation正确的划分三角形</h2><p>经过刚刚的源码分析，可以发现出现渲染错误的原因就是：绘制凹多边形时，划分三角形的方法有问题。谷歌一番，其实OpenGL提供了<a href="http://www.songho.ca/opengl/gl_tessellation.html" target="_blank" rel="external">Tessellation</a>的方法，来正确的划分三角形；但是OpenGL ES暂不支持。不过2008年的时候，有一个第三方库提供了<a href="https://code.google.com/archive/p/iphone-glu/" target="_blank" rel="external">iOS上Tessellation</a>的功能。</p>
+<p>下载该源代码，然后修改Makefile，生成静态库，导入Cocos2d-x中。然后看看如何修改Cocos2d-x源码来实现绘制凹多边形的：</p>
+<pre><code class="c++">/*-------- CCDrawNode.cpp中新增 drawPolygonUseTessllation 方法 ---------*/
+void DrawNode::drawPolygonUseTessllation(const Vec2 *verts, int count, const Color4F &amp;fillColor, float borderWidth, const Color4F &amp;borderColor) {
+    CCASSERT(count &gt;= 0, &quot;invalid count value&quot;);
+
+      // 新建一个tessellation处理模块
+    GLUtesselator *tess = gluNewTess();
+    if (tess) {
+        totolTessVecPointNum = 0;
+        drawNum = 0;
+
+          // 绑定tessellation 回调函数
+        gluTessCallback(tess, GLU_TESS_BEGIN, (void (*)())tessBeginCB);
+        gluTessCallback(tess, GLU_TESS_END, (void (*)())tessEndCB);
+        gluTessCallback(tess, GLU_TESS_ERROR, (void (*)())tessErrorCB);
+        gluTessCallback(tess, GLU_TESS_VERTEX, (void (*)())tessVertexCB);
+
+        gluTessBeginPolygon(tess, 0);
+        gluTessBeginContour(tess);
+        // 向tessellation处理模块中，依次传入多边形顶点坐标
+        GLdouble *quad = new GLdouble[count * 3];
+        for (int i = 0; i &lt; count; i++) {
+            quad[i * 3] = verts[i].x;
+            quad[i * 3 + 1] = verts[i].y;
+            quad[i * 3 + 2] = 0;
+        }
+
+        for (int i = 0; i &lt; count; ++i) {
+            gluTessVertex(tess, quad + i * 3, quad + i * 3);
+        }
+        gluTessEndContour(tess);
+        gluTessEndPolygon(tess);
+
+          // 结束tessellation处理
+        gluDeleteTess(tess);
+
+        delete[] quad;
+    } else {
+        std::cout &lt;&lt; &quot;no tessellation&quot;;
+        exit(1);
+    }
+
+
+    V2F_C4B_T2F *triangles = (V2F_C4B_T2F *)(_buffer + _bufferCount);
+    V2F_C4B_T2F *cursor = triangles;
+
+    // 经过tessellation, 以及将顶点重新排序了，现在将重新排序后的顶点放入顶点buffer，以待GPU渲染
+    for (int i = 0; i &lt; totolTessVecPointNum; i++)
+    {
+        V2F_C4B_T2F tmp = {tessVec2[i], Color4B(fillColor), __t(v2fzero)};
+        *cursor++ = tmp;
+    }
+
+    std::cout &lt;&lt; &quot;draw node is &quot; &lt;&lt; drawNum &lt;&lt; std::endl;
+    _TSCommand.clear();
+    _TSNumber.clear();
+    _TSCommand.resize(drawNum);
+    _TSNumber.resize((drawNum));
+    for (int j = 0; j &lt; drawNum; ++j) {
+        _TSCommand.push_back(tessSort[j][0]);
+        _TSNumber.push_back(tessSort[j][1]);
+    }
+
+    _bufferCount += totolTessVecPointNum;
+    _useTessellation = true;
+    _dirty = true;
+}
+</code></pre>
+<p>Tessellation的主要工作就是：<strong>将多边形的顶点重新排序，然后依次指定这些顶点的绘制方式。有三种绘制方式：GL_TRIANGLES，GL_TRIANGLE_STRIP和GL_TRIANGLE_FAN</strong></p>
+<p>来看看Tessellation的回调函数：回调函数会在这些情况下发生：</p>
+<ol>
+<li>重新指定一种绘制方式时 <strong>GLU_TESS_BEGIN</strong></li>
+<li>以该种绘制方式时，生成一个新的顶点时 <strong>GLU_TESS_VERTEX</strong></li>
+<li>结束该绘制方式时 <strong>GLU_TESS_END</strong></li>
+<li>发生错误时 <strong>GLU_TESS_ERROR</strong></li>
+</ol>
+<pre><code class="c++">float tessVec2[5000][2];
+int tessSort[100][2];
+int totolTessVecPointNum = 0;
+int currentDrawTessPointNum = 0;
+int drawNum = 0;
+GLenum tessType;
+
+const char* getPrimitiveType(GLenum type) {
+    // 省略800字， 获取绘制方式
+}
+
+void tessBeginCB(GLenum which) {
+    currentDrawTessPointNum = 0;
+    switch(which)
+    {
+        case 0x0004:
+            tessType = 1;
+            break;
+        case 0x0005:
+            tessType = 2;
+            break;
+        case 0x0006:
+            tessType = 3;
+            break;
+        default:
+            std::cout &lt;&lt; &quot;error tess type&quot; &lt;&lt; std::endl;
+    }
+    std::cout &lt;&lt; &quot;glBegin(&quot; &lt;&lt; getPrimitiveType(which) &lt;&lt; &quot;);\n&quot;;
+}
+
+void tessEndCB() {
+    tessSort[drawNum][0] = tessType;
+    tessSort[drawNum][1] = currentDrawTessPointNum;
+    drawNum++;
+    std::cout  &lt;&lt; &quot;glEnd();\n&quot;;
+}
+
+void tessVertexCB(const GLvoid *data) {
+    const GLdouble *ptr = (const GLdouble*)data;
+
+    GLfloat pos1 = *ptr;
+    GLfloat pos2 = *(ptr + 1);
+    GLfloat pos3 = *(ptr + 2);
+
+    std::cout &lt;&lt; &quot;pos1 is &quot; &lt;&lt; pos1 &lt;&lt; &quot;, pos2 is &quot; &lt;&lt; pos2 &lt;&lt; &quot;, pos3 is &quot; &lt;&lt; pos3 &lt;&lt; std::endl;
+    tessVec2[totolTessVecPointNum][0] = pos1;
+    tessVec2[totolTessVecPointNum][1] = pos2;
+    totolTessVecPointNum++;
+    currentDrawTessPointNum++;
+}
+
+void tessErrorCB(GLenum errorCode) {
+    const GLubyte *errorStr;
+
+    errorStr = gluErrorString(errorCode);
+    std::cerr &lt;&lt; &quot;[ERROR]: &quot; &lt;&lt; errorStr &lt;&lt; std::endl;
+}
+</code></pre>
+<h2 id="Cocos2d-x底层渲染"><a href="#Cocos2d-x底层渲染" class="headerlink" title="Cocos2d-x底层渲染"></a>Cocos2d-x底层渲染</h2><p>通过Tessellation之后，已经将多边形的顶点重新排序，并重新指定了绘制方式。现在这些绘制方式和顶点已经记录下来了，需要修改<strong>DrawNode</strong>的<strong>draw</strong>方法进行渲染。</p>
+<pre><code class="c++">void DrawNode::draw(Renderer *renderer, const Mat4 &amp;transform, uint32_t flags)
+{
+      // 如果使用Tessellation，那么调用onDrawUseTessellation方法绘制
+    if (_useTessellation) {
+        _customCommand.init(_globalZOrder, transform, flags);
+        _customCommand.func = CC_CALLBACK_0(DrawNode::onDrawUseTessellation, this, transform, flags);
+        renderer-&gt;addCommand(&amp;_customCommand);
+        return;
+    }
+    if(_bufferCount)
+    {
+        _customCommand.init(_globalZOrder, transform, flags);
+        _customCommand.func = CC_CALLBACK_0(DrawNode::onDraw, this, transform, flags);
+        renderer-&gt;addCommand(&amp;_customCommand);
+    }
+
+    // 此处省略800字， cocos2d-x自带了绘制点和线的方法
+}
+
+/*-----------  真正的绘制方法 --------------*/
+// onDrawUseTessellation仿造了DrawNode自带的onDraw方法，并共用底层的shader，以及CPU中的顶点buffer
+void DrawNode::onDrawUseTessellation(const Mat4 &amp;transform, uint32_t flags) {
+    // 基本设置，同onDraw方法
+      getGLProgramState()-&gt;apply(transform);
+    auto glProgram = this-&gt;getGLProgram();
+    glProgram-&gt;setUniformLocationWith1f(glProgram-&gt;getUniformLocation(&quot;u_alpha&quot;), _displayedOpacity / 255.0);
+    GL::blendFunc(_blendFunc.src, _blendFunc.dst);
+
+
+    if (_dirty)
+    {
+          // 绑定顶点数据，顶点数据从CPU的_buffer缓存中，传递给GPU的GL_ARRAY_BUFFER
+        glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(V2F_C4B_T2F)*_bufferCapacity, _buffer, GL_STREAM_DRAW);
+
+        _dirty = false;
+    }
+
+      // 此处省略800字，一些基本的设置
+
+    int curIndex = 0;
+    int drawNumber = _TSCommand.size();
+      // 核心代码： 一个凹多边形可能需要调用多次drawArrays方法，并且绘制的方式不同
+      // 绘制的次数，以及每次的绘制方式，以及每次绘制时绘制哪些顶点 都在Tessellation步骤里面生成好了
+      // _TSCommand数组存储绘制方式，_TSNumber数组存储每次绘制的定点数
+    for (int i = 0; i &lt; drawNumber; ++i) {
+        int curDrawType = _TSCommand[i];
+        int curVexNum = _TSNumber[i];
+        if (curDrawType == 1) {
+            glDrawArrays(GL_TRIANGLES, curIndex, curVexNum);
+        } else if (curDrawType == 2) {
+            glDrawArrays(GL_TRIANGLE_STRIP, curIndex, curVexNum);
+        } else {
+            glDrawArrays(GL_TRIANGLE_FAN, curIndex, curVexNum);
+        }
+        curIndex += curVexNum;
+    }
+
+    // 此处省略800字，一些收尾工作
+}
+</code></pre>
+<p>到此，就实现了在iOS设备上使用Cocos2d-x和OpenGL ES绘制凹多边形。</p>
+<h2 id="PS"><a href="#PS" class="headerlink" title="PS"></a>PS</h2><p>由于是在iOS上使用Cocos2d-x，所以使用过程中会需要Objective-C和C++混编，可以参考这个教程 - <a href="https://awhisper.github.io/2016/05/01/%E6%B7%B7%E7%BC%96ObjectiveC/" target="_blank" rel="external">混编ObjectiveC++</a></p>
+<p>对了，还有一些基本的Cocos2d-x渲染机制，我学习的这系列博客 - <a href="https://github.com/sric0880/coco2d-x-sourcecode-analysis" target="_blank" rel="external">coco2d-x sourcecode analysis</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://www.songho.ca/opengl/gl_tessellation.html" target="_blank" rel="external">OpenGL Tessellation</a></li>
+<li><a href="https://code.google.com/archive/p/iphone-glu/" target="_blank" rel="external">iOS上Tessellation - iPhone GLU</a></li>
+<li><a href="https://awhisper.github.io/2016/05/01/%E6%B7%B7%E7%BC%96ObjectiveC/" target="_blank" rel="external">混编ObjectiveC++</a></li>
+<li><a href="https://github.com/sric0880/coco2d-x-sourcecode-analysis" target="_blank" rel="external">coco2d-x sourcecode analysis</a></li>
+</ul>
+]]></content>
+      
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
+        
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[ARKit下的魔方]]></title>
       <url>/2017/12/02/ar-rubik/</url>
       <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>如题，先看看效果👇</p>
@@ -15,12 +312,12 @@
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
         
-        <tags>
-            
-            <tag> iOS </tag>
-            
-        </tags>
         
     </entry>
     
@@ -7471,18 +7768,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
   
     
     <entry>
-      <title><![CDATA[categories]]></title>
-      <url>/categories/index.html</url>
-      <content type="html"></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[tags]]></title>
-      <url>/tags/index.html</url>
-      <content type="html"></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[Controls]]></title>
       <url>/about/controls.html</url>
       <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>Controls</strong> 是手机App和Web通信的系统。可以通过他。来实现 App控制Web端的图片 这一功能。</p>
@@ -7591,30 +7876,6 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>之前<a href="/about/genome-browser.html">Genome Browser</a>草草收场，就是为了开发这个APP；不过之前的生物知识的积累还是对这个项目有很大的帮助的，不算白干=。=</p>
 <p>这个项目的亮点就在于：基因检测报告的数据可视化显示上面。它将枯燥的报告，以生动的形式展现了出来，显得简单易懂。</p>
 <p><strong>整个APP的实现过程中，对于iOS的显示以及绘制等问题有了更深刻的理解！</strong></p>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[关于]]></title>
-      <url>/about/index.html</url>
-      <content type="html"><![CDATA[<p>大家好，我是黄世杰。欢迎来到我的个人技术博客。</p>
-<p>这个博客主要记录了自己平时一些编程的心得和体会，当然还有读书笔记，偶尔还会有些杂七杂八的生活琐事。</p>
-<p>我本人目前在华中科技大学电信学院读研究生，主要从事iOS开发。下面来说说我的技术学习历程：</p>
-<ul>
-<li>大一至大三：上了C语言的课程，算是入了编程的门；后来自学PHP，JavaScript，倒腾了一段时间的网站开发</li>
-<li>大四：保研到实验室之后就主要从事后端开发。主要工作就是：编写PHP代码，服务器以及数据库的运维</li>
-<li>研一至研二：开始转向iOS开发。之后就基本上全职投入到iOS技术的研究中了。这期间与同学完成了多个有趣的项目，并多次担任iOS端负责人</li>
-<li>未来：再进一步提升自己的iOS开发水平。还想学学JavaScript，Swift，Java等其他语言，毕竟技多不压身，希望能成为一个大前端开发人员。另外还想去接触一下目前的新兴技术：AI，VR，AR等，拓宽自己的知识面。</li>
-</ul>
-<p>来看看目前的武器库：</p>
-<ul>
-<li>熟悉Objective-C编程</li>
-<li>熟悉PHP编程</li>
-<li>了解C/C++</li>
-<li>了解JavaScript， HTML/CSS</li>
-<li>了解OpenGL以及OpenGL ES</li>
-<li>熟悉Linux上Web服务器运维，MySQL运维</li>
-</ul>
 ]]></content>
     </entry>
     
@@ -7775,6 +8036,30 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
     </entry>
     
     <entry>
+      <title><![CDATA[关于]]></title>
+      <url>/about/index.html</url>
+      <content type="html"><![CDATA[<p>大家好，我是黄世杰。欢迎来到我的个人技术博客。</p>
+<p>这个博客主要记录了自己平时一些编程的心得和体会，当然还有读书笔记，偶尔还会有些杂七杂八的生活琐事。</p>
+<p>我本人目前在华中科技大学电信学院读研究生，主要从事iOS开发。下面来说说我的技术学习历程：</p>
+<ul>
+<li>大一至大三：上了C语言的课程，算是入了编程的门；后来自学PHP，JavaScript，倒腾了一段时间的网站开发</li>
+<li>大四：保研到实验室之后就主要从事后端开发。主要工作就是：编写PHP代码，服务器以及数据库的运维</li>
+<li>研一至研二：开始转向iOS开发。之后就基本上全职投入到iOS技术的研究中了。这期间与同学完成了多个有趣的项目，并多次担任iOS端负责人</li>
+<li>未来：再进一步提升自己的iOS开发水平。还想学学JavaScript，Swift，Java等其他语言，毕竟技多不压身，希望能成为一个大前端开发人员。另外还想去接触一下目前的新兴技术：AI，VR，AR等，拓宽自己的知识面。</li>
+</ul>
+<p>来看看目前的武器库：</p>
+<ul>
+<li>熟悉Objective-C编程</li>
+<li>熟悉PHP编程</li>
+<li>了解C/C++</li>
+<li>了解JavaScript， HTML/CSS</li>
+<li>了解OpenGL以及OpenGL ES</li>
+<li>熟悉Linux上Web服务器运维，MySQL运维</li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[ScienceWall]]></title>
       <url>/about/sciencewall.html</url>
       <content type="html"><![CDATA[<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>ScienceWall</strong> 是为科研人员打造的一个<strong>在线浏览大图，标记，讨论</strong>的平台。</p>
@@ -7791,6 +8076,18 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorn
 <li><a href="https://play.google.com/store/apps/details?id=net.sciencewall" target="_blank" rel="external">安卓端下载</a></li>
 </ul>
 ]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[categories]]></title>
+      <url>/categories/index.html</url>
+      <content type="html"></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[tags]]></title>
+      <url>/tags/index.html</url>
+      <content type="html"></content>
     </entry>
     
   
