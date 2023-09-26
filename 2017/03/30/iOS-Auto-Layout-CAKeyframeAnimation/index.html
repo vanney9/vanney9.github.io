@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Auto Layout 与 CAKeyframeAnimation | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言最近实现了一个基于Auto Layout的CAKeyframeAnimation。先来看一下效果👇">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Auto Layout 与 CAKeyframeAnimation">
+<meta property="og:url" content="http://example.com/2017/03/30/iOS-Auto-Layout-CAKeyframeAnimation/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言最近实现了一个基于Auto Layout的CAKeyframeAnimation。先来看一下效果👇">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2017-03-30T09:19:20.000Z">
+<meta property="article:modified_time" content="2017-07-17T08:19:57.000Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2017/03/30/iOS-Auto-Layout-CAKeyframeAnimation/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Auto Layout 与 CAKeyframeAnimation',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2017-07-17 16:19:57'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Hexo"><span class="site-name">Hexo</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Auto Layout 与 CAKeyframeAnimation</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2017-03-30T09:19:20.000Z" title="Created 2017-03-30 17:19:20">2017-03-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2017-07-17T08:19:57.000Z" title="Updated 2017-07-17 16:19:57">2017-07-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/iOS/">iOS</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Auto Layout 与 CAKeyframeAnimation"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近实现了一个基于Auto Layout的CAKeyframeAnimation。先来看一下效果👇</p>
+<p><img src="/lionheart/1703/animate.gif" alt="animate.gif"></p>
+<span id="more"></span>
+
+<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>看了效果图，第一反应应该是使用 <strong>CAKeyframeAnimation</strong>，让两个圆型view的position随着图中的贝塞尔曲线(<strong>CGPath</strong>)运动。</p>
+<p>那么问题来了：整个视图是使用 <strong>Auto Layout</strong> 来实现的，并没有指定每个视图的frame，我们是否可以使用CAKeyframeAnimation呢？这就引出了下面要讲的几点👇</p>
+<ol>
+<li><strong>Auto Layout</strong>的本质</li>
+<li>普通的基于<strong>Auto Layout</strong> 的动画</li>
+<li>在<strong>Auto Layout</strong>视图中获取<strong>frame</strong></li>
+<li><strong>CATransaction</strong> 与 <strong>CAKeyframeAnimation</strong></li>
+<li><strong>Auto Layout</strong> 百分比布局</li>
+</ol>
+<h2 id="Auto-Layout-的本质"><a href="#Auto-Layout-的本质" class="headerlink" title="Auto Layout 的本质"></a>Auto Layout 的本质</h2><p><a target="_blank" rel="noopener" href="http://vanney9.com/2017/03/24/something-about-iOS-drawing/">关于iOS Drawing</a> 这篇文章里面讲述了 <strong>iOS系统将View显示在屏幕上的6个详细步骤</strong>。这里说一下前面3个步骤：</p>
+<ol>
+<li><strong>Layout</strong>：将一个或者多个UIView（也就是<strong>UIView hierarchy</strong>）显示在屏幕上的第一步就是 <strong>计算每个layer的frame</strong>。无论代码使用<strong>Auto Layout</strong> 还是 <strong>Auto Resizing</strong> 还是直接指定了View的frame，iOS都会计算出每个layer的frame。</li>
+<li><strong>Display</strong>：此时已经知道每个Layer的frame，这一步会执行<code>-drawRect:</code>方法，执行custom的绘制，生成layer的backing image。</li>
+<li><strong>Prepare</strong>：这一步开始准备每个<strong>Animation</strong>的属性，比如要动画的layer属性，以及终止值等等。</li>
+</ol>
+<p><strong>划重点啦：</strong></p>
+<ol>
+<li><strong>Auto Layout虽然没有指定frame，但是iOS会根据这些约束，在内部算出layer的frame。所以Auto Layout的本质也就是指定每个View的frame</strong></li>
+<li><strong>在计算出每个layer的frame属性时，才开始准备Animation的参数。所以不存在基于Auto Layout的动画；指定动画属性时，还是指定与view的frame相关的属性</strong></li>
+</ol>
+<h2 id="普通的基于-Auto-Layout-的动画"><a href="#普通的基于-Auto-Layout-的动画" class="headerlink" title="普通的基于 Auto Layout 的动画"></a>普通的基于 Auto Layout 的动画</h2><p><a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/12622424/how-do-i-animate-constraint-changes">How do I animate constraint changes?</a> 这个stackoverflow的问题探讨了如何通过改变约束来使视图动画</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)moveBannerOffScreen &#123;</span><br><span class="line">  	[self.view layoutIfNeeded]; // 0</span><br><span class="line">    _addBannerDistanceFromBottomConstraint.constant = -32;  // 1</span><br><span class="line">  	// [sel.view layoutIfNeeded]; // 注释3</span><br><span class="line">    [UIView animateWithDuration:5</span><br><span class="line">        animations:^&#123;</span><br><span class="line">            [self.view layoutIfNeeded]; // 2</span><br><span class="line">        &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释0：<strong>先强行计算出每个view的动画开始前的frame</strong></p>
+<p>注释1：先更改约束条件，也就是指定动画结束之后，UIView该显示的位置。<strong>但是此时并没有计算出view的最终的frame</strong></p>
+<p>注释2：<strong>先记录动画初始位置</strong>；然后在动画中执行<strong>layoutIfNeeded</strong>，强行执行Layout步骤，计算出每个view的结束位置的frame，也就是动画的终止的frame</p>
+<p>注释3：如果在这里执行<code>layoutIfNeeded</code>的话，就会强行计算出每个view的最终的frame，那么动画会将该frame记为初始位置。那么<strong>初始位置和结束位置相同，直接跳到最终的位置</strong></p>
+<p>可以这么理解：执行完这一个函数后，开始下一帧的绘制；这个时候真实的view已经绘制在最终该显示的位置了，但是被屏幕最上方的Animation的view给遮挡了；这个Animation View从上一帧的状态开始，动画到最终的位置（有待商榷）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 相对比的UIView animate</span><br><span class="line">&#123;</span><br><span class="line">  	view.center = pointA; // 此时已经改变了view的frame，**计算动画的初始位置**</span><br><span class="line">  	[UIView animateWithDuration:0.5 animations:^&#123;</span><br><span class="line">      	view.center = pointB; // 计算view的最终frame， **计算动画的结束位置**</span><br><span class="line">  	&#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="在Auto-Layout-视图中获取bound"><a href="#在Auto-Layout-视图中获取bound" class="headerlink" title="在Auto Layout 视图中获取bound"></a>在Auto Layout 视图中获取bound</h2><p>说说方法：</p>
+<ol>
+<li>设要获取frame的视图为a，新建一个a的子视图b，使用Auto Layout将b的四边与a对齐</li>
+<li>重写b的<code>-drawRect:</code>方法，获取rect的宽高，也就是b的bound</li>
+<li>调用b的<code>setNeedsDisplay</code>方法，该方法会调用<code>-drawRect:</code>方法，从而获取b的bound</li>
+</ol>
+<p><strong>因为在调用<code>-drawRect:</code>的时候，每个视图的frame已经确定了，那么方法中的rect也就是该视图的bound</strong></p>
+<p><strong>还有一种更简单的方法：调用View的<code>layoutIfNeeded</code>方法，会立即重新计算每个view的frame</strong></p>
+<h2 id="CATransaction-与-CAKeyframeAnimation"><a href="#CATransaction-与-CAKeyframeAnimation" class="headerlink" title="CATransaction 与 CAKeyframeAnimation"></a>CATransaction 与 CAKeyframeAnimation</h2><p><strong>在这里详细说一下效果图的实现</strong>：</p>
+<ol>
+<li><p>图中的曲线使用UIBezier来画，那么就需要确定的坐标点，也就是需要知道曲线所在的视图的View。那么在<code>-drawRect:</code> 中画UIBezierPath，刚好可以知道view的bound</p>
+</li>
+<li><p>已经得到path之后，使用CAKeyframeAnimation来动画</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// 先设定2个CAKeyframeAnimation</span><br><span class="line">CAKeyframeAnimation *animation1 = [CAKeyframeAnimation animation];</span><br><span class="line">animation1.keyPath = @&quot;position&quot;;</span><br><span class="line">animation1.path = animation1Path.CGPath;</span><br><span class="line">animation1.duration = 0.5f;</span><br><span class="line">animation1.removedOnCompletion = NO;</span><br><span class="line"></span><br><span class="line">CAKeyframeAnimation *animation2 = [CAKeyframeAnimation animation];</span><br><span class="line">animation2.keyPath = @&quot;position&quot;;</span><br><span class="line">animation2.path = animation2Path.CGPath;</span><br><span class="line">animation2.duration = 0.5f;</span><br><span class="line">animation2.removedOnCompletion = NO;</span><br><span class="line"></span><br><span class="line">// 更新两个circle的约束</span><br><span class="line">[self.circle1 updateConstraint]；</span><br><span class="line">[self.circle2 updateConstraint]；</span><br><span class="line">  </span><br><span class="line">// 执行动画</span><br><span class="line">[CATransaction begin];</span><br><span class="line">[self.circle1.layer addAnimation:consultationKeyAnimation forKey:@&quot;circle1&quot;];</span><br><span class="line">[self.circle2.layer addAnimation:followupKeyAnimation forKey:@&quot;circle2&quot;];</span><br><span class="line">[CATransaction commit];</span><br></pre></td></tr></table></figure>
+
+<p>关于CATransaction：在第一次动画没执行完的时候，立刻开始同一个transaction，会强制让第一个transaction的动画立刻结束到终点（也就是去掉Animation View的遮挡），再立刻开始第二个transaction的动画</p>
+<h2 id="Auto-Layout-百分比布局"><a href="#Auto-Layout-百分比布局" class="headerlink" title="Auto Layout 百分比布局"></a>Auto Layout 百分比布局</h2><p>这里无主题无关。</p>
+<p><a target="_blank" rel="noopener" href="http://liumh.com/2015/09/27/ios-autolayout-multiplier/">iOS AutoLayout 百分比布局</a> 这边文章谈到了Auto Layout百分比布局的问题，讲的很好。说一个里面的例子：子视图b的leading要与父视图a的leading之间隔20%的宽度</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b.leading = a.trailing * 0.2</span><br></pre></td></tr></table></figure>
+
+<p>使用Masonry</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[b mas_makeConstraints:^(MASConstraintMaker *make) &#123;</span><br><span class="line">	make.leading.equalTo(a.mas_trailing).multipliedBy(0.2);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+
+<p>可以这么理解：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a.leading = 0;</span><br><span class="line">a.trailing = a.width;</span><br><span class="line">a.trailing * 0.2 = a.width * 0.2;</span><br><span class="line">b.leading - a.leading = 0.2 * a.width - 0 = 0.2 * a.width</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://liumh.com/2015/09/27/ios-autolayout-multiplier/">iOS AutoLayout 百分比布局</a></li>
+<li><a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/12622424/how-do-i-animate-constraint-changes">How do I animate constraint changes?</a></li>
+<li><a target="_blank" rel="noopener" href="http://vanney9.com/2017/03/24/something-about-iOS-drawing/">关于iOS Drawing</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2017/03/30/iOS-Auto-Layout-CAKeyframeAnimation/">http://example.com/2017/03/30/iOS-Auto-Layout-CAKeyframeAnimation/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2017/04/04/effective-objective-c-reading-note-four/" title="Effective Objective-C - 块与大中枢派发"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Effective Objective-C - 块与大中枢派发</div></div></a></div><div class="next-post pull-right"><a href="/2017/03/25/effective-objective-c-reading-note-three/" title="Effective Objective-C - 内存管理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Effective Objective-C - 内存管理</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">John Doe</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">问题分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Auto-Layout-%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="toc-number">3.</span> <span class="toc-text">Auto Layout 的本质</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%AE%E9%80%9A%E7%9A%84%E5%9F%BA%E4%BA%8E-Auto-Layout-%E7%9A%84%E5%8A%A8%E7%94%BB"><span class="toc-number">4.</span> <span class="toc-text">普通的基于 Auto Layout 的动画</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8Auto-Layout-%E8%A7%86%E5%9B%BE%E4%B8%AD%E8%8E%B7%E5%8F%96bound"><span class="toc-number">5.</span> <span class="toc-text">在Auto Layout 视图中获取bound</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CATransaction-%E4%B8%8E-CAKeyframeAnimation"><span class="toc-number">6.</span> <span class="toc-text">CATransaction 与 CAKeyframeAnimation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Auto-Layout-%E7%99%BE%E5%88%86%E6%AF%94%E5%B8%83%E5%B1%80"><span class="toc-number">7.</span> <span class="toc-text">Auto Layout 百分比布局</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2018/03/26/OpenGL-ES-concave-polygon-iOS/" title="iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形">iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形</a><time datetime="2018-03-26T07:36:06.000Z" title="Created 2018-03-26 15:36:06">2018-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/ar-rubik/" title="ARKit下的魔方">ARKit下的魔方</a><time datetime="2017-12-02T08:41:23.000Z" title="Created 2017-12-02 16:41:23">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/job-summary/" title="一次秋招">一次秋招</a><time datetime="2017-12-02T08:17:58.000Z" title="Created 2017-12-02 16:17:58">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/24/calayer-time-coordinate-system/" title="CALayer的时间坐标系">CALayer的时间坐标系</a><time datetime="2017-07-24T02:36:58.000Z" title="Created 2017-07-24 10:36:58">2017-07-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/14/association-object-and-retain-count/" title="OC关联对象及其内存管理">OC关联对象及其内存管理</a><time datetime="2017-07-14T08:29:19.000Z" title="Created 2017-07-14 16:29:19">2017-07-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By John Doe</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

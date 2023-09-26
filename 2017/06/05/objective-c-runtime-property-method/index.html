@@ -1,0 +1,257 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Objective-C runtime - 属性与方法 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言系列第二篇：深入分析OC中的属性与方法的本质。通过上一篇Objective-C runtime - 类和对象，我们了解了objc_class中的 isa 成员变量；在这篇文章中，则会详细介绍objc_class的另一成员变量 bits。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Objective-C runtime - 属性与方法">
+<meta property="og:url" content="http://example.com/2017/06/05/objective-c-runtime-property-method/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言系列第二篇：深入分析OC中的属性与方法的本质。通过上一篇Objective-C runtime - 类和对象，我们了解了objc_class中的 isa 成员变量；在这篇文章中，则会详细介绍objc_class的另一成员变量 bits。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2017-06-05T08:03:20.000Z">
+<meta property="article:modified_time" content="2017-07-31T03:11:21.000Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2017/06/05/objective-c-runtime-property-method/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Objective-C runtime - 属性与方法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2017-07-31 11:11:21'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Hexo"><span class="site-name">Hexo</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Objective-C runtime - 属性与方法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2017-06-05T08:03:20.000Z" title="Created 2017-06-05 16:03:20">2017-06-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2017-07-31T03:11:21.000Z" title="Updated 2017-07-31 11:11:21">2017-07-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/iOS/">iOS</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Objective-C runtime - 属性与方法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>系列第二篇：深入分析OC中的属性与方法的本质。通过上一篇<a target="_blank" rel="noopener" href="http://vanney9.com/2017/06/03/objective-c-runtime-class-object/">Objective-C runtime - 类和对象</a>，我们了解了objc_class中的 <strong>isa</strong> 成员变量；在这篇文章中，则会详细介绍objc_class的另一成员变量 <strong>bits</strong>。</p>
+<span id="more"></span>
+
+<h2 id="bits"><a href="#bits" class="headerlink" title="bits"></a>bits</h2><p>先回忆一下objc_class的结构</p>
+<p><img src="/lionheart/1706/bits.png" alt="objc_class"></p>
+<p><code>bits</code> 用来存储类的属性，方法，协议等信息。它是一个<code>class_data_bits_t</code>类型</p>
+<h3 id="class-data-bits-t"><a href="#class-data-bits-t" class="headerlink" title="class_data_bits_t"></a>class_data_bits_t</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">class_data_bits_t</span> &#123;</span><br><span class="line">    <span class="type">uintptr_t</span> bits;</span><br><span class="line">    <span class="comment">// method here</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个结构体只有一个64bit的成员变量<code>bits</code>，先来看看这64bit分别存放的什么信息：</p>
+<p><img src="/lionheart/1706/class_bits.png" alt="class_data_bits_t"></p>
+<p><code>is_swift</code> : 第一个bit，判断类是否是Swift类</p>
+<p><code>has_default_rr</code> ：第二个bit，判断当前类或者父类含有默认的<code>retain/release/autorelease/retainCount/_tryRetain/_isDeallocating/retainWeakReference/allowsWeakReference</code> 方法</p>
+<p><code>require_raw_isa</code> ：第三个bit， 判断当前类的实例是否需要raw_isa (不是很懂)</p>
+<p><code>data</code> ：第4-48位，存放一个指向class_rw_t结构体的指针，该结构体包含了该类的属性，方法，协议等信息。至于为何只用44bit来存放地址，可以参考<a target="_blank" rel="noopener" href="http://vanney9.com/2017/06/03/objective-c-runtime-class-object/">Objective-C runtime - 类和对象</a></p>
+<h3 id="class-rw-t-和-class-ro-t"><a href="#class-rw-t-和-class-ro-t" class="headerlink" title="class_rw_t 和 class_ro_t"></a>class_rw_t 和 class_ro_t</h3><p>先来看看两个结构体的内部成员变量</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">class_rw_t</span> &#123;</span><br><span class="line">    <span class="type">uint32_t</span> flags;</span><br><span class="line">    <span class="type">uint32_t</span> version;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">class_ro_t</span> *ro;</span><br><span class="line"></span><br><span class="line">    <span class="type">method_array_t</span> methods;</span><br><span class="line">    <span class="type">property_array_t</span> properties;</span><br><span class="line">    <span class="type">protocol_array_t</span> protocols;</span><br><span class="line"></span><br><span class="line">    Class firstSubclass;</span><br><span class="line">    Class nextSiblingClass;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">class_ro_t</span> &#123;</span><br><span class="line">    <span class="type">uint32_t</span> flags;</span><br><span class="line">    <span class="type">uint32_t</span> instanceStart;</span><br><span class="line">    <span class="type">uint32_t</span> instanceSize;</span><br><span class="line">    <span class="type">uint32_t</span> reserved;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">uint8_t</span> * ivarLayout;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> * name;</span><br><span class="line">    <span class="type">method_list_t</span> * baseMethodList;</span><br><span class="line">    <span class="type">protocol_list_t</span> * baseProtocols;</span><br><span class="line">    <span class="type">const</span> <span class="type">ivar_list_t</span> * ivars;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">uint8_t</span> * weakIvarLayout;</span><br><span class="line">    <span class="type">property_list_t</span> *baseProperties;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，class_rw_t结构体内有一个指向class_ro_t结构体的指针。</p>
+<p>每个类都对应有一个class_ro_t结构体和一个class_rw_t结构体。在编译期间，class_ro_t结构体就已经确定，objc_class中的bits的data部分存放着该结构体的地址。在runtime运行之后，具体说来是在运行runtime的<code>realizeClass</code> 方法时，会生成class_rw_t结构体，该结构体包含了class_ro_t，并且更新data部分，换成class_rw_t结构体的地址。</p>
+<p>用两张图来说明这个过程：</p>
+<p>类的<code>realizeClass</code>运行之前：</p>
+<p><img src="/lionheart/1706/before_bits.png" alt="before runtime"></p>
+<p>类的<code>realizeClass</code>运行之后：</p>
+<p><img src="/lionheart/1706/after_bits.png" alt="before runtime"></p>
+<p>细看两个结构体的成员变量会发现很多相同的地方，他们都存放着当前类的属性、实例变量、方法、协议等等。区别在于：class_ro_t存放的是编译期间就确定的；而class_rw_t是在runtime时才确定，它会先将class_ro_t的内容拷贝过去，然后再将当前类的分类的这些属性、方法等拷贝到其中。所以可以说class_rw_t是class_ro_t的超集，<strong>当然实际访问类的方法、属性等也都是访问的class_rw_t中的内容</strong></p>
+<h2 id="属性和实例变量"><a href="#属性和实例变量" class="headerlink" title="属性和实例变量"></a>属性和实例变量</h2><p>现在知道了属性(<strong>property</strong>)存放在class_rw_t中，实例变量(<strong>ivar</strong>)存放在class_ro_t中。下面来看看他们的真实面目。</p>
+<p>先看一段代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@interface TestOBJ : NSObject &#123;</span><br><span class="line">  	NSInteger ivarInt;</span><br><span class="line">&#125;</span><br><span class="line">@property (nonatomic, assign) NSInteger propertyInt;</span><br></pre></td></tr></table></figure>
+
+<p>这个TestOBJ类有一个实例变量<code>ivarInt</code> 和 一个属性<code>propertyInt</code> 。使用lldb打印出class_ro_t的ivars：</p>
+<p><img src="/lionheart/1706/ivars.png" alt="ivars list"></p>
+<p>再使用lldb打印出class_ro_t的baseProperties:</p>
+<p><img src="/lionheart/1706/properties.png" alt="properties list"></p>
+<p>顺便也把class_ro_t的baseMethodList打印出来吧：</p>
+<p><img src="/lionheart/1706/methods.png" alt="methods list"></p>
+<p>从上面三张lldb的结果可以看出：<strong>TestOBJ类含有2个实例变量，1个属性和2个方法</strong>。但是代码里只有一个实例变量一个属性和0个方法。原因就是声明一个属性的同时，会同时生成一个实例变量和该实例变量的存取方法。</p>
+<p>以<code>propertyInt</code>为例：生成了 <code>_propertyInt</code> 实例变量和 <code>- (NSInteger)propertyInt;</code> 以及 <code>- (void)setPropertyInt:(NSInteger)propertyInt</code> 两个存取方法</p>
+<h3 id="property-t"><a href="#property-t" class="headerlink" title="property_t"></a>property_t</h3><p><em>class_ro_t</em>中<em>的baseProperties</em>是一个存放<em>property_t</em>结构体的list。<strong>property_t</strong>结构体用来存放属性的信息</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">property_t</span> &#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> *name;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> *attributes;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>该结构体保存了属性的名字和type encoding。</p>
+<h3 id="ivar-t"><a href="#ivar-t" class="headerlink" title="ivar_t"></a>ivar_t</h3><p>其实到这里你就会发现<em>property_t</em>结构体中存放的信息没啥用，真正有用的还是存放实例变量的结构体<strong>ivar_t</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">ivar_t</span> &#123;</span><br><span class="line">    <span class="type">int32_t</span> *offset;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> *name;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> *type;</span><br><span class="line">    <span class="comment">// alignment is sometimes -1; use alignment() instead</span></span><br><span class="line">    <span class="type">uint32_t</span> alignment_raw;</span><br><span class="line">    <span class="type">uint32_t</span> size;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">uint32_t</span> <span class="title">alignment</span><span class="params">()</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (alignment_raw == ~(<span class="type">uint32_t</span>)<span class="number">0</span>) <span class="keyword">return</span> <span class="number">1U</span> &lt;&lt; WORD_SHIFT;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span> &lt;&lt; alignment_raw;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>以<em>TestOBJ</em>中的 <strong>ivarInt</strong> 实例变量为例来说明，先使用lldb打印该实例变量的详细信息：</p>
+<p><img src="/lionheart/1706/ivar_t.png" alt="ivar_t"></p>
+<p><code>name</code> : <strong>实例变量的名字</strong> -&gt; ivarInt</p>
+<p><code>type</code> : <strong>实例变量的类型，type encoding</strong> -&gt; q 表示int类型 </p>
+<p><code>size</code> : <strong>实例变量的内存大小</strong> -&gt; 8 因为NSInteger类型占8个字节</p>
+<p><code>offset</code> : <strong>实例变量距离对象的首地址的偏移量</strong> -&gt; offset是一个指向int的指针，取出offset指向的int，发现偏移量为8</p>
+<p>上图还打印了class_ro_t，里面有2个变量需要注意一下：</p>
+<p><code>instanceStart</code> : <strong>对象开始存放实例变量的地址的偏移量</strong> -&gt; 8 因为对象的前8字节存放的是<code>isa_t</code>结构体</p>
+<p><code>instanceSize</code> : <strong>对象的大小</strong> -&gt; 24 &#x3D; isa_t + ivarInt + _propertyInt</p>
+<p><strong>所以：获取TestOBJ实例a的ivarInt的过程：取出 对象首地址加ivarInt的偏移量 的内存空间的int</strong></p>
+<p><img src="/lionheart/1706/get_ivar.png" alt="get ivar"></p>
+<h3 id="类继承关系中的对象的内存空间结构"><a href="#类继承关系中的对象的内存空间结构" class="headerlink" title="类继承关系中的对象的内存空间结构"></a>类继承关系中的对象的内存空间结构</h3><p>先看看没有继承关系的类 TestOBJ：</p>
+<p><img src="/lionheart/1706/testObj.png" alt="testObj"></p>
+<p>再看看继承TestOBJ的Son类：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@interface Son : TestOBJ</span><br><span class="line">@property (nonatomic, strong) NSString *sonStr</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<p>它的对象既存储了TestOBJ的实例变量，也存放了Son自己的实例变量</p>
+<p><img src="/lionheart/1706/son.png" alt="son"></p>
+<p>使用lldb打印son的class_ro_t:</p>
+<p><img src="/lionheart/1706/super.png" alt="super"></p>
+<p>可以发现Son类的 <code>instanceStart</code> 为24，因为Son的实例的前8字节存放isa，后面16字节存放父类的ivarInt和_propertyInt两个NSInteger型实例变量。Son类的 <code>instanceSize</code>为32字节，因为他还有自己的一个指向NSString结构体的指针 <strong>_sonStr</strong> ，这个指针也占8字节。</p>
+<p>另外<strong>_sonStr</strong> 这一个ivar_t的offset是24，也符合分析</p>
+<p>注意Son类的class_ro_t在<code>realizeClass</code>方法完成后就确定下来了</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>编译结束之后，类的方法就已经存储在class_ro_t里面的baseMethodList变量中了；当运行完runtime的<code>realizeClass</code>方法之后，会将baseMethodList拷贝到class_rw_t的<code>methods</code>变量中，并将各种分类的方法拷贝到<code>methods</code>中。<strong>这样类的所有方法就都聚集在class_rw_t的methods变量中了。</strong></p>
+<p>使用lldb打印出class_rw_t中的methods:</p>
+<p><img src="/lionheart/1706/realmethods.png" alt="methods"></p>
+<p>可以看到这里的<code>methods</code>和上面打印出来的class_ro_t中的<code>baseMethodList</code>一模一样。这是因为这个类没有分类，只是简单的将baseMethodList的内容拷贝过去。</p>
+<h3 id="method-t"><a href="#method-t" class="headerlink" title="method_t"></a>method_t</h3><p>runtime使用<code>method_t</code>结构体来存放方法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">method_t</span> &#123;</span><br><span class="line">    SEL name;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> *types;</span><br><span class="line">    IMP imp;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">SortBySELAddress</span> :</span><br><span class="line">        <span class="keyword">public</span> std::binary_function&lt;<span class="type">const</span> <span class="type">method_t</span>&amp;,</span><br><span class="line">                                    <span class="type">const</span> <span class="type">method_t</span>&amp;, <span class="type">bool</span>&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="type">bool</span> <span class="title">operator</span><span class="params">()</span> <span class="params">(<span class="type">const</span> <span class="type">method_t</span>&amp; lhs,</span></span></span><br><span class="line"><span class="params"><span class="function">                         <span class="type">const</span> <span class="type">method_t</span>&amp; rhs)</span></span></span><br><span class="line"><span class="function">        </span>&#123; <span class="keyword">return</span> lhs.name &lt; rhs.name; &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>name</code> : 方法名，类型为<code>SEL</code>选择子，可以简单地理解成方法的id，字符串类型</p>
+<p><code>types</code> : 方法的type encoding</p>
+<p><code>imp</code> : 方法的实现，类型为<code>IMP</code>。IMP是函数指针，指向方法的实现，也就是指向实现该方法的代码区</p>
+<h2 id="底层存储方式"><a href="#底层存储方式" class="headerlink" title="底层存储方式"></a>底层存储方式</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">class_rw_t</span> &#123;</span><br><span class="line">    <span class="type">uint32_t</span> flags;</span><br><span class="line">    <span class="type">uint32_t</span> version;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">class_ro_t</span> *ro;</span><br><span class="line"></span><br><span class="line">    <span class="type">method_array_t</span> methods;</span><br><span class="line">    <span class="type">property_array_t</span> properties;</span><br><span class="line">    <span class="type">protocol_array_t</span> protocols;</span><br><span class="line"></span><br><span class="line">    Class firstSubclass;</span><br><span class="line">    Class nextSiblingClass;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">class_ro_t</span> &#123;</span><br><span class="line">    <span class="type">uint32_t</span> flags;</span><br><span class="line">    <span class="type">uint32_t</span> instanceStart;</span><br><span class="line">    <span class="type">uint32_t</span> instanceSize;</span><br><span class="line">    <span class="type">uint32_t</span> reserved;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">uint8_t</span> * ivarLayout;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> * name;</span><br><span class="line">    <span class="type">method_list_t</span> * baseMethodList;</span><br><span class="line">    <span class="type">protocol_list_t</span> * baseProtocols;</span><br><span class="line">    <span class="type">const</span> <span class="type">ivar_list_t</span> * ivars;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">uint8_t</span> * weakIvarLayout;</span><br><span class="line">    <span class="type">property_list_t</span> *baseProperties;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>class_ro_t里面的<code>method_list_t</code> 和 <code>ivar_list_t</code> 都是 <code>entsize_list_tt</code> 的结构体；class_rw_t里面的 <code>method_array_t</code> 和 <code>property_array_t</code> 都是 <code>list_array_tt</code> 的结构体。来看看这个底层存储方式</p>
+<h3 id="entsize-list-tt"><a href="#entsize-list-tt" class="headerlink" title="entsize_list_tt"></a>entsize_list_tt</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Element, <span class="keyword">typename</span> List, <span class="type">uint32_t</span> FlagMask&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">entsize_list_tt</span> &#123;</span><br><span class="line">    <span class="type">uint32_t</span> entsizeAndFlags;</span><br><span class="line">    <span class="type">uint32_t</span> count;</span><br><span class="line">    Element first;</span><br><span class="line">  	<span class="comment">// other code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个存储Element的序列，可以使用<code>get(index)</code>方法获取特定index的Element；它也提供了iterator遍历器，具体实现细节可以查看代码。<code>objc-runtime-new.h</code></p>
+<h3 id="list-array-tt"><a href="#list-array-tt" class="headerlink" title="list_array_tt"></a>list_array_tt</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Element, <span class="keyword">typename</span> List&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">list_array_tt</span> &#123;</span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">union</span> &#123;</span><br><span class="line">        List* list;</span><br><span class="line">        <span class="type">uintptr_t</span> arrayAndFlag;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单来说是一个存放<code>entsize_list_tt</code>的数组。也提供了iterator遍历器。也定义在<code>objc-runtime-new.h</code></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实这篇文章就是👇两篇参考文章的一个合体。总结来说：objc_class结构体中的bits成员变量存放着类的属性、方法、协议等信息。这一些信息，有的是在编译期间就确定的；另外一些则是在运行runtime的<code>realizeClass</code>的方法时添加上去的。</p>
+<p>那么当runtime将类初始化之后，所有的类所需的信息都存放在了<strong>class_rw_t</strong>结构体中</p>
+<h2 id="fixme"><a href="#fixme" class="headerlink" title="fixme"></a>fixme</h2><p><strong>在这里做个更正：</strong>在<code>realizeClass</code>方法中，并不是将<code>class_ro_t</code>中的属性、方法的list拷贝到<code>class_rw_t</code>中；而只是通过<code>class_rw_t</code>来操作<code>class_ro_t</code>中的各种list。<code>class_rw_t</code>中的<code>list_array_tt</code> 有指向 <code>class_ro_t</code>中的 <code>entsize_list_tt</code> 的指针。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://www.jianshu.com/p/89ac27684693">Runtime源码 —— property和ivar</a></li>
+<li><a target="_blank" rel="noopener" href="http://draveness.me/method-struct.html">深入解析 ObjC 中方法的结构</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2017/06/05/objective-c-runtime-property-method/">http://example.com/2017/06/05/objective-c-runtime-property-method/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2017/06/07/objective-c-runtime-category/" title="Objective-C runtime - 分类与关联对象"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Objective-C runtime - 分类与关联对象</div></div></a></div><div class="next-post pull-right"><a href="/2017/06/03/objective-c-runtime-class-object/" title="Objective-C runtime - 类和对象"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Objective-C runtime - 类和对象</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">John Doe</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bits"><span class="toc-number">2.</span> <span class="toc-text">bits</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#class-data-bits-t"><span class="toc-number">2.1.</span> <span class="toc-text">class_data_bits_t</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#class-rw-t-%E5%92%8C-class-ro-t"><span class="toc-number">2.2.</span> <span class="toc-text">class_rw_t 和 class_ro_t</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E5%92%8C%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F"><span class="toc-number">3.</span> <span class="toc-text">属性和实例变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#property-t"><span class="toc-number">3.1.</span> <span class="toc-text">property_t</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ivar-t"><span class="toc-number">3.2.</span> <span class="toc-text">ivar_t</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB%E4%B8%AD%E7%9A%84%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%86%85%E5%AD%98%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84"><span class="toc-number">3.3.</span> <span class="toc-text">类继承关系中的对象的内存空间结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#method-t"><span class="toc-number">4.1.</span> <span class="toc-text">method_t</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%95%E5%B1%82%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">底层存储方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#entsize-list-tt"><span class="toc-number">5.1.</span> <span class="toc-text">entsize_list_tt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#list-array-tt"><span class="toc-number">5.2.</span> <span class="toc-text">list_array_tt</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fixme"><span class="toc-number">7.</span> <span class="toc-text">fixme</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2018/03/26/OpenGL-ES-concave-polygon-iOS/" title="iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形">iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形</a><time datetime="2018-03-26T07:36:06.000Z" title="Created 2018-03-26 15:36:06">2018-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/ar-rubik/" title="ARKit下的魔方">ARKit下的魔方</a><time datetime="2017-12-02T08:41:23.000Z" title="Created 2017-12-02 16:41:23">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/job-summary/" title="一次秋招">一次秋招</a><time datetime="2017-12-02T08:17:58.000Z" title="Created 2017-12-02 16:17:58">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/24/calayer-time-coordinate-system/" title="CALayer的时间坐标系">CALayer的时间坐标系</a><time datetime="2017-07-24T02:36:58.000Z" title="Created 2017-07-24 10:36:58">2017-07-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/14/association-object-and-retain-count/" title="OC关联对象及其内存管理">OC关联对象及其内存管理</a><time datetime="2017-07-14T08:29:19.000Z" title="Created 2017-07-14 16:29:19">2017-07-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By John Doe</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

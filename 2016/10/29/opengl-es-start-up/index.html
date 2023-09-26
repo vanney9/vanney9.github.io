@@ -1,0 +1,201 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>OpenGL ES 入门 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言最近在学习OpenGL ES，跟着教程做了一个Demo，在模拟器下的运行效果如下：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenGL ES 入门">
+<meta property="og:url" content="http://example.com/2016/10/29/opengl-es-start-up/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言最近在学习OpenGL ES，跟着教程做了一个Demo，在模拟器下的运行效果如下：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2016-10-29T11:41:29.000Z">
+<meta property="article:modified_time" content="2017-07-17T09:00:11.000Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2016/10/29/opengl-es-start-up/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'OpenGL ES 入门',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2017-07-17 17:00:11'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Hexo"><span class="site-name">Hexo</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">OpenGL ES 入门</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2016-10-29T11:41:29.000Z" title="Created 2016-10-29 19:41:29">2016-10-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2017-07-17T09:00:11.000Z" title="Updated 2017-07-17 17:00:11">2017-07-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/iOS/">iOS</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="OpenGL ES 入门"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在学习OpenGL ES，跟着教程做了一个Demo，在模拟器下的运行效果如下：</p>
+<p><img src="/lionheart/1610/openglesstartup.gif" alt="demo"></p>
+<span id="more"></span>
+
+<p>Demo代码在<a target="_blank" rel="noopener" href="https://github.com/vanney9/blogDemo/tree/master/blogOpenGLESStartup">这里</a></p>
+<h2 id="OpenGL和OpenGL-ES"><a href="#OpenGL和OpenGL-ES" class="headerlink" title="OpenGL和OpenGL ES"></a>OpenGL和OpenGL ES</h2><p>OpenGL ES是OpenGL的子集，它主要运行在手机上。推荐一个超棒的OpenGL入门教程：<a target="_blank" rel="noopener" href="http://learnopengl.com/">Learn OpenGL</a> ；当然也有热心的国人将他翻译过来了，在 <a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/">这里</a>。通过这些教程的学习，我也算是入了OpenGL的门。</p>
+<p>关于将OpenGL运用于iOS上面，也就是使用OpenGL ES，可以看看Apple的官方文档 <a target="_blank" rel="noopener" href="https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793-CH1-SW1">OpenGL ES Programming Guide for iOS</a></p>
+<h2 id="Demo实现"><a href="#Demo实现" class="headerlink" title="Demo实现"></a>Demo实现</h2><p>demo的实现可以分成2个部分：</p>
+<ol>
+<li>运用OpenGL ES显示静态的场景</li>
+<li>添加手势操作，让场景动起来</li>
+</ol>
+<h3 id="OpenGL-ES-渲染"><a href="#OpenGL-ES-渲染" class="headerlink" title="OpenGL ES 渲染"></a>OpenGL ES 渲染</h3><p>关于在iOS上使用OpenGL ES渲染，可以借助iOS的GLKit框架。他大大简化了OpenGL ES的使用难度。而渲染的主要步骤分成以下几步：</p>
+<h4 id="使用GLKit初始化"><a href="#使用GLKit初始化" class="headerlink" title="使用GLKit初始化"></a>使用GLKit初始化</h4><p>创建GLKViewController和GLKView，OpenGL ES渲染的结果将会显示在GLKView的layer上面。而将GLKViewController设置成GLKView的delegate，他会控制整个的渲染流程，比如每秒渲染多少次，何时开始渲染等等</p>
+<h4 id="设置GLKView的context属性"><a href="#设置GLKView的context属性" class="headerlink" title="设置GLKView的context属性"></a>设置GLKView的context属性</h4><p>OpenGL ES渲染的时候需要一个上下文，也就是GLKView的context，对于他的设置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">view.context = [[EAGLContext alloc]initWithAPI:kEAGLRenderingAPIOpenGLES3];</span><br><span class="line">[EAGLContext setCurrentContext:view.context];</span><br></pre></td></tr></table></figure>
+
+<p>这里创建context是使用OpenGL ES的基石，就相当于你使用GLFW和GLEW对整个环境进行初始化，定义viewport之类的</p>
+<h4 id="设置OpenGL-ES"><a href="#设置OpenGL-ES" class="headerlink" title="设置OpenGL ES"></a>设置OpenGL ES</h4><p>设置OpenGL ES的代码和OpenGL的基本相似。</p>
+<h5 id="创建shader程序"><a href="#创建shader程序" class="headerlink" title="创建shader程序"></a>创建shader程序</h5><p>也就是对你写的glsl文件进行编译链接，最终持有一个Shader programe。代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">// load glsl file</span><br><span class="line">NSString *vertexFile = [[NSBundle mainBundle] pathForResource:vertexPath ofType:@&quot;glsl&quot;];</span><br><span class="line">NSString *fragmentFile = [[NSBundle mainBundle] pathForResource:fragmentPath ofType:@&quot;glsl&quot;];</span><br><span class="line"></span><br><span class="line">NSError *error;</span><br><span class="line"></span><br><span class="line">NSString *vertexString = [NSString stringWithContentsOfFile:vertexFile encoding:NSUTF8StringEncoding error:&amp;error];</span><br><span class="line">if (!vertexString) &#123;</span><br><span class="line">  NSLog(@&quot;vanney code log : error loading vertex shader : %@&quot;, error.localizedDescription);</span><br><span class="line">  exit(1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">NSString *fragmentString = [NSString stringWithContentsOfFile:fragmentFile encoding:NSUTF8StringEncoding error:&amp;error];</span><br><span class="line">if (!fragmentString) &#123;</span><br><span class="line">  NSLog(@&quot;vanney code log : error loading fragment shader : %@&quot;, error.localizedDescription);</span><br><span class="line">  exit(1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// compiler</span><br><span class="line">GLuint vertexShader, fragmentShader;</span><br><span class="line">GLint compilerSuccess, linkSuccess;</span><br><span class="line">GLchar messages[512];</span><br><span class="line"></span><br><span class="line">vertexShader = glCreateShader(GL_VERTEX_SHADER);</span><br><span class="line">const GLchar *vertexStringUTF8 = [vertexString UTF8String];</span><br><span class="line">glShaderSource(vertexShader, 1, &amp;vertexStringUTF8, NULL);</span><br><span class="line">glCompileShader(vertexShader);</span><br><span class="line">glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &amp;compilerSuccess);</span><br><span class="line">if (compilerSuccess == GL_FALSE) &#123;</span><br><span class="line">  glGetShaderInfoLog(vertexShader, sizeof(messages), NULL, messages);</span><br><span class="line">  NSLog(@&quot;vanney code log : compile vertex shader error : %@&quot;, [NSString 	stringWithUTF8String:messages]);</span><br><span class="line">  exit(1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);</span><br><span class="line">const GLchar *fragmentStringUTF8 = [fragmentString UTF8String];</span><br><span class="line">glShaderSource(fragmentShader, 1, &amp;fragmentStringUTF8, NULL);</span><br><span class="line">glCompileShader(fragmentShader);</span><br><span class="line">glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &amp;compilerSuccess);</span><br><span class="line">if (compilerSuccess == GL_FALSE) &#123;</span><br><span class="line">  glGetShaderInfoLog(fragmentShader, sizeof(messages), NULL, messages);</span><br><span class="line">  NSLog(@&quot;vanney code log : compile fragment shader error : %@&quot;, [NSString stringWithUTF8String:messages]);</span><br><span class="line">  exit(1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// link</span><br><span class="line">self.program = glCreateProgram();</span><br><span class="line">glAttachShader(self.program, vertexShader);</span><br><span class="line">glAttachShader(self.program, fragmentShader);</span><br><span class="line">glLinkProgram(self.program);</span><br><span class="line">glGetProgramiv(self.program, GL_LINK_STATUS, &amp;linkSuccess);</span><br><span class="line">if (linkSuccess == GL_FALSE) &#123;</span><br><span class="line">  glGetProgramInfoLog(self.program, sizeof(messages), NULL, messages);</span><br><span class="line">  NSLog(@&quot;vanney code log : link shader error : %@&quot;, [NSString stringWithUTF8String:messages]);</span><br><span class="line">  exit(1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">glDeleteShader(vertexShader);</span><br><span class="line">glDeleteShader(fragmentShader);</span><br></pre></td></tr></table></figure>
+<h5 id="设置各种和顶点相关的缓冲"><a href="#设置各种和顶点相关的缓冲" class="headerlink" title="设置各种和顶点相关的缓冲"></a>设置各种和顶点相关的缓冲</h5><p>在缓冲中写入顶点数据，以及定义好GPU如何对这些顶点数据进行读取等等，代码如下：</p>
+   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// initialize vertex data</span><br><span class="line">glGenVertexArrays(1, &amp;VAO);</span><br><span class="line">glGenBuffers(1, &amp;VBO);</span><br><span class="line">//glGenBuffers(1, &amp;VEO);</span><br><span class="line"></span><br><span class="line">glBindVertexArray(VAO);</span><br><span class="line">glBindBuffer(GL_ARRAY_BUFFER, VBO);</span><br><span class="line">glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);</span><br><span class="line">//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.VEO);</span><br><span class="line">//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);</span><br><span class="line">glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *) 0);</span><br><span class="line">glEnableVertexAttribArray(GLKVertexAttribPosition);</span><br><span class="line">glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *) (3 * sizeof(GLfloat)));</span><br><span class="line">glEnableVertexAttribArray(GLKVertexAttribTexCoord0);</span><br><span class="line">glBindVertexArray(0);</span><br></pre></td></tr></table></figure>
+
+<h5 id="设置各种纹理缓冲"><a href="#设置各种纹理缓冲" class="headerlink" title="设置各种纹理缓冲"></a>设置各种纹理缓冲</h5><p>注意这里要使用 <code>GLKit的GLKTextureLoader</code> 和 <code>GLKTextureInfo</code> ，代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NSError *error;</span><br><span class="line">NSString *containerPath = [[NSBundle mainBundle] pathForResource:@&quot;container&quot; ofType:@&quot;jpg&quot;];</span><br><span class="line">self.containerTexture = [GLKTextureLoader textureWithContentsOfFile:containerPath options:nil error:&amp;error];</span><br><span class="line">glActiveTexture(GL_TEXTURE0);</span><br><span class="line">glBindTexture(self.containerTexture.target, self.containerTexture.name);</span><br></pre></td></tr></table></figure>
+<h5 id="开始渲染"><a href="#开始渲染" class="headerlink" title="开始渲染"></a>开始渲染</h5><p>只需实现GLKView的delegate <code>(void)glkView:(GLKView *)view drawInRect:(CGRect)rect;</code> 就可：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect &#123;</span><br><span class="line">  glEnable(GL_DEPTH_TEST);</span><br><span class="line">  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);</span><br><span class="line">  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);</span><br><span class="line">  //glClear(GL_COLOR_BUFFER_BIT);</span><br><span class="line"></span><br><span class="line">  [self.shader use];</span><br><span class="line"></span><br><span class="line">  GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(M_PI_4, self.view.bounds.size.width / self.view.bounds.size.height, 0.1f, 100.0f);</span><br><span class="line">  glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;projection&quot;), 1, GL_FALSE, projectionMatrix.m);</span><br><span class="line">  GLKMatrix4 viewMatrix = GLKMatrix4MakeLookAt(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);</span><br><span class="line">  glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;view&quot;), 1, GL_FALSE, viewMatrix.m);</span><br><span class="line"></span><br><span class="line">  // bind texture</span><br><span class="line">  glActiveTexture(GL_TEXTURE0);</span><br><span class="line">  glBindTexture(self.containerTexture.target, self.containerTexture.name);</span><br><span class="line">  glUniform1i(glGetUniformLocation(self.shader.program, &quot;ourTexture1&quot;), 0);</span><br><span class="line">  glActiveTexture(GL_TEXTURE1);</span><br><span class="line">  glBindTexture(self.faceTexture.target, self.faceTexture.name);</span><br><span class="line">  glUniform1i(glGetUniformLocation(self.shader.program, &quot;ourTexture2&quot;), 1);</span><br><span class="line"></span><br><span class="line">  glBindVertexArray(VAO);</span><br><span class="line">  GLKMatrix4 transModel = [self.transformation getModelViewMatrix];</span><br><span class="line">  for (int i = 0; i &lt; 10; ++i) &#123;</span><br><span class="line">    //GLKMatrix4 modelMatrix = GLKMatrix4TranslateWithVector3(GLKMatrix4Identity, cubePositions[i]);</span><br><span class="line">    GLKMatrix4 modelMatrix = GLKMatrix4TranslateWithVector3(transModel, cubePositions[i]);</span><br><span class="line">    GLfloat radian = (GLfloat) (20.0f * i / 180 * M_PI);</span><br><span class="line">    modelMatrix = GLKMatrix4RotateWithVector3(modelMatrix, radian, GLKVector3Make(1.0f, 0.3f, 0.5f));</span><br><span class="line">    glUniformMatrix4fv(glGetUniformLocation(self.shader.program, &quot;model&quot;), 1, GL_FALSE, modelMatrix.m);</span><br><span class="line">    glDrawArrays(GL_TRIANGLES, 0, 36);</span><br><span class="line">  &#125;</span><br><span class="line">  glBindVertexArray(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="添加手势"><a href="#添加手势" class="headerlink" title="添加手势"></a>添加手势</h3><p>参看这篇教程 <a target="_blank" rel="noopener" href="https://www.raywenderlich.com/50398/opengl-es-transformations-gestures">OpenGL ES Transformations with Gestures</a></p>
+<p>他的中心思想就是：向整个GLKView添加各种手势，通过手势传递的信息来调整物体的model的matrix，也就是从局部坐标到世界坐标转换的matrix。</p>
+<p>具体的代码可以参考Github上的Transformation类</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://learnopengl.com/">Learn OpenGL</a></li>
+<li><a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/">Learn OpenGL中文翻译</a></li>
+<li>[OpenGL ES苹果官方文档](OpenGL ES Programming Guide for iOS)</li>
+<li><a target="_blank" rel="noopener" href="https://www.raywenderlich.com/50398/opengl-es-transformations-gestures">OpenGL ES Transformations with Gestures</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2016/10/29/opengl-es-start-up/">http://example.com/2016/10/29/opengl-es-start-up/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2017/03/21/effective-objective-c-reading-note-one/" title="Effective Objective-C - 接口与API设计"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Effective Objective-C - 接口与API设计</div></div></a></div><div class="next-post pull-right"><a href="/2016/10/29/aws-minered-virus/" title="记一次aws-ec2杀毒经历"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">记一次aws-ec2杀毒经历</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">John Doe</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenGL%E5%92%8COpenGL-ES"><span class="toc-number">2.</span> <span class="toc-text">OpenGL和OpenGL ES</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Demo%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">Demo实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenGL-ES-%E6%B8%B2%E6%9F%93"><span class="toc-number">3.1.</span> <span class="toc-text">OpenGL ES 渲染</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8GLKit%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">3.1.1.</span> <span class="toc-text">使用GLKit初始化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEGLKView%E7%9A%84context%E5%B1%9E%E6%80%A7"><span class="toc-number">3.1.2.</span> <span class="toc-text">设置GLKView的context属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEOpenGL-ES"><span class="toc-number">3.1.3.</span> <span class="toc-text">设置OpenGL ES</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAshader%E7%A8%8B%E5%BA%8F"><span class="toc-number">3.1.3.1.</span> <span class="toc-text">创建shader程序</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%90%84%E7%A7%8D%E5%92%8C%E9%A1%B6%E7%82%B9%E7%9B%B8%E5%85%B3%E7%9A%84%E7%BC%93%E5%86%B2"><span class="toc-number">3.1.3.2.</span> <span class="toc-text">设置各种和顶点相关的缓冲</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%90%84%E7%A7%8D%E7%BA%B9%E7%90%86%E7%BC%93%E5%86%B2"><span class="toc-number">3.1.3.3.</span> <span class="toc-text">设置各种纹理缓冲</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E6%B8%B2%E6%9F%93"><span class="toc-number">3.1.3.4.</span> <span class="toc-text">开始渲染</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E6%89%8B%E5%8A%BF"><span class="toc-number">3.2.</span> <span class="toc-text">添加手势</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2018/03/26/OpenGL-ES-concave-polygon-iOS/" title="iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形">iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形</a><time datetime="2018-03-26T07:36:06.000Z" title="Created 2018-03-26 15:36:06">2018-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/ar-rubik/" title="ARKit下的魔方">ARKit下的魔方</a><time datetime="2017-12-02T08:41:23.000Z" title="Created 2017-12-02 16:41:23">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/job-summary/" title="一次秋招">一次秋招</a><time datetime="2017-12-02T08:17:58.000Z" title="Created 2017-12-02 16:17:58">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/24/calayer-time-coordinate-system/" title="CALayer的时间坐标系">CALayer的时间坐标系</a><time datetime="2017-07-24T02:36:58.000Z" title="Created 2017-07-24 10:36:58">2017-07-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/14/association-object-and-retain-count/" title="OC关联对象及其内存管理">OC关联对象及其内存管理</a><time datetime="2017-07-14T08:29:19.000Z" title="Created 2017-07-14 16:29:19">2017-07-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By John Doe</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

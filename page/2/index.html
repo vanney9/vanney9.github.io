@@ -1,0 +1,319 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/page/2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Hexo',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2023-09-26 20:25:54'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><hr class="custom-hr"/></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Hexo"><span class="site-name">Hexo</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Hexo</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/06/09/objective-c-runtime-api/" title="Objective-C runtime - API">Objective-C runtime - API</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-06-09T02:03:44.000Z" title="Created 2017-06-09 10:03:44">2017-06-09</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言系列第四篇：前面3篇，主要从对象，属性，方法等方面分析了runtime的源码。这一篇，来看看runtime提供的API。这些API可以用来操作类，对象，属性，方法等等。了解了这些底层的实现，API的工作只是对这些底层操作做了个封装。
+官方runtimeAPI文档
+
+
+概述runtime的API全部定义在runtime.h 头文件中，该API作用与以下几个方面：(API的开头都是以以下几个方面命名的)
+
+类
+实例对象
+实例变量
+关联对象
+消息发送
+方法
+选择子
+协议
+属性
+
+具体的可以参考官方文档
+参考
+官方runtimeAPI文档
+
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/06/08/objective-c-runtime-message/" title="Objective-C runtime - 消息">Objective-C runtime - 消息</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-06-08T06:46:01.000Z" title="Created 2017-06-08 14:46:01">2017-06-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言系列第三篇：来看看OC的消息。包括方法查找、缓存、方法决议以及消息转发
+
+
+objc_msgSend
+objc_msgSend 函数的原型为 void objc_msgSend(id self, SEL cmd, ...)
+
+给一个对象发送消息：
+1id returnValue = [someObject messageName:parameter];
+
+编译器会将该OC语句转换成objc_msgSend函数:
+1id returnValue = objc_msgSend(someObject, @selector(messageName:), parameter);
+
+其中的SEL选择子可以理解成方法的名字。
+从这里可以看出，给OC对象发送消息，其实就是调用objc_msgSend函数，所有这篇文章的重点也是该函数的具体实现过程
+OC方法本质12345- (void)hello:(int)a;// 该方法编译的时候会被转化成：void hello(id self, SEL _cmd, int a);
+
+当有一个对象调用该方法时：
+1234567[someObj hello:2]; ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/06/07/objective-c-runtime-category/" title="Objective-C runtime - 分类与关联对象">Objective-C runtime - 分类与关联对象</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-06-07T06:34:21.000Z" title="Created 2017-06-07 14:34:21">2017-06-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言系列第三篇：深入分析OC中的分类 - Category 以及在分类里面会涉及到了 关联对象
+
+
+Categorycategory_t先来看看category的真面目：category_t
+1234567891011121314151617struct category_t &#123;    const char *name;    classref_t cls;    struct method_list_t *instanceMethods;    struct method_list_t *classMethods;    struct protocol_list_t *protocols;    struct property_list_t *instanceProperties;    // Fields below this point are not always present on disk.    struct property_list_t *_classProperties;    method_list_t *methodsForMeta(bool isM ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/06/05/objective-c-runtime-property-method/" title="Objective-C runtime - 属性与方法">Objective-C runtime - 属性与方法</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-06-05T08:03:20.000Z" title="Created 2017-06-05 16:03:20">2017-06-05</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言系列第二篇：深入分析OC中的属性与方法的本质。通过上一篇Objective-C runtime - 类和对象，我们了解了objc_class中的 isa 成员变量；在这篇文章中，则会详细介绍objc_class的另一成员变量 bits。
+
+
+bits先回忆一下objc_class的结构
+
+bits 用来存储类的属性，方法，协议等信息。它是一个class_data_bits_t类型
+class_data_bits_t1234struct class_data_bits_t &#123;    uintptr_t bits;    // method here&#125;
+
+这个结构体只有一个64bit的成员变量bits，先来看看这64bit分别存放的什么信息：
+
+is_swift : 第一个bit，判断类是否是Swift类
+has_default_rr ：第二个bit，判断当前类或者父类含有默认的retain/release/autorelease/retainCount/_tryRetain/_isDeallocating/retainWeakReference/allowsWea ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/06/03/objective-c-runtime-class-object/" title="Objective-C runtime - 类和对象">Objective-C runtime - 类和对象</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-06-03T07:00:32.000Z" title="Created 2017-06-03 15:00:32">2017-06-03</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言OC是一门面向对象的语言，这篇文章先来看看OC的类和对象(Class &amp;&amp; Object)
+
+
+正文
+OC中的对象本质上是一个objc_object结构体
+OC中的类本质上是一个objc_class结构体
+id：指向objc_object的结构体指针
+Class：指向objc_class的结构体指针
+
+objc_class 和 objc_object先来看看两个结构体的结构（先只考虑结构体的成员变量，不考虑它的成员函数）
+12345678910111213struct objc_object &#123;private:    isa_t isa;public:	// function here&#125;struct objc_class : objc_object &#123;    Class superclass;    cache_t cache;             // formerly cache pointer and vtable    class_data_bits_t bits;  	// method here&#125;
+
+objc_ ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/06/03/objective-c-runtime-summarize/" title="Objective-C runtime - 系列开始">Objective-C runtime - 系列开始</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-06-03T02:14:50.000Z" title="Created 2017-06-03 10:14:50">2017-06-03</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言学习OC的runtime也有一段时间了，是时候写个runtime的系列来做个总结了。大体按照以下几个主题：
+
+Class &amp;&amp; Object
+Property &amp;&amp; Method
+Category &amp;&amp; Association Object
+Message
+上层API
+runtime应用示例 &amp;&amp; 奇奇怪怪的例子
+如果还有其他的话
+
+
+
+概述说是概述，其实是我学习runtime的过程。
+
+苹果官方的runtime文档，对runtime是什么，用来做什么了解个大概
+
+拿到了runtime的源码，据说能编译成objc的动态库，并且新建一个使用自己编译的runtime的mac的工程
+
+按原计划，到了这一步就该自己对着runtime的源码，修修改改，看看能弄出什么奇怪的效果。但是这才发现，要是重头开始一行一行的看runtime源码，是多么浩大的一项工程。。
+
+改变策略，抓住runtime的重点，从博客看起，逐个弄懂。在这一过程中发现了2个人的博客
+
+Haven_ZN
+Draveness
+
+这两位大神的博客里面都有一系列的关于r ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/04/13/effective-objective-c-reading-note-six/" title="Effective Objective-C - 对象、消息、运行期">Effective Objective-C - 对象、消息、运行期</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-04-13T12:59:20.000Z" title="Created 2017-04-13 20:59:20">2017-04-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="content">前言Effective Objective-C 2.0 系列读书笔记最后一篇
+
+
+笔记理解“属性”这一概念
+下面两部分代码等效
+12345678910@interface EOCPerson : NSObject@property NSString *firstName;@end@interface EOCPerson : NSObject &#123;  	NSString *_firstName;&#125;- (NSString *)firstName;- (void)setFirstName:(NSString *)firstName;@end
+
+可以理解成：属性 &#x3D; 实例变量 + 存取方法
+
+可以改变属性生成的实例变量的名字：
+123@implementation EOCPerson@synthesize firstName = _myFirstName;@end
+
+将实例变量命名成_myFirstName ，不再使用默认的名字
+
+当然还可以不让编译器自动生成存取方法，就是使用dynamic
+123@implementation EOCPerson@dynamic  ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/04/11/effective-objective-c-reading-note-five/" title="Effective Objective-C - 系统框架">Effective Objective-C - 系统框架</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-04-11T12:42:29.000Z" title="Created 2017-04-11 20:42:29">2017-04-11</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="content">前言NSObject 属于 Foundation 框架，我们写的OC代码全部都是基于这些基本系统框架之上的
+
+
+笔记熟悉系统框架
+将一系列代码封装为动态库，并在其中放入描述其接口的头文件，这样做出来的东西就叫框架。所有iOS平台的系统框架都是动态库
+NS开头的基本都是Foundation框架，与Foundation框架对应的一个CoreFoundation框架，他是C语言的API
+使用toll-free bridging可以实现Foundation的OC对象和CoreFoundation的C数据结构互相转换
+使用C语言的API可以绕过OC的runtime机制，加快运行速度；但是使用C语言的API时，需要注意内存管理的问题
+
+多用块枚举，少用for循环
+使用OC1.0的 NSEnumerator 来遍历
+1234567891011121314NSArray *array = /*...*/;NSEnumerator *enumerator = [array objectEnumerator];id object;while ((object = [enumerator nextObjec ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/04/04/effective-objective-c-reading-note-four/" title="Effective Objective-C - 块与大中枢派发">Effective Objective-C - 块与大中枢派发</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-04-04T07:43:55.000Z" title="Created 2017-04-04 15:43:55">2017-04-04</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="content">前言Effective Objective C 读书笔记 - 块与大中枢派发
+多线程的两大核心：block，GCD
+
+
+笔记理解“块”这以概念
+block其实也是一个数据类型，块也是对象类型
+123void (^someBlock)() = ^&#123;  	// do something here&#125;
+
+块的强大之处在于：在声明块的范围里面，所有的变量都可以为其所捕获，在快内可以使用这些变量
+
+在Block之前，只能使用函数指针或者是selector
+
+每个OC对象都占有一个内存区域，块也是对象，下图就是块的内存区域：
+
+
+invoke 是函数指针，指向块的实现代码
+descriptor 是一个结构体指针，每个block都有这么一个变量，该结构体包含了块的详细信息：大小等等
+块还会把 捕获到的变量 拷贝一份，注意这里拷贝的是指针
+
+
+定义块的时候，块所占的内存是分配在栈中的，来看看下面的例子
+1234567891011void (^block)(); // 声明一个block，是一个指针if (/* some condition */) &#123;  	block = ^ ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/03/30/iOS-Auto-Layout-CAKeyframeAnimation/" title="Auto Layout 与 CAKeyframeAnimation">Auto Layout 与 CAKeyframeAnimation</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-03-30T09:19:20.000Z" title="Created 2017-03-30 17:19:20">2017-03-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言最近实现了一个基于Auto Layout的CAKeyframeAnimation。先来看一下效果👇
+
+
+
+问题分析看了效果图，第一反应应该是使用 CAKeyframeAnimation，让两个圆型view的position随着图中的贝塞尔曲线(CGPath)运动。
+那么问题来了：整个视图是使用 Auto Layout 来实现的，并没有指定每个视图的frame，我们是否可以使用CAKeyframeAnimation呢？这就引出了下面要讲的几点👇
+
+Auto Layout的本质
+普通的基于Auto Layout 的动画
+在Auto Layout视图中获取frame
+CATransaction 与 CAKeyframeAnimation
+Auto Layout 百分比布局
+
+Auto Layout 的本质关于iOS Drawing 这篇文章里面讲述了 iOS系统将View显示在屏幕上的6个详细步骤。这里说一下前面3个步骤：
+
+Layout：将一个或者多个UIView（也就是UIView hierarchy）显示在屏幕上的第一步就是 计算每个layer的frame。无论代码使用Auto ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#content-inner">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/#content-inner">6</a><a class="extend next" rel="next" href="/page/3/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">John Doe</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2018/03/26/OpenGL-ES-concave-polygon-iOS/" title="iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形">iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形</a><time datetime="2018-03-26T07:36:06.000Z" title="Created 2018-03-26 15:36:06">2018-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/ar-rubik/" title="ARKit下的魔方">ARKit下的魔方</a><time datetime="2017-12-02T08:41:23.000Z" title="Created 2017-12-02 16:41:23">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/job-summary/" title="一次秋招">一次秋招</a><time datetime="2017-12-02T08:17:58.000Z" title="Created 2017-12-02 16:17:58">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/24/calayer-time-coordinate-system/" title="CALayer的时间坐标系">CALayer的时间坐标系</a><time datetime="2017-07-24T02:36:58.000Z" title="Created 2017-07-24 10:36:58">2017-07-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/14/association-object-and-retain-count/" title="OC关联对象及其内存管理">OC关联对象及其内存管理</a><time datetime="2017-07-14T08:29:19.000Z" title="Created 2017-07-14 16:29:19">2017-07-14</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>Categories</span>
+            
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/iOS/"><span class="card-category-list-name">iOS</span><span class="card-category-list-count">30</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/server/"><span class="card-category-list-name">server</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/"><span class="card-category-list-name">杂七杂八</span><span class="card-category-list-count">9</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"><span class="card-category-list-name">读书笔记</span><span class="card-category-list-count">13</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" style="font-size: 1.1em; color: #999">杂七杂八</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span><a class="card-more-btn" href="/archives/" title="More">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2018/03/"><span class="card-archive-list-date">March 2018</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/12/"><span class="card-archive-list-date">December 2017</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/07/"><span class="card-archive-list-date">July 2017</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/06/"><span class="card-archive-list-date">June 2017</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/04/"><span class="card-archive-list-date">April 2017</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/03/"><span class="card-archive-list-date">March 2017</span><span class="card-archive-list-count">5</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2016/10/"><span class="card-archive-list-date">October 2016</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2016/09/"><span class="card-archive-list-date">September 2016</span><span class="card-archive-list-count">1</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">55</div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Push :</div><div class="item-count" id="last-push-date" data-lastPushDate="2023-09-26T12:25:54.391Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By John Doe</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

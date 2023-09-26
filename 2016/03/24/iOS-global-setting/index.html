@@ -1,0 +1,198 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>iOS全局设置 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言一个iOS项目，有很多东西是全局通用的，比如全局常量等等。在整个项目的某个地方，对其进行全局设置，会极大的方便程序的编写，而且简化程序的结构。 不同类型的全局设置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS全局设置">
+<meta property="og:url" content="http://example.com/2016/03/24/iOS-global-setting/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言一个iOS项目，有很多东西是全局通用的，比如全局常量等等。在整个项目的某个地方，对其进行全局设置，会极大的方便程序的编写，而且简化程序的结构。 不同类型的全局设置">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2016-03-24T11:14:29.000Z">
+<meta property="article:modified_time" content="2016-03-24T13:19:15.000Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2016/03/24/iOS-global-setting/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'iOS全局设置',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2016-03-24 21:19:15'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Hexo"><span class="site-name">Hexo</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">iOS全局设置</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2016-03-24T11:14:29.000Z" title="Created 2016-03-24 19:14:29">2016-03-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2016-03-24T13:19:15.000Z" title="Updated 2016-03-24 21:19:15">2016-03-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/iOS/">iOS</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="iOS全局设置"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个iOS项目，有很多东西是全局通用的，比如全局常量等等。在整个项目的某个地方，对其进行全局设置，会极大的方便程序的编写，而且简化程序的结构。</p>
+<h2 id="不同类型的全局设置"><a href="#不同类型的全局设置" class="headerlink" title="不同类型的全局设置"></a>不同类型的全局设置</h2><span id="more"></span>
+<ol>
+<li>用户登录，用户数据全局存储</li>
+</ol>
+<h2 id="用户登录，用户数据全局存储"><a href="#用户登录，用户数据全局存储" class="headerlink" title="用户登录，用户数据全局存储"></a>用户登录，用户数据全局存储</h2><p>用户登录时，对用户数据进行存储，在全局都可以获得当前登录用户的数据。来看看如何实现</p>
+<h3 id="NSUserDefaults"><a href="#NSUserDefaults" class="headerlink" title="NSUserDefaults"></a><code>NSUserDefaults</code></h3><p><a target="_blank" rel="noopener" href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSUserDefaults_Class/">NSUserDefaults</a>用来存储轻量级的本地数据灰常合适，就比如说当前的登录用户数据（用户名，密码等等）。NSUserDefaults存储时支持的数据类型有 NSNumber, NSString, NSDate, NSArray, NSDictionary, BOOL。它有点类似键值对。</p>
+<h3 id="plist"><a href="#plist" class="headerlink" title="plist"></a><code>plist</code></h3><p>plist是<code>Property List</code>的缩写，它是一个xml格式的文件，用来存储串行化后的对象。因此plist文件可以用来存储历史登录用户的数据。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><h4 id="用户登录时"><a href="#用户登录时" class="headerlink" title="用户登录时"></a>用户登录时</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+ (void)doLogin:(NSDictionary *)loginData &#123;</span><br><span class="line">    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults]; // 获取默认的NSUserDefaults</span><br><span class="line">    [defaults setObject:[NSNumber numberWithBool:YES] forKey:@&quot;loginStatus&quot;]; // 设置登录状态为已登录</span><br><span class="line">    [defaults setObject:loginData forKey:@&quot;loginData&quot;]; // 存储当前登录用户数据。注：loginData为NSDictionary，里面可以存放username、password、email等信息</span><br><span class="line">    [defaults synchronize]; // 同步数据</span><br><span class="line">    [self saveLoginData:loginData]; // 使用plist存储历史登录用户数据，在后文会有介绍</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里使用NSUserDefaults存储登录时的数据：</p>
+<ol>
+<li>使用loginStatus键来存储登录状态：YES表示已登录，NO表示未登陆</li>
+<li>使用loginData键来存储登录用户的数据：该键对应的值是一个NSDictionary，该字典里面可以包含username、password、email等与当前用户相关的数据</li>
+<li>[defaults synchronize]; 该方法表示将NSUserDefaults数据同步到磁盘，此举避免了程序意外退出而导致数据未存储的情况</li>
+<li>saveLoginData方法将这个用户数据写入plist文件，达到存储历史数据的目的，后面会介绍</li>
+</ol>
+<h4 id="用户退出时"><a href="#用户退出时" class="headerlink" title="用户退出时"></a>用户退出时</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+ (void)doLogout &#123;</span><br><span class="line">    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults]; // 获取默认的NSUserDefaults</span><br><span class="line">    [defaults setObject:[NSNumber numberWithBool:NO] forKey:@&quot;loginStatus&quot;]; // 设置登录状态为未登陆</span><br><span class="line">    [defaults synchronize]; // 同步数据</span><br><span class="line">    // do something else, like clear cookies</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里将用户登录状态设置为未登陆，并同步数据</p>
+<h4 id="判断是否登录"><a href="#判断是否登录" class="headerlink" title="判断是否登录"></a>判断是否登录</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+ (BOOL)isLogin &#123;</span><br><span class="line">    NSNumber *loginStatus = [NSUserDefaults standardUserDefaults] objectForKey:@&quot;loginStatus&quot;]; // 获取用户登录状态</span><br><span class="line">    if (loginStatus.boolValue) &#123; // 判断用户是否登录，并返回</span><br><span class="line">        return YES;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        return NO;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>获取NSUserDefaults中loginStatus键的值来获取用户的登录状态</p>
+<h4 id="获取当前登录用户"><a href="#获取当前登录用户" class="headerlink" title="获取当前登录用户"></a>获取当前登录用户</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+ (User *)curLoginUser &#123;</span><br><span class="line">    NSDictionary *loginData = [NSUserDefaults standardUserDefaults] objectForKey:@&quot;loginData&quot;]; // 获取当前用户数据</span><br><span class="line">    User *curLoginUser = loginData ? [NSObject objectOfClass:@&quot;User&quot; fromJSON:loginData]; // 转化为User对象</span><br><span class="line">    return curLoginUser;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>获取NSUserDefaults中loginData的NSDictionary，并转化为User对象返回。注：User对象为一个model。</p>
+<h4 id="存储历史数据"><a href="#存储历史数据" class="headerlink" title="存储历史数据"></a>存储历史数据</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">+ (NSString *)loginDataListPath &#123;</span><br><span class="line">    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]; // 返回app存放数据的Documents文件夹路径</span><br><span class="line">    NSString *listPath = [documentPath stringByAppendingPathComponent:@&quot;login_list.plist&quot;]; // 返回存放历史数据的plist文件的路径，他在Documents文件夹里面</span><br><span class="line">    return listPath;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (NSMutableDictionary *)readLoginDataList &#123;</span><br><span class="line">    NSMutableDictionary *loginDataList = [NSMutableDictionary dictionaryWithContentsOfFile:[self loginDataListPath]]; // 读取plist文件内容，并将它存放在NSMutableDictionary中返回</span><br><span class="line">    return loginDataList;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (BOOL)saveLoginData:(NSDictionary *)loginData &#123;</span><br><span class="line">    BOOL save = NO;</span><br><span class="line">    if (loginData) &#123;</span><br><span class="line">        NSMutableDictionary *loginDataList = [self readLoginDataList]; // 获取已经存储的用户数据</span><br><span class="line">        User *curUser = [NSObject objectOfClass:@&quot;User&quot; fromJSON:loginData]; // 转化为User对象</span><br><span class="line">        if (curUser.username.length &gt; 0) &#123;</span><br><span class="line">            [loginDataList setObject:loginData forKey:curUser.username]; // 更新历史数据中该用户的数据</span><br><span class="line">            save = YES;</span><br><span class="line">        &#125;</span><br><span class="line">        if (save) &#123;</span><br><span class="line">          save = [loginDataList writeToFile:[self loginDataListPath] atomically:YES]; // 将数据写入plist文件</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上代码中包括三个函数：</p>
+<ol>
+<li>loginDataListPath: 该函数返回plist文件的路径</li>
+<li>readLoginDataList: 该函数读取plist文件中的数据，以NSDictionary的方式返回</li>
+<li>saveLoginData: 更新readLoginDataList中返回的历史数据，加入当前登录用户的数据；并再次将已经更新的历史用户数据写入plist文件</li>
+</ol>
+<h4 id="p-s"><a href="#p-s" class="headerlink" title="p.s"></a>p.s</h4><p>以上代码均参照<a target="_blank" rel="noopener" href="https://github.com/Coding/Coding-iOS">Coding-iOS</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSUserDefaults_Class/">NSUserDefaults Reference</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Coding/Coding-iOS">Coding-iOS</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2016/03/24/iOS-global-setting/">http://example.com/2016/03/24/iOS-global-setting/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2016/03/24/iOS-camera-picture-album/" title="iOS从图库或相机获得图片"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">iOS从图库或相机获得图片</div></div></a></div><div class="next-post pull-right"><a href="/2016/03/19/2016-week4/" title="2016-week4"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">2016-week4</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">John Doe</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E5%90%8C%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%85%A8%E5%B1%80%E8%AE%BE%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">不同类型的全局设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%EF%BC%8C%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE%E5%85%A8%E5%B1%80%E5%AD%98%E5%82%A8"><span class="toc-number">3.</span> <span class="toc-text">用户登录，用户数据全局存储</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#NSUserDefaults"><span class="toc-number">3.1.</span> <span class="toc-text">NSUserDefaults</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#plist"><span class="toc-number">3.2.</span> <span class="toc-text">plist</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.3.</span> <span class="toc-text">示例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%97%B6"><span class="toc-number">3.3.1.</span> <span class="toc-text">用户登录时</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E9%80%80%E5%87%BA%E6%97%B6"><span class="toc-number">3.3.2.</span> <span class="toc-text">用户退出时</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E7%99%BB%E5%BD%95"><span class="toc-number">3.3.3.</span> <span class="toc-text">判断是否登录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E7%99%BB%E5%BD%95%E7%94%A8%E6%88%B7"><span class="toc-number">3.3.4.</span> <span class="toc-text">获取当前登录用户</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%8E%86%E5%8F%B2%E6%95%B0%E6%8D%AE"><span class="toc-number">3.3.5.</span> <span class="toc-text">存储历史数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#p-s"><span class="toc-number">3.3.6.</span> <span class="toc-text">p.s</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2018/03/26/OpenGL-ES-concave-polygon-iOS/" title="iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形">iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形</a><time datetime="2018-03-26T07:36:06.000Z" title="Created 2018-03-26 15:36:06">2018-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/ar-rubik/" title="ARKit下的魔方">ARKit下的魔方</a><time datetime="2017-12-02T08:41:23.000Z" title="Created 2017-12-02 16:41:23">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/job-summary/" title="一次秋招">一次秋招</a><time datetime="2017-12-02T08:17:58.000Z" title="Created 2017-12-02 16:17:58">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/24/calayer-time-coordinate-system/" title="CALayer的时间坐标系">CALayer的时间坐标系</a><time datetime="2017-07-24T02:36:58.000Z" title="Created 2017-07-24 10:36:58">2017-07-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/14/association-object-and-retain-count/" title="OC关联对象及其内存管理">OC关联对象及其内存管理</a><time datetime="2017-07-14T08:29:19.000Z" title="Created 2017-07-14 16:29:19">2017-07-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By John Doe</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

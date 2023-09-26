@@ -1,0 +1,256 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/4/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/page/4/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Hexo',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2023-09-26 20:25:54'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><hr class="custom-hr"/></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Hexo"><span class="site-name">Hexo</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Hexo</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/07/19/OC-ARC-GCD-reading-note-one/" title="iOS与OS X多线程和内存管理 - 自动引用计数">iOS与OS X多线程和内存管理 - 自动引用计数</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-07-19T12:14:02.000Z" title="Created 2016-07-19 20:14:02">2016-07-19</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="content">前言iOS与OS X多线程和内存管理 读书笔记（一） 自动引用计数
+
+
+笔记##内存管理&#x2F;引用计数
+使用办公室的照明灯来做比喻，对象相当于照明灯，但是会有许多人需要这个照明灯，也就是持有对象。只要有人持有这个对象，就不能释放对象；若没人在需要对象，就释放对象。
+
+例如：a &#x3D; [class new];  b &#x3D; a; 那么a生成对象时持有对象，b也持有对象。只有当a和b都不持有对象时，才能释放对象。
+
+对于对象，有4个关键词。生成，持有，释放和废弃。
+
+看看对应的操作：（以下的方法均是NSObject类的方法）
+
+使用alloc/new/copy/mutableCopy开头的方法生成并持有对象
+retain方法持有对象
+release方法释放对象
+dealloc方法废弃对象
+
+
+自己生成的对象自己持有
+123id obj = [[NSObject alloc] new]; // alloc方法生成并持有对象// orid obj = [NSObject new]; // new 和 alloc + init 一样
+
+另外copy和mutableCopy也是 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/07/14/iOS-Core-Animation-reading-note-three/" title="iOS Core Animation - The Performance of a Lifetime">iOS Core Animation - The Performance of a Lifetime</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-07-14T07:57:42.000Z" title="Created 2016-07-14 15:57:42">2016-07-14</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="content">前言iOS Core Animation 读书笔记（三）The Performance of a Lifetime
+
+
+笔记Tuning for SpeedCPU Vs GPU
+将各个layer以及layer的动画渲染到屏幕上由系统来控制，这个控制器称为render server。
+绘制的过程如下：
+Layout：这个阶段建立好你的view树和layer树，并给layer设定好各种属性（frame，background color等等）。
+Display：这个阶段在每个layer上面画他们的backing image。这个阶段可能会调用-drawRect:或者-drawLayer:inContext:方法。
+Prepare：这个阶段Core Animation准备好要传递给render server的动画的相关参数。
+Commit：这个阶段Core Animation将所有的layer和动画属性一起打包，传递给render server，让它显示。
+render server计算每个layer每个属性以及动画过程的中间值，然后设置OpenGL的各个三角形属性等等
+在屏幕上绘制可视化的三 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/07/08/iOS-Core-Animation-reading-note-two/" title="iOS Core Animation - Setting Things in Motion">iOS Core Animation - Setting Things in Motion</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-07-08T08:29:36.000Z" title="Created 2016-07-08 16:29:36">2016-07-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="content">前言iOS Core Animation 读书笔记（二） Setting Things in Motion
+
+
+笔记Implicit Animations隐式的动画由framework自动执行，除非你叫他不执行。
+Transcations
+Core Animation会去假设你所有创建在屏幕上的东西都会animation。所以animation并不用你刻意的去启动。这也是Core Animation比OpenGL慢的一点，OpenGL不用去考虑这些东西，就不需要花费额外的性能代价。
+
+当你改变一个CALayer的属性时，它会自动平滑的执行动画从当前属性到新的属性，而不是瞬变。不需要你额外的做些什么。这种动画就叫做隐式动画。
+
+Transcations是Core Animation将一系列动画汇集成一个的机制。一旦transaction提交(committed)之后，这些动画就会开始执行。
+
+CATransaction类控制着transaction的行为。该类没有alloc init这样的初始化，也并不是如名字那样代表一个transaction，它表示一个transaction的栈。可以 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/07/01/iOS-Core-Animation-reading-note-one/" title="iOS Core Animation - The Layer Beneath">iOS Core Animation - The Layer Beneath</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-07-01T07:42:38.000Z" title="Created 2016-07-01 15:42:38">2016-07-01</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="content">前言iOS Core Animation  读书笔记（一）The Layer Beneath
+
+
+笔记The Layer Tree
+Layer Kit: 高效的，硬件加速的混合框架， 用来替代以Quartz为基础的，相对低效的AppKit框架。它也就是Core Animation的基础。
+Core Animation 不仅仅只和动画有关，它是iOS的核心组件之一，你在屏幕上看到的所有东西都由它来power。
+Core Animation的主要工作是将各个可视化的layer显示在屏幕上面。也就是将layer tree显示出来。
+UIView handles touch events and supports Core Graphics-based drawing, affine transform, and simple animations such as sliding and fading.
+但是UIView并不是亲自处理这些任务中的大部分。渲染，布局，动画…这些任务其实都是由Core Animation里面的CALayer来完成的。
+CALayer不负责用户交互(user int ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/06/07/ollie/" title="卧槽">卧槽</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-06-07T13:11:47.000Z" title="Created 2016-06-07 21:11:47">2016-06-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/">杂七杂八</a></span></div><div class="content">昨天晚上，也就是2016-6-6这么个666的日子，我ollie过一立了&#x3D;。&#x3D;
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/05/19/ios-pop-menu/" title="弹框按钮视图">弹框按钮视图</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-05-19T01:47:22.000Z" title="Created 2016-05-19 09:47:22">2016-05-19</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言这段时间又在忙项目的事，对Coding-iOS源码的学习只能先暂搁一旁。今天抽空来看看一个Coding-iOS中一个有趣的实现。这个和微博里面发送微博时的动效类似。效果如下👇
+
+前言二源码在这里我自己也简单的实现了一遍，看看效果👇我也把源码上传到github了
+分析一波这个PopMenu主要由2部分构成：模糊背景和按钮
+
+模糊背景  模糊背景直接就是白色半透明的View，它是PopMenu这个View的最底层的子View。这个模糊背景View的透明度从0-&gt;0.5渐变，当这个动画完成之后，开始显示按钮的动画。
+按钮  说是按钮，其实也是一个自定义的View，它由一个图片(UIImageView)和一个标题(UILabel)构成。这些按钮也是PopMenu这个View的子View。
+PopMenu View  这个View是主视图，它包括最底层的模糊背景视图和多个按钮视图。在这个视图内部定义了几个重要的方法
+
+
+定义每一个按钮视图的其实位置和最终位置
+未每个按钮视图添加动画
+
+按钮位置先来看看按钮视图的最终位置👇给每个视图定大小很简单：先定死高度为110，再根据每行放置几 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/05/12/app-download-uoload-manager/" title="iOS关于文件上传与下载">iOS关于文件上传与下载</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-05-12T11:06:10.000Z" title="Created 2016-05-12 19:06:10">2016-05-12</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言最近还在跟着Coding-iOS源码学习iOS开发，现在来介绍一下Coding-iOS的文件下载和上传机制。其实说实话，在写这文章的时候我对这个机制的总体把握也不是很全面；下面我将通过源码再来熟悉一遍这个全过程。这篇文章主要介绍的是下载流程。
+
+源码先行Coding_FileManagerCoding-iOS中将文件下载与上传有关的方法都封装在Coding_FileManager.h和Coding_FileManager.m文件里面。先来看看其中的主要代码👇Coding_FileManager里面包含3个类：Coding_FileManager类，Coding_DownloadTask类和Coding_UploadTask类。其中的Coding_UploadTask类与上传有关，这里不做介绍。
+Coding_DownloadTask类Coding_DownloadTask类用来封装每一个下载任务，它包含一个下载任务，下载进度和当前下载的文件名，代码如下👇
+12345678@interface Coding_DownloadTask : NSObject@property (no ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/05/07/NSObject-ObjectMap/" title="NSObject+ObjectMap 源码分析">NSObject+ObjectMap 源码分析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-05-07T02:45:25.000Z" title="Created 2016-05-07 10:45:25">2016-05-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言iOS应用从API获得的数据有很重要的一部分是以JSON格式返回的，通过AFNetworking，这种JSON格式会被转换成NSDictionary或者NSArray，从而被APP所接收。这时，如果能将这些NSDictionary&#x2F;NSArray转化成APP中已经封装好的各种Model，将极大的简化APP的开发。有很多第三方库已经实现了这个功能，比较知名的就有MJExtension
+
+MJExtension: A fast, convenient and nonintrusive conversion between JSON and model. Your model class don’t need to extend another base class. You don’t need to modify any model file.
+
+嗯，这个第三方库很有名，功能强大，使用也方便，但是本文并不介绍它。在这篇文章里面，我将介绍一个小的从JSON到Model进行转换的第三方库，这个库小到没有一个像样的名字，我在github上也只找到了一个模糊的地址：uacaps&# ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/03/26/iOS-method-swizzling/" title="iOS Method Swizzling">iOS Method Swizzling</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-03-26T08:18:43.000Z" title="Created 2016-03-26 16:18:43">2016-03-26</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言有个奇怪的需求：每个UIViewController在viewDidAppear:和viewWillAppear:方法中都需要执行一些操作。这里介绍一种iOS Method Swizzling方法:让viewDidAppear:和customViewDidAppear:方法调换实现方式；让viewWillAppear:和customViewWillAppear:方法调换实现方式。
+
+
+实现过程
+新建UIViewController的一个category - Swizzle
+在Swizzle中实现customViewDidAppear:方法和customViewWillAppear:方法。
+并且重写load方法，在load方法中将指向viewDidAppear:实现的指针和指向customViewDidAppear:实现的指针对调；将指向viewWillAppear:实现的指针和指向customViewWillAppear:实现的指针对调
+函数指针对调实现
+在AppDelegate.m中import这个Swizzle category。那么在所有的UIViewController执行 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/03/24/iOS-camera-picture-album/" title="iOS从图库或相机获得图片">iOS从图库或相机获得图片</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-03-24T13:23:18.000Z" title="Created 2016-03-24 21:23:18">2016-03-24</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言一款App很有可能需要访问系统的图库（照片）或者通过相机来获取图片，比如更换用户头像等等。效果如图👇
+
+下面来看看如何实现
+
+
+查看访问权限App在第一次访问系统照片或者相机时，通常需要询问是否有权限去access相片图库或者使用相机。可以通过下面代码得知目前该app的权限👇
+1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253@import AVFoundation;@import Photos;// 检查使用相片的权限， YES为可以访问，NO为不能使用+ (BOOL)checkPhotoLibraryAuthorizationStatus &#123;    if ([PHPhotoLibrary responseToSelector:@selector(authorizationStatus)]) &#123;        PHAuthorizationStatus status = [PHPhotoLibrary author ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/3/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/#content-inner">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/#content-inner">5</a><a class="page-number" href="/page/6/#content-inner">6</a><a class="extend next" rel="next" href="/page/5/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">John Doe</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2018/03/26/OpenGL-ES-concave-polygon-iOS/" title="iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形">iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形</a><time datetime="2018-03-26T07:36:06.000Z" title="Created 2018-03-26 15:36:06">2018-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/ar-rubik/" title="ARKit下的魔方">ARKit下的魔方</a><time datetime="2017-12-02T08:41:23.000Z" title="Created 2017-12-02 16:41:23">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/job-summary/" title="一次秋招">一次秋招</a><time datetime="2017-12-02T08:17:58.000Z" title="Created 2017-12-02 16:17:58">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/24/calayer-time-coordinate-system/" title="CALayer的时间坐标系">CALayer的时间坐标系</a><time datetime="2017-07-24T02:36:58.000Z" title="Created 2017-07-24 10:36:58">2017-07-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/14/association-object-and-retain-count/" title="OC关联对象及其内存管理">OC关联对象及其内存管理</a><time datetime="2017-07-14T08:29:19.000Z" title="Created 2017-07-14 16:29:19">2017-07-14</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>Categories</span>
+            
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/iOS/"><span class="card-category-list-name">iOS</span><span class="card-category-list-count">30</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/server/"><span class="card-category-list-name">server</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/"><span class="card-category-list-name">杂七杂八</span><span class="card-category-list-count">9</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"><span class="card-category-list-name">读书笔记</span><span class="card-category-list-count">13</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" style="font-size: 1.1em; color: #999">杂七杂八</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span><a class="card-more-btn" href="/archives/" title="More">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2018/03/"><span class="card-archive-list-date">March 2018</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/12/"><span class="card-archive-list-date">December 2017</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/07/"><span class="card-archive-list-date">July 2017</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/06/"><span class="card-archive-list-date">June 2017</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/04/"><span class="card-archive-list-date">April 2017</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/03/"><span class="card-archive-list-date">March 2017</span><span class="card-archive-list-count">5</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2016/10/"><span class="card-archive-list-date">October 2016</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2016/09/"><span class="card-archive-list-date">September 2016</span><span class="card-archive-list-count">1</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">55</div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Push :</div><div class="item-count" id="last-push-date" data-lastPushDate="2023-09-26T12:25:54.391Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By John Doe</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

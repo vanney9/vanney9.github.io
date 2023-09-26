@@ -1,0 +1,271 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Effective Objective-C - 块与大中枢派发 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言Effective Objective C 读书笔记 - 块与大中枢派发 多线程的两大核心：block，GCD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Effective Objective-C - 块与大中枢派发">
+<meta property="og:url" content="http://example.com/2017/04/04/effective-objective-c-reading-note-four/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言Effective Objective C 读书笔记 - 块与大中枢派发 多线程的两大核心：block，GCD">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2017-04-04T07:43:55.000Z">
+<meta property="article:modified_time" content="2017-07-17T08:18:32.000Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2017/04/04/effective-objective-c-reading-note-four/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Effective Objective-C - 块与大中枢派发',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2017-07-17 16:18:32'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Hexo"><span class="site-name">Hexo</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Effective Objective-C - 块与大中枢派发</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2017-04-04T07:43:55.000Z" title="Created 2017-04-04 15:43:55">2017-04-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2017-07-17T08:18:32.000Z" title="Updated 2017-07-17 16:18:32">2017-07-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Effective Objective-C - 块与大中枢派发"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><strong>Effective Objective C</strong> 读书笔记 - 块与大中枢派发</p>
+<p><strong>多线程的两大核心：block，GCD</strong></p>
+<span id="more"></span>
+
+<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="理解“块”这以概念"><a href="#理解“块”这以概念" class="headerlink" title="理解“块”这以概念"></a>理解“块”这以概念</h3><ol>
+<li><p>block其实也是一个数据类型，块也是对象类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void (^someBlock)() = ^&#123;</span><br><span class="line">  	// do something here</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>块的强大之处在于：在声明块的范围里面，所有的变量都可以为其所捕获，在快内可以使用这些变量</p>
+</li>
+<li><p>在Block之前，只能使用函数指针或者是selector</p>
+</li>
+<li><p>每个OC对象都占有一个内存区域，块也是对象，下图就是块的内存区域：</p>
+<p><img src="/lionheart/1704/blockmemory.JPG" alt="block memory"></p>
+<ol>
+<li><strong>invoke</strong> 是函数指针，指向块的实现代码</li>
+<li><strong>descriptor</strong> 是一个结构体指针，每个block都有这么一个变量，该结构体包含了块的详细信息：大小等等</li>
+<li>块还会把 <strong>捕获到的变量</strong> 拷贝一份，注意这里拷贝的是指针</li>
+</ol>
+</li>
+<li><p>定义块的时候，块所占的内存是分配在栈中的，来看看下面的例子</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">void (^block)(); // 声明一个block，是一个指针</span><br><span class="line">if (/* some condition */) &#123;</span><br><span class="line">  	block = ^&#123;</span><br><span class="line">      	// do something</span><br><span class="line">  	&#125;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">  	block = ^&#123;</span><br><span class="line">      	// do something</span><br><span class="line">  	&#125;</span><br><span class="line">&#125;</span><br><span class="line">block();</span><br></pre></td></tr></table></figure>
+
+<p>注释：在if和else中，分别创建了block，这个block是一个栈对象，也就是他们的内存是在栈上面的；然后<strong>将该栈内存的首地址赋予block</strong>。但是这个对象出了<code>&#123;&#125;</code> ，其内存可能被覆写，那么block变量指向的就不是一个真正的块了</p>
+<p><strong>注意，这里的block是一个指针；和一般的int理解上有所不同</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">int a;</span><br><span class="line">if (/* some condition */) &#123;</span><br><span class="line">  	int tmp = 2;</span><br><span class="line">  	a = tmp;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">  	int tmp = 3;</span><br><span class="line">  	a = tmp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里tmp的内存在出了<code>&#123;&#125;</code>之后也是会被覆写的，但是在<code>&#123;&#125;</code>里面，直接将tmp的内存中的值写到了a的内存中，所以a还是可以使用的。<strong>但是，写到block内存中的是这个栈对象的地址，地址还是可以使用的，但是地址里面的内容就不一定是原来的块对象了</strong></p>
+<p>至于，栈和堆的区别可以看看 <a target="_blank" rel="noopener" href="http://ios.jobbole.com/81900/">Objective-C 拾遗：从Heap and Stack到Block</a> 这篇文章</p>
+</li>
+<li><p>所以为了避免在栈上的块对象被销毁，就得使用<code>copy</code>方法了。block的<code>copy</code>方法将block从栈拷贝到堆上面，那么这个时候的block就和正常的OC对象一样了，具备引用计数，可以使用ARC来管理了</p>
+</li>
+<li><p>5和6分别讲述了 <strong>栈块</strong> 和 <strong>堆块</strong> 的区别，还有一种块，叫做 <strong>全局块</strong> 。这种block不会捕捉外部变量，它的内存在全局内存中，而且对他执行copy操作也只是空操作，类似一个函数</p>
+</li>
+</ol>
+<h3 id="为常用的块类型创建typedef"><a href="#为常用的块类型创建typedef" class="headerlink" title="为常用的块类型创建typedef"></a>为常用的块类型创建typedef</h3><ol>
+<li><p>定义块变量是非常不符合常理，不好记住，所以要使用 <strong>typedef</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">typedef int (^EOCSomeBlock)(BOOL flag, int value);</span><br><span class="line">EOCSomeBlock block = ^(BOOL flag, int value) &#123;</span><br><span class="line">  	// block implememtation</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>上面的EOCSomeBlock表示 <strong>接受2个参数，并返回int的block类型</strong></p>
+</li>
+</ol>
+<h3 id="用handler块降低代码分散程度"><a href="#用handler块降低代码分散程度" class="headerlink" title="用handler块降低代码分散程度"></a>用handler块降低代码分散程度</h3><ol>
+<li>也就是使用block来代替delegate</li>
+<li>还可以同时使用多个block，来处理success或者fail的情况</li>
+</ol>
+<h3 id="用块引用其所属对象时不要出现保留环"><a href="#用块引用其所属对象时不要出现保留环" class="headerlink" title="用块引用其所属对象时不要出现保留环"></a>用块引用其所属对象时不要出现保留环</h3><h3 id="多用派发队列，少用同步锁"><a href="#多用派发队列，少用同步锁" class="headerlink" title="多用派发队列，少用同步锁"></a>多用派发队列，少用同步锁</h3><ol>
+<li><p><code>dispatch_sync(queue, block);</code> 等待block执行完，再执行后面的语句；<code>dispatch_async(queue, block);</code> 不等待block执行完，立刻执行后续语句。具体参考<a target="_blank" rel="noopener" href="http://blog.csdn.net/zhangping871/article/details/44098773">dispatch_async 和 dispatch_sync 的区别</a></p>
+</li>
+<li><p>来个例子说明一下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">_syncQueue = dispatch_queue_create(&quot;com.vanney9.queue&quot;, NULL);</span><br><span class="line"></span><br><span class="line">- (NSString *)someString &#123;</span><br><span class="line">  	__block NSString *localSomeString;</span><br><span class="line">  	dispatch_sync(_syncQueue, ^&#123;      // 1</span><br><span class="line">      	localSomeThing = _someString;</span><br><span class="line">  	&#125;);</span><br><span class="line">  	return localSomeString;   // 2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)setSomeString:(NSString *)someString &#123;</span><br><span class="line">  	dispatch_async(_syncQueue, ^&#123;    // 3</span><br><span class="line">      	_someString = someString;</span><br><span class="line">  	&#125;);</span><br><span class="line">  	return;    // 4</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>get方法使用同步派发(<strong>dispatch_sync</strong>)：因为必须等待block执行完，才能返回localString，如果使用异步派发(<strong>dispatch_async</strong>)的话，block还没有执行，也就是localString还没有设置，就返回了，那么就返回空值了。。</li>
+<li>set方法使用异步派发，因为不需要等待block执行完</li>
+</ol>
+</li>
+<li><p>上面的例子使用的queue都是串行队列，也就是必须等待注册到该序列中的前面的block执行完了，才能执行自己的bloc；但是对于读操作来说是可以并行的，只要写操作和其他的操作串行化就可以了。所以可以使用 <strong>并行序列+栅栏</strong> 来实现</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">_syncQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0); // 1</span><br><span class="line">- (NSString *)someString &#123;</span><br><span class="line">  	__block NSString *localSomeString;</span><br><span class="line">  	dispatch_sync(_syncQueue, ^&#123;  // 2</span><br><span class="line">      	localSomeString = _someString;</span><br><span class="line">  	&#125;);</span><br><span class="line">  	return localSomeString;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)setSomeString:(NSString *)someString &#123;</span><br><span class="line">  	dispatch_barrier_async(_syncQueue, ^&#123;  // 3</span><br><span class="line">      	_someString = somString;</span><br><span class="line">  	&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1：创建了一个并发队列</p>
+<p>注释2：使用并发队列，可以同时执行get方法</p>
+<p>注释3：使用栅栏技术，让写操作执行的时候，队列中的其他操作无法执行</p>
+</li>
+</ol>
+<h3 id="多用GCD，少用performSelector系列方法"><a href="#多用GCD，少用performSelector系列方法" class="headerlink" title="多用GCD，少用performSelector系列方法"></a>多用GCD，少用performSelector系列方法</h3><ol>
+<li><p>先来说说<code>performSelector</code>方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SEL selector;</span><br><span class="line">if (/* some condition*/) &#123;</span><br><span class="line">  	selector = @selector(foo);</span><br><span class="line">&#125;  else &#123;</span><br><span class="line">  	selector = @selector(bar);</span><br><span class="line">&#125;</span><br><span class="line">[object performSelector:selector];</span><br></pre></td></tr></table></figure>
+
+<p>动态绑定之上再动态绑定</p>
+</li>
+<li><p>为什么不推荐使用呢？因为该方法返回的是id类型，也就是一个指向任意OC对象的指针（在32位架构上占32位，4字节；在64位架构上占64位，8字节）。但是如果selector方法返回int，float等类型时就不好转换了</p>
+</li>
+<li><p>使用GCD可以实现：延迟执行，选择特定线程执行</p>
+</li>
+</ol>
+<h3 id="掌握GCD及操作队列的使用时机"><a href="#掌握GCD及操作队列的使用时机" class="headerlink" title="掌握GCD及操作队列的使用时机"></a>掌握GCD及操作队列的使用时机</h3><ol>
+<li>还有一整多线程机制：<strong>NSOperationQueue + NSOperation</strong> 也就是<strong>操作队列</strong>， 它也可以实现和GCD相同的功能。其中NSOperationQueue类似GCD；而NSOperation类似block</li>
+<li>操作队列对比GCD的优点：<ol>
+<li>可以取消尚未开始执行的NSOperation</li>
+<li>可以指定操作间的依赖关系：可以指定当前的NSOperation在某个NSOperation执行结束后，才开始执行</li>
+<li>NSOperation的许多属性适合KVO，通过监听可以更粒子化的监控NSOperation</li>
+<li>可以指定NSOperation的优先级：GCD的优先级是针对队列之间的；但是操作队列的优先级是针对NSOperation的，也就是同一队列里面的block的优先级。当然，操作队列也有线程间的优先级</li>
+</ol>
+</li>
+</ol>
+<h3 id="通过Dispatch-Group机制，根据系统资源状况来执行任务"><a href="#通过Dispatch-Group机制，根据系统资源状况来执行任务" class="headerlink" title="通过Dispatch Group机制，根据系统资源状况来执行任务"></a>通过Dispatch Group机制，根据系统资源状况来执行任务</h3><ol>
+<li>使用 <strong>dispatch group</strong> 机制可以将任务分组。调用者可以等待这组任务执行完毕；也可以给直接提供回调函数，立刻进行下面的步骤</li>
+<li>这个特性最重要的一点用途就是：把将要并发执行的多个任务合并为一组，那么就可以知道这些任务什么时候全部执行完毕</li>
+<li><code>dispatch_group_wait</code> 和 <code>dispatch_group_notify</code> 两个函数可以用来执行结束后该做什么，具体参见 <a target="_blank" rel="noopener" href="http://vanney9.com/2016/08/02/OC-ARC-GCD-reading-note-three/">iOS与OS X多线程和内存管理 - GCD</a></li>
+<li>使用并发队列进行多线程任务时，系统会根据当时的情况自动分配线程，无须码农自己来调度</li>
+</ol>
+<h3 id="使用dispatch-once来执行只需运行一次的线程安全代码"><a href="#使用dispatch-once来执行只需运行一次的线程安全代码" class="headerlink" title="使用dispatch_once来执行只需运行一次的线程安全代码"></a>使用dispatch_once来执行只需运行一次的线程安全代码</h3><ol>
+<li><p>这个常用于单例模式</p>
+</li>
+<li><p>example：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+ (id)sharedInstance &#123;</span><br><span class="line">  	static ECOClass *sharedInstanced = nil;</span><br><span class="line">  	static dispatch_once_t onceToken;</span><br><span class="line">  	dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">      	sharedInstance = [[self alloc] init];</span><br><span class="line">  	&#125;);</span><br><span class="line">  	return sharedInstance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在函数中的static变量：只在函数中可见，但是其生命期为整个程序。具体见 <a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/5033627/static-variable-inside-of-a-function-in-c">Static variable inside of a function in C</a></p>
+</li>
+</ol>
+<h3 id="不要使用-dispatch-get-current-queue"><a href="#不要使用-dispatch-get-current-queue" class="headerlink" title="不要使用 dispatch_get_current_queue"></a>不要使用 dispatch_get_current_queue</h3><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://ios.jobbole.com/81900/">Objective-C 拾遗：从Heap and Stack到Block</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/zhangping871/article/details/44098773">dispatch_async 和 dispatch_sync 的区别</a></li>
+<li><a target="_blank" rel="noopener" href="http://vanney9.com/2016/08/02/OC-ARC-GCD-reading-note-three/">iOS与OS X多线程和内存管理 - GCD</a></li>
+<li><a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/5033627/static-variable-inside-of-a-function-in-c">Static variable inside of a function in C</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2017/04/04/effective-objective-c-reading-note-four/">http://example.com/2017/04/04/effective-objective-c-reading-note-four/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2017/04/11/effective-objective-c-reading-note-five/" title="Effective Objective-C - 系统框架"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Effective Objective-C - 系统框架</div></div></a></div><div class="next-post pull-right"><a href="/2017/03/30/iOS-Auto-Layout-CAKeyframeAnimation/" title="Auto Layout 与 CAKeyframeAnimation"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Auto Layout 与 CAKeyframeAnimation</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">John Doe</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%94%E8%AE%B0"><span class="toc-number">2.</span> <span class="toc-text">笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%A7%A3%E2%80%9C%E5%9D%97%E2%80%9D%E8%BF%99%E4%BB%A5%E6%A6%82%E5%BF%B5"><span class="toc-number">2.1.</span> <span class="toc-text">理解“块”这以概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E5%B8%B8%E7%94%A8%E7%9A%84%E5%9D%97%E7%B1%BB%E5%9E%8B%E5%88%9B%E5%BB%BAtypedef"><span class="toc-number">2.2.</span> <span class="toc-text">为常用的块类型创建typedef</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8handler%E5%9D%97%E9%99%8D%E4%BD%8E%E4%BB%A3%E7%A0%81%E5%88%86%E6%95%A3%E7%A8%8B%E5%BA%A6"><span class="toc-number">2.3.</span> <span class="toc-text">用handler块降低代码分散程度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E5%9D%97%E5%BC%95%E7%94%A8%E5%85%B6%E6%89%80%E5%B1%9E%E5%AF%B9%E8%B1%A1%E6%97%B6%E4%B8%8D%E8%A6%81%E5%87%BA%E7%8E%B0%E4%BF%9D%E7%95%99%E7%8E%AF"><span class="toc-number">2.4.</span> <span class="toc-text">用块引用其所属对象时不要出现保留环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E7%94%A8%E6%B4%BE%E5%8F%91%E9%98%9F%E5%88%97%EF%BC%8C%E5%B0%91%E7%94%A8%E5%90%8C%E6%AD%A5%E9%94%81"><span class="toc-number">2.5.</span> <span class="toc-text">多用派发队列，少用同步锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E7%94%A8GCD%EF%BC%8C%E5%B0%91%E7%94%A8performSelector%E7%B3%BB%E5%88%97%E6%96%B9%E6%B3%95"><span class="toc-number">2.6.</span> <span class="toc-text">多用GCD，少用performSelector系列方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%8C%E6%8F%A1GCD%E5%8F%8A%E6%93%8D%E4%BD%9C%E9%98%9F%E5%88%97%E7%9A%84%E4%BD%BF%E7%94%A8%E6%97%B6%E6%9C%BA"><span class="toc-number">2.7.</span> <span class="toc-text">掌握GCD及操作队列的使用时机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87Dispatch-Group%E6%9C%BA%E5%88%B6%EF%BC%8C%E6%A0%B9%E6%8D%AE%E7%B3%BB%E7%BB%9F%E8%B5%84%E6%BA%90%E7%8A%B6%E5%86%B5%E6%9D%A5%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1"><span class="toc-number">2.8.</span> <span class="toc-text">通过Dispatch Group机制，根据系统资源状况来执行任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8dispatch-once%E6%9D%A5%E6%89%A7%E8%A1%8C%E5%8F%AA%E9%9C%80%E8%BF%90%E8%A1%8C%E4%B8%80%E6%AC%A1%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E4%BB%A3%E7%A0%81"><span class="toc-number">2.9.</span> <span class="toc-text">使用dispatch_once来执行只需运行一次的线程安全代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%A6%81%E4%BD%BF%E7%94%A8-dispatch-get-current-queue"><span class="toc-number">2.10.</span> <span class="toc-text">不要使用 dispatch_get_current_queue</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2018/03/26/OpenGL-ES-concave-polygon-iOS/" title="iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形">iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形</a><time datetime="2018-03-26T07:36:06.000Z" title="Created 2018-03-26 15:36:06">2018-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/ar-rubik/" title="ARKit下的魔方">ARKit下的魔方</a><time datetime="2017-12-02T08:41:23.000Z" title="Created 2017-12-02 16:41:23">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/job-summary/" title="一次秋招">一次秋招</a><time datetime="2017-12-02T08:17:58.000Z" title="Created 2017-12-02 16:17:58">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/24/calayer-time-coordinate-system/" title="CALayer的时间坐标系">CALayer的时间坐标系</a><time datetime="2017-07-24T02:36:58.000Z" title="Created 2017-07-24 10:36:58">2017-07-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/14/association-object-and-retain-count/" title="OC关联对象及其内存管理">OC关联对象及其内存管理</a><time datetime="2017-07-14T08:29:19.000Z" title="Created 2017-07-14 16:29:19">2017-07-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By John Doe</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

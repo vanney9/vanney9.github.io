@@ -1,0 +1,310 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/page/3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Hexo',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2023-09-26 20:25:54'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><hr class="custom-hr"/></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Hexo"><span class="site-name">Hexo</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Hexo</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/03/25/effective-objective-c-reading-note-three/" title="Effective Objective-C - 内存管理">Effective Objective-C - 内存管理</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-03-25T08:07:33.000Z" title="Created 2017-03-25 16:07:33">2017-03-25</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="content">前言Effective Objective C 读书笔记 - 内存管理
+
+
+笔记理解引用计数
+引用关系有一个引用树，在iOS中，这个根引用对象是UIApplication
+
+调用alloc，引用计数加1，表示该对象想存活下去
+
+即使对象的引用计数为0，其占用的内存已经被dealloc了，但是注意：这个时候它的内存只是放回了“可用内存池”，里面的数据不会立即被覆盖
+
+记住一点：在MRC中，将指针指向对象是不会增加reference count的，必须手动加1
+
+看看下面的MRC代码：
+1234567- (NSString *)stringValue &#123;  	NSString *str = [[NSString alloc]] initWithFormat:@&quot;vanney&quot;; // 1  	return str;&#125;NSString *str = [self stringValue];[str retain]; // 2
+
+上面的代码在注释1，和注释2处分别增加了一次reference count，但是讲道理这个时候只需要一个reference co ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/03/24/something-about-iOS-drawing/" title="关于iOS Drawing">关于iOS Drawing</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-03-24T09:14:51.000Z" title="Created 2017-03-24 17:14:51">2017-03-24</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言学了一段时间的OpenGL，这次又重新看了一遍 iOS Core Animation 这本书，查看了许多资料。对这个iOS的drawing稍有顿悟&#x3D;。&#x3D;
+这篇文章里面，我会针对下面几个方面说说我自己的见解：
+
+Core Animation，Core Graphic 和 OpenGL ES
+Rendering以及Animation的步骤
+iOS Drawing中的CPU，GPU
+drawRect方法的弊端
+影响GPU与CPU绘制的因素
+
+
+
+Core Animation，Core Graphics 和 OpenGL ESCore Animation，Core Graphics 和 OpenGL ES 三者都是和iOS画图，呈现内容相关的iOS框架。总体来说，Core Animation和UIKit是一个层级的，而他们底层画图的框架就是Core Graphics 和 OpenGL ES。
+
+Core Animation 是iOS用来控制内容的显示和动画的。它的主要功能就是管理CALayer。
+UIView 大家都很熟悉。那么UIView底层负责显示内容和动画的就是  ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/03/23/effective-objective-c-reading-note-two/" title="Effective Objective-C - 协议与分类">Effective Objective-C - 协议与分类</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-03-23T11:47:30.000Z" title="Created 2017-03-23 19:47:30">2017-03-23</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="content">前言Effective Objective-C 读书笔记 - 协议与分类
+协议（protocol）与Java的接口（interface）类似，由于OC不支持多重继承。通过协议，可以实现类似多重继承的效果。若指定某个类实现了某个协议，那么就表示，该类实现了协议中规定了一些方法。
+分类（category）是OC的重要的一个语言特性。利用分类机制，无须继承子类即可为当前类添加方法。这也是由于动态runtime系统，才得以实现。
+
+
+笔记通过委托与数据源协议进行对象间通信
+注意一点，声明delegate的时候，要声明成weak类型的。避免循环引用。
+
+通常将：委托对象是否可以响应协议中的某个方法 这一信息缓存起来。之后就不需要一直查询该对象是否响应该方法了。缓存可以使用位段来实现。
+123456789101112131415@interface Example() &#123;  	struct &#123;      	unsigned int didReceiveData : 1;      	unsigned int didFailWithError : 1;  	&#125; _del ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/03/21/effective-objective-c-reading-note-one/" title="Effective Objective-C - 接口与API设计">Effective Objective-C - 接口与API设计</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-03-21T11:26:16.000Z" title="Created 2017-03-21 19:26:16">2017-03-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="content">前言Effective Objective-C 读书笔记 - 接口与API设计
+
+
+笔记用前缀避免命名空间冲突
+前缀字母至少3个，两字母的前缀被Apple保留
+注意：实现文件中的纯C函数以及全局变量也最好要加前缀，因为他们也是全局可见的。纯C函数，默认是extern的。（PS 见参考1）
+
+提供全能初始化方法
+初始化方法以 init 开头。
+
+如果一个类有多个初始化方法的话，最好要选定一个方法为全能初始化方法，让其他的初始化方法都来调用这个全能初始化方法。
+
+在全能初始化方法中，才执行数据的存储等等操作；其他方法只是改变调用全能初始化方法的参数而已。这样简单地保证了所有的初始化方法都能正确执行。
+
+全能初始化方法要链式调用：也就是说，子类的全能初始化方法要调用超类的全能初始化方法。
+
+还有子类的全能初始化方法如果与超类的全能初始化方法不重名的话，要覆写该方法
+12345678910111213141516171819202122// 超类全能初始化方法(矩形类)- (id)initWithWidth:(float)width andHeight:(float)height &#123; ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/10/29/opengl-es-start-up/" title="OpenGL ES 入门">OpenGL ES 入门</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-10-29T11:41:29.000Z" title="Created 2016-10-29 19:41:29">2016-10-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言最近在学习OpenGL ES，跟着教程做了一个Demo，在模拟器下的运行效果如下：
+
+
+
+Demo代码在这里
+OpenGL和OpenGL ESOpenGL ES是OpenGL的子集，它主要运行在手机上。推荐一个超棒的OpenGL入门教程：Learn OpenGL ；当然也有热心的国人将他翻译过来了，在 这里。通过这些教程的学习，我也算是入了OpenGL的门。
+关于将OpenGL运用于iOS上面，也就是使用OpenGL ES，可以看看Apple的官方文档 OpenGL ES Programming Guide for iOS
+Demo实现demo的实现可以分成2个部分：
+
+运用OpenGL ES显示静态的场景
+添加手势操作，让场景动起来
+
+OpenGL ES 渲染关于在iOS上使用OpenGL ES渲染，可以借助iOS的GLKit框架。他大大简化了OpenGL ES的使用难度。而渲染的主要步骤分成以下几步：
+使用GLKit初始化创建GLKViewController和GLKView，OpenGL ES渲染的结果将会显示在GLKView的layer上面。而将GLKViewControl ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/10/29/aws-minered-virus/" title="记一次aws-ec2杀毒经历">记一次aws-ec2杀毒经历</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-10-29T07:07:48.000Z" title="Created 2016-10-29 15:07:48">2016-10-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/server/">server</a></span></div><div class="content">前言前几天aws的ec2服务器被攻击了，被莫名人士植入了一个minerd的恶意程序，下面简单记录一下对这个恶意程序的处理过程
+
+
+问题发现我们使用一台aws的ec2服务器来托管网站，前几天登录网站界面的时候一直在loading界面，死活无法登录。当我想终端登录ec2的时候也是死活登不上去。当时就有种不翔的预感，要GG。稳下来后，查看aws的CloudWatch监控记录，发现近段时间的ec2的CPU利用率一直很稳定的保持在100%。。。原来CPU被用完了，难怪怎么都登不上去，网站也无法运作。
+问题解决登录ec2先得想办法登录ec2，看看到底发生了什么。注意：登录不上ec2的时候，千万不能随意的重启或者停止ec2；因为这样的话，存储在上面的数据可能会丢失。
+但是cpu占用率始终保持在100%，怎么也登不上ec2。只能使用大招了。使用一下步骤曲线救国：
+
+登录aws控制台。对现在的这台ec2（记为ec2one）的系统盘，也就是根卷创建一份快照
+根据刚创建的快照创建一个卷（也就是：磁盘），这样就复制了ec2one的系统盘
+启用一台全新的ec2（记为ec2two），注意登录密钥和ec2one的相 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/09/14/Pointers-on-c-reading-note-one/" title="C和指针读书笔记">C和指针读书笔记</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-09-14T06:42:12.000Z" title="Created 2016-09-14 14:42:12">2016-09-14</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="content">前言《C和指针》读书笔记，会按章节排序
+
+
+笔记快速上手
+函数参数若指定为 const ,表示函数不会修改这个参数。
+字符串就是一串以 NUL 字节结尾的字符，NUL作为字符串终止符，不属于字符串。 NUL也就是 ‘\0’ 
+字符串常量以双引号起止。比如 “Hello” ，在内存中占据6个字节，分别是：H e l l o 和 NUL
+
+基本概念
+代码的翻译阶段：
+程序的各个源代码先被转换成目标代码，也就是 .o 文件。编译阶段
+然后各个目标代码会被链接器捆绑到一起，并且链接器还会将所需的各种库链接到程序中；这些目标代码和各种库捆绑到一起，形成最终的可执行文件，也就是 .out 文件。寻找各种库，会在系统库和用户指定的函数库中寻找。链接阶段
+
+
+编译阶段：先解析(parse)；若有优化选项的话，还要进行优化(optimizer)
+对于字符注意一下 三字母词 。这些都以??开头，比如说 ??)表示的是]。所以当你打出 ??): 的时候，在控制台的输出会是 ]:  
+&#39;\100&#39;：这里的100是八进制，表示64。也就是ASCII码值为64的字符，也就是@
+同4所讲，&#39; ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/08/15/YYKit-source-code-analysis/" title="看YYKit的源码">看YYKit的源码</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-08-15T11:31:27.000Z" title="Created 2016-08-15 19:31:27">2016-08-15</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言YYKit 源码分析 之 YYCache
+
+
+笔记YYCache 是一个线程安全的 key-value 的缓存框架。使用 YYMemoryCache 来将对象存放在小且快的内存中；使用 YYDiskCache 来将对象存放在较慢的磁盘上。
+YYCache先来看看 YYCache 的工作流程。
+创建Cache(init)使用下面代码可以创建一个叫做vanney的新的cache。
+1YYCache *newCache = [YYCache alloc] initWithName:@&quot;vanney&quot;];
+
+这句语句所做的事情如下：
+
+物理层面
+在APP的 Caches 目录下面新建一个 vanney 的子目录，这个目录用来存放所有属于vanney的cache
+在vanney目录下面新建一个 manifest 的sqlite数据库，这个数据库用来记录属于vanney的所有cache的信息，数据库的每一行记录表示一个cache。每一行的信息包括：
+key : cache的唯一标识。manifes的主键
+filename : 如果cache的数据大于设置的值的话（默认是20 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/08/02/OC-ARC-GCD-reading-note-three/" title="iOS与OS X多线程和内存管理 - GCD">iOS与OS X多线程和内存管理 - GCD</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-08-02T07:54:22.000Z" title="Created 2016-08-02 15:54:22">2016-08-02</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="content">前言iOS与OS X多线程和内存管理 读书笔记（三） GCD
+
+
+笔记GCD概要
+GCD：Grand Central Dispatch，大中枢派发，很牛逼的名字
+
+GCD的API
+dispatch_async(queue, block);
+将想要执行的任务封装进Block，放他到queue中执行。这里的queue有两种：
+
+一种是Serial Dispatch Queue，顺序队列，放入这里面的block任务是一个一个执行的，先进先出。
+另一种是 Concurrent Dispatch Queue，并行队列，意思就是会开多个队列，block一次进入各个队列同时执行；但是队列的数量由系统控制，那些还来不及进入任何一个队列执行的block，只能等某个队列的block执行完了，再进入队列执行了；所以说这里的每个block的执行顺序是不确定的。
+
+PS：当然你也可以同时开多个顺序队列，以达到并行队列的效果；但是不能多开，因为程序在各个队列之间切换，也就是在各个线程之间切换，也就是所谓的上下文切换，需要耗费CPU等资源。当然存放每个线程的状态等信息也需要耗费资源。
+
+dispatch_queue ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2016/07/29/OC-ARC-GCD-reading-note-two/" title="iOS与OS X多线程和内存管理 - Blocks">iOS与OS X多线程和内存管理 - Blocks</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2016-07-29T02:37:30.000Z" title="Created 2016-07-29 10:37:30">2016-07-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="content">前言iOS与OS X多线程和内存管理 读书笔记（二） Blocks
+
+
+笔记Blocks概要
+Blocks：带有自动变量（局部变量）的匿名函数
+
+完整的Block语法与一般的C语言函数定义相比只有2点不同：
+
+开头多了^符号
+没有函数名
+
+
+看看如何声明Block类型变量：int (^blk)(int);声明了一个参数类型为int，返回类型为int的Block变量blk。
+
+typedef int (^blk_t)(int); 那么blk_t代表一个Block变量
+
+Block会自动截获和保存变量值。但是不能更改保存的变量值，除非你使用__block。如下：
+12345678int val = 0;void (^blk)(void) = ^&#123;val = 1&#125;; // 更改自动保存的变量值 报错blk();/* 使用__block之后 */__block int val = 0;void (^blk)(void) = ^&#123;val = 1&#125;; // 不报错blk();
+
+PS：如果是截获的OC对象，比如截获了NSMutableArray对象array ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/2/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/#content-inner">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/#content-inner">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/#content-inner">6</a><a class="extend next" rel="next" href="/page/4/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">John Doe</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2018/03/26/OpenGL-ES-concave-polygon-iOS/" title="iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形">iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形</a><time datetime="2018-03-26T07:36:06.000Z" title="Created 2018-03-26 15:36:06">2018-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/ar-rubik/" title="ARKit下的魔方">ARKit下的魔方</a><time datetime="2017-12-02T08:41:23.000Z" title="Created 2017-12-02 16:41:23">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/job-summary/" title="一次秋招">一次秋招</a><time datetime="2017-12-02T08:17:58.000Z" title="Created 2017-12-02 16:17:58">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/24/calayer-time-coordinate-system/" title="CALayer的时间坐标系">CALayer的时间坐标系</a><time datetime="2017-07-24T02:36:58.000Z" title="Created 2017-07-24 10:36:58">2017-07-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/14/association-object-and-retain-count/" title="OC关联对象及其内存管理">OC关联对象及其内存管理</a><time datetime="2017-07-14T08:29:19.000Z" title="Created 2017-07-14 16:29:19">2017-07-14</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>Categories</span>
+            
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/iOS/"><span class="card-category-list-name">iOS</span><span class="card-category-list-count">30</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/server/"><span class="card-category-list-name">server</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/"><span class="card-category-list-name">杂七杂八</span><span class="card-category-list-count">9</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"><span class="card-category-list-name">读书笔记</span><span class="card-category-list-count">13</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" style="font-size: 1.1em; color: #999">杂七杂八</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span><a class="card-more-btn" href="/archives/" title="More">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2018/03/"><span class="card-archive-list-date">March 2018</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/12/"><span class="card-archive-list-date">December 2017</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/07/"><span class="card-archive-list-date">July 2017</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/06/"><span class="card-archive-list-date">June 2017</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/04/"><span class="card-archive-list-date">April 2017</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/03/"><span class="card-archive-list-date">March 2017</span><span class="card-archive-list-count">5</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2016/10/"><span class="card-archive-list-date">October 2016</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2016/09/"><span class="card-archive-list-date">September 2016</span><span class="card-archive-list-count">1</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">55</div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Push :</div><div class="item-count" id="last-push-date" data-lastPushDate="2023-09-26T12:25:54.391Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By John Doe</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

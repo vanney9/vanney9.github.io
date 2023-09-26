@@ -1,0 +1,292 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Hexo',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2023-09-26 20:25:54'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><hr class="custom-hr"/></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Hexo"><span class="site-name">Hexo</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Hexo</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2018/03/26/OpenGL-ES-concave-polygon-iOS/" title="iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形">iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2018-03-26T07:36:06.000Z" title="Created 2018-03-26 15:36:06">2018-03-26</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言先看看在iPhone上使用Cocos2d-x与OpenGL ES绘制出来的最终效果。
+
+图中绘制的都是圆环，或者光滑曲线构成的图形。不过本质还是绘制多边形，只要这些多边形的顶点足够多，那么就可以形成光滑的曲线。
+在绘制过程中使用到的相关知识点：
+
+Cocos2d-x渲染机制
+OpenGL ES绘图基础
+Objectice-C与C++混编
+OpenGL Tessellation将多边形切分成多个三角形
+
+
+
+问题的发现在使用Cococs2d-x绘制填充颜色的多边形的时候，最先想到的就是使用DrawNode 。DrawNode提供以下接口：
+12// 绘制填充颜色的多边形，参数包括：多边形顶点坐标，定点数，以及需要填充的颜色void drawSolidPoly(const Vec2 *poli, unsigned int numberOfPoints, const Color4F &amp;color);
+
+使用该接口绘制一个四分之一圆环的时候，想达到的效果如下👇
+
+但是实际的效果却是这样的👇
+
+查看源码查看Cocos2d-x的DrawNode的源码：CCDrawNode.cpp
+ ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/12/02/ar-rubik/" title="ARKit下的魔方">ARKit下的魔方</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-12-02T08:41:23.000Z" title="Created 2017-12-02 16:41:23">2017-12-02</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言如题，先看看效果👇
+
+
+
+代码在我的Github，运行起来，在手势检测上还有些不够精准。有兴趣的可以一起讨论
+参考
+Awesome ARKit
+
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/12/02/job-summary/" title="一次秋招">一次秋招</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-12-02T08:17:58.000Z" title="Created 2017-12-02 16:17:58">2017-12-02</time></span></div><div class="content">如题，记录一下辛苦的秋招
+
+
+秋招结束有一段时间了。感谢今年良好的整体环境，我也拿了大大小小几个offer，最后选择了腾讯的iOS开发岗位。
+从七月中旬开始正式准备算起，到10月初确定下来，一共有2个半月时间吧。
+
+7月中旬看书，刷题
+7月底内推开始，一来就是阿里和腾讯，直接一波两连跪，心情跌倒谷底&#x3D;。&#x3D;
+开始找不足，发现iOS方面知识还算应付的过来；缺的是计算机基础知识，赶紧补一补本科的数据结构，计算机网络和操作系统
+8月夹杂着各种内推面试，总算熟悉了各家的面试套路。问来问去都差不多那些东西
+9.3号，今日头条内推视频面试，一下午面了三面。跟杰哥去吃饭的时候接到了hr的电话，说已经通过了。假装平静的跟hr小姐姐聊完之后，就开始激动的和杰哥噼里啪啦的讲起来了。信心大增。
+之后就只面了些大厂，问的问题都大同小异。说说其中腾讯的面试吧，腾讯二面，就持续了20分钟，全程就像聊天。气氛轻松的让我以为我已经挂了。。。
+9月底陆续收到了几份offer，十一之后收到了腾讯的offer。
+
+另外，回顾这两个多月的秋招，大部分公司面试体验都是很好的。其中今日头条给我的感觉是最好的：三 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/07/24/calayer-time-coordinate-system/" title="CALayer的时间坐标系">CALayer的时间坐标系</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-07-24T02:36:58.000Z" title="Created 2017-07-24 10:36:58">2017-07-24</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言上周末，又进行了一次实验室内部的iOS分享会。这次是小学弟给我们讲的CAMediaTiming以及Runloop的一些内容。讲的很细，也很深&#x3D;。&#x3D;
+其中提到了一点：CALayer的时间坐标系，也就是本文要讲的主要内容
+
+
+时间坐标系时间坐标系这个名字听着有点奇怪，类似layer的空间坐标系。它的意思是：每个CALyer都有自己的时间刻度；在同一个全局时间下，每个CALyer自己的时间是可以不一样的。而CAAnimation参照的时间则是他所属的CALyer的时间系。
+CAMediaTimingCAMediaTiming是一个协议，定义了beginTime，timeOffset，speed等属性。CALayer以及CAAnimation都实现了该协议。
+在CALayer中设置CAMediaTiming的相关属性是用来更改CALyer的时间系，也就是改变每一时刻的CALyer的时间。而在CAAnimation中设置这些属性，则是为了修改动画的相关时间属性；这些时间属性都是对应相应的layer的时间系的。
+CALayer的时间如何计算
+t &#x3D; (tp - b ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/07/14/association-object-and-retain-count/" title="OC关联对象及其内存管理">OC关联对象及其内存管理</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-07-14T08:29:19.000Z" title="Created 2017-07-14 16:29:19">2017-07-14</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言OC的关联对象经常被用来存储Category中的属性对应的实例变量，当然它还有其他的用途。
+这篇文章将讨论关联对象是如何实现的，以及关联对象的内存管理问题。
+
+
+Demo先用一段代码来引入要讲的东西：
+1234567891011121314151617181920212223242526272829303132#import &quot;HCBase.h&quot;@interface HCBase (vanney)@property (nonatomic, assign) int cui;@property (nonatomic, strong) NSString *van;@end/* -----------------  这里是分割线  -------------- */#import &quot;HCBase+vanney.h&quot;@implementation HCBase (vanney)- (void)setCui:(int)cui &#123;    objc_setAssociatedObject(self, &quot;cui&quot;, @(cui), ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/07/13/question-about-autorelease/" title="ARC下关于autorelease的一些疑问">ARC下关于autorelease的一些疑问</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-07-13T09:14:14.000Z" title="Created 2017-07-13 17:14:14">2017-07-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言今天在看黑幕背后的Autorelease这篇博客的时候，发现了一些问题。主要问题在于：
+123456// ARC 情况下@autoreleasepool &#123;  id __strong array = [NSMutableArray array];  NSLog(@&quot;array count is %lu&quot;, _objc_rootRetainCount(array));  _objc_autoreleasePoolPrint();&#125;
+
+这里的array对象的retainCount到底是1还是2？
+按照查找的博客，以及之前看的《Objective-C高级编程 iOS与OS X多线程和内存管理》这本书的结论：这里的retainCount应该是1，因为这个对象没有注册到autoreleasepool中。但是实际运行下来却并非如此。
+Stack Overflow
+
+
+AutoreleaseAutoreleasePool 自动释放池Autorelease就是延迟release的调用时间，将需要延迟release的对象加入autoreleasepool。当p ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/07/07/JSPatch-source-analyze/" title="JSPatch源码分析">JSPatch源码分析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-07-07T01:26:28.000Z" title="Created 2017-07-07 09:26:28">2017-07-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言JSPatch是一个可以动态更新iOS APP的开源库。通过JSPatch，可以使用JS书写原生代码，动态更新APP，替换项目原生代码修复Bug。
+JSPatch充分应用了Objective-C的runtime，来实现自己的功能。
+这篇文章将结合Demo，来分析JSPatch的主要的实现过程。包括：
+
+使用JS新建类
+使用JS替换原有方法
+使用JS添加全新方法
+OC调用JS定义的方法
+JS调用OC定义的方法
+
+
+
+Demo使用官方提供的Demo。先来看看Demo的关键代码：
+JPViewController12345678910111213141516@implementation JPViewController- (void)viewDidLoad &#123;    [super viewDidLoad];    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 50)];    [btn setTitle:@& ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/06/27/iOS-ARC-Block-GCD-Runloop/" title="关于ARC，Block以及GCD，runloop">关于ARC，Block以及GCD，runloop</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-06-27T11:51:42.000Z" title="Created 2017-06-27 19:51:42">2017-06-27</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言最近又看了一遍 Objective-C高级编程 iOS与OS X多线程和内存管理 这本书。对一些问题有了一些新的认识。这篇文章将讲讲下面几个话题：
+
+ARC，MRC 与 引用计数
+Block的实现
+GCD与runloop
+
+
+
+ARC, MRC 与 引用计数引用计数Objective C的生成的数据会存放在栈或者堆上面。对于存放在栈上面的数据（比如局部int变量等）在不需要时，系统会自动释放内存空间；对于存放在堆上面的数据（比如对象等）会使用引用计数来决定是否释放内存空间。
+创建一个对象时，会malloc一块对象所需大小的内存空间；当有一变量持有该对象时（一般是有一指针指向该内存时）该对象的引用计数加一；当持有该对象的变量不再持有它时（一般是指针被销毁，或指向其他地方）该对象的引用计数减一。当对象的引用计数为0时，free这一块内存
+MRC和ARC实质上都是对这个引用计数进行操作
+手动引用计数 MRC手动引用计数要确保在对象从被创建到销毁的一生中，该对象的引用计数也从1变成0。
+与对象引用计数相关的函数只有3个：
+
+alloc&#x2F;new&#x2F;copy&#x2F;mut ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/06/10/objective-c-runtime-other/" title="Objective-C runtime - 如果还有其他的话">Objective-C runtime - 如果还有其他的话</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-06-10T09:21:25.000Z" title="Created 2017-06-10 17:21:25">2017-06-10</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言系列应该是最后一篇：还真要来讲一点其他的东西：
+
+self &amp;&amp; super
+alloc &amp;&amp; init
+
+
+
+self &amp;&amp; superselfself是每个类函数中的隐藏参数，比如一个类的函数- (void)someFunc; 它经过编译之后会变成 void someFunc(id self, SEL _cmd);  当有一个对象去调用该函数时，比如 [someObj someFunc]; 那么等价于 someFunc(a, @selector(someFunc)); 会将a自己传入该函数
+supersuper是一个预编译命令，他会先调用父类的方法。比如在init方法中 [super init]; 该方法会先调用父类的init方法 
+alloc &amp;&amp; initallocalloc方法会生成一个类的对象，并将该类对象的isa变量初始化
+init讲道理，[NSObject init]方法没做啥事
+参考
+OC中的self和super
+
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2017/06/10/objective-c-runtime-example/" title="Objective-C runtime - 应用和示例">Objective-C runtime - 应用和示例</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2017-06-10T06:31:59.000Z" title="Created 2017-06-10 14:31:59">2017-06-10</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/iOS/">iOS</a></span></div><div class="content">前言系列第五篇：将展示几个runtime的例子以及runtime的实际应用。这些例子包括：
+
+动态添加属性以及添加用来存储属性对应的实例变量的关联对象
+方法决议：父类实现resolveInstanceMethod，然后在子类中添加方法
+消息转发示例：
+forwardingTargetForSelector
+forwardInvocation
+
+
+
+本文的demo代码可以在我的github上找到
+
+
+几个有趣的示例动态添加任意属性
+class_addProperty runtime添加属性API
+class_addMethod runtime添加方法API
+
+仅仅添加属性是没什么用的，因为还需要添加属性对应的实例变量。
+虽然runtime提供了class_addIvar方法来给类添加实例变量，但是注意，该方法只能在创建新的类的时候才能使用；对于已经存在的类，是不允许添加实例变量的
+鉴于上述原因，所以可以采用动态添加关联对象来存储属性对应的实例变量。
+添加属性BOOL class_addProperty(Class cls, const char *name, const objc_pro ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/#content-inner">6</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">John Doe</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2018/03/26/OpenGL-ES-concave-polygon-iOS/" title="iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形">iOS上使用Cocos2d-x和OpenGL ES绘制凹多边形</a><time datetime="2018-03-26T07:36:06.000Z" title="Created 2018-03-26 15:36:06">2018-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/ar-rubik/" title="ARKit下的魔方">ARKit下的魔方</a><time datetime="2017-12-02T08:41:23.000Z" title="Created 2017-12-02 16:41:23">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/12/02/job-summary/" title="一次秋招">一次秋招</a><time datetime="2017-12-02T08:17:58.000Z" title="Created 2017-12-02 16:17:58">2017-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/24/calayer-time-coordinate-system/" title="CALayer的时间坐标系">CALayer的时间坐标系</a><time datetime="2017-07-24T02:36:58.000Z" title="Created 2017-07-24 10:36:58">2017-07-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2017/07/14/association-object-and-retain-count/" title="OC关联对象及其内存管理">OC关联对象及其内存管理</a><time datetime="2017-07-14T08:29:19.000Z" title="Created 2017-07-14 16:29:19">2017-07-14</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>Categories</span>
+            
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/iOS/"><span class="card-category-list-name">iOS</span><span class="card-category-list-count">30</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/server/"><span class="card-category-list-name">server</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/"><span class="card-category-list-name">杂七杂八</span><span class="card-category-list-count">9</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"><span class="card-category-list-name">读书笔记</span><span class="card-category-list-count">13</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" style="font-size: 1.1em; color: #999">杂七杂八</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span><a class="card-more-btn" href="/archives/" title="More">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2018/03/"><span class="card-archive-list-date">March 2018</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/12/"><span class="card-archive-list-date">December 2017</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/07/"><span class="card-archive-list-date">July 2017</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/06/"><span class="card-archive-list-date">June 2017</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/04/"><span class="card-archive-list-date">April 2017</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2017/03/"><span class="card-archive-list-date">March 2017</span><span class="card-archive-list-count">5</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2016/10/"><span class="card-archive-list-date">October 2016</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2016/09/"><span class="card-archive-list-date">September 2016</span><span class="card-archive-list-count">1</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">55</div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Push :</div><div class="item-count" id="last-push-date" data-lastPushDate="2023-09-26T12:25:54.391Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By John Doe</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
